@@ -1,0 +1,17 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI/cwindow.cs">
+    <Files>
+      <File FileName="Campaign/Mission.cs" Line="3" Column="29" />
+      <File FileName="Campaign/CampCell.cs" Line="3" Column="11" />
+      <File FileName="Campaign/Campaign.cs" Line="5" Column="22" />
+      <File FileName="UI/cwindow.cs" Line="164" Column="14" />
+      <File FileName="Main/Main.cs" Line="9" Column="36" />
+      <File FileName="Graphics/WXMap.cs" Line="3" Column="29" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

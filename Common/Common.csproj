@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</ProjectGuid>
+    <ProjectGuid>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FalconNet.Graphics</RootNamespace>
-    <AssemblyName>Graphics</AssemblyName>
+    <RootNamespace>FalconNet.Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,7 +18,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -26,36 +26,15 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="WXMap.cs" />
-    <Compile Include="Tex.cs" />
-    <Compile Include="Palette.cs" />
-    <Compile Include="Setup.cs" />
-    <Compile Include="BSPnodes.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="Display.cs" />
-    <Compile Include="GrTypes.cs" />
-    <Compile Include="ImageBuffer.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="MyClass.cs" />
-    <Compile Include="PolyLib.cs" />
-    <Compile Include="Render2D.cs" />
-    <Compile Include="Render3D.cs" />
-    <Compile Include="StateStack.cs" />
-    <Compile Include="WxCell.cs" />
+    <Compile Include="EnumSupport.cs" />
+    <Compile Include="ConvertionSupport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

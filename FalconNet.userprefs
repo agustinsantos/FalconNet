@@ -1,18 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="OpenTk/Main.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Main/Main.cs">
     <Files>
-      <File FileName="Campaign/Mission.cs" Line="3" Column="29" />
-      <File FileName="Campaign/CampCell.cs" Line="3" Column="11" />
-      <File FileName="Campaign/Campaign.cs" Line="5" Column="22" />
-      <File FileName="UI/cwindow.cs" Line="88" Column="58" />
-      <File FileName="Main/Main.cs" Line="25" Column="23" />
-      <File FileName="Graphics/WXMap.cs" Line="7" Column="1" />
-      <File FileName="Graphics/Tex.cs" Line="262" Column="4" />
-      <File FileName="Graphics/Palette.cs" Line="317" Column="3" />
-      <File FileName="Graphics/Setup.cs" Line="17" Column="2" />
-      <File FileName="FalcLib/mddriver.cs" Line="236" Column="54" />
-      <File FileName="OpenTk/Main.cs" Line="1" Column="1" />
+      <File FileName="Main/Main.cs" Line="25" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

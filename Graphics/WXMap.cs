@@ -4,6 +4,7 @@ namespace FalconNet.Graphics
 {
 	public class WeatherMap
 	{
+#if TODO
 		public WeatherMap ();
 		// public ~WeatherMap( void );
 
@@ -79,6 +80,7 @@ namespace FalconNet.Graphics
 		public int			colShiftHistory;
 		public float		xOffset;
 		public float		yOffset;
+#endif
 	}
 }
 

@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>FalconNet.Graphics</RootNamespace>
-    <AssemblyName>Graphics</AssemblyName>
+    <ProjectGuid>{68BB1235-DE46-4CDE-BFC6-3A74E03A6C37}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>OpenTk</RootNamespace>
+    <AssemblyName>OpenTk</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,13 +30,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="OpenTK">
+      <HintPath>..\ExternalLibs\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="WXMap.cs" />
-    <Compile Include="Tex.cs" />
-    <Compile Include="Palette.cs" />
-    <Compile Include="Setup.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

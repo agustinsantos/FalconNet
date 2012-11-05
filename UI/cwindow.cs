@@ -4,7 +4,7 @@ namespace FalconNet.UI
 {
 	public class C_Window
 	{
- 
+ #if TODO
 		private enum Clip
 		{
 			_CHR_CLIP_LEFT=0x01,
@@ -85,6 +85,7 @@ namespace FalconNet.UI
 		private C_Base		*CurControl_;
 		private delegate void DragCallback(C_Window *win);
 		private F4CSECTIONHANDLE* Critical;
+
 		private delegate bool KBCallback(unsigned char DKScanCode,unsigned char Ascii,unsigned char ShiftStates,long RepeatCount);
 
 		private CONTROLLIST *FindControlInList(C_Base *cntrl);
@@ -264,6 +265,7 @@ namespace FalconNet.UI
 		public void SaveText(HANDLE ,C_Parser *)	{ ; }
 
 #endif // PARSER
+		#endif
 	}
 }
 

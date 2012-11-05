@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Main/Main.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Graphics/WXMap.cs">
     <Files>
       <File FileName="Main/Main.cs" Line="25" Column="20" />
+      <File FileName="Graphics/WXMap.cs" Line="199" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -36,4 +36,10 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\UI\UI.csproj">
+      <Project>{5EFB2579-EA16-49B7-94FC-430735B35DF9}</Project>
+      <Name>UI</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

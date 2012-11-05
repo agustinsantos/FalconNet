@@ -1,4 +1,5 @@
 using System;
+using FalconNet.UI;
 
 namespace FalconNet.Main
 {
@@ -6,6 +7,7 @@ namespace FalconNet.Main
 	{
 		private static void HandleWinMain()
 		{
+			F4Config.ReadFalcon4Config();	// OW: read config file
 #if TODO	
 			TheWeather = new WeatherClass();
 		

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace FalcLib
+namespace FalconNet.FalcLib
 {
 	public class F4Find
 	{
@@ -12,6 +12,18 @@ namespace FalcLib
 		public static  string FalconMiscTexDataDir;
 		public static  string FalconCampaignSaveDirectory;
 		public static  string FalconCampUserSaveDirectory;
+		
+		public static void InitDirectories()
+		{
+			FalconDataDirectory = "." + Path.DirectorySeparatorChar;
+			FalconTerrainDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "theater";
+			FalconObjectDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "object";
+			FalconMiscTexDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "FalconMiscTexData";
+			string campaignDir = FalconDataDirectory + Path.DirectorySeparatorChar + "Campaign"; 
+			FalconCampaignSaveDirectory = campaignDir + Path.DirectorySeparatorChar + "Save";
+			FalconCampUserSaveDirectory = campaignDir + Path.DirectorySeparatorChar + "Save";
+	
+		}
 		
 		// Returns path of file data is in, an offset and a length.
 		public static  string  F4FindFile (string filename, string buffer, int bufLen, out int offset, out int len)
@@ -159,7 +171,7 @@ namespace FalcLib
 		
 		   return retval;
 #endif
-			throw new NotImplementedException ();
+			throw new NotImplementedException();
 		}
 
 	}

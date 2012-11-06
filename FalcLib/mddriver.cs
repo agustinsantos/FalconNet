@@ -1,6 +1,6 @@
 using System;
 
-namespace FalcLib
+namespace FalconNet.FalcLib
 {
 	public class Mddriver
 	{

@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FalcLib</RootNamespace>
+    <RootNamespace>FalconNet.FalcLib</RootNamespace>
     <AssemblyName>FalcLib</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

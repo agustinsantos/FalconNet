@@ -1,6 +1,7 @@
 using System;
 using FalconNet.UI;
 
+
 namespace FalconNet.Main
 {
 	class MainClass
@@ -18,6 +19,7 @@ namespace FalconNet.Main
 			FileVerify();
 #endif
 		}
+		
 		
 		public static void Main (string[] args)
 		{

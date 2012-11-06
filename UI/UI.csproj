@@ -37,4 +37,10 @@
     <Compile Include="F4Config.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Sim\Sim.csproj">
+      <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
+      <Name>Sim</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

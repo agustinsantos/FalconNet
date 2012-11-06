@@ -3,14 +3,10 @@ using FalconNet.Common;
 
 namespace FalconNet.Graphics
 {
-
-
-
-
-public struct CellState {
-	public byte	BaseAltitude;	// hundreds of feet MSL
-	public byte	Type;			// cloud tile number (or thickness for OVC)
-};
+	public struct CellState {
+		public byte	BaseAltitude;	// hundreds of feet MSL
+		public byte	Type;			// cloud tile number (or thickness for OVC)
+	};
 
 
 public class WeatherMap 

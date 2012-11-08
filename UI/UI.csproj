@@ -35,6 +35,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="cwindow.cs" />
     <Compile Include="F4Config.cs" />
+    <Compile Include="logbook.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

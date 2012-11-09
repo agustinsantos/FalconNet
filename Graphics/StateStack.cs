@@ -48,7 +48,7 @@ namespace FalconNet.Graphics
 			SetFog( 0.0f, NULL );
 		}
 
-		//public ~StateStackClass()	{ ShiAssert(stackDepth == 0); };
+		//public ~StateStackClass()	{ Debug.Assert(stackDepth == 0); };
 
 		// Called by application
 		public static void SetContext (ContextMPR *cntxt)
@@ -192,7 +192,7 @@ namespace FalconNet.Graphics
 
 		public static void SetFog (float percent, Pcolor *color)
 		{
-			ShiAssert( percent <= 1.0f );
+			Debug.Assert( percent <= 1.0f );
 		
 			fogValue = percent;
 		
@@ -211,7 +211,7 @@ namespace FalconNet.Graphics
 				ClipPrimJumpTable		= ClipPrimFogJumpTable;
 		
 				// We store the color pre-scaled by the percent of fog to save time later.
-				ShiAssert( color );
+				Debug.Assert( color );
 				fogColor_premul.r = color.r * percent;
 				fogColor_premul.g = color.g * percent;
 				fogColor_premul.b = color.b * percent;
@@ -238,7 +238,7 @@ namespace FalconNet.Graphics
 
 		public static void SetCamera (Tpoint *pos, Pmatrix *rotWaspect, Pmatrix *Bill, Pmatrix *Tree)
 		{
-			ShiAssert(stackDepth == 0);
+			Debug.Assert(stackDepth == 0);
 		
 			// Store our rotation from world to camera space (including aspect scale effects)
 			Rotation = *rotWaspect;	
@@ -318,7 +318,7 @@ namespace FalconNet.Graphics
 		public static void	Light (Pnormal *pNormals, int nNormals)
 		{
 			// Make sure we've got enough room in the light value pool
-			ShiAssert( IsValidIntensityIndex( n-1 ) );
+			Debug.Assert( IsValidIntensityIndex( n-1 ) );
 			
 			while( n-- ) {
 				// light intensity = ambient + diffuse*(lightVector dot normal)
@@ -342,7 +342,7 @@ namespace FalconNet.Graphics
 
 		public static void	PushAll ()
 		{
-			ShiAssert( stackDepth < MAX_STATE_STACK_DEPTH );
+			Debug.Assert( stackDepth < MAX_STATE_STACK_DEPTH );
 		
 			stack[stackDepth].XformedPosPool		= XformedPosPool;
 			stack[stackDepth].IntensityPool			= IntensityPool;
@@ -398,7 +398,7 @@ namespace FalconNet.Graphics
 
 		public static void	PushVerts ()
 		{
-			ShiAssert( stackDepth < MAX_STATE_STACK_DEPTH );
+			Debug.Assert( stackDepth < MAX_STATE_STACK_DEPTH );
 		
 			stack[stackDepth].XformedPosPool	= XformedPosPool;
 			stack[stackDepth].IntensityPool		= IntensityPool;
@@ -432,7 +432,7 @@ namespace FalconNet.Graphics
 			Pmatrix	*T;
 		
 			// Make sure we've got enough room in the transformed position pool
-			ShiAssert( IsValidPosIndex( n-1 ) );
+			Debug.Assert( IsValidPosIndex( n-1 ) );
 		
 			if (type == Tree) {
 				T = Tt;
@@ -587,7 +587,7 @@ namespace FalconNet.Graphics
 			float	scratch_x, scratch_y, scratch_z;
 		
 			// Make sure we've got enough room in the transformed position pool
-			ShiAssert( IsValidPosIndex( n-1 ) );
+			Debug.Assert( IsValidPosIndex( n-1 ) );
 		
 			while( n-- ) {
 				scratch_z = Rotation.M11 * p.x + Rotation.M12 * p.y + Rotation.M13 * p.z + Xlation.x;
@@ -649,7 +649,7 @@ namespace FalconNet.Graphics
 			int	LODused;
 			float MaxLODRange;
 		
-			ShiAssert( objInst );
+			Debug.Assert( objInst );
 		
 			PushAll();
 		
@@ -661,9 +661,9 @@ namespace FalconNet.Graphics
 			if (operation & OP_WARP)
 			{
 				// Put the stretch into the transformation matrix
-				ShiAssert( (sx > 0.0f) && (sx <= 1.0f) );
-				ShiAssert( (sy > 0.0f) && (sy <= 1.0f) );
-				ShiAssert( (sz > 0.0f) && (sz <= 1.0f) );
+				Debug.Assert( (sx > 0.0f) && (sx <= 1.0f) );
+				Debug.Assert( (sy > 0.0f) && (sy <= 1.0f) );
+				Debug.Assert( (sz > 0.0f) && (sz <= 1.0f) );
 				Pmatrix	tempM;
 				Pmatrix	stretchM = {	sx,   0.0f, 0.0f,
 										0.0f, sy,   0.0f,
@@ -697,7 +697,7 @@ namespace FalconNet.Graphics
 				else // JB 010220 CTD
 				if (objInst.id < 0 || objInst.id >= TheObjectListLength || objInst.TextureSet < 0) // JB 010705 CTD second try
 				{
-					ShiAssert(FALSE);
+					Debug.Assert(FALSE);
 					CurrentLOD = 0;
 				}
 				else 

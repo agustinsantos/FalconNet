@@ -86,8 +86,8 @@ namespace FalconNet.Graphics
 			CImageFileMemory 	texFile;
 			int result;
 		
-			ShiAssert( filename );
-			ShiAssert( imageData == NULL );
+			Debug.Assert( filename );
+			Debug.Assert( imageData == NULL );
 		
 			// Add in the users requested flags to any already set
 			flags |= newFlags;
@@ -142,7 +142,7 @@ namespace FalconNet.Graphics
 			}
 		
 			dimensions = texFile.image.width;
-			ShiAssert( dimensions == 32 || dimensions == 64 || dimensions == 128 || dimensions == 256 );
+			Debug.Assert( dimensions == 32 || dimensions == 64 || dimensions == 128 || dimensions == 256 );
 		
 			if(texFile.image.palette)
 				chromaKey = texFile.image.palette[0];
@@ -150,12 +150,12 @@ namespace FalconNet.Graphics
 				chromaKey = 0xFFFF0000;		// Default to blue chroma key color
 		
 			// We only deal with 8 bit textures
-			ShiAssert(flags & MPR_TI_PALETTE);
+			Debug.Assert(flags & MPR_TI_PALETTE);
 		
 			imageData = texFile.image.image;
 		
 			// Create a palette object if we don't already have one
-			ShiAssert( texFile.image.palette );
+			Debug.Assert( texFile.image.palette );
 			if(!palette)
 			{
 				palette = new Palette();
@@ -214,9 +214,9 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public bool UpdateMPR(string strName = NULL)
 		{
-			ShiAssert( rc != NULL);
-			ShiAssert( imageData );
-			ShiAssert( texHandle );
+			Debug.Assert( rc != NULL);
+			Debug.Assert( imageData );
+			Debug.Assert( texHandle );
 		
 			if(!texHandle || !imageData)
 				return false;

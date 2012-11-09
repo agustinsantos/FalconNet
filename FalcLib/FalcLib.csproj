@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>FalconNet.FalcLib</RootNamespace>
     <AssemblyName>FalcLib</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +36,20 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="mddriver.cs" />
     <Compile Include="F4Find.cs" />
+    <Compile Include="PlayerOp.cs" />
+    <Compile Include="PlayerOpDef.cs" />
+    <Compile Include="rules.cs" />
+    <Compile Include="SoundGroups.cs" />
+    <Compile Include="Camplib.cs" />
+    <Compile Include="entity.cs" />
+    <Compile Include="FalcEnt.cs" />
+    <Compile Include="Campweap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

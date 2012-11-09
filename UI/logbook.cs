@@ -1,12 +1,11 @@
 using System;
 using System.IO;
+using System.Diagnostics;
+using FalconNet.Common;
+using FalconNet.FalcLib;
 
 namespace FalconNet.UI
 {
-	// TODO
-	public struct CAMP_MISS_STRUCT
-	{
-	}
 
 	//define value identifying medals for array index
 	public enum LB_MEDAL
@@ -68,14 +67,14 @@ namespace FalconNet.UI
 
 	public struct DF_STATS //DogfightStats
 	{
-		short	MatchesWon;
-		short	MatchesLost;
-		short	MatchesWonVHum;
-		short	MatchesLostVHum;
-		short	Kills;
-		short	Killed;
-		short	HumanKills;
-		short	KilledByHuman;
+		internal short	MatchesWon;
+		internal short	MatchesLost;
+		internal short	MatchesWonVHum;
+		internal short	MatchesLostVHum;
+		internal short	Kills;
+		internal short	Killed;
+		internal short	HumanKills;
+		internal short	KilledByHuman;
 	};
 
 	public struct CAMP_STATS //CampaignStats
@@ -126,14 +125,15 @@ namespace FalconNet.UI
 	{
 		private void EncryptPwd ()
 		{
-			char[] ptr = Pilot.Password.ToCharArray();;
+			char[] ptr = Pilot.Password.ToCharArray ();
+			;
 		
 			for (int i=0; i<(int)LEN_ENUM.PASSWORD_LEN; i++) {
 				ptr [i] ^= PwdMask [i % PwdMask.Length];
 				ptr [i] ^= PwdMask2 [i % PwdMask2.Length];
 			}
 			
-			Pilot.Password = ptr.ToString();
+			Pilot.Password = ptr.ToString ();
 		}
 
 		private void CalcRank ()
@@ -142,7 +142,7 @@ namespace FalconNet.UI
 		
 			if ((Pilot.Campaign.TotalScore > 3200) && Pilot.Campaign.GamesWon != 0) {
 				NewRank = LB_RANK.COLONEL;
-			} else if ((Pilot.Campaign.TotalScore > 1600) && (Pilot.Campaign.GamesWon != 0|| Pilot.Campaign.GamesTied != 0)) {
+			} else if ((Pilot.Campaign.TotalScore > 1600) && (Pilot.Campaign.GamesWon != 0 || Pilot.Campaign.GamesTied != 0)) {
 				NewRank = LB_RANK.LT_COL;
 			} else if ((Pilot.Campaign.TotalScore > 800) && (Pilot.Campaign.GamesWon != 0 || Pilot.Campaign.GamesTied != 0 || Pilot.Campaign.GamesLost != 0)) {
 				NewRank = LB_RANK.MAJOR;
@@ -155,7 +155,7 @@ namespace FalconNet.UI
 			}
 		
 			if (NewRank > Pilot.Rank) {
-				MissionResult |= PROMOTION;
+				CampaignMission.MissionResult |= RESULT_FLAGS.PROMOTION;
 				Pilot.Rank = NewRank;
 			}
 		}
@@ -165,51 +165,51 @@ namespace FalconNet.UI
 			if (MissStats. Score >= 3) {
 				int MedalPts = 0;
 		
-				if (MissStats. Flags & DESTROYED_PRIMARY)
+				if (MissStats. Flags.IsFlagSet (CAMP_MISS_FLAGS.DESTROYED_PRIMARY))
 					MedalPts += 2;
 		
-				if (MissStats. Flags & LANDED_AIRCRAFT)
+				if (MissStats. Flags.IsFlagSet (CAMP_MISS_FLAGS.LANDED_AIRCRAFT))
 					MedalPts++;
 		
-				if (!MissStats. WingmenLost)
+				if (MissStats. WingmenLost != 0)
 					MedalPts++;
 				
 				MedalPts += MissStats. NavalUnitsKilled + MissStats. Kills + 
-								min (10, MissStats. FeaturesDestroyed / 2) + min (10, MissStats. GroundUnitsKilled / 2);
+								Math.Min (10, MissStats. FeaturesDestroyed / 2) + Math.Min (10, MissStats. GroundUnitsKilled / 2);
 		
-				MedalPts = FloatToInt32 (PlayerOptions.Realism * MedalPts * CampaignDifficulty () * MissStats. Score * MissionComplexity (MissStats));
+				MedalPts = (int)(PlayerOptionsClass.PlayerOptions.Realism * MedalPts * CampaignDifficulty () * MissStats. Score * MissionComplexity (MissStats));
 		
-				if ((MedalPts > 9600) && (PlayerOptions.Realism > 0.9f) && MissStats. Score >= 4) {
-					MissionResult |= AWARD_MEDAL | MDL_AFCROSS;
-					Pilot.Medals [AIR_FORCE_CROSS]++;
+				if ((MedalPts > 9600) && (PlayerOptionsClass.PlayerOptions.Realism > 0.9f) && MissStats. Score >= 4) {
+					CampaignMission.MissionResult |= RESULT_FLAGS.AWARD_MEDAL | RESULT_FLAGS.MDL_AFCROSS;
+					Pilot.Medals [(int)LB_MEDAL.AIR_FORCE_CROSS]++;
 					Pilot.Campaign.TotalScore += 20;
-				} else if ((MedalPts > 7800) && (PlayerOptions.Realism > 0.7f)) {
-					MissionResult |= AWARD_MEDAL | MDL_SILVERSTAR;
-					Pilot.Medals [SILVER_STAR]++;
+				} else if ((MedalPts > 7800) && (PlayerOptionsClass.PlayerOptions.Realism > 0.7f)) {
+					CampaignMission.MissionResult |= RESULT_FLAGS.AWARD_MEDAL | RESULT_FLAGS.MDL_SILVERSTAR;
+					Pilot.Medals [(int)LB_MEDAL.SILVER_STAR]++;
 					Pilot.Campaign.TotalScore += 15;
-				} else if (MedalPts > 6000 && (PlayerOptions.Realism > 0.5f)) {
-					MissionResult |= AWARD_MEDAL | MDL_DIST_FLY;
-					Pilot.Medals [DIST_FLY_CROSS]++;
+				} else if (MedalPts > 6000 && (PlayerOptionsClass.PlayerOptions.Realism > 0.5f)) {
+					CampaignMission.MissionResult |= RESULT_FLAGS.AWARD_MEDAL | RESULT_FLAGS.MDL_DIST_FLY;
+					Pilot.Medals [(int)LB_MEDAL.DIST_FLY_CROSS]++;
 					Pilot.Campaign.TotalScore += 10;
 				} else if (MedalPts > 4800) {
-					MissionResult |= AWARD_MEDAL | MDL_AIR_MDL;
-					Pilot.Medals [AIR_MEDAL]++;
+					CampaignMission.MissionResult |= RESULT_FLAGS.AWARD_MEDAL | RESULT_FLAGS.MDL_AIR_MDL;
+					Pilot.Medals [(int)LB_MEDAL.AIR_MEDAL]++;
 					Pilot.Campaign.TotalScore += 5;
 				}
 			}
 		
 		
-			if (MissStats.Killed || MissStats. KilledByHuman || MissStats. KilledBySelf) {
+			if (MissStats.Killed != 0 || MissStats. KilledByHuman != 0 || MissStats. KilledBySelf != 0) {
 				Pilot.Campaign.ConsecMissions = 0;
 			} else {
-				if (!PlayerOptions.InvulnerableOn ())
+				if (!PlayerOptionsClass.PlayerOptions.InvulnerableOn ())
 					Pilot.Campaign.ConsecMissions++;
 			}
 		
 			if (Pilot.Campaign.ConsecMissions >= 100) {
-				MissionResult |= AWARD_MEDAL | MDL_LONGEVITY;
+				CampaignMission.MissionResult |= RESULT_FLAGS.AWARD_MEDAL | RESULT_FLAGS.MDL_LONGEVITY;
 				Pilot.Campaign.ConsecMissions = 0;
-				Pilot.Medals [LONGEVITY]++;
+				Pilot.Medals [(int)LB_MEDAL.LONGEVITY]++;
 			}
 		}
 
@@ -227,17 +227,17 @@ namespace FalconNet.UI
 			if (MissStats. WeaponsExpended > 6)
 				WeapExpended = 6;
 			else
-				WeapExpended = static_cast<float> (MissStats. WeaponsExpended);
+				WeapExpended = (float)(MissStats. WeaponsExpended);
 		
 			if (MissStats. ShotsAtPlayer > 10)
 				ShotsAt = 10;
 			else
-				ShotsAt = static_cast<float> (MissStats. ShotsAtPlayer);
+				ShotsAt = (float)(MissStats. ShotsAtPlayer);
 		
 			if (MissStats. AircraftInPackage > 8)
 				AircrftInPkg = 8;
 			else
-				AircrftInPkg = static_cast<float> (MissStats. AircraftInPackage);
+				AircrftInPkg = (float)(MissStats. AircraftInPackage);
 		
 			
 			return (Duration / 3.0F + WeapExpended / 6.0F + ShotsAt / 10.0F + AircrftInPkg / 16.0F + 3.0F);
@@ -245,9 +245,12 @@ namespace FalconNet.UI
 
 		private float CampaignDifficulty ()
 		{
+#if TODO
 			return ((13.0F - TheCampaign.GroundRatio - TheCampaign.AirRatio -
 								TheCampaign.AirDefenseRatio - TheCampaign.NavalRatio / 4.0F) / 39.0F +
 								(TheCampaign.EnemyAirExp + TheCampaign.EnemyADExp) / 12.0F) * 5.0F + 15.0F;
+#endif
+			throw new NotImplementedException();
 		}
 
 		public LB_PILOT	Pilot;
@@ -259,8 +262,9 @@ namespace FalconNet.UI
 		// public ~LogBookData();
 		public void Initialize ()
 		{
+#if TODO		
 			string path;
-			if (gStringMgr)
+			if (gStringMgr != null)
 				Pilot.Name = gStringMgr.GetString (TXT_JOE_PILOT);
 			else
 				Pilot.Name = "Joe Pilot";
@@ -283,17 +287,19 @@ namespace FalconNet.UI
 			Pilot.Squadron[0] = 0;
 			Pilot.voice = 0;
 #endif
-			DateTime systime = DateTime.Now ();
+			DateTime systime = DateTime.Now;
 			if (gLangIDNum != F4LANG_ENGLISH) {
 				Pilot.Commissioned = systime.ToString ("d");
 			} else {
 				Pilot.Commissioned = systime.ToString ("d");
 			}
 			Pilot.CheckSum = 0;
-			if (gCommsMgr) {
+			if (gCommsMgr != 0) {
 				path = FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".plc";
 				gCommsMgr.SetStatsFile (path);
 			}
+		#endif
+			throw new NotImplementedException ();
 		}
 
 		public void Cleanup ()
@@ -310,18 +316,18 @@ namespace FalconNet.UI
 		{
 			DWORD size;
 			FileStream fp;
-			size_t success = 0;
+			
 			string path;
 		
-			ShiAssert (callsign);
+			Debug.Assert (!string.IsNullOrEmpty (PilotName));
 		
-			path = FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
+			path = F4Find.FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
 			
 			fp = File.OpenRead (path);
 #if TODO // Handle error....
 			if(!fp.)
 			{
-				//TODO MonoPrint(_T("Couldn't open %s's logbook.\n"),callsign);
+				//TODO MonoPrint(_T("Couldn't open %s's logbook.\n"),PilotName);
 				Initialize();
 				return false;
 			}
@@ -337,11 +343,12 @@ namespace FalconNet.UI
 				Initialize();
 				return false;
 			}
-#endif		
+
+			size_t success = 0;
 			success = fread (&Pilot, sizeof(LB_PILOT), 1, fp);
 			fclose (fp);
 			if (success != 1) {
-				MonoPrint (_T ("Failed to read %s's logbook.\n"), callsign);
+				MonoPrint (_T ("Failed to read %s's logbook.\n"), PilotName);
 				Initialize ();
 				return false;
 			}
@@ -355,7 +362,7 @@ namespace FalconNet.UI
 				return(false);
 			}
 			if (gCommsMgr) {
-				sprintf (path, "%s\\config\\%s.plc", FalconDataDirectory, callsign);
+				sprintf (path, "%s\\config\\%s.plc", FalconDataDirectory, PilotName);
 				gCommsMgr. SetStatsFile (path);
 			}	
 		
@@ -371,10 +378,13 @@ namespace FalconNet.UI
 			}
 		
 			return true;
+#endif
+			throw new NotImplementedException ();
 		}
 
 		public int LoadData (LB_PILOT NewPilot)
 		{
+#if TODO
 			if (NewPilot != null) {
 				Pilot = NewPilot;
 				if (this == LogBook) {
@@ -390,22 +400,23 @@ namespace FalconNet.UI
 				return true;
 			}
 			return false;
+#endif
+			throw new NotImplementedException ();
 		}
 
 		public int SaveData ()
 		{
+#if TODO
 			FileStream fp;
 			string path;
 			
 			path = FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
 			fp = File.OpenWrite (path);
-#if TODO //Handle errors...
 			if(fp != null)
 			{
 				MonoPrint(_T("Couldn't save logbook"));
 				return FALSE;
 			}
-#endif
 			byte[] buff = EncryptBuffer (0x58, Pilot);
 			
 			fp.Write (buff);
@@ -443,10 +454,13 @@ namespace FalconNet.UI
 			}
 		
 			return true;
+#endif
+			throw new NotImplementedException ();
 		}
 
 		public void Clear ()
 		{
+#if TODO
 			string path;
 			path = FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".rul";
 			File.Delete (path);
@@ -475,7 +489,8 @@ namespace FalconNet.UI
 			_tstrdate(buf);
 			_tcscpy(Pilot.Commissioned,buf);
 			*/
-		
+	#endif
+			throw new NotImplementedException ();
 		}
 				
 		public void Encrypt ()
@@ -500,6 +515,7 @@ namespace FalconNet.UI
 
 		public void UpdateDogfight (short MatchWonLost, float Hours, short VsHuman, short Kills, short Killed, short HumanKills, short KilledByHuman)
 		{
+#if TODO
 			MissionResult = 0;
 		
 			UpdateFlightHours (Hours);
@@ -526,10 +542,13 @@ namespace FalconNet.UI
 				Pilot.Dogfight.KilledByHuman += KilledByHuman;
 			
 			SaveData ();
+		#endif
+			throw new NotImplementedException ();
 		}
 		
 		public void UpdateCampaign (CAMP_MISS_STRUCT MissStats)
 		{
+#if TODO 
 			MissionResult = 0;
 		
 			UpdateFlightHours (MissStats. FlightHours);
@@ -577,54 +596,54 @@ namespace FalconNet.UI
 			if (!(MissStats. Flags & DONT_SCORE_MISSION)) {
 				Pilot.Campaign.Missions++;
 		
-				ShiAssert (MissStats. Score >= 0);
+				Debug.Assert (MissStats. Score >= 0);
 				Pilot.Campaign.TotalMissionScore += MissStats. Score;
 		
 				Pilot.Campaign.TotalScore -= MissStats. WingmenLost * 5;
 		
-				ShiAssert (MissStats. Kills >= 0);
+				Debug.Assert (MissStats. Kills >= 0);
 				if (MissStats. Kills > 0)
 					Pilot.Campaign.Kills += MissStats. Kills;
 				if (Pilot.Campaign.Kills < 0)
 					Pilot.Campaign.Kills = 0;
 		
-				ShiAssert (MissStats. Killed >= 0);
+				Debug.Assert (MissStats. Killed >= 0);
 				if (MissStats. Killed > 0)
 					Pilot.Campaign.Killed += MissStats. Killed;
 				if (Pilot.Campaign.Killed < 0)
 					Pilot.Campaign.Killed = 0;
 		
-				ShiAssert (MissStats. HumanKills >= 0);
+				Debug.Assert (MissStats. HumanKills >= 0);
 				if (MissStats. HumanKills > 0)
 					Pilot.Campaign.HumanKills += MissStats. HumanKills;
 				if (Pilot.Campaign.HumanKills < 0)
 					Pilot.Campaign.HumanKills = 0;
 		
-				ShiAssert (MissStats. KilledByHuman >= 0);
+				Debug.Assert (MissStats. KilledByHuman >= 0);
 				if (MissStats. KilledByHuman > 0)
 					Pilot.Campaign.KilledByHuman += MissStats. KilledByHuman;
 				if (Pilot.Campaign.KilledByHuman < 0)
 					Pilot.Campaign.KilledByHuman = 0;
 		
-				ShiAssert (MissStats. KilledBySelf >= 0);
+				Debug.Assert (MissStats. KilledBySelf >= 0);
 				if (MissStats. KilledBySelf > 0)
 					Pilot.Campaign.KilledBySelf += MissStats. KilledBySelf;
 				if (Pilot.Campaign.KilledBySelf < 0)
 					Pilot.Campaign.KilledBySelf = 0;
 		
-				ShiAssert (MissStats. GroundUnitsKilled >= 0);
+				Debug.Assert (MissStats. GroundUnitsKilled >= 0);
 				if (MissStats. GroundUnitsKilled > 0)
 					Pilot.Campaign.AirToGround += MissStats. GroundUnitsKilled;
 				if (Pilot.Campaign.AirToGround < 0)
 					Pilot.Campaign.AirToGround = 0;
 		
-				ShiAssert (MissStats. FeaturesDestroyed >= 0);
+				Debug.Assert (MissStats. FeaturesDestroyed >= 0);
 				if (MissStats. FeaturesDestroyed > 0)
 					Pilot.Campaign.Static += MissStats. FeaturesDestroyed;
 				if (Pilot.Campaign.Static < 0)
 					Pilot.Campaign.Static = 0;
 		
-				ShiAssert (MissStats. NavalUnitsKilled >= 0);
+				Debug.Assert (MissStats. NavalUnitsKilled >= 0);
 				if (MissStats. NavalUnitsKilled > 0)
 					Pilot.Campaign.Naval += MissStats. NavalUnitsKilled;
 				if (Pilot.Campaign.Naval < 0)
@@ -637,10 +656,13 @@ namespace FalconNet.UI
 			CalcRank ();
 		
 			SaveData ();
+		#endif
+			throw new NotImplementedException ();
 		}
 
 		public void FinishCampaign (short WonLostTied)
 		{
+#if TODO
 			Pilot.Campaign.TotalScore += 10;
 		
 			if (WonLostTied > 0) {
@@ -654,6 +676,8 @@ namespace FalconNet.UI
 				Pilot.Campaign.GamesTied++;
 		
 			SaveData ();
+		#endif
+			throw new NotImplementedException ();
 		}
 	
 		public CAMP_STATS GetCampaign ()
@@ -673,22 +697,22 @@ namespace FalconNet.UI
 		// This is used for remote pilots...so I can get them in the class used for drawing the UI
 		public void	SetPilot (LB_PILOT data)
 		{
-			if (data)
-				memcpy (&Pilot, data, sizeof(Pilot));
+			if (data != null)
+				Pilot = data; // TODO the original code was a clone copy
 		}
 
 		public byte	GetMedal (LB_MEDAL MedalNo)
 		{
-			if (MedalNo < NUM_MEDALS)
-				return Pilot.Medals [MedalNo];
+			if (MedalNo < LB_MEDAL.NUM_MEDALS)
+				return Pilot.Medals [(int)MedalNo];
 			else
 				return 0;
 		}
 
 		public void	SetMedal (LB_MEDAL MedalNo, byte Medal)
 		{
-			if (MedalNo < NUM_MEDALS)
-				Pilot.Medals [MedalNo] = Medal;
+			if (MedalNo < LB_MEDAL.NUM_MEDALS)
+				Pilot.Medals [(int)MedalNo] = Medal;
 		}
 
 		public void	SetFlightHours (float Hours)
@@ -713,15 +737,14 @@ namespace FalconNet.UI
 
 		public void	SetPicture (string  filename)
 		{
-			if (_tcslen (filename) <= FILENAME_LEN)
-				_tcscpy (Pilot.Picture, filename);
+			Pilot.Picture = filename;
 			Pilot.PictureResource = 0;
 		}
 
 		public void	SetPicture (long imageID)
 		{
 			Pilot.PictureResource = imageID;
-			_tcscpy (Pilot.Picture, "");
+			Pilot.Picture = "";
 		}
 
 		public string GetPatch ()
@@ -736,8 +759,7 @@ namespace FalconNet.UI
 
 		public void	SetPatch (string filename)
 		{
-			if (filename.Length <= LEN_ENUM.FILENAME_LEN)
-				Pilot.Patch = filename;
+			Pilot.Patch = filename;
 			Pilot.PatchResource = 0;
 		}
 
@@ -754,8 +776,7 @@ namespace FalconNet.UI
 
 		public void	SetName (string Name)
 		{
-			if (Name.Length <= LEN_ENUM._NAME_LEN_)
-				Pilot.Name = Name;
+			Pilot.Name = Name;
 		}
 	
 		public string Callsign ()
@@ -765,8 +786,7 @@ namespace FalconNet.UI
 
 		public void	SetCallsign (string Callsign)
 		{
-			if (Callsign.Length <= LEN_ENUM._CALLSIGN_LEN_)
-				Pilot.Callsign = Callsign;
+			Pilot.Callsign = Callsign;
 		}
 	
 		public string Squadron ()
@@ -776,11 +796,10 @@ namespace FalconNet.UI
 
 		public void	SetSquadron (string Squadron)
 		{
-			if (Squadron.Length <= LEN_ENUM._NAME_LEN_)
-				Pilot.Squadron = Squadron;
+			Pilot.Squadron = Squadron;
 		}
 	
-		public int CheckPassword (string Pwd)
+		public bool CheckPassword (string Pwd)
 		{
 			//if(Pilot.Password[0] == 0)
 			//return TRUE;
@@ -797,13 +816,9 @@ namespace FalconNet.UI
 
 		public bool SetPassword (string Password)
 		{
-			if (Password.Length <= LEN_ENUM.PASSWORD_LEN) {
-				Pilot.Password = Password;
-				EncryptPwd ();
-				return true;
-			}
-		
-			return false;
+			Pilot.Password = Password;
+			EncryptPwd ();
+			return true;
 		}
 
 		public bool GetPassword (ref string Pwd)
@@ -824,8 +839,7 @@ namespace FalconNet.UI
 
 		public void	SetPersonal (string  Personal)
 		{
-			if (Personal.Length <= LEN_ENUM.PERSONAL_TEXT_LEN)
-				Pilot.Personal = Personal;
+			Pilot.Personal = Personal;
 		}
 	
 		public string OptionsFile ()
@@ -835,8 +849,7 @@ namespace FalconNet.UI
 
 		public void	SetOptionsFile (string OptionsFile)
 		{
-			if (OptionsFile.Length <= LEN_ENUM._CALLSIGN_LEN_)
-				Pilot.OptionsFile = OptionsFile;
+			Pilot.OptionsFile = OptionsFile;
 		}
 	
 		public float AceFactor ()
@@ -862,8 +875,7 @@ namespace FalconNet.UI
 
 		public void	SetCommissioned (string Date)
 		{
-			if (Date.Length <= LEN_ENUM.COMM_LEN)
-				Pilot.Commissioned = Date;
+			Pilot.Commissioned = Date;
 		}
 
 		public float FlightHours ()
@@ -897,12 +909,15 @@ namespace FalconNet.UI
 
 		public string NameWRank ()
 		{
-			if (gStringMgr) {
+#if TODO
+			if (gStringMgr != null) {
 				string rank = gStringMgr. GetString (gRanksTxt [Rank ()]);
 				nameWrank = rank + " " + Pilot.Name;
 				return nameWrank;
 			}
 			return Name ();
+#endif 
+			throw new NotImplementedException();
 		}
 	};
 

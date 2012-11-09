@@ -203,9 +203,9 @@ public class ContextMPR
 			return FALSE;
 		}
 
-		ShiAssert(m_pVtx == NULL);	// Cleanup() wasnt called if not zero
+		Debug.Assert(m_pVtx == NULL);	// Cleanup() wasnt called if not zero
 
-		ShiAssert(pIB);
+		Debug.Assert(pIB);
 		if(!pIB)
 			return FALSE;
 
@@ -260,12 +260,12 @@ public class ContextMPR
 		ZeroMemory(&ddsd, sizeof(ddsd));
 		ddsd.dwSize = sizeof(ddsd);
 		HRESULT hr = m_pVB.GetVertexBufferDesc(&ddsd);
-		ShiAssert(SUCCEEDED(hr));
+		Debug.Assert(SUCCEEDED(hr));
 
 //		MonoPrint("ContextMPR::Setup - m_pVB created in %s memory (%d vtx)\n",
 //			ddsd.dwCaps & D3DVBCAPS_SYSTEMMEMORY ? "SYSTEM" : "VIDEO",
 //			ddsd.dwNumVertices);
-		ShiAssert(ddsd.dwNumVertices == m_dwVBSize);
+		Debug.Assert(ddsd.dwNumVertices == m_dwVBSize);
 		#endif
 
 		bool bCanDoAnisotropic = (m_pCtxDX.m_pD3DHWDeviceDesc.dpcTriCaps.dwTextureFilterCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC) &&
@@ -353,7 +353,7 @@ public class ContextMPR
 /*
 	if(m_nFrameDepth && m_pIB)
 	{
-		ShiAssert(false);	// our image buffer is still locked!!
+		Debug.Assert(false);	// our image buffer is still locked!!
 		m_pIB.Unlock();
 	}
 */
@@ -479,9 +479,9 @@ public class ContextMPR
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SetState(%d, 0x%X)\n", State, Value);
 	#endif
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
-	ShiAssert (State != MPR_STA_TEX_ID);
-	ShiAssert (State != MPR_STA_FG_COLOR);
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	Debug.Assert (State != MPR_STA_TEX_ID);
+	Debug.Assert (State != MPR_STA_FG_COLOR);
 
 	if (!m_pD3DD)
 		return;
@@ -590,9 +590,9 @@ public class ContextMPR
 			{
 				// FlushVB();
 
-				ShiAssert(false);		// we do not create Z buffers for now
+				Debug.Assert(false);		// we do not create Z buffers for now
 				// HRESULT hr = m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, TRUE);
-				// ShiAssert(SUCCEEDED(hr));
+				// Debug.Assert(SUCCEEDED(hr));
 			}
 
 			if(Value & MPR_SE_FILTERING)
@@ -602,27 +602,27 @@ public class ContextMPR
 
 			if(Value & MPR_SE_PIXEL_MASKING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_Z_MASKING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_PATTERNING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_NON_SUBPIXEL_PRECISION_MODE)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_HARDWARE_OFF)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_PALETTIZED_TEXTURES)
@@ -632,12 +632,12 @@ public class ContextMPR
 
 			if(Value & MPR_SE_DECAL_TEXTURES)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_ANTIALIASING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 			#endif
 
@@ -747,27 +747,27 @@ public class ContextMPR
 			#if _DEBUG
 			if(Value & MPR_SE_PIXEL_MASKING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_Z_MASKING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_PATTERNING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_NON_SUBPIXEL_PRECISION_MODE)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_HARDWARE_OFF)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_PALETTIZED_TEXTURES)
@@ -777,12 +777,12 @@ public class ContextMPR
 
 			if(Value & MPR_SE_DECAL_TEXTURES)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 
 			if(Value & MPR_SE_ANTIALIASING)
 			{
-				ShiAssert(false);
+				Debug.Assert(false);
 			}
 			#endif
 
@@ -887,7 +887,7 @@ public class ContextMPR
 				case MPR_TF_FOO:
 				case MPR_TF_SHADE:
 				{
-					ShiAssert(false);		// unused
+					Debug.Assert(false);		// unused
 					break;
 				}
 			}
@@ -898,19 +898,19 @@ public class ContextMPR
 		#if MPR_MASKING_ENABLED
 		case MPR_STA_AREA_MASK:             /* Area pattern bitmask */
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_LINE_MASK:             /* Line pattern bitmask */
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_PIXEL_MASK:            /* RGBA or bitmask  */
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
@@ -931,19 +931,19 @@ public class ContextMPR
 		#if  MPR_DEPTH_BUFFER_ENABLED
 		case MPR_STA_Z_FUNCTION:            /* use MPR_ZF_...   */
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_FG_DEPTH:              /* FIXED 16.16 for raster*/
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_BG_DEPTH:              /* FIXED 16.16 for zclear*/
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
@@ -951,7 +951,7 @@ public class ContextMPR
 
 		case MPR_STA_TEX_ID:                /* Handle for current texture.*/
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
@@ -966,7 +966,7 @@ public class ContextMPR
 
 		case MPR_STA_HARDWARE_ON:           /* Read only - set if hardware supports mode */
 		{
-			ShiAssert(false);
+			Debug.Assert(false);
 			break;
 		}
 
@@ -974,21 +974,21 @@ public class ContextMPR
 		case MPR_STA_GAMMA_RED:             /* Gamma correction term for red (set before blue)  */
 		{
 // called for software devices
-//			ShiAssert(false);
+//			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_GAMMA_GREEN:           /* Gamma correction term for green (set before blue) */
 		{
 // called for software devices
-//			ShiAssert(false);
+//			Debug.Assert(false);
 			break;
 		}
 
 		case MPR_STA_GAMMA_BLUE:            /* Gamma correction term for blue (set last) */
 		{
 // called for software devices
-//			ShiAssert(false);
+//			Debug.Assert(false);
 			break;
 		}
 
@@ -1074,8 +1074,8 @@ public class ContextMPR
 	public void SetStateInternal(WORD State, DWORD Value)
 {
 	// This is for internal state tracking - currently only enable/disable is tracked
-	ShiAssert (State != MPR_STA_TEX_ID);
-	ShiAssert (State != MPR_STA_FG_COLOR);
+	Debug.Assert (State != MPR_STA_TEX_ID);
+	Debug.Assert (State != MPR_STA_FG_COLOR);
 
 	switch(State)
 	{
@@ -1165,7 +1165,7 @@ public class ContextMPR
 	if(ClearInfo & MPR_CI_ZBUFFER) dwClearFlags |= D3DCLEAR_ZBUFFER;
 
 	HRESULT hr = m_pD3DD.Clear(NULL, NULL, dwClearFlags, m_colBG, 1.0f, NULL);
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 }
 
 	public void SwapBuffers( WORD SwapInfo );
@@ -1238,7 +1238,7 @@ public class ContextMPR
 	FlushVB();
 
 	HRESULT hr = m_pD3DD.EndScene();
-	//ShiAssert(SUCCEEDED(hr));
+	//Debug.Assert(SUCCEEDED(hr));
 	if(FAILED(hr))
 	{
 		MonoPrint("ContextMPR::FinishFrame - EndScene failed 0x%X\n", hr);
@@ -1272,7 +1272,7 @@ public class ContextMPR
 
 //	m_pIB.Unlock();
 
-	ShiAssert(lpFnPtr == NULL);		// no idea what to do with it
+	Debug.Assert(lpFnPtr == NULL);		// no idea what to do with it
 	Stats();
 }
 	public void SetColorCorrection( DWORD color, float percent )
@@ -1343,7 +1343,7 @@ public class ContextMPR
 		// m_pD3DD.PreLoad((IDirectDrawSurface7 *) texID);
 
 		HRESULT hr = m_pD3DD.SetTexture(0, (IDirectDrawSurface7 *) texID); 	// Make sure all textures get released
-		ShiAssert(SUCCEEDED(hr));
+		Debug.Assert(SUCCEEDED(hr));
 	}
 
 	#if _CONTEXT_ENABLE_STATS
@@ -1352,8 +1352,8 @@ public class ContextMPR
 }
 	public void RestoreState(GLint state)
 {
-	ShiAssert(state != -1);		// Use InvalidateState() !
-	ShiAssert(state >= 0 && state < MAXIMUM_MPR_STATE);
+	Debug.Assert(state != -1);		// Use InvalidateState() !
+	Debug.Assert(state >= 0 && state < MAXIMUM_MPR_STATE);
 
 	#if  _DEBUG &&  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT_REPLACE
 	if(GetKeyState(VK_F4) & ~1)
@@ -1389,7 +1389,7 @@ public class ContextMPR
 		currentState = state;
 
 		HRESULT hr = m_pD3DD.ApplyStateBlock(StateTable[currentState]);
-		ShiAssert(SUCCEEDED(hr));
+		Debug.Assert(SUCCEEDED(hr));
 	}
 }
 
@@ -1402,7 +1402,7 @@ public class ContextMPR
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Render2DBitmap(%d, %d, %d, %d, %d, %d, %d, 0x%X)\n", sX, sY, dX, dY, w, h, totalWidth, pSrc);
 	#endif
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 	try
 	{
 			// Convert from ABGR to ARGB ;(
@@ -1429,7 +1429,7 @@ public class ContextMPR
 		IDirectDrawSurface7Ptr pDDSTex;
 		CheckHR(D3DXCreateTexture(m_pD3DD, &dwFlags, &dwActualWidth, &dwActualHeight,
 			&fmt, NULL, &pDDSTex, &dwNumMipMaps));
-		//TODO ShiAssert(FALSE==F4IsBadReadPtr(pDDSTex, sizeof *pDDSTex));
+		//TODO Debug.Assert(FALSE==F4IsBadReadPtr(pDDSTex, sizeof *pDDSTex));
 		CheckHR(D3DXLoadTextureFromMemory(m_pD3DD, pDDSTex, 0, pDst, NULL,
 			D3DX_SF_A8R8G8B8, w << 2, NULL, D3DX_FT_LINEAR));
 
@@ -1508,12 +1508,12 @@ public class ContextMPR
 		
 	// Record a stateblock
 	HRESULT hr = m_pD3DD.BeginStateBlock();
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 
 	SetCurrentState (state, flag);
 
 	hr = m_pD3DD.EndStateBlock((DWORD *) &StateTable[state]);
-	ShiAssert(SUCCEEDED(hr) && StateTable[state]);
+	Debug.Assert(SUCCEEDED(hr) && StateTable[state]);
 
 	// OW - record internal state
 	m_bUseSetStateInternal = true;
@@ -1524,7 +1524,7 @@ public class ContextMPR
 	protected void ClearStateTable (GLint state)
 {
 	HRESULT hr = m_pD3DD.DeleteStateBlock(StateTable[state]);
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 
 	StateTable[state] = 0;
 }
@@ -1539,7 +1539,7 @@ public class ContextMPR
 	MonoPrint("ContextMPR::SetCurrentState (%d, 0x%X)\n", state, flag);
 	#endif
 
-	// TODO ShiAssert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	// TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 
 	// OW FIXME: optimize
 	// see MPRcfg.h (MPR_BILINEAR_CLAMPED)
@@ -3817,7 +3817,7 @@ public class ContextMPR
 	// get current viewport
 	D3DVIEWPORT7 vp;
 	HRESULT hr = m_pD3DD.GetViewport(&vp);
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 	if(FAILED(hr)) return;	
 
 	if(m_bEnableScissors)
@@ -3839,7 +3839,7 @@ public class ContextMPR
 		ZeroMemory(&ddsd, sizeof(ddsd));
 		ddsd.dwSize = sizeof(ddsd);
 		hr = m_pRenderTarget.GetSurfaceDesc(&ddsd);
-		ShiAssert(SUCCEEDED(hr));
+		Debug.Assert(SUCCEEDED(hr));
 		if(FAILED(hr)) return;	
 
 		vp.dwX = 0;
@@ -3849,7 +3849,7 @@ public class ContextMPR
 	}	
 
 	hr = m_pD3DD.SetViewport(&vp);
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 }
 
 	protected   bool LockVB(int nVtxCount, void **p)
@@ -3861,7 +3861,7 @@ public class ContextMPR
 	HRESULT hr;
 	DWORD dwSize = 0;
 
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr (m_pVB, sizeof *m_pVB));
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr (m_pVB, sizeof *m_pVB));
 	// Check for VB overflow
 	if((m_dwStartVtx + m_dwNumVtx + nVtxCount) >= m_dwVBSize)
 	{
@@ -3891,7 +3891,7 @@ public class ContextMPR
 				DDLOCK_DISCARDCONTENTS, p, &dwSize);
 	}
 
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 
 	#if _DEBUG
 	if(SUCCEEDED(hr)) m_pVtxEnd = (BYTE *) *p + dwSize;
@@ -3909,14 +3909,14 @@ public class ContextMPR
 
 	// Unlock VB
 	HRESULT hr = m_pVB.Unlock();
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 	m_pVtx = NULL;
 }
 
 	protected   void FlushVB()
 			{
 	if(!m_dwNumVtx) return;
-	ShiAssert(m_nCurPrimType != 0);
+	Debug.Assert(m_nCurPrimType != 0);
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::FlushVB()\n");
@@ -3928,14 +3928,14 @@ public class ContextMPR
 	if(nPrimType == D3DPT_TRIANGLEFAN)
 	{
 		nPrimType = D3DPT_TRIANGLELIST;
-		ShiAssert(m_dwNumIdx);
+		Debug.Assert(m_dwNumIdx);
 	}
 
 	// Convert line strips to line lists to make them batchable
 	else if(nPrimType == D3DPT_LINESTRIP)
 	{
 		nPrimType = D3DPT_LINELIST;
-		ShiAssert(m_dwNumIdx);
+		Debug.Assert(m_dwNumIdx);
 	}
 
 	HRESULT hr;
@@ -3952,7 +3952,7 @@ public class ContextMPR
 	//if(currentState == STATE_ALPHA_GOURAUD)
 	{
 		hr = m_pD3DD.ApplyStateBlock(StateTable[STATE_SOLID]);
-		ShiAssert(SUCCEEDED(hr));
+		Debug.Assert(SUCCEEDED(hr));
 	}
 	#endif
 
@@ -3962,7 +3962,7 @@ public class ContextMPR
 	else hr = m_pD3DD.DrawPrimitiveVB((D3DPRIMITIVETYPE) nPrimType,
 		m_pVB, m_dwStartVtx, m_dwNumVtx, NULL);
 
-	ShiAssert(SUCCEEDED(hr));
+	Debug.Assert(SUCCEEDED(hr));
 
 	#if _CONTEXT_ENABLE_STATS
 	m_stats.StartBatch();
@@ -3977,8 +3977,8 @@ public class ContextMPR
 	protected static HRESULT EnumSurfacesCB2(IDirectDrawSurface7 *lpDDSurface, _DDSURFACEDESC2 *lpDDSurfaceDesc, LPVOID lpContext)
 {
 	ContextMPR *pThis = (ContextMPR *) lpContext;
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr(pThis, sizeof *pThis));
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr(lpDDSurfaceDesc, sizeof *lpDDSurfaceDesc));
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(pThis, sizeof *pThis));
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(lpDDSurfaceDesc, sizeof *lpDDSurfaceDesc));
 
 	if(lpDDSurfaceDesc.ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE)
 	{
@@ -3994,10 +3994,10 @@ public class ContextMPR
 			{
 	// Note: incoming type is always MPR_PRM_TRIFAN
 	// OW FIXME: optimize loop
-	//TODO ShiAssert(FALSE == F4IsBadReadPtr(poly, sizeof *poly));
-	ShiAssert(poly.nVerts >= 3);
-	ShiAssert(xyzIdxPtr);
-	ShiAssert(!bUseFGColor || (bUseFGColor && rgbaIdxPtr == NULL));
+	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(poly, sizeof *poly));
+	Debug.Assert(poly.nVerts >= 3);
+	Debug.Assert(xyzIdxPtr);
+	Debug.Assert(!bUseFGColor || (bUseFGColor && rgbaIdxPtr == NULL));
 
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPoly(0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, %s)\n",
@@ -4018,10 +4018,10 @@ public class ContextMPR
 	float *I;
 	Pcolor foggedColor;
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, poly.nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, poly.nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4029,7 +4029,7 @@ public class ContextMPR
 	// Iterate for each vertex
 	for(int i=0;i<poly.nVerts;i++)
 	{
-		ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+		Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 		/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX))) // JB 010222 CTD (too much CPU)
 		{
@@ -4051,14 +4051,14 @@ public class ContextMPR
 		if (xyz.z) // JB 010222
 			pVtx.rhw = 1.0f / xyz.z;
 		pVtx.color = 0xffffffff;	// do not remove
-		ShiAssert(xyz.z != 0.0f);
+		Debug.Assert(xyz.z != 0.0f);
 
 		if(opFlag & PRIM_COLOP_COLOR)
 		{
-			ShiAssert(rgbaIdxPtr);
+			Debug.Assert(rgbaIdxPtr);
 			rgba = &TheColorBank.ColorPool[*rgbaIdxPtr++];
 			
-			ShiAssert(rgba);
+			Debug.Assert(rgba);
 			if (rgba)
 			{
 				if((opFlag & PRIM_COLOP_FOG) && !(opFlag & PRIM_COLOP_TEXTURE))
@@ -4072,16 +4072,16 @@ public class ContextMPR
 
 				if(opFlag & PRIM_COLOP_INTENSITY)
 				{
-					ShiAssert(IIdxPtr);
+					Debug.Assert(IIdxPtr);
 					I = &TheStateStack.IntensityPool[*IIdxPtr++];
-					// ShiAssert((rgba.r * *I <= 1.0f) && (rgba.g * *I <= 1.0f) && (rgba.b * *I <= 1.0f) && (rgba.a <= 1.0f));
+					// Debug.Assert((rgba.r * *I <= 1.0f) && (rgba.g * *I <= 1.0f) && (rgba.b * *I <= 1.0f) && (rgba.a <= 1.0f));
 
 					pVtx.color = D3DRGBA(rgba.r * *I, rgba.g * *I, rgba.b * *I, rgba.a);
 				}
 
 				else
 				{
-					// ShiAssert((rgba.r <= 1.0f) && (rgba.g <= 1.0f) && (rgba.b <= 1.0f) && (rgba.a <= 1.0f));
+					// Debug.Assert((rgba.r <= 1.0f) && (rgba.g <= 1.0f) && (rgba.b <= 1.0f) && (rgba.a <= 1.0f));
 					pVtx.color = D3DRGBA(rgba.r, rgba.g, rgba.b, rgba.a);
 				}
 			}
@@ -4089,16 +4089,16 @@ public class ContextMPR
 
 		else if(opFlag & PRIM_COLOP_INTENSITY)
 		{
-			ShiAssert(IIdxPtr);
+			Debug.Assert(IIdxPtr);
 
 			I = &TheStateStack.IntensityPool[*IIdxPtr++];
-			// ShiAssert(*I <= 1.0f);
+			// Debug.Assert(*I <= 1.0f);
 			pVtx.color = D3DRGBA(*I, *I, *I, 1.0f);
 		}
 
 		if(opFlag & PRIM_COLOP_TEXTURE)
 		{
-			ShiAssert(uv);
+			Debug.Assert(uv);
 
 			// OW FIXME
 			// pVtx.q = xyz.z;
@@ -4148,7 +4148,7 @@ public class ContextMPR
 
 	public void Draw2DPoint(Tpoint *v0)
 			{
-	ShiAssert(v0);
+	Debug.Assert(v0);
 
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DPoint(0x%X)\n", v0);
@@ -4163,12 +4163,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
 
-	ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 	pVtx.sx = v0.x;
 	pVtx.sy = v0.y;
@@ -4204,12 +4204,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
+	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
 
 	pVtx.sx = x;
 	pVtx.sy = y;
@@ -4232,7 +4232,7 @@ public class ContextMPR
 
 	public void Draw2DLine(Tpoint *v0, Tpoint *v1)
 			{
-	ShiAssert(v0 && v1);
+	Debug.Assert(v0 && v1);
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DLine(0x%X, 0x%X)\n", v0, v1);
@@ -4247,12 +4247,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, 2*sizeof *pVtx));
+	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, 2*sizeof *pVtx));
 
 	/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX)) || F4IsBadReadPtr(v0, sizeof(Tpoint))) // JB 010305 CTD (too much CPU)
 		return;*/
@@ -4310,12 +4310,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, 2* sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, 2* sizeof *pVtx));
 
-	ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 	pVtx.sx = x0;
 	pVtx.sy = y0;
@@ -4359,7 +4359,7 @@ public class ContextMPR
 	
 	public void DrawPrimitive2D(int type, int nVerts, int *xyzIdxPtr)
 			{
-	ShiAssert(xyzIdxPtr);
+	Debug.Assert(xyzIdxPtr);
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive2D(%d, %d, 0x%X)\n", type, nVerts, xyzIdxPtr);
@@ -4374,19 +4374,19 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	Tpoint *xyz;
 
 	// Iterate for each vertex
 	for(int i=0;i<nVerts;i++)
 	{
-	    ShiAssert(*xyzIdxPtr < MAX_VERT_POOL_SIZE);
+	    Debug.Assert(*xyzIdxPtr < MAX_VERT_POOL_SIZE);
 		xyz = &TheStateStack.XformedPosPool[*xyzIdxPtr++];
-		ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+		Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 		/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX)) || F4IsBadReadPtr(xyz, sizeof(Tpoint))) // JB 010305 CTD (too much CPU)
 		{
@@ -4430,8 +4430,8 @@ public class ContextMPR
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtx_t *data, WORD Stride)
 			{
-	ShiAssert(!(VtxInfo & MPR_VI_COLOR));	// impossible
-	ShiAssert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
+	Debug.Assert(!(VtxInfo & MPR_VI_COLOR));	// impossible
+	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive(%d, 0x%X, %d, 0x%X, %d)\n", nPrimType, VtxInfo, nVerts, pData, Stride);
@@ -4446,15 +4446,15 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	// Iterate for each vertex
 	for(int i=0;i<nVerts;i++)
 	{
-		ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+		Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 		pVtx.sx = pData.x;
 		pVtx.sy = pData.y;
@@ -4507,7 +4507,7 @@ public class ContextMPR
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t *data, WORD Stride)
 			{
-	ShiAssert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
+	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive2(%d, 0x%X, %d, 0x%X, %d)\n", nPrimType, VtxInfo, nVerts, pData, Stride);
@@ -4522,11 +4522,11 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4538,7 +4538,7 @@ public class ContextMPR
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX)) || F4IsBadReadPtr(pData, sizeof(MPRVtxTexClr_t))) // JB 010305 CTD (too much CPU)
 				{
@@ -4571,7 +4571,7 @@ public class ContextMPR
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				pVtx.sx = pData.x;
 				pVtx.sy = pData.y;
@@ -4592,12 +4592,12 @@ public class ContextMPR
 
 		default:
 		{
-			ShiAssert(VtxInfo == NULL);
+			Debug.Assert(VtxInfo == NULL);
 
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				pVtx.sx = pData.x;
 				pVtx.sy = pData.y;
@@ -4652,7 +4652,7 @@ public class ContextMPR
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t **data)
 			{
-	ShiAssert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
+	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
 	#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive3(%d, 0x%X, %d, 0x%X)\n", nPrimType, VtxInfo, nVerts, pData);
@@ -4667,11 +4667,11 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
-	ShiAssert(m_dwStartVtx < m_dwVBSize);
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	//TODO ShiAssert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4683,7 +4683,7 @@ public class ContextMPR
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX))) // JB 010222 CTD (too much CPU)
 				{
@@ -4716,7 +4716,7 @@ public class ContextMPR
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				pVtx.sx = pData[i].x;
 				pVtx.sy = pData[i].y;
@@ -4736,12 +4736,12 @@ public class ContextMPR
 
 		default:
 		{
-			ShiAssert(VtxInfo == NULL);
+			Debug.Assert(VtxInfo == NULL);
 
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
 			{
-				ShiAssert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
+				Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
 				pVtx.sx = pData[i].x;
 				pVtx.sy = pData[i].y;
@@ -4837,19 +4837,19 @@ public class ContextMPR
 }
 	public void LockViewport()
 {
-//	ShiAssert(!m_bViewportLocked);
+//	Debug.Assert(!m_bViewportLocked);
 	m_bViewportLocked = true;
 }
 
 	public void UnlockViewport()
 {
-//	ShiAssert(m_bViewportLocked);
+//	Debug.Assert(m_bViewportLocked);
 	m_bViewportLocked = false;
 }
 
 public void GetViewport(RECT *prc)
 {
-    //TODO ShiAssert(FALSE == F4IsBadWritePtr(prc, sizeof *prc));
+    //TODO Debug.Assert(FALSE == F4IsBadWritePtr(prc, sizeof *prc));
 	*prc = m_rcVP;
 }
 		public void Stats__TODO()

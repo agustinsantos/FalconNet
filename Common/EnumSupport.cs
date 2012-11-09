@@ -18,7 +18,9 @@ namespace FalconNet.Common
 
 		public static bool IsFlagSet<T> (this T value, T flag) where T : struct
 		{
+#if DEBUG
 			CheckIsEnum<T> (true);
+#endif
 			long lValue = Convert.ToInt64 (value);
 			long lFlag = Convert.ToInt64 (flag);
 			return (lValue & lFlag) != 0;
@@ -26,7 +28,9 @@ namespace FalconNet.Common
 
 		public static IEnumerable<T> GetFlags<T> (this T value) where T : struct
 		{
+#if DEBUG
 			CheckIsEnum<T> (true);
+#endif
 			foreach (T flag in Enum.GetValues(typeof(T)).Cast<T>()) {
 				if (value.IsFlagSet (flag))
 					yield return flag;
@@ -35,7 +39,9 @@ namespace FalconNet.Common
 
 		public static T SetFlags<T> (this T value, T flags, bool on) where T : struct
 		{
+#if DEBUG
 			CheckIsEnum<T> (true);
+#endif
 			long lValue = Convert.ToInt64 (value);
 			long lFlag = Convert.ToInt64 (flags);
 			if (on) {
@@ -58,7 +64,9 @@ namespace FalconNet.Common
 
 		public static T CombineFlags<T> (this IEnumerable<T> flags) where T : struct
 		{
+#if DEBUG
 			CheckIsEnum<T> (true);
+#endif
 			long lValue = 0;
 			foreach (T flag in flags) {
 				long lFlag = Convert.ToInt64 (flag);
@@ -69,7 +77,9 @@ namespace FalconNet.Common
 
 		public static string GetDescription<T> (this T value) where T : struct
 		{
-			CheckIsEnum<T> (false);
+#if DEBUG
+			CheckIsEnum<T> (true);
+#endif
 			string name = Enum.GetName (typeof(T), value);
 			if (name != null) {
 				FieldInfo field = typeof(T).GetField (name);

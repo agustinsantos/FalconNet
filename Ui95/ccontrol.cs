@@ -1,0 +1,76 @@
+using System;
+
+namespace FalconNet.Ui95
+{
+// Parser Stuff
+#if _UI95_PARSER_
+	
+	public enum CNTL_ENUM
+	{
+		CNTL_NOTHING=0,
+		CNTL_SETID,
+		CNTL_SETTYPE,
+		CNTL_SETCLIENT,
+		CNTL_SETX,
+		CNTL_SETY,
+		CNTL_SETW,
+		CNTL_SETH,
+		CNTL_SETXY,
+		CNTL_SETWH,
+		CNTL_SETXYWH,
+		CNTL_SETGROUP,
+		CNTL_SETCLUSTER,
+		CNTL_SETFLAGS,
+		CNTL_SETFLAGBITON,
+		CNTL_SETFLAGBITOFF,
+		CNTL_SETFLAGTOGGLE,
+		CNTL_SETSOUND,
+		CNTL_SETMENU,
+		CNTL_USERDATA,
+		CNTL_SETFONT,
+		CNTL_SETHELP,
+		CNTL_CURSOR,
+		CNTL_SETMOVIE,
+		CNTL_SETHOTKEY,
+		CNTL_SETMOUSECOLOR,
+		CNTL_SETMOUSEPERC,
+		CNTL_SETDRAGCURSOR,
+	};
+	
+	string[] C_Cntl_Tokens=
+	{
+		"[NOTHING]",
+		"[ID]",
+		"[TYPE]",
+		"[CLIENT]",
+		"[X]",
+		"[Y]",
+		"[W]",
+		"[H]",
+		"[XY]",
+		"[WH]",
+		"[XYWH]",
+		"[GROUP]",
+		"[CLUSTER]",
+		"[FLAGS]",
+		"[FLAGBITON]",
+		"[FLAGBITOFF]",
+		"[FLAGTOGGLE]",
+		"[SOUNDBITE]",
+		"[OPENMENU]",
+		"[USERDATA]",
+		"[FONT]",
+		"[HELPTEXT]",
+		"[CURSOR]",
+		"[PLAYMOVIE]",
+		"[HOTKEY]",
+		"[OVERCOLOR]",
+		"[OVERPERC]",
+		"[DRAGCURSOR]",
+		0,
+	};
+	
+#endif
+
+}
+

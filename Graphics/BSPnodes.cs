@@ -172,7 +172,7 @@ namespace FalconNet.Graphics
 			}
 		
 			child = subTree;
-			//TODO ShiAssert(FALSE == F4IsBadReadPtr( child, sizeof*child) );
+			//TODO Debug.Assert(FALSE == F4IsBadReadPtr( child, sizeof*child) );
 			do
 			{
 				child.Draw();
@@ -239,7 +239,7 @@ namespace FalconNet.Graphics
 			TheStateStack.SetTextureTable( pTexIDs + texOffset );
 										   
 			if (ScriptNumber > 0) {
-				ShiAssert( ScriptNumber < ScriptArrayLength );
+				Debug.Assert( ScriptNumber < ScriptArrayLength );
 				if (ScriptNumber < ScriptArrayLength) {
 					ScriptArray[ScriptNumber]();
 				}
@@ -360,7 +360,7 @@ namespace FalconNet.Graphics
 			Tpoint	T;
 			mlTrig trig;
 		
-			ShiAssert( dofNumber < TheStateStack.CurrentInstance.ParentObject.nDOFs );
+			Debug.Assert( dofNumber < TheStateStack.CurrentInstance.ParentObject.nDOFs );
 			if (dofNumber >= TheStateStack.CurrentInstance.ParentObject.nDOFs )
 				return;
 			// Set up our free rotation
@@ -430,7 +430,7 @@ namespace FalconNet.Graphics
 			UInt32		mask;
 			int			i = 0;
 		
-			ShiAssert( switchNumber < TheStateStack.CurrentInstance.ParentObject.nSwitches );
+			Debug.Assert( switchNumber < TheStateStack.CurrentInstance.ParentObject.nSwitches );
 			if (switchNumber >= TheStateStack.CurrentInstance.ParentObject.nSwitches)
 				return;
 			mask = TheStateStack.CurrentInstance.SwitchValues[switchNumber];
@@ -442,7 +442,7 @@ namespace FalconNet.Graphics
 			// Go until all children have been considered for drawing.
 			while (i < numChildren) {
 		#endif
-				ShiAssert( subTrees[i] );
+				Debug.Assert( subTrees[i] );
 		
 				// Only draw this subtree if the corresponding switch bit is set
 				if (mask & 1) {
@@ -487,8 +487,8 @@ namespace FalconNet.Graphics
 		{
 			BNode	*child;
 		
-			ShiAssert( front );
-			ShiAssert( back );
+			Debug.Assert( front );
+			Debug.Assert( back );
 		
 			if (A*TheStateStack.ObjSpaceEye.x + 
 				B*TheStateStack.ObjSpaceEye.y + 

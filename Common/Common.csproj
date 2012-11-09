@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>FalconNet.Common</RootNamespace>
     <AssemblyName>Common</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

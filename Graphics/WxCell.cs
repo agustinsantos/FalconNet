@@ -10,7 +10,7 @@ namespace FalconNet.Graphics
 		{
 			drawable = NULL;
 		}
-		//public ~WeatherCell()	{ ShiAssert( drawable == NULL ); };
+		//public ~WeatherCell()	{ Debug.Assert( drawable == NULL ); };
 
 		public void	Setup (int row, int col, ObjectDisplayList* objList)
 		{
@@ -83,7 +83,7 @@ namespace FalconNet.Graphics
 
 		public void	Cleanup (ObjectDisplayList* objList)
 		{
-			ShiAssert (objList);
+			Debug.Assert (objList);
 
 			if (drawable) {
 				// Remove the visual object for the object manager list

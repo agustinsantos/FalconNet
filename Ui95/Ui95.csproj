@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B822ED47-038A-4E04-8BA8-5742C69ADF6E}</ProjectGuid>
+    <ProjectGuid>{81D5A611-9192-40CC-AB58-4309BB9CFF68}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FalconNet.Campaign</RootNamespace>
-    <AssemblyName>Campaign</AssemblyName>
+    <RootNamespace>FalconNet.Ui95</RootNamespace>
+    <AssemblyName>Ui95</AssemblyName>
     <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,19 +34,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Mission.cs" />
-    <Compile Include="Campaign.cs" />
-    <Compile Include="CampCell.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="Name.cs" />
-    <Compile Include="Cmpclass.cs" />
+    <Compile Include="cbase.cs" />
+    <Compile Include="cwindow.cs" />
+    <Compile Include="ui95defs.cs" />
+    <Compile Include="ccontrol.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\FalcLib\FalcLib.csproj">
-      <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>
-      <Name>FalcLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>

@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>OpenTk</RootNamespace>
     <AssemblyName>OpenTk</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

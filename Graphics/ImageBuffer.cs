@@ -120,7 +120,7 @@ namespace FalconNet.Graphics
 		// Used to write a pixel to the back buffer surface (requires a Lock)
 		public void* Pixel (void* ptr, int row, int col)
 		{
-			ShiAssert (ptr);
+			Debug.Assert (ptr);
 			return (BYTE*)ptr + 
 											  row * m_ddsdBack.lPitch + 
 											  col * PixelSize ();

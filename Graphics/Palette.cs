@@ -7,7 +7,7 @@ namespace FalconNet.Graphics
 #if TODO
 		#if USE_SH_POOLS
 		// Overload new/delete to use a SmartHeap fixed size pool
-		public void *operator new(size_t size) { ShiAssert( size == sizeof(Palette) ); return MemAllocFS(pool);	};
+		public void *operator new(size_t size) { Debug.Assert( size == sizeof(Palette) ); return MemAllocFS(pool);	};
 		public void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
 		public static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(Palette), 100, 0 ); };
 		public static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -15,7 +15,7 @@ namespace FalconNet.Graphics
 		#endif
 		
 		public Palette()	{ refCount = 0; palHandle = NULL; memset(paletteData, 0, sizeof(paletteData)); }
-		// public ~Palette()	{ ShiAssert( refCount == 0); };
+		// public ~Palette()	{ Debug.Assert( refCount == 0); };
 	
 		 
 		public DWORD[] paletteData = new DWORD[256];
@@ -55,8 +55,8 @@ namespace FalconNet.Graphics
 			DWORD	*to;
 			BYTE	*stop;
 			
-			ShiAssert( palHandle == NULL );
-			ShiAssert( data24 );
+			Debug.Assert( palHandle == NULL );
+			Debug.Assert( data24 );
 		
 			// Start our reference count at 1
 			refCount = 1;
@@ -81,8 +81,8 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public void Setup32( DWORD *data32 )
 		{
-			ShiAssert( palHandle == NULL );
-			ShiAssert( data32 );
+			Debug.Assert( palHandle == NULL );
+			Debug.Assert( data32 );
 		
 			// Start our reference count at 1
 			refCount = 1;
@@ -98,7 +98,7 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public void Reference()
 		{
-			ShiAssert( refCount >= 0 );
+			Debug.Assert( refCount >= 0 );
 			refCount++;
 		}
 		
@@ -108,13 +108,13 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public int Release()
 		{
-			ShiAssert( refCount > 0 );
+			Debug.Assert( refCount > 0 );
 		
 			refCount--;
 		
 			if (refCount == 0) {
 				if (palHandle) {
-					ShiAssert( rc != NULL);
+					Debug.Assert( rc != NULL);
 		
 					delete palHandle;
 					palHandle = NULL;
@@ -131,8 +131,8 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public void UpdateMPR( DWORD *pal )
 		{
-			ShiAssert( rc != NULL );
-			ShiAssert( pal );
+			Debug.Assert( rc != NULL );
+			Debug.Assert( pal );
 		
 			if (!rc) // JB 010615 CTD
 				return;
@@ -141,7 +141,7 @@ namespace FalconNet.Graphics
 			if(palHandle == NULL)
 				palHandle = new PaletteHandle(rc->m_pDD, 32, 256);
 		
-			ShiAssert(palHandle);
+			Debug.Assert(palHandle);
 			palHandle->Load(MPR_TI_PALETTE,	32, 0, 256, (BYTE*)pal );
 		}
 

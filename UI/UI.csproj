@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>FalconNet.UI</RootNamespace>
     <AssemblyName>UI</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,12 +37,21 @@
     <Compile Include="cwindow.cs" />
     <Compile Include="F4Config.cs" />
     <Compile Include="logbook.cs" />
+    <Compile Include="campmiss.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Sim\Sim.csproj">
       <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
       <Name>Sim</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FalcLib\FalcLib.csproj">
+      <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>
+      <Name>FalcLib</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

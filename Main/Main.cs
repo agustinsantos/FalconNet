@@ -25,6 +25,14 @@ namespace FalconNet.Main
 			Directory.SetCurrentDirectory(F4Find.FalconDataDirectory);
  	
 			Mddriver.FileVerify();
+			
+			fileName = F4Find.FalconObjectDataDir + "Falcon4.init";
+
+			gLangIDNum = GetPrivateProfileInt("Lang", "Id", 0, fileName);
+			
+			UI_LoadSkyWeatherData();
+
+			FalconDisplay.Setup(gLangIDNum);
  #endif
 		}
 		

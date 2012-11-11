@@ -1,32 +1,27 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FalconNet.Common;
 
 namespace FalconNet.Ui95
 {
+	public enum UserDataType
+	{
+		// Userdata stuff
+		CSB_IS_VALUE=1,
+		CSB_IS_PTR,
+		CSB_IS_CLEANUP_PTR,
+	}
+
 	public struct USERDATA
 	{
-		short type;
-
-#if TODO
-		union
-		{
-			long number;
-			void *ptr;
-		} data;
-#endif
+		public UserDataType type;
+		public long data_number;
+		public object data_ptr;
 	}
 
 	public class C_Base
 	{
-		public enum UserDataType
-		{
-			// Userdata stuff
-			CSB_IS_VALUE=1,
-			CSB_IS_PTR,
-			CSB_IS_CLEANUP_PTR,
-		};
-	
 		protected const int _GROUP_ = 0;
 		protected const int _CLUSTER_ = 1;
 		protected const int NUM_SECTIONS = 2;
@@ -42,7 +37,7 @@ namespace FalconNet.Ui95
 
 		// Don't save
 		protected short	Ready_;
-		protected C_Hash User_;
+		protected Dictionary<long, USERDATA> User_;
 		public C_Window Parent_;
 
 		public C_Base ()
@@ -143,7 +138,7 @@ namespace FalconNet.Ui95
 		}
 #endif
 
-		public long Size ()
+		public virtual long Size ()
 		{
 #if TODO
 			long size,curidx;
@@ -179,7 +174,7 @@ namespace FalconNet.Ui95
 					throw new NotImplementedException();
 		}
 
-		public void Save (string stream)
+		public virtual void Save (string stream)
 		{
 #if TODO
 			short count;
@@ -232,7 +227,7 @@ namespace FalconNet.Ui95
 		}
 
 
-		public void Save (FileStream fp)
+		public virtual void Save (FileStream fp)
 		{
 #if TODO
 			short count;
@@ -409,17 +404,108 @@ namespace FalconNet.Ui95
 
 		public void SetUserNumber (long idx, long val)
 		{
-			throw new NotImplementedException();
+			USERDATA usr;
+		
+			if(User_ == null)
+			{
+				User_= new Dictionary<long, USERDATA>();
+#if TODO
+				User_.Setup(1);
+				User_.SetFlags(UI95_BITTABLE.C_BIT_REMOVE);
+				User_.SetCallback(DelUserDataCB);
+#endif
+			}
+			if(User_ != null)
+			{
+				bool found=User_.TryGetValue(idx, out usr);
+				if(found)
+				{
+					if(usr.type == UserDataType.CSB_IS_CLEANUP_PTR)
+						usr.data_ptr = null;
+				}
+				else
+				{
+					#if USE_SH_POOLS
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					#else
+					usr=new USERDATA();
+					#endif
+					User_.Add(idx,usr);
+				}
+				usr.type=UserDataType.CSB_IS_VALUE;
+				usr.data_number=val;
+			}
 		}
 
 		public void SetUserPtr (long idx, object val)
 		{
-			throw new NotImplementedException();
+			USERDATA usr;
+		
+			if(User_ == null)
+			{
+				User_= new Dictionary<long, USERDATA>();
+#if TODO
+				User_.Setup(1);
+				User_.SetFlags(UI95_BITTABLE.C_BIT_REMOVE);
+				User_.SetCallback(DelUserDataCB);
+#endif
+			}
+			if(User_ != null)
+			{
+				bool found=User_.TryGetValue(idx, out usr);
+				if(found)
+				{
+					if(usr.type == UserDataType.CSB_IS_CLEANUP_PTR)
+						usr.data_ptr = null;
+				}
+				else
+				{
+					#if USE_SH_POOLS
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					#else
+					usr=new USERDATA();
+					#endif
+					User_.Add(idx,usr);
+				}
+				usr.type=UserDataType.CSB_IS_PTR;
+				usr.data_ptr=val;
+			}
 		}
+
 
 		public void SetUserCleanupPtr (long idx, object val)
 		{
-			throw new NotImplementedException();
+			USERDATA usr;
+		
+			if(User_ == null)
+			{
+				User_= new Dictionary<long, USERDATA>();
+#if TODO
+				User_.Setup(1);
+				User_.SetFlags(UI95_BITTABLE.C_BIT_REMOVE);
+				User_.SetCallback(DelUserDataCB);
+#endif
+			}
+			if(User_ != null)
+			{
+				bool found=User_.TryGetValue(idx, out usr);
+				if(found)
+				{
+					if(usr.type == UserDataType.CSB_IS_CLEANUP_PTR)
+						usr.data_ptr = null;
+				}
+				else
+				{
+					#if USE_SH_POOLS
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					#else
+					usr=new USERDATA();
+					#endif
+					User_.Add(idx,usr);
+				}
+				usr.type=UserDataType.CSB_IS_CLEANUP_PTR;
+				usr.data_ptr=val;
+			}
 		}
 
 		public virtual void SetState (short state)
@@ -477,7 +563,7 @@ namespace FalconNet.Ui95
 			return(ID_);
 		}
 
-		public short GetType ()
+		public virtual short GetCType ()
 		{
 			return(Type_);
 		}
@@ -529,12 +615,26 @@ namespace FalconNet.Ui95
 
 		public long  GetUserNumber (long idx)
 		{
-			throw new NotImplementedException ();
+			USERDATA usr;
+			if(User_ != null)
+			{
+				bool found=User_.TryGetValue(idx, out usr);
+				if(found && usr.type == UserDataType.CSB_IS_VALUE)
+					return(usr.data_number);
+			}
+			return(0);
 		}
 
 		public object GetUserPtr (long idx)
 		{
-			throw new NotImplementedException ();
+			USERDATA usr;
+			if(User_ != null)
+			{
+				bool found=User_.TryGetValue(idx, out usr);
+				if(found && usr.type == UserDataType.CSB_IS_VALUE)
+					return(usr.data_ptr);
+			}
+			return(null);
 		}
 
 		public virtual long GetRelX ()

@@ -1,4 +1,6 @@
 using System;
+using FalconNet.Common;
+using FalconNet.FalcLib;
 
 namespace FalconNet.Campaign
 {
@@ -8,7 +10,7 @@ namespace FalconNet.Campaign
 	
 	// Mission defines for aircraft
 	public enum MissionTypeEnum
-	{        // NOTE: This must fit int a uchar!
+	{        // NOTE: This must fit int a byte!
 		AMIS_NONE           = 0,
 		AMIS_BARCAP         = 1,			// BARCAP missions to protect a target area
 		AMIS_BARCAP2        = 2,			// BARCAP missions to defend a border
@@ -90,7 +92,7 @@ namespace FalconNet.Campaign
 		AMIS_ESC_NONE       = 98,
 	};
 
-// Tanker conditional modes
+	// Tanker conditional modes
 	public enum TankerConditionalModeEnum
 	{
 		TANKER_NONE         = 0,
@@ -99,9 +101,9 @@ namespace FalconNet.Campaign
 		TANKER_ALWAYS       = 3,
 	};
 
-// flags for mission data
+	// flags for mission data
 	[Flags]
-public enum MissionDataFlagEnum
+	public enum MissionDataFlagEnum
 	{
 		AMIS_ADDAWACS       = 0x01,				// Request AWACS
 		AMIS_ADDJSTAR       = 0x02,				// Request JSTAR
@@ -137,9 +139,9 @@ public enum MissionDataFlagEnum
 		AMIS_HELP_REQUEST   = 0x40000000,		// 2001-10-27 S.G. It's from an help request
 	};
 
-// Flags for mission requests
+	// Flags for mission requests
 	[Flags]
-public enum MissionRequestFlagEnum
+	public enum MissionRequestFlagEnum
 	{
 		REQF_USERESERVES    = 0x01,				// Use reserve aircraft for this request, if nessesary (mostly for support)
 		REQF_CHECKED        = 0x02,				// This request has already been checked at least once
@@ -279,10 +281,157 @@ public enum MissionRequestFlagEnum
 		otherContext
 	};
 
-	public class Mission
+// ===================================================
+// Mission Request Class		
+// ===================================================
+
+// This class is filled in order to request a mission
+	public class MissionRequestClass
 	{
-		public Mission ()
+#if USE_SH_POOLS
+   public:
+      // Overload new/delete to use a SmartHeap fixed size pool
+      void *operator new(size_t size) { ShiAssert( size == sizeof(MissionRequestClass) ); return MemAllocFS(pool);	};
+      void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
+      static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(MissionRequestClass), 50, 0 ); };
+      static void ReleaseStorage()	{ MemPoolFree( pool ); };
+      static MEM_POOL	pool;
+#endif
+		public VU_ID				requesterID;
+		public VU_ID				targetID;
+		public VU_ID				secondaryID;				// Is this being used?
+		public VU_ID				pakID;
+		public Team				who;
+		public Team				vs;
+		public CampaignTime		tot;
+		public GridIndex			tx, ty;
+		public ulong				flags;
+		public short				caps;
+		public short				target_num;
+		public short				speed;
+		public short				match_strength;				// How much Air to Air strength we should try to match
+		public short				priority;
+		public byte				tot_type;
+		public byte				action_type;				// Type of action we're associated with
+		public byte				mission;
+		public byte				aircraft;
+		public byte				context;					// Context code (why this was requested)
+		public byte				roe_check;
+		public byte				delayed;					// number of times it's been pushed back
+		public byte				start_block;				// time block we're taking off during
+		public byte				final_block;				// time block we're landing during
+		public byte[]				slots = new byte[4];					// squadron slots we're using.
+		public char				min_to;						// minimum block we found planes for
+		public char				max_to;						// maximum block we found planes for
+		
+		public MissionRequestClass ()
 		{
+			throw new NotImplementedException ();
+		}
+		//TODO public ~MissionRequestClass();
+		public int RequestMission ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public int RequestEnemyMission ()
+		{
+			throw new NotImplementedException ();
+		}
+	};
+	
+// TODO typedef MissionRequestClass *MissionRequest;
+
+// ======================================================
+// Mission Data Type - Stores data used to build missions
+// ======================================================
+
+	public struct MissionDataType
+	{
+		public byte					type;
+		public byte					target;						// Target type
+		public byte					skill;						// Primary skill to look for
+		public byte					mission_profile;			// Allowable mission profiles
+		public byte					target_profile;				// Type of target profile
+		public byte					target_desc;				// When to use our target action (target area/whole mission/etc)
+		public byte					routewp;					// Waypoint type along route
+		public byte					targetwp;					// What to do at target location
+		public short					minalt;						// Minimum alt at target (in hundreds of feet)
+		public short					maxalt;						// Maximum alt at target (in hundreds of feet)
+		public short					missionalt;					// Suggested mission altitude (in hundreds of feet)
+		public short					separation;					// Seperation from main flight, in seconds
+		public short					loitertime;					// Loiter time in minutes
+		public byte					str;						// Aircraft strength typically assigned
+		public byte					min_time;					// Minimum # of minutes in advance to consider a planned mission
+		public byte					max_time;					// Maximum # of minutes in advance to consider a planned mission
+		public byte					escorttype;					// What sort of mission to build for an escort
+		public byte					mindistance;				// Minimum distance between two similar missions
+		public byte					mintime;					// Minimum time between missions of similar types
+		public byte					caps;						// Special capibilities required (stealth, navy, etc)
+		public ulong					flags;						// flags
+	};
+	
+	public static class MissionStatic
+	{
+		public static MissionDataType[] MissionData = new MissionDataType [AMIS_OTHER];
+
+// ===================================================
+// Global functions
+// ===================================================
+
+		public static  int BuildPathToTarget (Flight u, MissionRequestClass *mis, VU_ID airbaseID)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  void BuildDivertPath (Flight u, MissionRequestClass *mis)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  void AddInformationWPs (Flight u, MissionRequestClass *mis)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  void ClearDivertWayPoints (Flight flight)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  int AddTankerWayPoint (Flight u, int refuel)
+		{
+			throw new NotImplementedException ();
+		} // M.N.
+
+		public static  long SetWPTimes (Flight u, MissionRequestClass *mis)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  long SetWPTimesTanker (Flight u, MissionRequestClass *mis, bool type, CampaignTime time)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  int SetWPAltitudes (Flight u)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  int CheckPathThreats (Unit u)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  int TargetThreats (Team team, int priority, F4PFList list, MoveType mt, CampaignTime time, long target_flags, short* targeted)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static  bool LoadMissionData ()
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

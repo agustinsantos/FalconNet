@@ -44,12 +44,20 @@
     <Compile Include="entity.cs" />
     <Compile Include="FalcEnt.cs" />
     <Compile Include="Campweap.cs" />
+    <Compile Include="dispcfg.cs" />
+    <Compile Include="dirtybits.cs" />
+    <Compile Include="FalcDmg.cs" />
+    <Compile Include="TheaterDef.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
+      <Name>Graphics</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

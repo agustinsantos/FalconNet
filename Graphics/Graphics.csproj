@@ -45,12 +45,12 @@
     <Compile Include="GrTypes.cs" />
     <Compile Include="ImageBuffer.cs" />
     <Compile Include="Matrix.cs" />
-    <Compile Include="MyClass.cs" />
     <Compile Include="PolyLib.cs" />
     <Compile Include="Render2D.cs" />
     <Compile Include="Render3D.cs" />
     <Compile Include="StateStack.cs" />
     <Compile Include="WxCell.cs" />
+    <Compile Include="Device.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

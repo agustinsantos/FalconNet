@@ -40,6 +40,11 @@
     <Compile Include="Options.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Cmpclass.cs" />
+    <Compile Include="MissEval.cs" />
+    <Compile Include="Team.cs" />
+    <Compile Include="Atm.cs" />
+    <Compile Include="Manager.cs" />
+    <Compile Include="Gtm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

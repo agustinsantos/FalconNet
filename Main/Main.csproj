@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="UI_Main.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -45,6 +46,14 @@
     <ProjectReference Include="..\FalcLib\FalcLib.csproj">
       <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>
       <Name>FalcLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
+      <Name>Graphics</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

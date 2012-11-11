@@ -1,20 +1,10 @@
 using System;
 using FalconNet.Common;
 using System.IO;
+using FalconNet.Graphics;
 
 namespace FalconNet.Ui95
 {
-	/* TODO
-	#define WIN_MAX_CLIENTS (8)
-	#define WIN_MAX_RECTS   (200)
-	#define WIN_HASH_SIZE	(50)
-	
-	#define MAX_CURSORS (30)
-
-	F4CSECTIONHANDLE* UI_Enter(C_Window *win); // Must be defined prior to cwindow.h
-	void UI_Leave(F4CSECTIONHANDLE* section);
-
-	TODO */
 	public class SCREEN
 	{
 		public WORD mem;
@@ -59,6 +49,11 @@ namespace FalconNet.Ui95
 		public const int WIN_HASH_SIZE = 50;
 	
 		public const int MAX_CURSORS = 30;
+
+#if TODO
+	F4CSECTIONHANDLE* UI_Enter(C_Window *win); // Must be defined prior to cwindow.h
+	void UI_Leave(F4CSECTIONHANDLE* section);
+#endif
 		
 #if USE_SH_POOLS
 	public:
@@ -67,6 +62,7 @@ namespace FalconNet.Ui95
 		void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 #endif
 	
+		[FlagsAttribute]
 		private enum CHR_ENUM
 		{
 			_CHR_CLIP_LEFT=0x01,
@@ -581,7 +577,7 @@ namespace FalconNet.Ui95
 			return(h_);
 		}
 
-		public short GetType ()
+		public virtual short GetCType ()
 		{
 			return(Type_);
 		}

@@ -1,7 +1,20 @@
 using System;
+using FalconNet.Common;
+using FalconNet.Graphics;
 
 namespace FalconNet.FalcLib
 {
+		
+	public enum DisplayMode {
+		Movie,
+		UI,
+		UILarge, 
+		Planner, 
+		Layout, 
+		Sim, 
+		NumModes
+	}
+	
 	public class FalconDisplayConfiguration
 	{
 		public static FalconDisplayConfiguration FalconDisplay = new FalconDisplayConfiguration();		
@@ -46,8 +59,7 @@ namespace FalconNet.FalcLib
 		}
 
 		// public ~FalconDisplayConfiguration();
-	
-		public enum DisplayMode {Movie, UI, UILarge, Planner, Layout, Sim, NumModes};
+
 		const int modes = (int)DisplayMode.NumModes;
 		public DisplayMode currentMode;
 		public int	xOffset;
@@ -59,8 +71,8 @@ namespace FalconNet.FalcLib
 		// TODO public HWND appWin;
 		public int	windowStyle;
 		// Device managment
-		// TODO public DeviceManager	devmgr;
-		// TODO public DisplayDevice	theDisplayDevice;
+		public DeviceManager	devmgr;
+		public DisplayDevice	theDisplayDevice;
 		public int	deviceNumber;
 		public bool	displayFullScreen;
 	
@@ -150,19 +162,94 @@ namespace FalconNet.FalcLib
 
 		public void EnterMode (DisplayMode newMode, int theDevice = 0,int Driver = 0)
 		{
+#if TODO
+			RECT rect;
+		
+			#if _FORCE_MAIN_THREAD
+			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			#endif
+		
+			currentMode = newMode;
+		
+			rect.top = rect.left = 0;
+			rect.right = width[currentMode];
+			rect.bottom = height[currentMode];
+			AdjustWindowRect(&rect, windowStyle, FALSE);
+		
+			SetWindowPos(appWin, NULL, xOffset, yOffset,
+				rect.right-rect.left, rect.bottom-rect.top, SWP_NOZORDER);
+		
+		
+			DeviceManager::DDDriverInfo *pDI = FalconDisplay.devmgr.GetDriver(Driver);
+		
+			if(pDI)
+			{
+				if((g_bForceSoftwareGUI || pDI->Is3dfx() || !pDI->CanRenderWindowed()) && currentMode != Sim)
+				{
+		#if !NOTHING
+					// V1, V2 workaround - use primary display adapter with RGB Renderer
+					int nIndexPrimary = FalconDisplay.devmgr.FindPrimaryDisplayDriver();
+					ShiAssert(nIndexPrimary != -1);
+		
+					if(nIndexPrimary != -1)
+					{
+						DeviceManager.DDDriverInfo pDI = FalconDisplay.devmgr.GetDriver(nIndexPrimary);
+						int nIndexRGBRenderer = pDI.FindRGBRenderer();
+						ShiAssert(nIndexRGBRenderer != -1);
+		
+						if(nIndexRGBRenderer != -1)
+						{
+							Driver = nIndexPrimary;
+							theDevice = nIndexRGBRenderer;
+						}
+					}
+		#else
+					displayFullScreen = TRUE;	// force fullscreen
+		#endif
+				}
+		
+				if(!pDI->SupportsSRT() && PlayerOptions.bFastGMRadar)
+					PlayerOptions.bFastGMRadar = false;
+			}
+		
+		
+			theDisplayDevice.Setup( Driver, theDevice, width[currentMode],
+				height[currentMode], depth[currentMode], displayFullScreen, doubleBuffer[currentMode], appWin, currentMode == Sim);
+		
+			SetForegroundWindow (appWin);
+			Sleep (0);
+#endif
 			throw new NotImplementedException();
 		}
 		
 		public void LeaveMode()	
 		{
+#if TODO	
+			#if _FORCE_MAIN_THREAD
+			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			#endif
+		
+		   theDisplayDevice.Cleanup();
+#endif
 			throw new NotImplementedException();
 		}
 
 		public void ToggleFullScreen()
 		{
-			throw new NotImplementedException();
-		}
+#if TODO			
+			#if _FORCE_MAIN_THREAD
+			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			#endif
 		
+			LeaveMode();
+			DestroyWindow(appWin);
+			displayFullScreen = !displayFullScreen;
+			MakeWindow();
+			EnterMode(currentMode);
+#endif
+			throw new NotImplementedException();			
+		}		
+
 		public void MakeWindow()
 		{
 #if TODO
@@ -209,9 +296,9 @@ namespace FalconNet.FalcLib
 			ShowWindow( appWin, SW_SHOW );
 #endif
 		}
-#if TODO
+
 		public ImageBuffer GetImageBuffer() {return theDisplayDevice.GetImageBuffer();}
-	
+#if TODO	
 		// OW
 
 		protected void _LeaveMode();

@@ -21,9 +21,9 @@ namespace FalconNet.Common
 	}
 	
 	public struct COLORREF {}
-	public struct SCREEN {}
 	public class SOUND_RES {}
 	public struct POINT {}
+	public struct IMAGE_RSC {}
 	public struct CONTROLLIST {}
 	public struct F4CSECTIONHANDLE {}
 	public struct F4THREADHANDLE {}
@@ -43,19 +43,21 @@ namespace FalconNet.Common
 	public class VU_TIME {}
 	public struct Unit {}
 	public struct C_Handler {}
+	public class DeviceManager {}
+	public class DXContext {}
+	public class HWND {}
+	public class IDirectDraw7 {}
 	public struct DamType {}
-	public struct Dirtyness {}
-	public struct Dirty_Class {}
-	public struct Dirty_Falcon_Entity {}
 	public struct vector {}
 	public struct C_ScrollBar {}
 	public class C_Hash {}
-	public struct ImageBuffer {}
+	public class O_Output {}
 	public struct GridIndex {}
 	public struct CampUIEventElement {}
 	public struct SquadUIInfoClass {}
-	public struct MissionEvaluationClass {}
+	public struct EventElement {}
 	public struct FalconGameEntity {}
 	public struct FalconGameType {}
+	public struct Team {}
 }
 

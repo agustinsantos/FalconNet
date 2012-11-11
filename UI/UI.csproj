@@ -38,6 +38,7 @@
     <Compile Include="F4Config.cs" />
     <Compile Include="logbook.cs" />
     <Compile Include="campmiss.cs" />
+    <Compile Include="dispopts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

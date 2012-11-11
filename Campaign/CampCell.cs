@@ -2,32 +2,30 @@ using System;
 
 namespace FalconNet.Campaign
 {
-	public struct CellDataType
+	public struct CellData
 	{
 		private byte val;
 	}
 	
 	public static class CampCell
 	{
-#if TODO
-		public void SetReliefType (CellData TheCell, ReliefType NewReliefType);
-		
-		public void SetGroundCover (CellData TheCell, CoverType NewGroundCover);
-		
-		public void SetRoadCell (CellData TheCell, char Road);
-		
-		public void SetRailCell (CellData TheCell, char Rail);
-		
-		public char GetAltitudeCode (CellData TheCell);
-		
-		public ReliefType GetReliefType (CellData TheCell);
-		
-		public CoverType GetGroundCover (CellData TheCell);
-		
-		public char GetRoadCell (CellData TheCell);
-		
-		public char GetRailCell (CellData TheCell);
-#endif
+		public static void SetReliefType (CellData TheCell, ReliefType NewReliefType);
+
+        public static void SetGroundCover(CellData TheCell, CoverType NewGroundCover);
+
+        public static void SetRoadCell(CellData TheCell, sbyte Road);
+
+        public static void SetRailCell(CellData TheCell, sbyte Rail);
+
+        public static char GetAltitudeCode(CellData TheCell);
+
+        public static ReliefType GetReliefType(CellData TheCell);
+
+        public static CoverType GetGroundCover(CellData TheCell);
+
+        public static sbyte GetRoadCell(CellData TheCell);
+
+        public static sbyte GetRailCell(CellData TheCell);
 	}
 }
 

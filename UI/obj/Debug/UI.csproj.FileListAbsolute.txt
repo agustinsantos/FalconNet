@@ -1,0 +1,13 @@
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\UI.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\UI.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Common.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\FalcLib.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Sim.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Graphics.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Sim.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Common.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\FalcLib.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\bin\Debug\Graphics.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\obj\Debug\UI.csprojResolveAssemblyReference.cache
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\obj\Debug\UI.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\UI\obj\Debug\UI.pdb

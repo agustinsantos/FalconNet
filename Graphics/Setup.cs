@@ -3,39 +3,39 @@ using System.IO;
 
 namespace FalconNet.Graphics
 {
-	/***************************************************************************\
-	    This is a one stop source for the terrain/weather/graphics system
-		startup and shutdown sequences.  Just call these functions and you're
-		set.
-	\***************************************************************************/
-	public static class Setup
-	{
-		/***************************************************************************\
-			Load all data and create all structures which do not depend on a
-			specific graphics device.  This should be done only once.  This must
-			be done before any of the other setup calls are made.
-		\***************************************************************************/
-		public static void DeviceIndependentGraphicsSetup( string theater, string objects, string misctex )
-		{
-			string	fullPath;
-			string	zipName;
-		
-		
-			// Store the data path and the map name
-			theaterPath = theater;
-			objectPath = objects;
-			misctexPath = misctex;
-		
-		#if USE_SH_POOLS
+    /***************************************************************************\
+        This is a one stop source for the terrain/weather/graphics system
+        startup and shutdown sequences.  Just call these functions and you're
+        set.
+    \***************************************************************************/
+    public static class Setup
+    {
+        /***************************************************************************\
+            Load all data and create all structures which do not depend on a
+            specific graphics device.  This should be done only once.  This must
+            be done before any of the other setup calls are made.
+        \***************************************************************************/
+        public static void DeviceIndependentGraphicsSetup(string theater, string objects, string misctex)
+        {
+            string fullPath;
+            string zipName;
+
+
+            // Store the data path and the map name
+            theaterPath = theater;
+            objectPath = objects;
+            misctexPath = misctex;
+
+#if USE_SH_POOLS
 			// Initialize our Smart Heap pools
 			Palette.InitializeStorage();
 			TBlock.InitializeStorage();
 			TListEntry.InitializeStorage();
 			TBlockList.InitializeStorage();
 			glMemPool = MemPoolInit( 0 );
-		#endif
-		
-		#if GRAPHICS_USE_RES_MGR
+#endif
+
+#if GRAPHICS_USE_RES_MGR
 			// Setup our attach points
 			sprintf( fullPath, "%s\\Texture", theaterPath );
 			ResAddPath( fullPath, FALSE );
@@ -53,7 +53,7 @@ namespace FalconNet.Graphics
 				//ShiAssert( ResHandleTerrainTex >= 0 );
 				// we need to exit cleanly... cuz the file couldn't be opened which we need
 			}
-		#endif
+#endif
 #if TODO
 			// Setup the font tables
 			VirtualDisplay.InitializeFonts();
@@ -82,23 +82,23 @@ namespace FalconNet.Graphics
 			// Setup the BSP object library
 			fullPath=  objectPath + Path.DirectorySeparatorChar + "KoreaObj";
 			ObjectParent.SetupTable( fullPath );
-#endif 
-			throw new NotImplementedException();
-		}
-		
-		
-		/***************************************************************************\
-			Load all data and create all structures which require a specific 
-			graphics device to be identified.  For now, this can only be done
-			for one device at a time.  In the future, we might allow multiple
-			simultanious graphics devices through this interface.
-		\***************************************************************************/
-		public static void DeviceDependentGraphicsSetup(   DisplayDevice dd)
-		{
-			string	fullPath;
+#endif
+            throw new NotImplementedException();
+        }
+
+
+        /***************************************************************************\
+            Load all data and create all structures which require a specific 
+            graphics device to be identified.  For now, this can only be done
+            for one device at a time.  In the future, we might allow multiple
+            simultanious graphics devices through this interface.
+        \***************************************************************************/
+        public static void DeviceDependentGraphicsSetup(DisplayDevice dd)
+        {
+            string fullPath;
 #if TODO	
 			// OW - must initialize Textures first for pools to work 
-		#if !NOTHING
+#if !NOTHING
 			// Setup the miscellanious texture database
 			fullPath = misctexPath + Path.DirectorySeparatorChar;
 			Texture.SetupForDevice( device.GetDefaultRC(), fullPath );
@@ -107,7 +107,7 @@ namespace FalconNet.Graphics
 			fullPath =  theaterPath + Path.DirectorySeparatorChar +"texture" + Path.DirectorySeparatorChar;
 			TheTerrTextures.Setup( device.GetDefaultRC(), fullPath );
 			TheFarTextures.Setup( device.GetDefaultRC(), fullPath );
-		#else
+#else
 			// Setup the terrain texture database
 			sprintf( fullPath, "%s\\texture\\", theaterPath );
 			TheTerrTextures.Setup( device.GetDefaultRC(), fullPath );
@@ -116,7 +116,7 @@ namespace FalconNet.Graphics
 			// Setup the miscellanious texture database
 			sprintf( fullPath, "%s\\", misctexPath );
 			Texture.SetupForDevice( device.GetDefaultRC(), fullPath );
-		#endif
+#endif
 		
 			// Setup all the miscellanious textures we need to pre-load
 			DrawableBSP.SetupTexturesOnDevice( device.GetDefaultRC() );
@@ -126,14 +126,14 @@ namespace FalconNet.Graphics
 			RenderOTW.SetupTexturesOnDevice( device.GetDefaultRC() );
 			Load2DFontTextures();
 #endif
-			throw new NotImplementedException();
-		}
-		
-		/***************************************************************************\
-			Clean up all graphics device dependent data and structures.
-		\***************************************************************************/
-		public static void DeviceDependentGraphicsCleanup(   DisplayDevice dd)
-		{
+            throw new NotImplementedException();
+        }
+
+        /***************************************************************************\
+            Clean up all graphics device dependent data and structures.
+        \***************************************************************************/
+        public static void DeviceDependentGraphicsCleanup(DisplayDevice dd)
+        {
 #if TODO			
 			// Clean up all the pre-loaded textures we have.
 			DrawableBSP.ReleaseTexturesOnDevice( device.GetDefaultRC() );
@@ -154,17 +154,17 @@ namespace FalconNet.Graphics
 			ThePaletteBank.FlushHandles();
 			Texture.CleanupForDevice( device.GetDefaultRC() );
 #endif
-			throw new NotImplementedException();
-		}
-		
-		
-		/***************************************************************************\
-			Clean up all graphics device independent data and structures.
-			This should not be done until all device dependent stuff has been
-			cleaned up.
-		\***************************************************************************/
-		public static void DeviceIndependentGraphicsCleanup(   )
-		{
+            throw new NotImplementedException();
+        }
+
+
+        /***************************************************************************\
+            Clean up all graphics device independent data and structures.
+            This should not be done until all device dependent stuff has been
+            cleaned up.
+        \***************************************************************************/
+        public static void DeviceIndependentGraphicsCleanup()
+        {
 #if TODO		
 			TheLoader.Cleanup();
 			TheTimeOfDay.Cleanup();
@@ -173,27 +173,27 @@ namespace FalconNet.Graphics
 			TheMap.Cleanup();
 			TheTimeManager.Cleanup();
 		
-		#if GRAPHICS_USE_RES_MGR
+#if GRAPHICS_USE_RES_MGR
 			// Detach our resource file
 			ResDetach( ResHandleTerrainTex );
-		#endif
+#endif
 		
-		#if USE_SH_POOLS
+#if USE_SH_POOLS
 			// Release our Smart Heap pools
 			Palette.ReleaseStorage();
 			TBlock.ReleaseStorage();
 			TListEntry.ReleaseStorage();
 			TBlockList.ReleaseStorage();
 			MemPoolFree( glMemPool );
-		#endif
 #endif
-			throw new NotImplementedException();
-		}
-			
-	
-	
-		static string theaterPath;
-		static string objectPath;
-		static string misctexPath;
-	}
+#endif
+            throw new NotImplementedException();
+        }
+
+
+
+        static string theaterPath;
+        static string objectPath;
+        static string misctexPath;
+    }
 }

@@ -19,7 +19,7 @@ namespace FalconNet.FalcLib
 	} ;
 
 	[Flags]
-	public enum FEC_FLAGS
+    public enum FEC_FLAGS : byte
 	{
 		FEC_HOLDSHORT = 0x01,		// Don't takeoff until a player attaches
 		FEC_PLAYERONLY = 0x02,		// This entity is only valid if under player control
@@ -30,7 +30,8 @@ namespace FalconNet.FalcLib
 	}
 	
 	[Flags]
-	public enum EntityEnum {
+	public enum EntityEnum : sbyte
+    {
 		FalconCampaignEntity = 0x1,
 		FalconSimEntity = 0x2,
 		FalconPersistantEntity = 0x8,
@@ -65,22 +66,73 @@ namespace FalconNet.FalcLib
 
 
 		public FalconEntity (int type)
-		{ throw new NotImplementedException(); }
+            : base (type)
+        {
+            falconType = 0;
+            falconFlags = 0;
+            dirty_falcent = 0;
+            dirty_classes = 0;
+            dirty_score = 0;
+        }
+
 		
-		public FalconEntity (ref VU_BYTE[] stream)
-		{ throw new NotImplementedException(); }
+		public FalconEntity (byte[] stream, ref int pos)
+            : base(stream, ref pos)
+        {
+            dirty_falcent = 0;
+            dirty_classes = 0;
+            dirty_score = 0;
+            falconType = (EntityEnum)(stream[pos]);
+            pos += sizeof(EntityEnum);
+            if (gCampDataVersion >= 32)
+            {
+                falconFlags = (FEC_FLAGS)(stream[pos]);
+                pos += sizeof(FEC_FLAGS);
+            }
+        }
 
-		public FalconEntity (FileStream filePtr)
-		{ throw new NotImplementedException(); }
 
-		public int Save (ref VU_BYTE[] stream)
-		{ throw new NotImplementedException(); }
+		public FalconEntity (FileStream filePtr) 
+            :base(filePtr)
+        {
+            dirty_falcent = 0;
+            dirty_classes = 0;
+            dirty_score = 0;
+            falconType = (EntityEnum)(filePtr.ReadByte());
+            if (gCampDataVersion >= 32)
+                falconFlags = (FEC_FLAGS)(filePtr.ReadByte());
+        }
+
+        public int Save(byte[] stream, ref int pos)
+		{
+	        int saveSize = base.Save (stream, ref pos);
+
+	        stream[pos] = (byte)falconType;
+            pos += sizeof(EntityEnum);
+            saveSize += sizeof(EntityEnum);	
+	        stream[pos] = (byte)falconFlags;
+            pos += sizeof(FEC_FLAGS);
+            saveSize += sizeof(FEC_FLAGS);
+            return (saveSize);
+        }
 
 		public int Save (FileStream filePtr)
-		{ throw new NotImplementedException(); }
+		{
+	        int saveSize = base.Save (filePtr);
+
+            filePtr.WriteByte((byte)falconType);
+            saveSize += sizeof(EntityEnum);
+            filePtr.WriteByte((byte)falconFlags);
+            saveSize += sizeof(FEC_FLAGS);
+	        return (saveSize);
+        }
 
 		public int SaveSize ()
-		{ throw new NotImplementedException(); }
+		{
+            return base.SaveSize() + sizeof(EntityEnum) + sizeof(FEC_FLAGS);
+    	    //   return VuEntity::SaveSize();
+	    }
+
 
 		//TODO public virtual ~FalconEntity();
 
@@ -163,7 +215,10 @@ namespace FalconNet.FalcLib
 		}
 
 		public virtual byte GetDomain ()
-		{ throw new NotImplementedException(); }
+        {
+          //TODO  return Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_DOMAIN];
+            throw new NotImplementedException();
+        }
 
 		public virtual int GetRadarMode ()
 		{
@@ -360,7 +415,9 @@ namespace FalconNet.FalcLib
 		{ throw new NotImplementedException(); }
 	
 		public virtual byte[] GetDamageModifiers ()
-		{ throw new NotImplementedException(); }
+        {
+            return DefaultDamageMods;
+        }
 
 		public void GetLocation (ref short x, ref short y)
 		{ throw new NotImplementedException(); }

@@ -1,0 +1,9 @@
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Ui95.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Ui95.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Common.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Graphics.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Common.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\bin\Debug\Graphics.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\obj\Debug\Ui95.csprojResolveAssemblyReference.cache
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\obj\Debug\Ui95.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Ui95\obj\Debug\Ui95.pdb

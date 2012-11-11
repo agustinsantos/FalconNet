@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,13 +34,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Campbase.cs" />
+    <Compile Include="Campglobl.cs" />
+    <Compile Include="Campterr.cs" />
+    <Compile Include="Campwp.cs" />
+    <Compile Include="Gtmobj.cs" />
     <Compile Include="Mission.cs" />
     <Compile Include="Campaign.cs" />
     <Compile Include="CampCell.cs" />
+    <Compile Include="Objectiv.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Cmpclass.cs" />
     <Compile Include="MissEval.cs" />
+    <Compile Include="Simbase.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="Atm.cs" />
     <Compile Include="Manager.cs" />

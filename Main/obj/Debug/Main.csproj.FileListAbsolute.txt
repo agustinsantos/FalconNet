@@ -1,0 +1,14 @@
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\F4os.cfg
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Main.exe
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Main.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Common.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\FalcLib.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Graphics.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\UI.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\UI.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\FalcLib.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Common.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\Graphics.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.csprojResolveAssemblyReference.cache
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.exe
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.pdb

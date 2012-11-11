@@ -4,53 +4,53 @@ using FalconNet.Common;
 
 namespace FalconNet.Graphics
 {
-	public struct FontDataType
-	{
-		public float top;
-		public float left;
-		public float width;
-		public float height;
-		public float pixelWidth;
-		public float pixelHeight;
-	};
+    public struct FontDataType
+    {
+        public float top;
+        public float left;
+        public float width;
+        public float height;
+        public float pixelWidth;
+        public float pixelHeight;
+    };
 
-// Clipping flags.  Some of these are only used in 3D clipping, but I want to keep them together.
-	[Flags]
-	public enum ClippingFlags
-	{
-		ON_SCREEN			= 0x00,
-		CLIP_LEFT			= 0x01,
-		CLIP_RIGHT			= 0x02,
-		CLIP_TOP			= 0x04,
-		CLIP_BOTTOM			= 0x08,
-		CLIP_NEAR			= 0x10,
-		CLIP_FAR			= 0x20,
-		OFF_SCREEN			= 0xFF
-	}
+    // Clipping flags.  Some of these are only used in 3D clipping, but I want to keep them together.
+    [Flags]
+    public enum ClippingFlags
+    {
+        ON_SCREEN = 0x00,
+        CLIP_LEFT = 0x01,
+        CLIP_RIGHT = 0x02,
+        CLIP_TOP = 0x04,
+        CLIP_BOTTOM = 0x08,
+        CLIP_NEAR = 0x10,
+        CLIP_FAR = 0x20,
+        OFF_SCREEN = 0xFF
+    }
 
-	public struct DisplayMatrix
-	{ // JPO - how a display is oriented
-		public float	translationX, translationY;
-		public float	rotation00, rotation01;
-		public float	rotation10, rotation11;
-	};
-	
-	public abstract class VirtualDisplay
-	{
-		public const int NUM_FONT_RESOLUTIONS = 4;
-		public const int CircleStep = 4;							// In units of degrees
-		public const int CircleSegments = 360 / CircleStep + 1;	// How many segments (plus one)?
+    public struct DisplayMatrix
+    { // JPO - how a display is oriented
+        public float translationX, translationY;
+        public float rotation00, rotation01;
+        public float rotation10, rotation11;
+    };
 
-		public VirtualDisplay ()
-		{
-			ready = false;
-		}
-		
-		// public virtual ~VirtualDisplay()	{ Debug.Assert( ready == FALSE ); };
+    public abstract class VirtualDisplay
+    {
+        public const int NUM_FONT_RESOLUTIONS = 4;
+        public const int CircleStep = 4;							// In units of degrees
+        public const int CircleSegments = 360 / CircleStep + 1;	// How many segments (plus one)?
 
-		// One time call to create inverse font
-		public static void  InitializeFonts ()
-		{
+        public VirtualDisplay()
+        {
+            ready = false;
+        }
+
+        // public virtual ~VirtualDisplay()	{ Debug.Assert( ready == FALSE ); };
+
+        // One time call to create inverse font
+        public static void InitializeFonts()
+        {
 #if TODO
 			int c, r;
 
@@ -61,372 +61,393 @@ namespace FalconNet.Graphics
 				}
 			}
 #endif
-		}
-		
-		// Parents Setup() must set xRes and yRes before call this...
-		/***************************************************************************\
-		Setup the rendering context for this display
-		\***************************************************************************/
-		public virtual void Setup ()
-		{
-			Debug.Assert (!IsReady ());
-	
-			// Setup the default viewport
-			SetViewport (-1.0f, 1.0f, 1.0f, -1.0f);
+        }
 
-			// Setup the default offset and rotation
-			CenterOriginInViewport ();
-			ZeroRotationAboutOrigin ();
+        // Parents Setup() must set xRes and yRes before call this...
+        /***************************************************************************\
+        Setup the rendering context for this display
+        \***************************************************************************/
+        public virtual void Setup()
+        {
+            Debug.Assert(!IsReady());
 
-			// Initialize the unit circle array (in case someone else hasn't done it already)
-			double angle;
-			int entry;
-			for (entry = 0; entry < CircleSegments; entry++) {
-				angle = (entry * CircleStep) * Math.PI / 180.0;
+            // Setup the default viewport
+            SetViewport(-1.0f, 1.0f, 1.0f, -1.0f);
 
-				CircleX [entry] = (float)Math.Cos (angle);
-				CircleY [entry] = -(float)Math.Sin (angle);	// Account for the y axis flip
-			}
+            // Setup the default offset and rotation
+            CenterOriginInViewport();
+            ZeroRotationAboutOrigin();
 
-			type = DisplayType.DISPLAY_GENERAL;
+            // Initialize the unit circle array (in case someone else hasn't done it already)
+            double angle;
+            int entry;
+            for (entry = 0; entry < CircleSegments; entry++)
+            {
+                angle = (entry * CircleStep) * Math.PI / 180.0;
 
-			ready = true;
-		}
-    
-		/***************************************************************************\
-	Shutdown the rendering context for this display
-\***************************************************************************/
-		public virtual void Cleanup ()
-		{
-			Debug.Assert (IsReady ());
-			ready = false;
-		}
+                CircleX[entry] = (float)Math.Cos(angle);
+                CircleY[entry] = -(float)Math.Sin(angle);	// Account for the y axis flip
+            }
 
-		public bool	IsReady ()
-		{
-			return ready;
-		}
+            type = DisplayType.DISPLAY_GENERAL;
 
-		public abstract void StartFrame ();
+            ready = true;
+        }
 
-		public abstract void ClearFrame ();
+        /***************************************************************************\
+            Shutdown the rendering context for this display
+        \***************************************************************************/
+        public virtual void Cleanup()
+        {
+            Debug.Assert(IsReady());
+            ready = false;
+        }
 
-		public abstract void FinishFrame ();
+        public bool IsReady()
+        {
+            return ready;
+        }
 
-		/***************************************************************************\
-			Put a pixel on the display.
-		\***************************************************************************/
-		public virtual void Point (float x1, float y1)
-		{
-			float x, y;
-	
-			// Rotation and translate this point based on the current settings
-			x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
-			y = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
-	
-			// Clipping
-			if ((x >= -1.0f) && (x <= 1.0f) && (y <= 1.0f) && (y >= -1.0f)) {
-	
-				// Convert to pixel coordinates and draw the point on the display
-				Render2DPoint (viewportXtoPixel (x), viewportYtoPixel (-y));
-	
-			}
-		}
+        public abstract void StartFrame();
 
-		/***************************************************************************\
-			Put a one pixel wide line on the display
-		\***************************************************************************/
-		public virtual void Line (float x1, float y1, float x2, float y2)
-		{
-			float x;
-			ClippingFlags clipFlag = ClippingFlags.ON_SCREEN;
+        public abstract void ClearFrame();
 
-			// Rotation and translate this point based on the current settings
-			x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
-			y1 = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
-			x1 = x;
+        public abstract void FinishFrame();
 
-			x = x2 * dmatrix.rotation00 + y2 * dmatrix.rotation01 + dmatrix.translationX;
-			y2 = x2 * dmatrix.rotation10 + y2 * dmatrix.rotation11 + dmatrix.translationY;
-			x2 = x;
+        /***************************************************************************\
+            Put a pixel on the display.
+        \***************************************************************************/
+        public virtual void Point(float x1, float y1)
+        {
+            float x, y;
 
+            // Rotation and translate this point based on the current settings
+            x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
+            y = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
 
-			// Clip point 1
-			clipFlag = ClippingFlags.ON_SCREEN;
-			if (x1 < -1.0f) {
-				y1 = y2 + (y1 - y2) * ((x2 + 1.0f) / (x2 - x1));
-				x1 = -1.0f;
-				clipFlag = ClippingFlags.CLIP_LEFT;
-			} else if (x1 > 1.0f) {
-				y1 = y2 + (y1 - y2) * ((x2 - 1.0f) / (x2 - x1));
-				x1 = 1.0f;
-				clipFlag = ClippingFlags.CLIP_RIGHT;
-			}
-			if (y1 < -1.0f) {
-				x1 = x2 + (x1 - x2) * ((y2 + 1.0f) / (y2 - y1));
-				y1 = -1.0f;
-				clipFlag |= ClippingFlags.CLIP_BOTTOM;
-			} else if (y1 > 1.0f) {
-				x1 = x2 + (x1 - x2) * ((y2 - 1.0f) / (y2 - y1));
-				y1 = 1.0f;
-				clipFlag |= ClippingFlags.CLIP_TOP;
-			}
+            // Clipping
+            if ((x >= -1.0f) && (x <= 1.0f) && (y <= 1.0f) && (y >= -1.0f))
+            {
 
-			// Clip point 2
-			if (x2 < -1.0f) {
-				y2 = y1 + (y2 - y1) * ((x1 + 1.0f) / (x1 - x2));
-				x2 = -1.0f;
-				if (clipFlag.IsFlagSet (ClippingFlags.CLIP_LEFT))
-					return;
-			} else if (x2 > 1.0f) {
-				y2 = y1 + (y2 - y1) * ((x1 - 1.0f) / (x1 - x2));
-				x2 = 1.0f;
-				if (clipFlag.IsFlagSet (ClippingFlags.CLIP_RIGHT))
-					return;
-			}
-			if (y2 < -1.0f) {
-				x2 = x1 + (x2 - x1) * ((y1 + 1.0f) / (y1 - y2));
-				y2 = -1.0f;
-				if (clipFlag.IsFlagSet (ClippingFlags.CLIP_BOTTOM))
-					return;
-			} else if (y2 > 1.0f) {
-				x2 = x1 + (x2 - x1) * ((y1 - 1.0f) / (y1 - y2));
-				y2 = 1.0f;
-				if (clipFlag.IsFlagSet (ClippingFlags.CLIP_TOP))
-					return;
-			}
+                // Convert to pixel coordinates and draw the point on the display
+                Render2DPoint(viewportXtoPixel(x), viewportYtoPixel(-y));
 
-			Render2DLine (viewportXtoPixel (x1),
-		          viewportYtoPixel (-y1),
-				  viewportXtoPixel (x2),
-				  viewportYtoPixel (-y2));
-		}
+            }
+        }
 
-		
-		/***************************************************************************\
-			Put a triangle on the display.  It is not filled (for now at least)
-		\***************************************************************************/
-		public virtual void Tri (float x1, float y1, float x2, float y2, float x3, float y3)
-		{
-			float x;
+        /***************************************************************************\
+            Put a one pixel wide line on the display
+        \***************************************************************************/
+        public virtual void Line(float x1, float y1, float x2, float y2)
+        {
+            float x;
+            ClippingFlags clipFlag = ClippingFlags.ON_SCREEN;
 
-			// Rotation and translate this point based on the current settings
-			x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
-			y1 = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
-			x1 = x;
+            // Rotation and translate this point based on the current settings
+            x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
+            y1 = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
+            x1 = x;
 
-			x = x2 * dmatrix.rotation00 + y2 * dmatrix.rotation01 + dmatrix.translationX;
-			y2 = x2 * dmatrix.rotation10 + y2 * dmatrix.rotation11 + dmatrix.translationY;
-			x2 = x;
-
-			x = x3 * dmatrix.rotation00 + y3 * dmatrix.rotation01 + dmatrix.translationX;
-			y3 = x3 * dmatrix.rotation10 + y3 * dmatrix.rotation11 + dmatrix.translationY;
-			x3 = x;
-
-			Render2DTri (viewportXtoPixel (x1), viewportYtoPixel (-y1),
-     					 viewportXtoPixel (x2), viewportYtoPixel (-y2),
-      					 viewportXtoPixel (x3), viewportYtoPixel (-y3));
-		}
+            x = x2 * dmatrix.rotation00 + y2 * dmatrix.rotation01 + dmatrix.translationX;
+            y2 = x2 * dmatrix.rotation10 + y2 * dmatrix.rotation11 + dmatrix.translationY;
+            x2 = x;
 
 
+            // Clip point 1
+            clipFlag = ClippingFlags.ON_SCREEN;
+            if (x1 < -1.0f)
+            {
+                y1 = y2 + (y1 - y2) * ((x2 + 1.0f) / (x2 - x1));
+                x1 = -1.0f;
+                clipFlag = ClippingFlags.CLIP_LEFT;
+            }
+            else if (x1 > 1.0f)
+            {
+                y1 = y2 + (y1 - y2) * ((x2 - 1.0f) / (x2 - x1));
+                x1 = 1.0f;
+                clipFlag = ClippingFlags.CLIP_RIGHT;
+            }
+            if (y1 < -1.0f)
+            {
+                x1 = x2 + (x1 - x2) * ((y2 + 1.0f) / (y2 - y1));
+                y1 = -1.0f;
+                clipFlag |= ClippingFlags.CLIP_BOTTOM;
+            }
+            else if (y1 > 1.0f)
+            {
+                x1 = x2 + (x1 - x2) * ((y2 - 1.0f) / (y2 - y1));
+                y1 = 1.0f;
+                clipFlag |= ClippingFlags.CLIP_TOP;
+            }
 
-		
-		/***************************************************************************\
-			Draw a circle in the viewport.  The radius is given indpendently
-			in the x and y direction.
-		\***************************************************************************/
-		public virtual void Oval (float x, float y, float xRadius, float yRadius)
-		{
-			int entry;
+            // Clip point 2
+            if (x2 < -1.0f)
+            {
+                y2 = y1 + (y2 - y1) * ((x1 + 1.0f) / (x1 - x2));
+                x2 = -1.0f;
+                if (clipFlag.IsFlagSet(ClippingFlags.CLIP_LEFT))
+                    return;
+            }
+            else if (x2 > 1.0f)
+            {
+                y2 = y1 + (y2 - y1) * ((x1 - 1.0f) / (x1 - x2));
+                x2 = 1.0f;
+                if (clipFlag.IsFlagSet(ClippingFlags.CLIP_RIGHT))
+                    return;
+            }
+            if (y2 < -1.0f)
+            {
+                x2 = x1 + (x2 - x1) * ((y1 + 1.0f) / (y1 - y2));
+                y2 = -1.0f;
+                if (clipFlag.IsFlagSet(ClippingFlags.CLIP_BOTTOM))
+                    return;
+            }
+            else if (y2 > 1.0f)
+            {
+                x2 = x1 + (x2 - x1) * ((y1 - 1.0f) / (y1 - y2));
+                y2 = 1.0f;
+                if (clipFlag.IsFlagSet(ClippingFlags.CLIP_TOP))
+                    return;
+            }
 
-			float x1, y1;
-			float x2, y2;
+            Render2DLine(viewportXtoPixel(x1),
+                  viewportYtoPixel(-y1),
+                  viewportXtoPixel(x2),
+                  viewportYtoPixel(-y2));
+        }
 
-			// Prime the pump
-			x1 = x + xRadius * CircleX [0];
-			y1 = y + yRadius * CircleY [0];
 
-			for (entry = 1; entry <= CircleSegments-1; entry++) {
+        /***************************************************************************\
+            Put a triangle on the display.  It is not filled (for now at least)
+        \***************************************************************************/
+        public virtual void Tri(float x1, float y1, float x2, float y2, float x3, float y3)
+        {
+            float x;
 
-				// Compute the end point of this next segment
-				x2 = (x + xRadius * CircleX [entry]);
-				y2 = (y + yRadius * CircleY [entry]);
+            // Rotation and translate this point based on the current settings
+            x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
+            y1 = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
+            x1 = x;
 
-				// Draw the segment
-				Line (x1, y1, x2, y2);
+            x = x2 * dmatrix.rotation00 + y2 * dmatrix.rotation01 + dmatrix.translationX;
+            y2 = x2 * dmatrix.rotation10 + y2 * dmatrix.rotation11 + dmatrix.translationY;
+            x2 = x;
 
-				// Save the end point of this one to use as the start point of the next one
-				x1 = x2;
-				y1 = y2;
-			}
-		}
+            x = x3 * dmatrix.rotation00 + y3 * dmatrix.rotation01 + dmatrix.translationX;
+            y3 = x3 * dmatrix.rotation10 + y3 * dmatrix.rotation11 + dmatrix.translationY;
+            x3 = x;
 
-		/***************************************************************************\
-			Draw a portion of a circle in the viewport.  The radius given is in
-			the X direction.  The Y direction will be scaled to account for the
-			aspect ratio of the display and viewport.  The start and stop angles
-			will be adjusted lie between 0 and 2PI.
-		\***************************************************************************/
-		public virtual void OvalArc (float x, float y, float xRadius, float yRadius, float start, float stop)
-		{
-			int entry, startEntry, stopEntry;
-	
-			// Find the first and last segment end point of interest
-			startEntry = (int)((start % (2.0f * Math.PI)) / Math.PI * 180.0) / CircleStep;
-			stopEntry = (int)((stop % (2.0f * Math.PI)) / Math.PI * 180.0) / CircleStep;
-	
-			// Make sure we aren't overrunning the precomputed array
-			Debug.Assert (startEntry >= 0);
-			Debug.Assert (stopEntry >= 0);
-			Debug.Assert (startEntry < CircleSegments);
-			Debug.Assert (stopEntry < CircleSegments);
-	
-			if (startEntry <= stopEntry) {
-				for (entry = startEntry; entry < stopEntry; entry++) {
-					Line (x + xRadius * CircleX [entry], y + yRadius * CircleY [entry],
-					  x + xRadius * CircleX [entry + 1], y + yRadius * CircleY [entry + 1]);
-				}
-			} else {
-				for (entry = startEntry; entry < CircleSegments-1; entry++) {
-					Line (x + xRadius * CircleX [entry], y + yRadius * CircleY [entry],
-					  x + xRadius * CircleX [entry + 1], y + yRadius * CircleY [entry + 1]);
-				}
-				for (entry = 0; entry < stopEntry; entry++) {
-					Line (x + xRadius * CircleX [entry], y + yRadius * CircleY [entry],
-					  x + xRadius * CircleX [entry + 1], y + yRadius * CircleY [entry + 1]);
-				}
-			}
-		}
+            Render2DTri(viewportXtoPixel(x1), viewportYtoPixel(-y1),
+                         viewportXtoPixel(x2), viewportYtoPixel(-y2),
+                         viewportXtoPixel(x3), viewportYtoPixel(-y3));
+        }
 
-		public virtual void Circle (float x, float y, float xRadius)
-		{
-			Oval (x, y, xRadius, xRadius * scaleX / scaleY);
-		}
 
-		public virtual void Arc (float x, float y, float xRadius, float start, float stop)
-		{
-			OvalArc (x, y, xRadius, xRadius * scaleX / scaleY, start, stop);
-		}
 
-		/***************************************************************************\
-			Put a mono-colored string of text on the display.
-			(The location given is used as the lower left corner of the text)
-		\***************************************************************************/
-		public virtual void TextLeft (float x1, float y1, string str, int boxed = 0)
-		{
-			float x, y;
 
-			// Rotation and translate this point based on the current settings
-			x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
-			y = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
+        /***************************************************************************\
+            Draw a circle in the viewport.  The radius is given indpendently
+            in the x and y direction.
+        \***************************************************************************/
+        public virtual void Oval(float x, float y, float xRadius, float yRadius)
+        {
+            int entry;
 
-			// Convert from viewport coordiants to screen space and draw the string
-			ScreenText (viewportXtoPixel (x), viewportYtoPixel (-y), str, boxed);
-		}
+            float x1, y1;
+            float x2, y2;
 
-		public virtual void TextLeftVertical (float x1, float y1, string str, int boxed = 0)
-		{
-			float x, y;
+            // Prime the pump
+            x1 = x + xRadius * CircleX[0];
+            y1 = y + yRadius * CircleY[0];
 
-			// Rotation and translate this point based on the current settings
-			x = viewportXtoPixel (x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
-			y = viewportYtoPixel (-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+            for (entry = 1; entry <= CircleSegments - 1; entry++)
+            {
 
-			y -= ScreenTextHeight () / 2;
+                // Compute the end point of this next segment
+                x2 = (x + xRadius * CircleX[entry]);
+                y2 = (y + yRadius * CircleY[entry]);
 
-			// Convert from viewport coordiants to screen space and draw the string
-			ScreenText (x, y, str, boxed);
-		}
-		
-/***************************************************************************\
-	Put a mono-colored string of text on the display.
-	(The location given is used as the lower right corner of the text)
-\***************************************************************************/
-		public virtual void TextRight (float x1, float y1, string str, int boxed = 0)
-		{
-			float xPixel, yPixel;
+                // Draw the segment
+                Line(x1, y1, x2, y2);
 
-			// Rotation and translate this point based on the current settings
-			// Convert from viewport coordiants to screen space
-			xPixel = viewportXtoPixel (x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
-			yPixel = viewportYtoPixel (-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+                // Save the end point of this one to use as the start point of the next one
+                x1 = x2;
+                y1 = y2;
+            }
+        }
 
-			// Adjust our starting point in screen space to get proper alignment
-			xPixel -= ScreenTextWidth (str);
+        /***************************************************************************\
+            Draw a portion of a circle in the viewport.  The radius given is in
+            the X direction.  The Y direction will be scaled to account for the
+            aspect ratio of the display and viewport.  The start and stop angles
+            will be adjusted lie between 0 and 2PI.
+        \***************************************************************************/
+        public virtual void OvalArc(float x, float y, float xRadius, float yRadius, float start, float stop)
+        {
+            int entry, startEntry, stopEntry;
 
-			// Draw the string on the screen
-			ScreenText (xPixel, yPixel, str, boxed);
-		}
+            // Find the first and last segment end point of interest
+            startEntry = (int)((start % (2.0f * Math.PI)) / Math.PI * 180.0) / CircleStep;
+            stopEntry = (int)((stop % (2.0f * Math.PI)) / Math.PI * 180.0) / CircleStep;
 
-		public virtual void TextRightVertical (float x1, float y1, string str, int boxed = 0)
-		{
-			float xPixel, yPixel;
+            // Make sure we aren't overrunning the precomputed array
+            Debug.Assert(startEntry >= 0);
+            Debug.Assert(stopEntry >= 0);
+            Debug.Assert(startEntry < CircleSegments);
+            Debug.Assert(stopEntry < CircleSegments);
 
-			// Rotation and translate this point based on the current settings
-			// Convert from viewport coordiants to screen space
-			xPixel = viewportXtoPixel (x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
-			yPixel = viewportYtoPixel (-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+            if (startEntry <= stopEntry)
+            {
+                for (entry = startEntry; entry < stopEntry; entry++)
+                {
+                    Line(x + xRadius * CircleX[entry], y + yRadius * CircleY[entry],
+                      x + xRadius * CircleX[entry + 1], y + yRadius * CircleY[entry + 1]);
+                }
+            }
+            else
+            {
+                for (entry = startEntry; entry < CircleSegments - 1; entry++)
+                {
+                    Line(x + xRadius * CircleX[entry], y + yRadius * CircleY[entry],
+                      x + xRadius * CircleX[entry + 1], y + yRadius * CircleY[entry + 1]);
+                }
+                for (entry = 0; entry < stopEntry; entry++)
+                {
+                    Line(x + xRadius * CircleX[entry], y + yRadius * CircleY[entry],
+                      x + xRadius * CircleX[entry + 1], y + yRadius * CircleY[entry + 1]);
+                }
+            }
+        }
 
-			// Adjust our starting point in screen space to get proper alignment
-			xPixel -= ScreenTextWidth (str);
-			yPixel -= ScreenTextHeight () / 2;
+        public virtual void Circle(float x, float y, float xRadius)
+        {
+            Oval(x, y, xRadius, xRadius * scaleX / scaleY);
+        }
 
-			// Draw the string on the screen
-			ScreenText (xPixel, yPixel, str, boxed);
-		}
-	
-	
-		/***************************************************************************\
-			Put a mono-colored string of text on the display.
-			(The location given is used as the horizontal center and vertical lower
-			 edge of the text)
-		\***************************************************************************/
-		public virtual void TextCenter (float x1, float y1, string str, int boxed = 0)
-		{
-			float xPixel, yPixel;
+        public virtual void Arc(float x, float y, float xRadius, float start, float stop)
+        {
+            OvalArc(x, y, xRadius, xRadius * scaleX / scaleY, start, stop);
+        }
 
-			// Rotation and translate this point based on the current settings
-			// Convert from viewport coordiants to screen space
-			xPixel = viewportXtoPixel (x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
-			yPixel = viewportYtoPixel (-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+        /***************************************************************************\
+            Put a mono-colored string of text on the display.
+            (The location given is used as the lower left corner of the text)
+        \***************************************************************************/
+        public virtual void TextLeft(float x1, float y1, string str, int boxed = 0)
+        {
+            float x, y;
 
-			// Adjust our starting point in screen space to get proper alignment
-			xPixel -= ScreenTextWidth (str) / 2;
+            // Rotation and translate this point based on the current settings
+            x = x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX;
+            y = x1 * dmatrix.rotation10 + y1 * dmatrix.rotation11 + dmatrix.translationY;
 
-			// Draw the string on the screen
-			ScreenText (xPixel, yPixel, str, boxed);
-		}
+            // Convert from viewport coordiants to screen space and draw the string
+            ScreenText(viewportXtoPixel(x), viewportYtoPixel(-y), str, boxed);
+        }
 
-/***************************************************************************\
-	Put a mono-colored string of text on the display.
-	(The location given is used as the horizontal center and vertical lower
-	 edge of the text)
-\***************************************************************************/
-		public virtual void TextCenterVertical (float x1, float y1, string str, int boxed = 0)
-		{
-			float xPixel, yPixel;
+        public virtual void TextLeftVertical(float x1, float y1, string str, int boxed = 0)
+        {
+            float x, y;
 
-			// Rotation and translate this point based on the current settings
-			// Convert from viewport coordiants to screen space
-			xPixel = viewportXtoPixel (x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
-			yPixel = viewportYtoPixel (-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+            // Rotation and translate this point based on the current settings
+            x = viewportXtoPixel(x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
+            y = viewportYtoPixel(-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
 
-			// Adjust our starting point in screen space to get proper alignment
-			xPixel -= ScreenTextWidth (str) / 2;
-			yPixel -= ScreenTextHeight () / 2;
+            y -= ScreenTextHeight() / 2;
 
-			// Draw the string on the screen
-			ScreenText (xPixel, yPixel, str, boxed);
-		}
+            // Convert from viewport coordiants to screen space and draw the string
+            ScreenText(x, y, str, boxed);
+        }
 
-		/***************************************************************************\
-			Print the string on multiple lines.  h,v is the starting point.
-			spacing is the line height and width is the line width.
-			THIS ASSUMES that no single word is longer than will fit in the
-			specified width.
-		\***************************************************************************/
-		public virtual int  TextWrap (float h, float v, string str, float spacing, float width)
-		{
+        /***************************************************************************\
+            Put a mono-colored string of text on the display.
+            (The location given is used as the lower right corner of the text)
+        \***************************************************************************/
+        public virtual void TextRight(float x1, float y1, string str, int boxed = 0)
+        {
+            float xPixel, yPixel;
+
+            // Rotation and translate this point based on the current settings
+            // Convert from viewport coordiants to screen space
+            xPixel = viewportXtoPixel(x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
+            yPixel = viewportYtoPixel(-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+
+            // Adjust our starting point in screen space to get proper alignment
+            xPixel -= ScreenTextWidth(str);
+
+            // Draw the string on the screen
+            ScreenText(xPixel, yPixel, str, boxed);
+        }
+
+        public virtual void TextRightVertical(float x1, float y1, string str, int boxed = 0)
+        {
+            float xPixel, yPixel;
+
+            // Rotation and translate this point based on the current settings
+            // Convert from viewport coordiants to screen space
+            xPixel = viewportXtoPixel(x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
+            yPixel = viewportYtoPixel(-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+
+            // Adjust our starting point in screen space to get proper alignment
+            xPixel -= ScreenTextWidth(str);
+            yPixel -= ScreenTextHeight() / 2;
+
+            // Draw the string on the screen
+            ScreenText(xPixel, yPixel, str, boxed);
+        }
+
+
+        /***************************************************************************\
+            Put a mono-colored string of text on the display.
+            (The location given is used as the horizontal center and vertical lower
+             edge of the text)
+        \***************************************************************************/
+        public virtual void TextCenter(float x1, float y1, string str, int boxed = 0)
+        {
+            float xPixel, yPixel;
+
+            // Rotation and translate this point based on the current settings
+            // Convert from viewport coordiants to screen space
+            xPixel = viewportXtoPixel(x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
+            yPixel = viewportYtoPixel(-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+
+            // Adjust our starting point in screen space to get proper alignment
+            xPixel -= ScreenTextWidth(str) / 2;
+
+            // Draw the string on the screen
+            ScreenText(xPixel, yPixel, str, boxed);
+        }
+
+        /***************************************************************************\
+            Put a mono-colored string of text on the display.
+            (The location given is used as the horizontal center and vertical lower
+             edge of the text)
+        \***************************************************************************/
+        public virtual void TextCenterVertical(float x1, float y1, string str, int boxed = 0)
+        {
+            float xPixel, yPixel;
+
+            // Rotation and translate this point based on the current settings
+            // Convert from viewport coordiants to screen space
+            xPixel = viewportXtoPixel(x1 * dmatrix.rotation00 + y1 * dmatrix.rotation01 + dmatrix.translationX);
+            yPixel = viewportYtoPixel(-x1 * dmatrix.rotation10 - y1 * dmatrix.rotation11 - dmatrix.translationY);
+
+            // Adjust our starting point in screen space to get proper alignment
+            xPixel -= ScreenTextWidth(str) / 2;
+            yPixel -= ScreenTextHeight() / 2;
+
+            // Draw the string on the screen
+            ScreenText(xPixel, yPixel, str, boxed);
+        }
+
+        /***************************************************************************\
+            Print the string on multiple lines.  h,v is the starting point.
+            spacing is the line height and width is the line width.
+            THIS ASSUMES that no single word is longer than will fit in the
+            specified width.
+        \***************************************************************************/
+        public virtual int TextWrap(float h, float v, string str, float spacing, float width)
+        {
 #if TODO
 			int pixelsLeft;
 			char lineBreak;
@@ -486,27 +507,27 @@ namespace FalconNet.Graphics
 
 			return line;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		// NOTE:  These might need to be virtualized and overloaded by canvas3d (maybe???)
-		public virtual float TextWidth (string str)
-		{
-			return ScreenTextWidth (str) / scaleX;
-		}	// normalized screen space
-		
-		public virtual float TextHeight ()
-		{
-			return ScreenTextHeight () / scaleY;
-		}		// normalized screen space
+        // NOTE:  These might need to be virtualized and overloaded by canvas3d (maybe???)
+        public virtual float TextWidth(string str)
+        {
+            return ScreenTextWidth(str) / scaleX;
+        }	// normalized screen space
 
-		// Screen space text printing (based on upper left starting pixel)
-		/***************************************************************************\
-			Put a mono-colored string of text on the display in screen space.
-			(The location given is used as the upper left corner of the text in units of pixels)
-		\***************************************************************************/
-		public virtual void ScreenText (float xLeft, float yTop, string str, int boxed = 0)
-		{
+        public virtual float TextHeight()
+        {
+            return ScreenTextHeight() / scaleY;
+        }		// normalized screen space
+
+        // Screen space text printing (based on upper left starting pixel)
+        /***************************************************************************\
+            Put a mono-colored string of text on the display in screen space.
+            (The location given is used as the upper left corner of the text in units of pixels)
+        \***************************************************************************/
+        public virtual void ScreenText(float xLeft, float yTop, string str, int boxed = 0)
+        {
 #if TODO
 	int			x, y;
 	int			width;
@@ -578,14 +599,14 @@ namespace FalconNet.Graphics
 		Render2DLine (x1, y2, x1, y1);
 	}
 #endif
-		}
-	
-		/***************************************************************************\
-			This function is used by 3d canvas and is needed to do the boxed strings
-			since we do 1 char at a time in the canvas
-		\***************************************************************************/
-		public virtual void ScreenChar (float xLeft, float yTop, string str, int boxed = 0)
-		{
+        }
+
+        /***************************************************************************\
+            This function is used by 3d canvas and is needed to do the boxed strings
+            since we do 1 char at a time in the canvas
+        \***************************************************************************/
+        public virtual void ScreenChar(float xLeft, float yTop, string str, int boxed = 0)
+        {
 #if TODO
 	int			x, y;
 	unsigned	num;
@@ -695,15 +716,15 @@ namespace FalconNet.Graphics
 		Render2DLine (x2, y2, x1, y2);
 	}
 #endif
-		}
+        }
 
-		
-		/***************************************************************************\
-			Get the width of a text string about to be placed onto the display
-			// Returns in units of pixels
-		\***************************************************************************/
-		public static int   ScreenTextWidth (string str)
-		{
+
+        /***************************************************************************\
+            Get the width of a text string about to be placed onto the display
+            // Returns in units of pixels
+        \***************************************************************************/
+        public static int ScreenTextWidth(string str)
+        {
 #if TODO
 #if !USE_TEXTURE_FONT
 	uint	num;
@@ -734,283 +755,283 @@ int width = 0;
 	return width;
 #endif
 #endif
-			throw new NotImplementedException ();
-		}
-		
-/***************************************************************************\
-	Get the width of a text string about to be placed onto the display
- // Returns in units of pixels
-\***************************************************************************/
-		public static int   ScreenTextHeight ()
-		{
+            throw new NotImplementedException();
+        }
+
+        /***************************************************************************\
+            Get the width of a text string about to be placed onto the display
+         // Returns in units of pixels
+        \***************************************************************************/
+        public static int ScreenTextHeight()
+        {
 #if !USE_TEXTURE_FONT
-			// Right now we have only one font.  It draws 6 pixels high with one
-			// pixel each above and below for spacing and reverse video effects.
-			return 8;
+            // Right now we have only one font.  It draws 6 pixels high with one
+            // pixel each above and below for spacing and reverse video effects.
+            return 8;
 #else
 	return FloatToInt32(FontData[FontNum][32].pixelHeight);
 #endif
-		}
+        }
 
-		public static int CurFont ()
-		{
-			return FontNum;
-		}
+        public static int CurFont()
+        {
+            return FontNum;
+        }
 
-		public static void SetFont (int newfont)
-		{ 
-			Debug.Assert (newfont >= 0 && newfont < NUM_FONT_RESOLUTIONS);
-			if (newfont >= TotalFont) 
-				newfont = TotalFont - 1;
-			else
-				FontNum = newfont;
-		}
-	
-		public virtual void SetLineStyle (int p)
-		{
-		}
+        public static void SetFont(int newfont)
+        {
+            Debug.Assert(newfont >= 0 && newfont < NUM_FONT_RESOLUTIONS);
+            if (newfont >= TotalFont)
+                newfont = TotalFont - 1;
+            else
+                FontNum = newfont;
+        }
 
-		public virtual DWORD Color ()
-		{
-			return new DWORD (0x0);
-		}
+        public virtual void SetLineStyle(int p)
+        {
+        }
 
-		public virtual void SetColor (DWORD c)
-		{
-		}				// Override for color displays
-		public virtual void SetBackground (DWORD c)
-		{
-		}			// Override for color displays
+        public virtual DWORD Color()
+        {
+            return new DWORD(0x0);
+        }
 
-    
-		/***************************************************************************\
-	Set the dimensions and location of the viewport.
+        public virtual void SetColor(DWORD c)
+        {
+        }				// Override for color displays
+        public virtual void SetBackground(DWORD c)
+        {
+        }			// Override for color displays
+
+
+        /***************************************************************************\
+    Set the dimensions and location of the viewport.
 \***************************************************************************/
-		public virtual void SetViewport (float leftSide, float topSide, float rightSide, float bottomSide)
-		{
-			const float E = 0.01f;	// Eplsion value to ensure we stay within our pixel limits
+        public virtual void SetViewport(float leftSide, float topSide, float rightSide, float bottomSide)
+        {
+            const float E = 0.01f;	// Eplsion value to ensure we stay within our pixel limits
 
-			left = leftSide;
-			top = topSide;
-			right = rightSide;
-			bottom = bottomSide;
+            left = leftSide;
+            top = topSide;
+            right = rightSide;
+            bottom = bottomSide;
 
-			scaleX = (rightSide - leftSide) * xRes * 0.25f - E;
-			if (scaleX < 0.0f)
-				scaleX = 0.0f;
-			shiftX = (leftSide + 1 + (rightSide - leftSide) * 0.5f) * xRes * 0.5f;
+            scaleX = (rightSide - leftSide) * xRes * 0.25f - E;
+            if (scaleX < 0.0f)
+                scaleX = 0.0f;
+            shiftX = (leftSide + 1 + (rightSide - leftSide) * 0.5f) * xRes * 0.5f;
 
-			scaleY = (topSide - bottomSide) * yRes * 0.25f - E;
-			if (scaleY < 0.0f)
-				scaleY = 0.0f;
-			shiftY = yRes - ((bottomSide + 1 + (topSide - bottomSide) * 0.5f) * yRes * 0.5f);
+            scaleY = (topSide - bottomSide) * yRes * 0.25f - E;
+            if (scaleY < 0.0f)
+                scaleY = 0.0f;
+            shiftY = yRes - ((bottomSide + 1 + (topSide - bottomSide) * 0.5f) * yRes * 0.5f);
 
-			// Now store our pixel space boundries
-			// (top/right inclusive, bottom/left exclusive)
-			topPixel = viewportYtoPixel (-1.0f);
-			bottomPixel = viewportYtoPixel (1.0f);
-			leftPixel = viewportXtoPixel (-1.0f);
-			rightPixel = viewportXtoPixel (1.0f);
+            // Now store our pixel space boundries
+            // (top/right inclusive, bottom/left exclusive)
+            topPixel = viewportYtoPixel(-1.0f);
+            bottomPixel = viewportYtoPixel(1.0f);
+            leftPixel = viewportXtoPixel(-1.0f);
+            rightPixel = viewportXtoPixel(1.0f);
 
-			Debug.Assert (Math.Floor (topPixel) >= 0.0f);
-			Debug.Assert (Math.Ceiling (bottomPixel) >= 0);
-			Debug.Assert (Math.Floor (leftPixel) >= 0.0f);
-			Debug.Assert (Math.Ceiling (rightPixel) >= 0);
-			Debug.Assert (Math.Floor (topPixel) <= yRes);
-			Debug.Assert (Math.Ceiling (bottomPixel) <= yRes);
-			Debug.Assert (Math.Floor (leftPixel) <= xRes);
-			Debug.Assert (Math.Ceiling (rightPixel) <= xRes);
-		}
+            Debug.Assert(Math.Floor(topPixel) >= 0.0f);
+            Debug.Assert(Math.Ceiling(bottomPixel) >= 0);
+            Debug.Assert(Math.Floor(leftPixel) >= 0.0f);
+            Debug.Assert(Math.Ceiling(rightPixel) >= 0);
+            Debug.Assert(Math.Floor(topPixel) <= yRes);
+            Debug.Assert(Math.Ceiling(bottomPixel) <= yRes);
+            Debug.Assert(Math.Floor(leftPixel) <= xRes);
+            Debug.Assert(Math.Ceiling(rightPixel) <= xRes);
+        }
 
 
-/***************************************************************************\
-	Set the dimensions and location of the viewport.  This one assumes
-	the inputs are relative to the currently set viewport.
+        /***************************************************************************\
+            Set the dimensions and location of the viewport.  This one assumes
+            the inputs are relative to the currently set viewport.
+        \***************************************************************************/
+        public virtual void SetViewportRelative(float left, float top, float right, float bottom)
+        {
+            float w = right - left;
+            float h = top - bottom;
+
+            float topSide = top - (1.0f - top) / 2.0f * h;
+            float bottomSide = bottom + (1.0f + bottom) / 2.0f * h;
+            float leftSide = left + (1.0f + left) / 2.0f * w;
+            float rightSide = right - (1.0f - right) / 2.0f * w;
+
+            SetViewport(leftSide, topSide, rightSide, bottomSide);
+        }
+
+
+        /***************************************************************************\
+        Compound the current offset with the new one requested.
+    \***************************************************************************/
+        public void AdjustOriginInViewport(float horizontal, float vertical)
+        {
+            dmatrix.translationX += horizontal;
+            dmatrix.translationY += vertical;
+        }
+
+
+        /***************************************************************************\
+    Compound the current rotation with the new one requested.
 \***************************************************************************/
-		public virtual void SetViewportRelative (float left, float top, float right, float bottom)
-		{
-			float w = right - left;
-			float h = top - bottom;
+        public void AdjustRotationAboutOrigin(float angle)
+        {
+            float temp;
+            float cosAng = (float)Math.Cos(angle);
+            float sinAng = (float)Math.Sin(angle);
 
-			float topSide = top - (1.0f - top) / 2.0f * h;
-			float bottomSide = bottom + (1.0f + bottom) / 2.0f * h;
-			float leftSide = left + (1.0f + left) / 2.0f * w;
-			float rightSide = right - (1.0f - right) / 2.0f * w;
+            temp = dmatrix.rotation00 * cosAng - dmatrix.rotation01 * sinAng;
+            dmatrix.rotation01 = dmatrix.rotation00 * sinAng + dmatrix.rotation01 * cosAng;
+            dmatrix.rotation00 = temp;
 
-			SetViewport (leftSide, topSide, rightSide, bottomSide);
-		}
+            temp = dmatrix.rotation10 * cosAng - dmatrix.rotation11 * sinAng;
+            dmatrix.rotation11 = dmatrix.rotation10 * sinAng + dmatrix.rotation11 * cosAng;
+            dmatrix.rotation10 = temp;
+        }
 
-    
-		/***************************************************************************\
-		Compound the current offset with the new one requested.
-	\***************************************************************************/
-		public void AdjustOriginInViewport (float horizontal, float vertical)
-		{
-			dmatrix.translationX += horizontal;
-			dmatrix.translationY += vertical;
-		}
-		
-	
-		/***************************************************************************\
-	Compound the current rotation with the new one requested.
-\***************************************************************************/
-		public void AdjustRotationAboutOrigin (float angle)
-		{
-			float temp;
-			float cosAng = (float)Math.Cos (angle);
-			float sinAng = (float)Math.Sin (angle);
+        public void CenterOriginInViewport()
+        {
+            dmatrix.translationX = 0.0f;
+            dmatrix.translationY = 0.0f;
+        }
 
-			temp = dmatrix.rotation00 * cosAng - dmatrix.rotation01 * sinAng;
-			dmatrix.rotation01 = dmatrix.rotation00 * sinAng + dmatrix.rotation01 * cosAng;
-			dmatrix.rotation00 = temp;
+        public void ZeroRotationAboutOrigin()
+        {
+            dmatrix.rotation01 = dmatrix.rotation10 = 0.0f;
+            dmatrix.rotation00 = dmatrix.rotation11 = 1.0f;
+        }
 
-			temp = dmatrix.rotation10 * cosAng - dmatrix.rotation11 * sinAng;
-			dmatrix.rotation11 = dmatrix.rotation10 * sinAng + dmatrix.rotation11 * cosAng;
-			dmatrix.rotation10 = temp;
-		}
-		
-		public void CenterOriginInViewport ()
-		{
-			dmatrix.translationX = 0.0f;
-			dmatrix.translationY = 0.0f;
-		}
-		
-		public void ZeroRotationAboutOrigin ()
-		{
-			dmatrix.rotation01 = dmatrix.rotation10 = 0.0f;
-			dmatrix.rotation00 = dmatrix.rotation11 = 1.0f; 
-		}
-	
-	
-		// save restore context
-		public void SaveDisplayMatrix (DisplayMatrix dm)
-		{
-			dm = dmatrix;
-		}
-		
-		public void RestoreDisplayMatrix (DisplayMatrix dm)
-		{
-			dmatrix = dm;
-		}
 
-		public int GetXRes ()
-		{
-			return xRes;
-		}
+        // save restore context
+        public void SaveDisplayMatrix(DisplayMatrix dm)
+        {
+            dm = dmatrix;
+        }
 
-		public int GetYRes ()
-		{
-			return yRes;
-		}
+        public void RestoreDisplayMatrix(DisplayMatrix dm)
+        {
+            dmatrix = dm;
+        }
 
-	
-		/***************************************************************************\
-	Return the current normalized screen space dimensions of the viewport
-	on the drawing target buffer.
-	\***************************************************************************/
-		public void GetViewport (ref float leftSide, ref float topSide, ref float rightSide, ref float bottomSide)
-		{
-			leftSide = left;
-			topSide = top;
-			rightSide = right;
-			bottomSide = bottom;
-		}
+        public int GetXRes()
+        {
+            return xRes;
+        }
 
-		public float GetTopPixel ()
-		{
-			return topPixel;
-		}
+        public int GetYRes()
+        {
+            return yRes;
+        }
 
-		public float GetBottomPixel ()
-		{
-			return bottomPixel;
-		}
 
-		public float GetLeftPixel ()
-		{
-			return leftPixel;
-		}
+        /***************************************************************************\
+    Return the current normalized screen space dimensions of the viewport
+    on the drawing target buffer.
+    \***************************************************************************/
+        public void GetViewport(ref float leftSide, ref float topSide, ref float rightSide, ref float bottomSide)
+        {
+            leftSide = left;
+            topSide = top;
+            rightSide = right;
+            bottomSide = bottom;
+        }
 
-		public float GetRightPixel ()
-		{
-			return rightPixel;
-		}
+        public float GetTopPixel()
+        {
+            return topPixel;
+        }
 
-		public float GetXOffset ()
-		{
-			return shiftX;
-		}
+        public float GetBottomPixel()
+        {
+            return bottomPixel;
+        }
 
-		public float GetYOffset ()
-		{
-			return shiftY;
-		}
+        public float GetLeftPixel()
+        {
+            return leftPixel;
+        }
 
-		public enum DisplayType
-		{
-			DISPLAY_GENERAL = 0,
-			DISPLAY_CANVAS
-		};
-		public DisplayType type;
-		
-		// Functions to convert from normalized coordinates to pixel coordinates
-		// (assumes at this point that x is right and y is down)
-		public float viewportXtoPixel (float x)
-		{
-			return (x * scaleX) + shiftX;
-		}
+        public float GetRightPixel()
+        {
+            return rightPixel;
+        }
 
-		public float viewportYtoPixel (float y)
-		{
-			return (y * scaleY) + shiftY;
-		}
+        public float GetXOffset()
+        {
+            return shiftX;
+        }
 
- 	
-		// Functions which must be provided by all derived classes
-		protected abstract void Render2DPoint (float x1, float y1);
+        public float GetYOffset()
+        {
+            return shiftY;
+        }
 
-		protected abstract void Render2DLine (float x1, float y1, float x2, float y2);
+        public enum DisplayType
+        {
+            DISPLAY_GENERAL = 0,
+            DISPLAY_CANVAS
+        };
+        public DisplayType type;
 
-		// Functions which should be provided by all derived classes
-		protected virtual void Render2DTri (float x1, float y1, float x2, float y2, float x3, float y3)
-		{
-			Render2DLine (x1, y1, x2, y2);
-			Render2DLine (x2, y2, x3, y3);
-			Render2DLine (x3, y3, x1, y1);
-		}
-  
-		// Store the currently selected resolution
-		protected int		xRes;
-		protected int		yRes;
+        // Functions to convert from normalized coordinates to pixel coordinates
+        // (assumes at this point that x is right and y is down)
+        public float viewportXtoPixel(float x)
+        {
+            return (x * scaleX) + shiftX;
+        }
 
-		// The viewport properties in normalized screen space (-1 to 1)
-		protected float	left, right;
-		protected float	top, bottom;
+        public float viewportYtoPixel(float y)
+        {
+            return (y * scaleY) + shiftY;
+        }
 
-		// The parameters required to get from normalized screen space to pixel space
-		// TEMPORARILY PUBLIC TO GET THINGS GOING...
-  
-		public float	scaleX;
-		public float	scaleY;
-		public float	shiftX;
-		public float	shiftY;
 
-  
-		// Store the pixel space boundries of the current viewport
-		// (top/right inclusive, bottom/left exclusive)
-		protected float	topPixel;
-		protected float	bottomPixel;
-		protected float	leftPixel;
-		protected float	rightPixel;
+        // Functions which must be provided by all derived classes
+        protected abstract void Render2DPoint(float x1, float y1);
 
-		// The 2D rotation/translation settings
-		protected DisplayMatrix dmatrix; // JPO - now in a sub structure so you can save/restore
-		//float	translationX, translationY;
-		//float	rotation00,	rotation01;
-		//float	rotation10,	rotation11;
+        protected abstract void Render2DLine(float x1, float y1, float x2, float y2);
 
-		// The font information for drawing text
-		protected  static readonly byte[][] Font = {
+        // Functions which should be provided by all derived classes
+        protected virtual void Render2DTri(float x1, float y1, float x2, float y2, float x3, float y3)
+        {
+            Render2DLine(x1, y1, x2, y2);
+            Render2DLine(x2, y2, x3, y3);
+            Render2DLine(x3, y3, x1, y1);
+        }
+
+        // Store the currently selected resolution
+        protected int xRes;
+        protected int yRes;
+
+        // The viewport properties in normalized screen space (-1 to 1)
+        protected float left, right;
+        protected float top, bottom;
+
+        // The parameters required to get from normalized screen space to pixel space
+        // TEMPORARILY PUBLIC TO GET THINGS GOING...
+
+        public float scaleX;
+        public float scaleY;
+        public float shiftX;
+        public float shiftY;
+
+
+        // Store the pixel space boundries of the current viewport
+        // (top/right inclusive, bottom/left exclusive)
+        protected float topPixel;
+        protected float bottomPixel;
+        protected float leftPixel;
+        protected float rightPixel;
+
+        // The 2D rotation/translation settings
+        protected DisplayMatrix dmatrix; // JPO - now in a sub structure so you can save/restore
+        //float	translationX, translationY;
+        //float	rotation00,	rotation01;
+        //float	rotation10,	rotation11;
+
+        // The font information for drawing text
+        protected static readonly byte[][] Font = {
 	Space, OpenParen, CloseParen, Asterisk, Plus,				/* Index 0 through 4 */
 	Comma, Minus, Period, Slash,								/* Index 5 through 8 */
 	Number0,Number1,Number2,Number3,Number4,					/* Index 9 through 13 */
@@ -1035,10 +1056,10 @@ int width = 0;
 	LetterAhat,			// 72
 	LetterAbackaccent,	// 73
 };
-	
-//TODO protected  static readonly int  FontLength = sizeof(Font)/sizeof(Font[0]);
 
-		protected  static readonly byte[] FontLUT = 
+        //TODO protected  static readonly int  FontLength = sizeof(Font)/sizeof(Font[0]);
+
+        protected static readonly byte[] FontLUT = 
 {
 	  0, /* ASCII   0 */	  0, /* ASCII   1 */	  0, /* ASCII   2 */      0,  /* ASCII   3 */
 	  0, /* ASCII   4 */	  0, /* ASCII   5 */	  0, /* ASCII   6 */      0,  /* ASCII   7 */
@@ -1106,257 +1127,257 @@ int width = 0;
 	 55, /* ASCII 252 */	 50, /* ASCII 253 */	  0, /* ASCII 254 */	 50,  /* ASCII 255 */
 };
 
-		
-		//TODO protected static readonly byte[][]       InvFont = new byte[][8];
 
- 
-		
+        //TODO protected static readonly byte[][]       InvFont = new byte[][8];
 
-		protected bool	ready;
-		
-		
-		// An array of precomputed points on a unit circle to be shared by all instances of this class
-		// Element zero is for theta = 0, and each successive element adds 4 degrees to
-		// theta.  theta = 360 is a repeat of theta = 0.  The whole unit circle is
-		// represented without the need for reflecting points between quadrants.
-		private float[]		CircleX = new float[CircleSegments];
-		private float[]		CircleY = new float[CircleSegments];
-		
-		//TODO private FontDataType[][] FontData = new FontDataType[NUM_FONT_RESOLUTIONS][256] = {0};
-		private int[] fontSpacing = new int[NUM_FONT_RESOLUTIONS];
-		private static int FontNum = 0;
-		private static int TotalFont = 3;
-		
-/***************************************************************************\
-	This is the font data used to draw text.  For now, it uses an 8x8 cell.
-	NOTE:  The last number in each character it the actual width of the
-	character for proportional spacing.
-\***************************************************************************/
 
-		static readonly byte[]  Space = {
+
+
+        protected bool ready;
+
+
+        // An array of precomputed points on a unit circle to be shared by all instances of this class
+        // Element zero is for theta = 0, and each successive element adds 4 degrees to
+        // theta.  theta = 360 is a repeat of theta = 0.  The whole unit circle is
+        // represented without the need for reflecting points between quadrants.
+        private float[] CircleX = new float[CircleSegments];
+        private float[] CircleY = new float[CircleSegments];
+
+        //TODO private FontDataType[][] FontData = new FontDataType[NUM_FONT_RESOLUTIONS][256] = {0};
+        private int[] fontSpacing = new int[NUM_FONT_RESOLUTIONS];
+        private static int FontNum = 0;
+        private static int TotalFont = 3;
+
+        /***************************************************************************\
+            This is the font data used to draw text.  For now, it uses an 8x8 cell.
+            NOTE:  The last number in each character it the actual width of the
+            character for proportional spacing.
+        \***************************************************************************/
+
+        static readonly byte[] Space = {
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 3
 };
-		static readonly byte[]  OpenParen = {
+        static readonly byte[] OpenParen = {
 	0x00,0x00,0x40,0x80,0x80,0x80,0x40,0x00, 2
 };
-		static readonly byte[]  CloseParen = {
+        static readonly byte[] CloseParen = {
 	0x00,0x00,0x80,0x40,0x40,0x40,0x80,0x00, 2
 };
-		static readonly byte[]  Asterisk = {
+        static readonly byte[] Asterisk = {
 	0x00,0x00,0xe0,0xa0,0xe0,0x00,0x00,0x00, 3
 };												// Note: This is the slot for the ascii asterisk, but I'm mapping a degree symbol to it.
-		static readonly byte[]  Plus = {
+        static readonly byte[] Plus = {
 	0x00,0x00,0x40,0xe0,0x00,0xe0,0x40,0x00, 3
 };												// Note: This is the slot for the ascii plus symbol, but I'm mapping a 'roll' symbol to it.
-		static readonly byte[]  Comma = {
+        static readonly byte[] Comma = {
 	0x00,0x00,0x00,0x00,0x00,0x00,0x40,0x80, 2
 };
-		static readonly byte[]  Minus = {
+        static readonly byte[] Minus = {
 	0x00,0x00,0x00,0x00,0xe0,0x00,0x00,0x00, 3
 };
-		static readonly byte[]  Period = {
+        static readonly byte[] Period = {
 	0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00, 2
 };
-		static readonly byte[]  Slash = {
+        static readonly byte[] Slash = {
 	0x00,0x00,0x20,0x20,0x40,0x80,0x80,0x00, 3
 };
-		static readonly byte[] Number0 = {
+        static readonly byte[] Number0 = {
 	0x00,0x00,0xe0,0xa0,0xa0,0xa0,0xe0,0x00, 3
 };
-		static readonly byte[]  Number1 = {
+        static readonly byte[] Number1 = {
 	0x00,0x00,0x40,0xc0,0x40,0x40,0xe0,0x00, 3
 };
-		static readonly byte[]  Number2 = {
+        static readonly byte[] Number2 = {
 	0x00,0x00,0xe0,0x20,0xe0,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  Number3 = {
+        static readonly byte[] Number3 = {
 	0x00,0x00,0xe0,0x20,0x60,0x20,0xe0,0x00, 3
 };
-		static readonly byte[]  Number4 = {
+        static readonly byte[] Number4 = {
 	0x00,0x00,0x80,0xa0,0xe0,0x20,0x20,0x00, 3
 };
-		static readonly byte[]  Number5 = {
+        static readonly byte[] Number5 = {
 	0x00,0x00,0xe0,0x80,0xc0,0x20,0xc0,0x00, 3
 };
-		static readonly byte[]  Number6 = {
+        static readonly byte[] Number6 = {
     0x00,0x00,0x80,0x80,0xe0,0xa0,0xe0,0x00, 3
 };
-		static readonly byte[]  Number7 = {
+        static readonly byte[] Number7 = {
     0x00,0x00,0xe0,0x20,0x20,0x20,0x20,0x00, 3
 };
-		static readonly byte[]  Number8 = {
+        static readonly byte[] Number8 = {
     0x00,0x00,0xe0,0xa0,0xe0,0xa0,0xe0,0x00, 3
 };
-		static readonly byte[]  Number9 = {
+        static readonly byte[] Number9 = {
     0x00,0x00,0xe0,0xa0,0xe0,0x20,0x20,0x00, 3
 };
-		static readonly byte[]  Colon = {
+        static readonly byte[] Colon = {
     0x00,0x00,0x00,0x80,0x00,0x80,0x00,0x00, 1
 };
-		static readonly byte[]  SemiColon = {
+        static readonly byte[] SemiColon = {
     0x00,0x00,0x00,0x40,0x00,0x40,0x40,0x80, 2
 };
-		static readonly byte[]  Less = {
+        static readonly byte[] Less = {
     0x00,0x00,0x20,0x40,0x80,0x40,0x20,0x00, 3
 };
-		static readonly byte[]  Equal = {
+        static readonly byte[] Equal = {
     0x00,0x00,0x00,0xe0,0x00,0xe0,0x00,0x00, 3
 };
-		static readonly byte[]  More = {
+        static readonly byte[] More = {
     0x00,0x00,0x80,0x40,0x20,0x40,0x80,0x00, 3
 };
-		static readonly byte[]  Quest = {
+        static readonly byte[] Quest = {
     0x40,0x00,0xc0,0x20,0x40,0x00,0x40,0x00, 3
 };
-		static readonly byte[]  Each = {
+        static readonly byte[] Each = {
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 3
 };
-		static readonly byte[]  LetterA = {
+        static readonly byte[] LetterA = {
     0x00,0x00,0x40,0xa0,0xa0,0xe0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterB = {
+        static readonly byte[] LetterB = {
     0x00,0x00,0xc0,0xa0,0xc0,0xa0,0xc0,0x00, 3
 };
-		static readonly byte[]  LetterC = {
+        static readonly byte[] LetterC = {
     0x00,0x00,0x40,0xa0,0x80,0xa0,0x40,0x00, 3
 };
-		static readonly byte[]  LetterD = {
+        static readonly byte[] LetterD = {
     0x00,0x00,0xc0,0xa0,0xa0,0xa0,0xc0,0x00, 3
 };
-		static readonly byte[]  LetterE = {
+        static readonly byte[] LetterE = {
     0x00,0x00,0xe0,0x80,0xc0,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterF = {
+        static readonly byte[] LetterF = {
     0x00,0x00,0xe0,0x80,0xc0,0x80,0x80,0x00, 3
 };
-		static readonly byte[]  LetterG = {
+        static readonly byte[] LetterG = {
     0x00,0x00,0x60,0x80,0xa0,0xa0,0x60,0x00, 3
 };
-		static readonly byte[]  LetterH = {
+        static readonly byte[] LetterH = {
     0x00,0x00,0xa0,0xa0,0xe0,0xa0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterI = {
+        static readonly byte[] LetterI = {
     0x00,0x00,0xe0,0x40,0x40,0x40,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterJ = {
+        static readonly byte[] LetterJ = {
     0x00,0x00,0x20,0x20,0x20,0xa0,0x40,0x00, 3
 };
-		static readonly byte[]  LetterK = {
+        static readonly byte[] LetterK = {
     0x00,0x00,0xa0,0xa0,0xc0,0xa0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterL = {
+        static readonly byte[] LetterL = {
     0x00,0x00,0x80,0x80,0x80,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterM = {
+        static readonly byte[] LetterM = {
     0x00,0x00,0x88,0xd8,0xa8,0xa8,0x88,0x00, 5
 };
-		static readonly byte[]  LetterN = {
+        static readonly byte[] LetterN = {
     0x00,0x00,0x90,0xd0,0xb0,0x90,0x90,0x00, 4
 };
-		static readonly byte[]  LetterO = {
+        static readonly byte[] LetterO = {
     0x00,0x00,0x60,0x90,0x90,0x90,0x60,0x00, 4
 };
-		static readonly byte[]  LetterP = {
+        static readonly byte[] LetterP = {
     0x00,0x00,0xe0,0xa0,0xe0,0x80,0x80,0x00, 3
 };
-		static readonly byte[]  LetterQ = {
+        static readonly byte[] LetterQ = {
     0x00,0x00,0x60,0x90,0x90,0xa0,0xd0,0x00, 4
 };
-		static readonly byte[]  LetterR = {
+        static readonly byte[] LetterR = {
     0x00,0x00,0xc0,0xa0,0xc0,0xa0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterS = {
+        static readonly byte[] LetterS = {
     0x00,0x00,0x60,0x80,0x40,0x20,0xc0,0x00, 3
 };
-		static readonly byte[]  LetterT = {
+        static readonly byte[] LetterT = {
     0x00,0x00,0xe0,0x40,0x40,0x40,0x40,0x00, 3
 };
-		static readonly byte[]  LetterU = {
+        static readonly byte[] LetterU = {
     0x00,0x00,0xa0,0xa0,0xa0,0xa0,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterV = {
+        static readonly byte[] LetterV = {
     0x00,0x00,0xa0,0xa0,0xa0,0xe0,0x40,0x00, 3
 };
-		static readonly byte[]  LetterW = {
+        static readonly byte[] LetterW = {
     0x00,0x00,0x88,0x88,0xa8,0xa8,0x50,0x00, 5
 };
-		static readonly byte[]  LetterX = {
+        static readonly byte[] LetterX = {
     0x00,0x00,0xa0,0xa0,0x40,0xa0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterY = {
+        static readonly byte[] LetterY = {
     0x00,0x00,0xa0,0xa0,0xe0,0x40,0x40,0x00, 3
 };
-		static readonly byte[]  LetterZ = {
+        static readonly byte[] LetterZ = {
     0x00,0x00,0xe0,0x20,0x40,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  Apostrophe = {
+        static readonly byte[] Apostrophe = {
 	0x00,0x00,0x40,0x80,0x00,0x00,0x00,0x00, 2
 };
-		static readonly byte[]  LetterAumlaut = {
+        static readonly byte[] LetterAumlaut = {
     0x00,0xa0,0x40,0xa0,0xa0,0xe0,0xa0,0x00, 3
 };
-		static readonly byte[]  LetterOumlaut = {
+        static readonly byte[] LetterOumlaut = {
     0x00,0x90,0x60,0x90,0x90,0x90,0x60,0x00, 4
 };
-		static readonly byte[]  LetterUumlaut = {
+        static readonly byte[] LetterUumlaut = {
     0x00,0xa0,0x00,0xa0,0xa0,0xa0,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterBeta = {
+        static readonly byte[] LetterBeta = {
     0x00,0x00,0xf0,0x90,0xb8,0x88,0xf8,0x00, 5
 };
-		static readonly byte[]  Degree = {
+        static readonly byte[] Degree = {
 	0x00,0x00,0xe0,0xa0,0xe0,0x00,0x00,0x00, 3
 };
-		static readonly byte[]  Mu = {
+        static readonly byte[] Mu = {
 	0x00,0x00,0x50,0x50,0x50,0x60,0x80,0x00, 4
 };
-		static readonly byte[]  Exclaim = {
+        static readonly byte[] Exclaim = {
 	0x00,0x00,0x80,0x80,0x80,0x00,0x80,0x00, 1
 };
-		static readonly byte[]  Quote = {
+        static readonly byte[] Quote = {
 	0x00,0x00,0xa0,0xa0,0x00,0x00,0x00,0x00, 3
 };
-		static readonly byte[]  And = {
+        static readonly byte[] And = {
 	0x00,0x00,0x40,0xa0,0x40,0xa0,0x50,0x00, 4
 };
-		static readonly byte[]  LetterAaccent = {
+        static readonly byte[] LetterAaccent = {
     0x10,0x20,0x40,0x60,0x90,0xf0,0x90,0x00, 4
 };
-		static readonly byte[]  LetterAbackaccent = {
+        static readonly byte[] LetterAbackaccent = {
     0x40,0x20,0x10,0x60,0x90,0xf0,0x90,0x00, 4
 };
-		static readonly byte[]  LetterAsquiggle = {
+        static readonly byte[] LetterAsquiggle = {
     0x50,0xa0,0x00,0x60,0x90,0xf0,0x90,0x00, 4
 };
-		static readonly byte[]  LetterAhat = {
+        static readonly byte[] LetterAhat = {
     0x60,0x90,0x00,0x60,0x90,0xf0,0x90,0x00, 4
 };
-		static readonly byte[]  LetterEaccent = {
+        static readonly byte[] LetterEaccent = {
     0x20,0x40,0xe0,0x80,0xc0,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterEhat = {
+        static readonly byte[] LetterEhat = {
     0x40,0xa0,0xe0,0x80,0xc0,0x80,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterIaccent = {
+        static readonly byte[] LetterIaccent = {
     0x20,0x40,0xe0,0x40,0x40,0x40,0xe0,0x00, 3
 };
-		static readonly byte[]  LetterNsquiggle = {
+        static readonly byte[] LetterNsquiggle = {
     0x50,0xa0,0x00,0x90,0xd0,0xb0,0x90,0x00, 4
 };
-		static readonly byte[]  LetterOsquiggle = {
+        static readonly byte[] LetterOsquiggle = {
     0x50,0xa0,0x00,0xf0,0x90,0x90,0xf0,0x00, 4
 };
-		static readonly byte[]  LetterOaccent = {
+        static readonly byte[] LetterOaccent = {
     0x10,0x20,0x40,0xf0,0x90,0x90,0xf0,0x00, 4
 };
-		static readonly byte[]  LetterUaccent = {
+        static readonly byte[] LetterUaccent = {
     0x10,0x20,0x40,0x90,0x90,0x90,0xf0,0x00, 4
 };
-		static readonly byte[]  LetterCstem = {
+        static readonly byte[] LetterCstem = {
     0x00,0x00,0xe0,0x80,0x80,0xe0,0x40,0xc0, 3
 };
 
-	};
+    };
 
 }
 

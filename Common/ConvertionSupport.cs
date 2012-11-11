@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace FalconNet.Common
 {
@@ -30,6 +31,9 @@ namespace FalconNet.Common
 	public struct HCURSOR {}
 	
 	public class VuEntity {
+        public VuEntity(int t) { }
+        public VuEntity (byte[] stream, ref int pos){}
+        public VuEntity (FileStream filePtr){}
 		protected float posx, posy, posz;
 		public float XPos() { return posx;}
 		public float YPos() { return posy;}
@@ -41,6 +45,7 @@ namespace FalconNet.Common
 	public struct VU_BYTE {}
 	public struct VU_ID {}
 	public class VU_TIME {}
+    public struct VU_ERRCODE { }
 	public struct Unit {}
 	public struct C_Handler {}
 	public class DeviceManager {}
@@ -52,7 +57,7 @@ namespace FalconNet.Common
 	public struct C_ScrollBar {}
 	public class C_Hash {}
 	public class O_Output {}
-	public struct GridIndex {}
+
 	public struct CampUIEventElement {}
 	public struct SquadUIInfoClass {}
 	public struct EventElement {}

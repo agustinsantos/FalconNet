@@ -36,6 +36,9 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Phyconst.cs" />
     <Compile Include="Simdrive.cs" />
+    <Compile Include="Simloop.cs" />
+    <Compile Include="Statistics.cs" />
+    <Compile Include="Aircraft.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

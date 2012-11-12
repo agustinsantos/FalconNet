@@ -1,23 +1,27 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Gtm.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Squadron.cs">
     <Files>
-      <File FileName="Ui95/ccontrol.cs" Line="148" Column="3" />
-      <File FileName="Ui95/cbuttons.cs" Line="97" Column="59" />
-      <File FileName="Campaign/MissEval.cs" Line="394" Column="44" />
-      <File FileName="Campaign/Team.cs" Line="187" Column="34" />
-      <File FileName="Common/ConvertionSupport.cs" Line="61" Column="20" />
-      <File FileName="Campaign/Mission.cs" Line="382" Column="55" />
-      <File FileName="Campaign/Atm.cs" Line="37" Column="47" />
-      <File FileName="Campaign/Manager.cs" Line="6" Column="38" />
-      <File FileName="Campaign/Gtm.cs" Line="63" Column="2" />
+      <File FileName="Sim/Simloop.cs" Line="14" Column="3" />
+      <File FileName="Sim/Statistics.cs" Line="22" Column="42" />
+      <File FileName="Sim/Aircraft.cs" Line="691" Column="36" />
+      <File FileName="Campaign/ACSelect.cs" Line="13" Column="17" />
+      <File FileName="Campaign/AIInput.cs" Line="133" Column="3" />
+      <File FileName="Campaign/Airunit.cs" Line="46" Column="2" />
+      <File FileName="Campaign/Battalion.cs" Line="98" Column="10" />
+      <File FileName="Campaign/Brigade.cs" Line="27" Column="33" />
+      <File FileName="Campaign/GndUnit.cs" Line="84" Column="1" />
+      <File FileName="Campaign/Unit.cs" Line="72" Column="20" />
+      <File FileName="Campaign/Campbase.cs" Line="96" Column="37" />
+      <File FileName="FalcLib/FalcEnt.cs" Line="45" Column="24" />
+      <File FileName="Campaign/Name.cs" Line="1" Column="1" />
+      <File FileName="Campaign/Squadron.cs" Line="35" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Campaign" expanded="True">
-            <Node name="Gtm.cs" selected="True" />
-          </Node>
+          <Node name="Campaign" expanded="True" selected="True" />
+          <Node name="FalcLib" expanded="True" />
         </State>
       </Pad>
     </Pads>

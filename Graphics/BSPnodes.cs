@@ -25,7 +25,8 @@ namespace FalconNet.Graphics
 		Billboard,
 		Tree
 	} 
-#if TODO
+
+	
 	/***************************************************************\
 		To improve performance, these classes use several global
 		variables to store command data instead of passing it
@@ -674,7 +675,6 @@ namespace FalconNet.Graphics
 			return BNodeType.tagBLightStringNode;
 		}
 	}
-#endif
 }
 
 

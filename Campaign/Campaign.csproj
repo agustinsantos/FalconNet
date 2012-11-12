@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,6 +52,14 @@
     <Compile Include="Atm.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Gtm.cs" />
+    <Compile Include="ACSelect.cs" />
+    <Compile Include="AIInput.cs" />
+    <Compile Include="Airunit.cs" />
+    <Compile Include="Battalion.cs" />
+    <Compile Include="Brigade.cs" />
+    <Compile Include="GndUnit.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="Squadron.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

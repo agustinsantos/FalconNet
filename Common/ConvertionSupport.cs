@@ -29,40 +29,69 @@ namespace FalconNet.Common
 	public struct F4CSECTIONHANDLE {}
 	public struct F4THREADHANDLE {}
 	public struct HCURSOR {}
-	
-	public class VuEntity {
-        public VuEntity(int t) { }
-        public VuEntity (byte[] stream, ref int pos){}
-        public VuEntity (FileStream filePtr){}
-		protected float posx, posy, posz;
-		public float XPos() { return posx;}
-		public float YPos() { return posy;}
-		public float ZPos() { return posz;}
-	}
-	public class VuEntityType {}
-	public struct VuThread {}
-	public class FalconSessionEntity {}
-	public struct VU_BYTE {}
-	public struct VU_ID {}
-	public class VU_TIME {}
-    public struct VU_ERRCODE { }
+
 	public struct Unit {}
 	public struct C_Handler {}
 	public class DeviceManager {}
 	public class DXContext {}
 	public class HWND {}
+	public struct HANDLE {}
 	public class IDirectDraw7 {}
 	public struct DamType {}
-	public struct vector {}
 	public struct C_ScrollBar {}
 	public class C_Hash {}
 	public class O_Output {}
-
+	public class TransformMatrix {}
+	public class DrawableObject {}
+	public class SimInitDataClass {}
+	public class ObjectGeometry {}
+	public class DrawablePoint {}
+	
+	public struct List {}
 	public struct CampUIEventElement {}
 	public struct SquadUIInfoClass {}
 	public struct EventElement {}
-	public struct FalconGameEntity {}
-	public struct FalconGameType {}
 	public struct Team {}
+	public struct DrawableTrail {}
+	public class SimVehicleClass {}
+	public struct CampEntity {}
+	public struct Control {}
+	public struct TailInsertList {}
+	public struct FalconCampWeaponsFire {}
+	public struct FalconDeathMessage {}
+	public struct F4PFList {}
+	public struct UnitType {}
+	public class Package {}
+	public class PackageClass {}
+	public class MissionRequest{}
+	public struct RadarRangeClass {}
+	public struct ATCBrain {}
+	public struct PriorityLevel {}
+	public struct ObjectiveType {}
+	public struct FalconDivertMessage {}
+	public struct FalconPlayerStatusMessage {}
+	public struct FalconWeaponsFire {}
+	public struct FalconDamageMessage {}
+	public struct FalconEjectMessage {}
+	public struct FalconLandingMessage {}
+	public struct WayPoint {}
+	public struct LoadoutStruct {}
+	public struct CampaignHeading {}
+	public struct Path {}
+	public struct AircraftClass {}
+	public struct Percentage {}
+	public struct CAMP_MISS_STRUCT {}
+	public struct VehicleID {}
+	public struct SmallPathClass {}
+	public struct PilotClass {}
+	public struct PilotInfoClass {}
+	public struct NTM {}
+	
+	public struct AirframeClass {}
+	public struct FackClass {}
+	public struct FireControlComputer {}
+	public struct SMSClass {}
+	public struct GunClass {}
+
 }
 

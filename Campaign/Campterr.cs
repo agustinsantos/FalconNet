@@ -36,25 +36,35 @@ namespace FalconNet.Campaign
         public static short Map_Max_X;							// World Size, in grid coordinates
         public static short Map_Max_Y;
 
-        public static void InitTheaterTerrain();
+        public static void InitTheaterTerrain()
+		{throw new NotImplementedException();}
 
-        public static void FreeTheaterTerrain();
+        public static void FreeTheaterTerrain()
+		{throw new NotImplementedException();}
 
-        public static int LoadTheaterTerrain(string FileName);
+        public static int LoadTheaterTerrain(string FileName)
+		{throw new NotImplementedException();}
 
-        public static int LoadTheaterTerrainLight(string name);
+        public static int LoadTheaterTerrainLight(string name)
+		{throw new NotImplementedException();}
 
-        public static int SaveTheaterTerrain(string FileName);
+        public static int SaveTheaterTerrain(string FileName)
+		{throw new NotImplementedException();}
 
-        public static CellData GetCell(GridIndex x, GridIndex y);
+        public static CellData GetCell(GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-        public static ReliefType GetRelief(GridIndex x, GridIndex y);
+        public static ReliefType GetRelief(GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-        public static CoverType GetCover(GridIndex x, GridIndex y);
+        public static CoverType GetCover(GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-        public static char GetRoad(GridIndex x, GridIndex y);
+        public static char GetRoad(GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-        public static char GetRail(GridIndex x, GridIndex y);
+        public static char GetRail(GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
     }
 
 }

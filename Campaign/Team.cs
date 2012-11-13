@@ -1,5 +1,10 @@
 using System;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using GTM=FalconNet.Campaign.GroundTaskingManagerClass;
+using ATM=FalconNet.Campaign.AirTaskingManagerClass;
+using FalconNet.Common;
+using System.IO;
 
 namespace FalconNet.Campaign
 {
@@ -233,22 +238,34 @@ namespace FalconNet.Campaign
 	
 		
 			// Constructors
-		public TeamClass (int typeindex, Control owner);
-		public TeamClass (VU_BYTE **stream);
-		public TeamClass (FILE *file);
+		public TeamClass (int typeindex, Control owner)
+		{throw new NotImplementedException();}
+		
+		public TeamClass (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
+		public TeamClass (FileStream file)
+		{throw new NotImplementedException();}
 		// TODO public ~TeamClass ();
 	
 			// event handlers
-		public virtual int Handle(VuEvent evnt);
-		public virtual int Handle(VuFullUpdateEvent evnt);
-		public virtual int Handle(VuPositionUpdateEvent evnt);
-		public virtual int Handle(VuEntityCollisionEvent evnt);
-		public virtual int Handle(VuTransferEvent *evnt);
-		public virtual int Handle(VuSessionEvent *evnt);
-		public virtual VU_ERRCODE InsertionCallback();
-		public virtual VU_ERRCODE RemovalCallback();
-		public virtual int Wake () {return 0;}
-		public virtual int Sleep () {return 0;}
+		public virtual int Handle(VuEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual int Handle(VuFullUpdateEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual int Handle(VuPositionUpdateEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual int Handle(VuEntityCollisionEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual int Handle(VuTransferEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual int Handle(VuSessionEvent evnt)
+		{throw new NotImplementedException();}
+		public virtual VU_ERRCODE InsertionCallback()
+		{throw new NotImplementedException();}
+		public virtual VU_ERRCODE RemovalCallback()
+		{throw new NotImplementedException();}
+		public override int Wake () {return 0;}
+		public override int Sleep () {return 0;}
 	
 			// Access Functions
 		public short GetInitiative () { return initiative; }
@@ -259,42 +276,69 @@ namespace FalconNet.Campaign
 		public byte GetObjTypePriority (int type) { return objtype_priority[type]; }
 		public byte GetUnitTypePriority (int type) { return unittype_priority[type]; }
 		public byte GetMissionPriority (int type) { return mission_priority[type]; }
-		public TeamStatusType *GetCurrentStats () { return &currentStats; }
-		public TeamGndActionType *GetGroundAction () { return &groundAction; }
-		public TeamAirActionType *GetDefensiveAirAction () { return &defensiveAirAction; }
-		public TeamAirActionType *GetOffensiveAirAction () { return &offensiveAirAction; }
+		public TeamStatusType GetCurrentStats () { return currentStats; }
+		public TeamGndActionType GetGroundAction () { return groundAction; }
+		public TeamAirActionType GetDefensiveAirAction () { return defensiveAirAction; }
+		public TeamAirActionType GetOffensiveAirAction () { return offensiveAirAction; }
 	
-		public void SetInitiative (short i);
-		public void SetReinforcement (short r);
-		public byte[] SetAllObjTypePriority ();
-		public byte[] SetAllUnitTypePriority ();
-		public byte[] SetAllMissionPriority ();
-		public void SetObjTypePriority (int i, byte b);
-		public void SetUnitTypePriority (int i, byte b);
-		public void SetMissionPriority (int i, byte b);
-		public void SetSupplyAvail (int i );
-		public void SetFuelAvail (int i);
-		public void SetReplacementsAvail (int i);
-		public TeamStatusType SetCurrentStats ();
-		public TeamGndActionType SetGroundAction ();
-		public TeamAirActionType SetDefensiveAirAction ();
-		public TeamAirActionType SetOffensiveAirAction ();
+		public void SetInitiative (short i)
+		{throw new NotImplementedException();}
+		public void SetReinforcement (short r)
+		{throw new NotImplementedException();}
+		public byte[] SetAllObjTypePriority ()
+		{throw new NotImplementedException();}
+		public byte[] SetAllUnitTypePriority ()
+		{throw new NotImplementedException();}
+		public byte[] SetAllMissionPriority ()
+		{throw new NotImplementedException();}
+		public void SetObjTypePriority (int i, byte b)
+		{throw new NotImplementedException();}
+		public void SetUnitTypePriority (int i, byte b)
+		{throw new NotImplementedException();}
+		public void SetMissionPriority (int i, byte b)
+		{throw new NotImplementedException();}
+		public void SetSupplyAvail (int i )
+		{throw new NotImplementedException();}
+		public void SetFuelAvail (int i)
+		{throw new NotImplementedException();}
+		public void SetReplacementsAvail (int i)
+		{throw new NotImplementedException();}
+		public TeamStatusType SetCurrentStats ()
+		{throw new NotImplementedException();}
+		public TeamGndActionType SetGroundAction ()
+		{throw new NotImplementedException();}
+		public TeamAirActionType SetDefensiveAirAction ()
+		{throw new NotImplementedException();}
+		public TeamAirActionType SetOffensiveAirAction ()
+		{throw new NotImplementedException();}
 	
-		public void AddInitiative (short s);
-		public void AddReinforcement (short s);
+		public void AddInitiative (short s)
+		{throw new NotImplementedException();}
+		public void AddReinforcement (short s)
+		{throw new NotImplementedException();}
 	
 			// Core functions
-		public virtual int SaveSize ();
-		public virtual int Save (ref VU_BYTE[] stream);
-		public virtual int Save (FileStream file);
+		public virtual int SaveSize ()
+		{throw new NotImplementedException();}
+		public virtual int Save (ref VU_BYTE[] stream)
+		{throw new NotImplementedException();}
+		public virtual int Save (FileStream file)
+		{throw new NotImplementedException();}
 	
-		public void ReadDoctrineFile ();
-		public void ReadPriorityFile (int tactic);
-		public int CheckControl(GridIndex X, GridIndex Y);
-		public void SetActive(int act);
-		public void DumpHeader();
-		public void Dump();
-		public void DoFullUpdate (VuTargetEntity *target);
+		public void ReadDoctrineFile ()
+		{throw new NotImplementedException();}
+		public void ReadPriorityFile (int tactic)
+		{throw new NotImplementedException();}
+		public int CheckControl(GridIndex X, GridIndex Y)
+		{throw new NotImplementedException();}
+		public void SetActive(int act)
+		{throw new NotImplementedException();}
+		public void DumpHeader()
+		{throw new NotImplementedException();}
+		public void Dump()
+		{throw new NotImplementedException();}
+		public void DoFullUpdate (VuTargetEntity target)
+		{throw new NotImplementedException();}
 	
 		public int CStance(Control country)				{ return stance[GetTeam(country)]; }
 		public int TStance(Team team)						{ return stance[team]; }
@@ -303,29 +347,39 @@ namespace FalconNet.Campaign
 		public ATM GetATM()							{ return atm; }
 		public GTM GetGTM()							{ return gtm; }
 		public NTM GetNTM()							{ return ntm; }
-		public void SetName (string newname);
-		public string GetName();
+		public void SetName (string newname)
+		{throw new NotImplementedException();}
+		public string GetName()
+		{throw new NotImplementedException();}
 		public void SetFlag (byte flag)					{ teamFlag = flag; }
 		public void SetEquipment (byte e)					{ equipment = e; }
 		public int GetFlag ()							{ return (int) teamFlag; }
 		public void SetColor (byte color)					{ teamColor = color; }
 		public int GetColor ()							{ return (int) teamColor; }
 		public int GetEquipment ()						{ return (int) equipment; }
-		public void SetMotto (string motto);
-		public string GetMotto ();
+		public void SetMotto (string motto)
+		{throw new NotImplementedException();}
+		public string GetMotto ()
+		{throw new NotImplementedException();}
 		public TeamDoctrine GetDoctrine ()			{ return &doctrine; }
 	//		int OnOffensive()						{ return offensiveLoss; }
 		public byte GetGroundActionType ()			{ return groundAction.actionType; }
-		public void SelectGroundAction ();
-		public void SelectAirActions ();
-		public void SetGroundAction (TeamGndActionType action);
+		public void SelectGroundAction ()
+		{throw new NotImplementedException();}
+		public void SelectAirActions ()
+		{throw new NotImplementedException();}
+		public void SetGroundAction (TeamGndActionType action)
+		{throw new NotImplementedException();}
 	
 		public virtual int IsTeam ()					{ return true; }
 	
 			// Dirty Data
-		public void MakeTeamDirty (Dirty_Team bits, Dirtyness score);
-		public void WriteDirty (ref byte [] stream);
-		public void ReadDirty (ref byte [] stream);
+		public void MakeTeamDirty (Dirty_Team bits, Dirtyness score)
+		{throw new NotImplementedException();}
+		public void WriteDirty (ref byte [] stream)
+		{throw new NotImplementedException();}
+		public void ReadDirty (ref byte [] stream)
+		{throw new NotImplementedException();}
 	
 	};
 	
@@ -338,62 +392,91 @@ namespace FalconNet.Campaign
 	// Global functions
 	// =============================================		
 	
-		public static void AddTeam (int p);
+		public static void AddTeam (int p)
+		{throw new NotImplementedException();}
 
-		public static void RemoveTeam (int p);
+		public static void RemoveTeam (int p)
+		{throw new NotImplementedException();}
 		
-		public static  void AddNewTeams (RelType defaultStance);
+		public static  void AddNewTeams (RelType defaultStance)
+		{throw new NotImplementedException();}
 		
-		public static  void RemoveTeams ();
+		public static  void RemoveTeams ()
+		{throw new NotImplementedException();}
 		
-		public static  int LoadTeams (string scenario);
+		public static  int LoadTeams (string scenario)
+		{throw new NotImplementedException();}
 		
-		public static  int SaveTeams (string scenario);
+		public static  int SaveTeams (string scenario)
+		{throw new NotImplementedException();}
 		
-		public static  void LoadPriorityTables ();
+		public static  void LoadPriorityTables ()
+		{throw new NotImplementedException();}
 		
-		public static Team GetTeam (Control country);
+		public static Team GetTeam (Control country)
+		{throw new NotImplementedException();}
 		
-		public static int GetCCRelations (Control who, Control with);
+		public static int GetCCRelations (Control who, Control with)
+		{throw new NotImplementedException();}
 		
-		public static int GetCTRelations (Control who, Team with);
+		public static int GetCTRelations (Control who, Team with)
+		{throw new NotImplementedException();}
 		
-		public static int GetTTRelations (Team who, Team with);
+		public static int GetTTRelations (Team who, Team with)
+		{throw new NotImplementedException();}
 		
-		public static int GetTCRelations (Team who, Control with);
+		public static int GetTCRelations (Team who, Control with)
+		{throw new NotImplementedException();}
 		
-		public static void SetTeam (Control country, int team);
+		public static void SetTeam (Control country, int team)
+		{throw new NotImplementedException();}
 		
-		public static void SetCTRelations (Control who, Team with, int rel);
+		public static void SetCTRelations (Control who, Team with, int rel)
+		{throw new NotImplementedException();}
 		
-		public static void SetTTRelations (Team who, Team with, int rel);
+		public static void SetTTRelations (Team who, Team with, int rel)
+		{throw new NotImplementedException();}
 		
-		public static int GetRoE(Team a, Team b, int type);
+		public static int GetRoE(Team a, Team b, int type)
+		{throw new NotImplementedException();}
 		
-		public static void TransferInitiative (Team from, Team to, int i);
+		public static void TransferInitiative (Team from, Team to, int i)
+		{throw new NotImplementedException();}
 		
-		public static float AirExperienceAdjustment(Team t);
+		public static float AirExperienceAdjustment(Team t)
+		{throw new NotImplementedException();}
 		
-		public static float AirDefenseExperienceAdjustment(Team t);
+		public static float AirDefenseExperienceAdjustment(Team t)
+		{throw new NotImplementedException();}
 		
-		public static float GroundExperienceAdjustment(Team t);
+		public static float GroundExperienceAdjustment(Team t)
+		{throw new NotImplementedException();}
 		
-		public static float NavalExperienceAdjustment(Team t);
+		public static float NavalExperienceAdjustment(Team t)
+		{throw new NotImplementedException();}
 		
-		public static float CombatBonus(Team who, VU_ID poid);
+		public static float CombatBonus(Team who, VU_ID poid)
+		{throw new NotImplementedException();}
 		
-		public static void ApplyPlayerInput(Team who, VU_ID poid, int rating);
+		public static void ApplyPlayerInput(Team who, VU_ID poid, int rating)
+		{throw new NotImplementedException();}
 		
-		public static Team GetEnemyTeam (Team who);
+		public static Team GetEnemyTeam (Team who)
+		{throw new NotImplementedException();}
 		
-		public static int GetPriority (MissionRequest mis);
+		public static int GetPriority (MissionRequest mis)
+		{throw new NotImplementedException();}
 		
-		public static void AddReinforcements (Team who, int inc);
+		public static void AddReinforcements (Team who, int inc)
+		{throw new NotImplementedException();}
 		
-		public static void UpdateTeamStatistics ();
+		public static void UpdateTeamStatistics ()
+		{throw new NotImplementedException();}
 		
-		public static int NavalSuperiority (Team who);
+		public static int NavalSuperiority (Team who)
+		{throw new NotImplementedException();}
 		
-		public static int AirSuperiority (Team who);
+		public static int AirSuperiority (Team who)
+		{throw new NotImplementedException();}
 	}
 }

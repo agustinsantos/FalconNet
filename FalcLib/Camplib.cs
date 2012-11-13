@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using FalconNet.Common;
+using FalconNet.VU;
 
 namespace FalconNet.FalcLib
 {
@@ -16,10 +17,6 @@ namespace FalconNet.FalcLib
 		public const ulong CampaignDay = 86400000;
 		public const ulong INFINITE_TIME = 4294967295;		// Max value of CampaignTime
 
-        public CampaignTime()
-        {
-            time = 0;
-        }
         public CampaignTime(ulong t)
         {
             time = t;

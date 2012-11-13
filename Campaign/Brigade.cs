@@ -1,4 +1,8 @@
 using System;
+using FalconNet.VU;
+using Unit=FalconNet.Campaign.UnitClass;
+using FalconNet.Common;
+using FalconNet.FalcLib;
 
 namespace FalconNet.Campaign
 {
@@ -24,29 +28,38 @@ namespace FalconNet.Campaign
 		private short			fullstrength;						// How many vehicles we were before we took losses
 
 		// constructors and serial functions
-		public BrigadeClass (int type);
-		public BrigadeClass (VU_BYTE **stream);
+		public BrigadeClass (int type)
+		{throw new NotImplementedException();}
+		public BrigadeClass (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 		// TODO public virtual ~BrigadeClass();
-		public virtual int SaveSize ();
+		public virtual int SaveSize ()
+		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE **stream);
+		public virtual int Save (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent *evnt);
+		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int IsBrigade ()
+		public override bool IsBrigade ()
 		{
 			return true;
 		}
 
 		// Access Functions
-		public void SetElements (byte p);
+		public void SetElements (byte p)
+		{throw new NotImplementedException();}
 
-		public void SetCElement (byte p);
+		public void SetCElement (byte p)
+		{throw new NotImplementedException();}
 
-		public void SetElement (int i, VU_ID v);
+		public void SetElement (int i, VU_ID v)
+		{throw new NotImplementedException();}
 
-		public void SetFullStrength (short p);
+		public void SetFullStrength (short p)
+		{throw new NotImplementedException();}
 
 		public byte GetElements ()
 		{
@@ -69,13 +82,17 @@ namespace FalconNet.Campaign
 		}
 
 		// Required pure virtuals handled by Brigade class
-		public virtual int MoveUnit (CampaignTime time);
+		public virtual int MoveUnit (CampaignTime time)
+		{throw new NotImplementedException();}
 
-		public virtual int Reaction (CampEntity what, int zone, float range);
+		public virtual int Reaction (CampEntity what, int zone, float range)
+		{throw new NotImplementedException();}
 
-		public virtual int ChooseTactic ();
+		public virtual int ChooseTactic ()
+		{throw new NotImplementedException();}
 
-		public virtual int CheckTactic (int tid);
+		public virtual int CheckTactic (int tid)
+		{throw new NotImplementedException();}
 
 		public virtual int Father ()
 		{
@@ -87,48 +104,69 @@ namespace FalconNet.Campaign
 			return 0;
 		}
 
-		public virtual void SetUnitOrders (int o, VU_ID oid);
+		public virtual void SetUnitOrders (int o, VU_ID oid)
+		{throw new NotImplementedException();}
 //		virtual void SetUnitAction ();
-		public virtual int GetUnitSpeed ();
+		public virtual int GetUnitSpeed ()
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitSupply ();
+		public virtual int GetUnitSupply ()
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitMorale ();
+		public virtual int GetUnitMorale ()
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitSupplyNeed (int total);
+		public virtual int GetUnitSupplyNeed (int total)
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitFuelNeed (int total);
+		public virtual int GetUnitFuelNeed (int total)
+		{throw new NotImplementedException();}
 
-		public virtual void SupplyUnit (int supply, int fuel);
+		public virtual void SupplyUnit (int supply, int fuel)
+		{throw new NotImplementedException();}
 
 		// Core functions
-		public virtual void SetUnitDivision (int d);
+		public virtual void SetUnitDivision (int d)
+		{throw new NotImplementedException();}
 
-		public virtual int OrderElement (Unit e, F4PFList l);
+		public virtual int OrderElement (Unit e, F4PFList l)
+		{throw new NotImplementedException();}
 
-		public virtual Unit GetFirstUnitElement ();
+		public virtual Unit GetFirstUnitElement ()
+		{throw new NotImplementedException();}
 
-		public virtual Unit GetNextUnitElement ();
+		public virtual Unit GetNextUnitElement ()
+		{throw new NotImplementedException();}
 
-		public virtual Unit GetUnitElement (int e);
+		public virtual Unit GetUnitElement (int e)
+		{throw new NotImplementedException();}
 
-		public virtual Unit GetUnitElementByID (int eid);
+		public virtual Unit GetUnitElementByID (int eid)
+		{throw new NotImplementedException();}
 
-		public virtual Unit GetPrevUnitElement (Unit e);
+		public virtual Unit GetPrevUnitElement (Unit e)
+		{throw new NotImplementedException();}
 
-		public virtual void AddUnitChild (Unit e);
+		public virtual void AddUnitChild (Unit e)
+		{throw new NotImplementedException();}
 
-		public virtual void DisposeChildren ();
+		public virtual void DisposeChildren ()
+		{throw new NotImplementedException();}
 
-		public virtual void RemoveChild (VU_ID eid);
+		public virtual void RemoveChild (VU_ID eid)
+		{throw new NotImplementedException();}
 
-		public virtual void ReorganizeUnit ();
+		public virtual void ReorganizeUnit ()
+		{throw new NotImplementedException();}
 
-		public virtual int UpdateParentStatistics ();
+		public virtual int UpdateParentStatistics ()
+		{throw new NotImplementedException();}
 
-		public virtual int RallyUnit (int minutes);
+		public virtual int RallyUnit (int minutes)
+		{throw new NotImplementedException();}
 		
-		public static BrigadeClass* NewBrigade (int type);
+		public static BrigadeClass NewBrigade (int type)
+		{throw new NotImplementedException();}
 	}
 
 }

@@ -1,4 +1,7 @@
 using System;
+using FalconNet.VU;
+using FalconNet.Common;
+using System.IO;
 
 namespace FalconNet.Sim
 {
@@ -21,6 +24,7 @@ namespace FalconNet.Sim
 
 	public class AircraftClass : SimVehicleClass
 	{
+#if TODO
 		public const int FLARE_STATION = 0;
 		public const int CHAFF_STATION = 1;
 		public const int  DEBRIS_STATION = 2;
@@ -157,13 +161,25 @@ namespace FalconNet.Sim
 			Auto
 		};
 		//MI new OverG/Speed stuff
-		public void CheckForOverG ();
+		public void CheckForOverG ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void CheckForOverSpeed ();
+		public void CheckForOverSpeed ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void DoOverGSpeedDamage (int station);
+		public void DoOverGSpeedDamage (int station)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void StoreToDamage (WeaponClass thing);
+		public void StoreToDamage (WeaponClass thing)
+		{
+			throw new NotImplementedException ();
+		}
 
 		public uint StationsFailed;
 		  
@@ -260,23 +276,50 @@ namespace FalconNet.Sim
 			return (INSFlags & fl) == (uint)fl ? 1 : 0;
 		}
 	
-		public void RunINS ();
+		public void RunINS ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void DoINSAlign ();
+		public void DoINSAlign ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void SwitchINSToAlign ();
+		public void SwitchINSToAlign ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void SwitchINSToNav ();
+		public void SwitchINSToNav ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void SwitchINSToOff ();
+		public void SwitchINSToOff ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void SwitchINSToInFLT ();
+		public void SwitchINSToInFLT ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void CheckINSStatus ();
+		public void CheckINSStatus ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void CalcINSDrift ();
+		public void CalcINSDrift ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void CalcINSOffset ();
+		public void CalcINSOffset ()
+		{
+			throw new NotImplementedException ();
+		}
 
 		public float GetINSLatDrift ()
 		{
@@ -317,7 +360,10 @@ namespace FalconNet.Sim
 		public float AVTRCountown;
 		public bool doAVTRCountdown;
 
-		public void AddAVTRSeconds ();
+		public void AddAVTRSeconds ()
+		{
+			throw new NotImplementedException ();
+		}
 			
 		[Flags]
 		  public enum AVTRStateFlags
@@ -378,7 +424,10 @@ namespace FalconNet.Sim
 			return (LEFFlags & fl) == (uint)fl ? 1 : 0;
 		}
 
-		public float CheckLEF (int side);
+		public float CheckLEF (int side)
+		{
+			throw new NotImplementedException ();
+		}
 	
 		public int MissileVolume;
 		public int ThreatVolume;
@@ -388,56 +437,113 @@ namespace FalconNet.Sim
 		public bool CockpitWingLight;
 		public bool CockpitStrobeLight;
 
-		public void SetCockpitWingLight (bool state);
+		public void SetCockpitWingLight (bool state)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void SetCockpitStrobeLight (bool state);
+		public void SetCockpitStrobeLight (bool state)
+		{
+			throw new NotImplementedException ();
+		}
 	
-		public AircraftClass (int flag, VU_BYTE** stream)
-;
-		public AircraftClass (int flag, FILE* filePtr)
-;
-		public AircraftClass (int flag, int type);
+		public AircraftClass (int flag, VU_BYTE[] stream)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public AircraftClass (int flag, FileStream filePtr)
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public AircraftClass (int flag, int type)
+		{
+			throw new NotImplementedException ();
+		}
 		//TODO public virtual ~AircraftClass		();
 	
 		public float					glocFactor;
 		public int						fireGun, fireMissile, lastPickle;
-		public FackClass*				mFaults;
-		public AirframeClass*			af;
-		public FireControlComputer*	FCC;
-		public SMSClass*				Sms;
-		public GunClass*				Guns;
+		public FackClass				mFaults;
+		public AirframeClass			af;
+		public FireControlComputer	FCC;
+		public SMSClass				Sms;
+		public GunClass				Guns;
 	
-		public virtual void	Init (SimInitDataClass* initData);
+		public virtual void	Init (SimInitDataClass* initData)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual int	   Wake ();
+		public virtual int	   Wake ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual int 	Sleep ();
+		public virtual int 	Sleep ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual int		Exec ();
+		public virtual int		Exec ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	JoinFlight ();
+		public virtual void	JoinFlight ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	InitData (int i);
+		public virtual void	InitData (int i)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	Cleanup ();
+		public virtual void	Cleanup ()
+		{
+			throw new NotImplementedException ();
+		}
 		
-		public virtual int    CombatClass (); // 2002-02-25 MODIFIED BY S.G. virtual added in front since FlightClass also have one now...
-		public void           SetAutopilot (AutoPilotType flag);
+		public virtual int    CombatClass ()
+		{
+			throw new NotImplementedException ();
+		} // 2002-02-25 MODIFIED BY S.G. virtual added in front since FlightClass also have one now...
+		public void           SetAutopilot (AutoPilotType flag)
+		{
+			throw new NotImplementedException ();
+		}
 
 		public AutoPilotType	AutopilotType ()
 		{
 			return autopilotType;
 		}
 
-		public VU_ID	         HomeAirbase ();
+		public VU_ID	         HomeAirbase ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public VU_ID	         TakeoffAirbase ();
+		public VU_ID	         TakeoffAirbase ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public VU_ID	         LandingAirbase ();
+		public VU_ID	         LandingAirbase ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public VU_ID	         DivertAirbase ();
+		public VU_ID	         DivertAirbase ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void           DropProgramed ();
+		public void           DropProgramed ()
+		{
+			throw new NotImplementedException ();
+		}
 
 		public int            IsF16 ()
 		{
@@ -449,59 +555,140 @@ namespace FalconNet.Sim
 			return ((acFlags & isComplex) ? true : false);
 		}
 		// 2000-11-17 ADDED BY S.G. SO AIRCRAFT CAN HAVE A ENGINE TEMPERATURE AS WELL AS 'POWER' (RPM) OUTPUT   
-		public void SetPowerOutput (float powerOutput);//me123 changed back
+		public void SetPowerOutput (float powerOutput)
+		{
+			throw new NotImplementedException ();
+		}//me123 changed back
 		// END OF ADDED SECTION	
-		public virtual void	SetVt (float newvt);
+		public virtual void	SetVt (float newvt)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	SetKias (float newkias);
+		public virtual void	SetKias (float newkias)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void			ResetFuel ();
+		public void			ResetFuel ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual long	GetTotalFuel ();
+		public virtual long	GetTotalFuel ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	GetTransform (TransformMatrix vmat);
+		public virtual void	GetTransform (TransformMatrix vmat)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	ApplyDamage (FalconDamageMessage *damageMessage);
+		public virtual void	ApplyDamage (FalconDamageMessage *damageMessage)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	SetLead (int flag);
+		public virtual void	SetLead (int flag)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	ReceiveOrders (FalconEvent* newOrder);
+		public virtual void	ReceiveOrders (FalconEvent* newOrder)
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetP ();
+		public virtual float	GetP ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetQ ();
+		public virtual float	GetQ ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetR ();
+		public virtual float	GetR ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetAlpha ();
+		public virtual float	GetAlpha ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetBeta ();
+		public virtual float	GetBeta ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetNx ();
+		public virtual float	GetNx ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetNy ();
+		public virtual float	GetNy ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetNz ();
+		public virtual float	GetNz ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetGamma ();
+		public virtual float	GetGamma ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetSigma ();
+		public virtual float	GetSigma ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual float	GetMu ();
+		public virtual float	GetMu ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	MakePlayerVehicle ();
+		public virtual void	MakePlayerVehicle ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	MakeNonPlayerVehicle ();
+		public virtual void	MakeNonPlayerVehicle ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	MakeLocal ();
+		public virtual void	MakeLocal ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	MakeRemote ();
+		public virtual void	MakeRemote ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	ConfigurePlayerAvionics ();
+		public virtual void	ConfigurePlayerAvionics ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	SetVuPosition ();
+		public virtual void	SetVuPosition ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual void	Regenerate (float x, float y, float z, float yaw);
+		public virtual void	Regenerate (float x, float y, float z, float yaw)
+		{
+			throw new NotImplementedException ();
+		}
 
 		public virtual FireControlComputer* GetFCC ()
 		{
@@ -513,9 +700,15 @@ namespace FalconNet.Sim
 			return (SMSBaseClass*)Sms;
 		}
 
-		public virtual int HasSPJamming ();
+		public virtual int HasSPJamming ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public virtual int HasAreaJamming ();
+		public virtual int HasAreaJamming ()
+		{
+			throw new NotImplementedException ();
+		}
 	
 	#if _DEBUG
 		public virtual void	SetDead (int);
@@ -524,7 +717,7 @@ namespace FalconNet.Sim
 		// private:
 	
 		public long				mCautionCheckTime;
-		public BOOL				MPOCmd;
+		public bool				MPOCmd;
 		public char				dropChaffCmd;
 		public char				dropFlareCmd;
 		public int            acFlags;
@@ -543,16 +736,25 @@ namespace FalconNet.Sim
 		{
 			bingoFuel = newbingo;
 		}//me123
-		public void DamageSounds ();
+		public void DamageSounds ()
+		{
+			throw new NotImplementedException ();
+		}
 
 		public uint SpeedSoundsWFuel;
 		public uint SpeedSoundsNFuel;
 		public uint GSoundsWFuel;
 		public uint GSoundsNFuel;
 
-		public void WrongCAT ();
+		public void WrongCAT ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void CorrectCAT ();
+		public void CorrectCAT ()
+		{
+			throw new NotImplementedException ();
+		}
 		//MI for RALT stuff
 		public 	enum RaltStatus
 		{
@@ -581,13 +783,25 @@ namespace FalconNet.Sim
 			RALTStatus = RaltStatus.ROFF;
 		}
 		//MI for EWS stuff
-		public void DropEWS ();
+		public void DropEWS ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void EWSChaffBurst ();
+		public void EWSChaffBurst ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void EWSFlareBurst ();
+		public void EWSFlareBurst ()
+		{
+			throw new NotImplementedException ();
+		}
 
-		public void ReleaseManualProgram ();
+		public void ReleaseManualProgram ()
+		{
+			throw new NotImplementedException ();
+		}
 
 		public bool ManualECM;
 		public int FlareCount, ChaffCount, ChaffSalvoCount, FlareSalvoCount;
@@ -648,9 +862,9 @@ namespace FalconNet.Sim
 		public DrawableTrail[]	    conTrails = new DrawableTrail[MAXENGINES];
 		public DrawableTrail[]	    engineTrails = new DrawableTrail[MAXENGINES];
 		public DrawableTrail	rwingvortex, lwingvortex;
-		public BOOL				playerSmokeOn;
+		public bool				playerSmokeOn;
 		public DrawableGroundVehicle* pLandLitePool;
-		public BOOL				mInhibitLitePool;
+		public bool				mInhibitLitePool;
 
 		public void				CleanupLitePool ();
 
@@ -693,7 +907,7 @@ namespace FalconNet.Sim
 			return mainPower;
 		}
 
-		public BOOL MainPowerOn ()
+		public bool MainPowerOn ()
 		{
 			return mainPower == MainPowerMain;
 		}
@@ -816,7 +1030,7 @@ namespace FalconNet.Sim
 
 		public void	RunSensors ();
 
-		public BOOL	LandingCheck (float noseAngle, float impactAngle, int groundType);
+		public bool	LandingCheck (float noseAngle, float impactAngle, int groundType);
 
 		public void	GroundFeatureCheck (float groundZ);
 
@@ -858,9 +1072,9 @@ namespace FalconNet.Sim
 		public virtual float	Mass ();
 		
 		// Has the player triggered the ejection sequence?
-		public BOOL	ejectTriggered;
+		public bool	ejectTriggered;
 		public float	ejectCountdown;
-		public BOOL	doEjectCountdown;
+		public bool	doEjectCountdown;
 	
 		//MI Emergency jettison
 		public bool EmerJettTriggered;
@@ -917,6 +1131,7 @@ namespace FalconNet.Sim
 		private void DeployDragChute (int n);
 
 		private int FindBestSpawnPoint (ObjectiveClass *obj, SimInitDataClass* initData);
+#endif
 	}
 }
 

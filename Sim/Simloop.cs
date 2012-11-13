@@ -1,4 +1,5 @@
 using System;
+using FalconNet.Common;
 
 namespace FalconNet.Sim
 {
@@ -7,24 +8,55 @@ namespace FalconNet.Sim
 		It starts and stops each as appropriate during transitions between
 		the SIM and UI.
 	\***************************************************************************/
-	public class SimulationLoopControl {
-		public static void StartSim( );
-		public static void StopSim( );
+	public class SimulationLoopControl
+	{
+
+		public static void StartSim ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static void StopSim ()
+		{
+			throw new NotImplementedException ();
+		}
 	
-		public static void StartGraphics( );
-		public static void StopGraphics( );
+		public static void StartGraphics ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static void StopGraphics ()
+		{
+			throw new NotImplementedException ();
+		}
 	
-		public static void Loop( );
-		public static void StartLoop( );
+		public static void Loop ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static void StartLoop ()
+		{
+			throw new NotImplementedException ();
+		}
 	
-		public static int  InSim( )			{ return currentMode == RunningGraphics; }
-		public static int  GetSimTick( )	{ return sim_tick; }
+		public static bool  InSim ()
+		{
+			return currentMode == SimLoopControlMode.RunningGraphics;
+		}
+
+		public static int  GetSimTick ()
+		{
+			return sim_tick;
+		}
 	
 		public static HANDLE wait_for_sim_cleanup;
 		public static HANDLE wait_for_graphics_cleanup;
 	
 	  
-		protected enum SimLoopControlMode { 
+		protected enum SimLoopControlMode
+		{ 
 			Stopped,
 			StartingSim, 
 			RunningSim, 
@@ -36,7 +68,8 @@ namespace FalconNet.Sim
 			Step5,
 			StoppingSim,
 		};
-	
+		
+		protected static SimLoopControlMode currentMode;
 		protected static HANDLE wait_for_start_graphics;
 		protected static HANDLE wait_for_stop_graphics;
 		protected static int sim_tick;

@@ -321,7 +321,7 @@ namespace FalconNet.UI
 		
 			Debug.Assert (!string.IsNullOrEmpty (PilotName));
 		
-			path = F4Find.FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
+			path = F4Find.FalconDataDirectory + "config" + System.IO.Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
 			
 			fp = File.OpenRead (path);
 #if TODO // Handle error....

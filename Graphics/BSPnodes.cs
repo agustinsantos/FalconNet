@@ -25,7 +25,7 @@ namespace FalconNet.Graphics
 		Billboard,
 		Tree
 	} 
-
+#if TODO
 	
 	/***************************************************************\
 		To improve performance, these classes use several global
@@ -34,8 +34,9 @@ namespace FalconNet.Graphics
 		The global variables are maintained by the StackState
 		module.
 	\***************************************************************/
-	public class BNode
+	public abstract class BNode
 	{
+		#if TODO	
 		// Convert from file offsets back to pointers   
 		public BNode (byte *baseAddress, BNodeType **tagListPtr)
 		{
@@ -46,7 +47,8 @@ namespace FalconNet.Graphics
 				sibling = null;
 			}
 		}
-	
+		#endif
+		
 		public BNode ()
 		{
 			sibling = null;
@@ -63,76 +65,76 @@ namespace FalconNet.Graphics
 		// Function to identify the type of an encoded node and call the appropriate constructor
 		// Determine the type of an encoded node and intialize and contruct
 		// it appropriatly.
+#if TODO
 		public static BNode RestorePointers (byte *baseAddress, int offset, BNodeType **tagListPtr)
 		{
-#if TODO
-	BNode		*node;
-	BNodeType	tag;
-
-	// Get this record's tag then advance the pointer to the next tag we'll need
-	tag = **tagListPtr;
-	*tagListPtr = (*tagListPtr)+1;
-	
-
-	// Apply the proper virtual table setup and constructor
-	switch( tag ) {
-	  case BNodeType.tagBSubTree:
-		node = new (baseAddress+offset) BSubTree( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBRoot:
-		node = new (baseAddress+offset) BRoot( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBSpecialXform:
-		node = new (baseAddress+offset) BSpecialXform( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBSlotNode:
-		node = new (baseAddress+offset) BSlotNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBDofNode:
-		node = new (baseAddress+offset) BDofNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBSwitchNode:
-		node = new (baseAddress+offset) BSwitchNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBSplitterNode:
-		node = new (baseAddress+offset) BSplitterNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBPrimitiveNode:
-		node = new (baseAddress+offset) BPrimitiveNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBLitPrimitiveNode:
-		node = new (baseAddress+offset) BLitPrimitiveNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBCulledPrimitiveNode:
-		node = new (baseAddress+offset) BCulledPrimitiveNode( baseAddress, tagListPtr );
-		break;
-	  case BNodeType.tagBLightStringNode:
-		node = new (baseAddress+offset) BLightStringNode( baseAddress, tagListPtr );
-		break;
-	  default:
-		Debug.Fail("Decoding unrecognized BSP node type.");
+			BNode		*node;
+			BNodeType	tag;
+		
+			// Get this record's tag then advance the pointer to the next tag we'll need
+			tag = **tagListPtr;
+			*tagListPtr = (*tagListPtr)+1;
+			
+		
+			// Apply the proper virtual table setup and constructor
+			switch( tag ) {
+			  case BNodeType.tagBSubTree:
+				node = new (baseAddress+offset) BSubTree( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBRoot:
+				node = new (baseAddress+offset) BRoot( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBSpecialXform:
+				node = new (baseAddress+offset) BSpecialXform( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBSlotNode:
+				node = new (baseAddress+offset) BSlotNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBDofNode:
+				node = new (baseAddress+offset) BDofNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBSwitchNode:
+				node = new (baseAddress+offset) BSwitchNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBSplitterNode:
+				node = new (baseAddress+offset) BSplitterNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBPrimitiveNode:
+				node = new (baseAddress+offset) BPrimitiveNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBLitPrimitiveNode:
+				node = new (baseAddress+offset) BLitPrimitiveNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBCulledPrimitiveNode:
+				node = new (baseAddress+offset) BCulledPrimitiveNode( baseAddress, tagListPtr );
+				break;
+			  case BNodeType.tagBLightStringNode:
+				node = new (baseAddress+offset) BLightStringNode( baseAddress, tagListPtr );
+				break;
+			  default:
+				Debug.Fail("Decoding unrecognized BSP node type.");
+			}
+		
+			return node;
+		 
+					throw new NotImplementedException();
 	}
+#endif
 
-	return node;
-#endif 
-			throw new NotImplementedException();
-}
+		public BNode sibling;
 
+		public abstract void Draw ();
 
-		public BNode	sibling;
-
-		public abstract void		Draw ();
-
-		public virtual BNodeType	Type ()
+		public virtual BNodeType Type ()
 		{
 			return BNodeType.tagBNode;
 		}
-	};
+	}
 
 	// Convert from file offsets back to pointers
-	public class BSubTree:   BNode
+	public class BSubTree: BNode
 	{
- 
+	#if TODO
 		public BSubTree (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -143,24 +145,24 @@ namespace FalconNet.Graphics
 			pCoords		= (Tpoint*)(baseAddress + (int)pCoords);
 			pNormals	= (Pnormal*)(baseAddress + (int)pNormals);
 		}
-	
+	#endif
 		public BSubTree ()
 		{
 			subTree = null;
 		}
 		//public virtual ~BSubTree()	{ delete subTree; };
 
-		public Tpoint	*pCoords;
+		public Tpoint[]	pCoords;
 		public int		nCoords;
 		public int		nDynamicCoords;
 		public int		DynamicCoordOffset;
-		public Pnormal	*pNormals;
+		public Pnormal[]	pNormals;
 		public int		nNormals;
-		public BNode	*subTree;
+		public BNode	subTree;
 
-		public override void		Draw ()
+		public override void Draw ()
 		{
-			BNode	*child;
+			BNode child;
 		
 			TheStateStack.Light( pNormals, nNormals );
 		
@@ -178,7 +180,7 @@ namespace FalconNet.Graphics
 			{
 				child.Draw();
 				child = child.sibling;
-			} while (child); // JB 010306 CTD
+			} while (child != null); // JB 010306 CTD
 			//} while (child && !F4IsBadReadPtr(child, sizeof(BNode))); // JB 010306 CTD (too much CPU)
 		}
 
@@ -190,16 +192,17 @@ namespace FalconNet.Graphics
 	}
 	
 
-	public class BRoot:   BSubTree
+	public class BRoot: BSubTree
 	{
 		// Convert from file offsets back to pointers 
+#if TODO
 		public BRoot (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 			// Fixup our extra data pointers
 			pTexIDs		= (int*)(baseAddress + (int)pTexIDs);
 		}
-	
+#endif
 		public BRoot () : base()
 		{
 			pTexIDs = null;
@@ -228,7 +231,7 @@ namespace FalconNet.Graphics
 			}
 		}
 
-		public int		*pTexIDs;
+		public int[] 	pTexIDs;
 		public int		nTexIDs;
 		public int		ScriptNumber;
 
@@ -260,6 +263,7 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BSpecialXform (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -269,17 +273,17 @@ namespace FalconNet.Graphics
 			// Fixup our data pointers
 			pCoords		= (Tpoint*)(baseAddress + (int)pCoords);
 		}
-
+#endif
 		public BSpecialXform ()
 		{
 			subTree = null;
 		}
 		// public virtual ~BSpecialXform()	{ delete subTree; };
 
-		public Tpoint			*pCoords;
+		public Tpoint[]			pCoords;
 		public int				nCoords;
 		public BTransformType	type;
-		public BNode			*subTree;
+		public BNode			subTree;
 
 		public override void		Draw ()
 		{
@@ -302,11 +306,12 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BSlotNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
-	
+#endif	
 		public BSlotNode ()
 		{
 			slotNumber = -1;
@@ -339,11 +344,12 @@ namespace FalconNet.Graphics
 	public class BDofNode:   BSubTree
 	{
 		// Convert from file offsets back to pointers 
+#if TODO
 		public BDofNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
-
+#endif
 		public BDofNode () : base()
 		{
 			dofNumber = -1;
@@ -402,6 +408,7 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BSwitchNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -413,7 +420,7 @@ namespace FalconNet.Graphics
 				subTrees[i] = (BSubTree*)RestorePointers( baseAddress, (int)subTrees[i], tagListPtr );
 			}
 		}
-
+#endif
 		public BSwitchNode ()
 		{
 			subTrees = null;
@@ -424,7 +431,7 @@ namespace FalconNet.Graphics
 
 		public int			switchNumber;
 		public int			numChildren;
-		public BSubTree	**subTrees;
+		public BSubTree[]  subTrees;
 
 		public override void Draw ()
 		{
@@ -466,6 +473,7 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BSplitterNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -473,7 +481,7 @@ namespace FalconNet.Graphics
 			front	= RestorePointers( baseAddress, (int)front, tagListPtr );
 			back	= RestorePointers( baseAddress, (int)back,  tagListPtr );
 		}
-
+#endif
 		public BSplitterNode ()
 		{
 			front = back = null;
@@ -481,12 +489,12 @@ namespace FalconNet.Graphics
 		//public virtual ~BSplitterNode()	{ delete front; delete back; };
 
 		public float	A, B, C, D;
-		public BNode	*front;
-		public BNode	*back;
+		public BNode	front;
+		public BNode	back;
 
 		public override void		Draw ()
 		{
-			BNode	*child;
+			BNode	child;
 		
 			Debug.Assert( front );
 			Debug.Assert( back );
@@ -537,20 +545,21 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 			// Now fixup our polygon
 			prim		= RestorePrimPointers( baseAddress, (int)prim );
 		}
-	
+#endif	
 		public BPrimitiveNode ()
 		{
 			prim = null;
 		}
 		//public virtual ~BPrimitiveNode()	{};
 
-		public Prim		*prim;
+		public Prim		prim;
 
 		public override void		Draw ()
 		{
@@ -568,6 +577,7 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BLitPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -575,7 +585,7 @@ namespace FalconNet.Graphics
 			poly		= (Poly*)RestorePrimPointers( baseAddress, (int)poly );
 			backpoly	= (Poly*)RestorePrimPointers( baseAddress, (int)backpoly );
 		}
-
+#endif
 		public BLitPrimitiveNode ()
 		{
 			poly = null;
@@ -583,8 +593,8 @@ namespace FalconNet.Graphics
 		}
 		//public virtual ~BLitPrimitiveNode()	{};
 
-		public Poly		*poly;
-		public Poly		*backpoly;
+		public Poly		poly;
+		public Poly		backpoly;
 
 		public override void Draw ()
 		{
@@ -606,20 +616,21 @@ namespace FalconNet.Graphics
 	{
  
 		// Convert from file offsets back to pointers
+#if TODO
 		public BCulledPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 			// Now fixup our polygon
 			poly		= (Poly*)RestorePrimPointers( baseAddress, (int)poly );
 		}
-
+#endif
 		public BCulledPrimitiveNode ()
 		{
 			poly = null;
 		}
 		//public virtual~BCulledPrimitiveNode()	{};
 
-		public Poly		*poly;
+		public Poly		poly;
 
 		public override void Draw ()
 		{
@@ -639,11 +650,12 @@ namespace FalconNet.Graphics
 	public class BLightStringNode:   BPrimitiveNode
 	{
 		// Convert from file offsets back to pointers
+#if TODO
 		public BLightStringNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
-	
+#endif
 		public BLightStringNode () : base()
 		{
 			rgbaFront = -1;
@@ -675,7 +687,5 @@ namespace FalconNet.Graphics
 			return BNodeType.tagBLightStringNode;
 		}
 	}
+#endif
 }
-
-
-

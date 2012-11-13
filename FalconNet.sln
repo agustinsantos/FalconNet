@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sim", "Sim\Sim.csproj", "{3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui95", "Ui95\Ui95.csproj", "{81D5A611-9192-40CC-AB58-4309BB9CFF68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VU", "VU\VU.csproj", "{EDA4023D-884D-4F58-9E25-0F77A34CF43C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDA4023D-884D-4F58-9E25-0F77A34CF43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA4023D-884D-4F58-9E25-0F77A34CF43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA4023D-884D-4F58-9E25-0F77A34CF43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA4023D-884D-4F58-9E25-0F77A34CF43C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Main\Main.csproj

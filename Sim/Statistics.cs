@@ -10,15 +10,15 @@ namespace FalconNet.Sim
 	{
 		public static int	log_frame_rate;
 		
-		public staticvoid InitializeStatistics( )
+		public static void InitializeStatistics( )
 			{throw new NotImplementedException();}
-		public staticvoid CloseStatistics( )
+		public static void CloseStatistics( )
 			{throw new NotImplementedException();}
-		public staticvoid WriteStatistics( )
+		public static void WriteStatistics( )
 			{throw new NotImplementedException();}
-		public staticvoid PrintMemUsage ( )
+		public static void PrintMemUsage ( )
 			{throw new NotImplementedException();}
-		public staticvoid WriteMemUsage ( )
+		public static void WriteMemUsage ( )
 			{throw new NotImplementedException();}
 	}
 }

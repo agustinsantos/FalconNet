@@ -2,6 +2,9 @@ using System;
 using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using Flight=FalconNet.Campaign.FlightClass;
+using Squadron=FalconNet.Campaign.SquadronClass;
 
 namespace FalconNet.Campaign
 {
@@ -17,22 +20,26 @@ namespace FalconNet.Campaign
         public ATMAirbaseClass()
         {
             id = FalconNullId;
-            memset(schedule, 0, sizeof(uchar) * ATM_MAX_CYCLES);
+            memset(schedule, 0, sizeof(byte) * ATM_MAX_CYCLES);
             usage = 0;
             next = NULL;
         }
         public ATMAirbaseClass(CampBaseClass ent)
         {
             id = ent->Id();
-            memset(schedule, 0, sizeof(uchar) * ATM_MAX_CYCLES);
+            memset(schedule, 0, sizeof(byte) * ATM_MAX_CYCLES);
             usage = 0;
             next = NULL;
         }
-        public ATMAirbaseClass(ref VU_BYTE[] stream);
-        public ATMAirbaseClass(FileStream file);
+        public ATMAirbaseClass(ref VU_BYTE[] stream)
+			{throw new NotImplementedException();}
+        public ATMAirbaseClass(FileStream file)
+			{throw new NotImplementedException();}
         //TODO public ~ATMAirbaseClass();
-        public int Save(ref VU_BYTE[] stream);
-        public int Save(FileStream file);
+        public int Save(ref VU_BYTE[] stream)
+			{throw new NotImplementedException();}
+        public int Save(FileStream file)
+			{throw new NotImplementedException();}
         public int Size() { return sizeof(VU_ID) + AtmStatic.ATM_MAX_CYCLES; }
     };
 
@@ -55,41 +62,65 @@ namespace FalconNet.Campaign
         public List delayedList;						// List of mission requests already handled, but not filled
         public F4PFList squadronList;						// List of this team's squadrons
         public F4PFList packageList;						// List of all active packages
-        public ATMAirbaseClass* airbaseList;						// List of active airbases
+        public ATMAirbaseClass airbaseList;						// List of active airbases
         public byte supplyBase;
         public byte cycle;								// which planning block we're in.
         public CampaignTime scheduleTime;						// Last time we updated our blocks
 
         // constructors & serial functions
-        public AirTaskingManagerClass(ushort type, Team t);
-        public AirTaskingManagerClass(ref VU_BYTE[] stream);
-        public AirTaskingManagerClass(FileStream file);
+        public AirTaskingManagerClass(ushort type, Team t)
+		{throw new NotImplementedException();}
+        public AirTaskingManagerClass(ref VU_BYTE[] stream)
+		{throw new NotImplementedException();}
+        public AirTaskingManagerClass(FileStream file)
+		{throw new NotImplementedException();}
         //TODO public virtual ~AirTaskingManagerClass();
-        public virtual int SaveSize();
-        public virtual int Save(ref VU_BYTE[] stream);
-        public virtual int Save(FileStream file);
+        public override int SaveSize()
+		{throw new NotImplementedException();}
+        public virtual int Save(ref VU_BYTE[] stream)
+		{throw new NotImplementedException();}
+        public override int Save(FileStream file)
+		{throw new NotImplementedException();}
 
         // Required pure virtuals
-        public virtual int Task();
-        public virtual void DoCalculations();
-        public virtual int Handle(VuFullUpdateEvent* evnt);
+        public override int Task()
+		{throw new NotImplementedException();}
+        public override void DoCalculations()
+		{throw new NotImplementedException();}
+        public virtual int Handle(VuFullUpdateEvent evnt)
+		{throw new NotImplementedException();}
 
         // core functions
-        public int BuildPackage(Package* pc, MissionRequest mis);
-        public int BuildDivert(MissionRequest mis);
-        public int BuildSpecificDivert(Flight flight);
-        public void ProcessRequest(MissionRequest request);
-        public Squadron FindBestAir(MissionRequest mis, GridIndex bx, GridIndex by);
-        public Flight FindBestAirFlight(MissionRequest mis);
-        public void SendATMMessage(VU_ID from, Team to, short msg, short d1, short d2, void* d3, int flags);
-        public int FindTakeoffSlot(VU_ID abid, WayPoint w);
-        public void ScheduleAircraft(VU_ID abid, WayPoint wp, int aircraft);
-        public void ZapAirbase(VU_ID abid);
-        public void ZapSchedule(int rw, ATMAirbaseClass* airbase, int tilblock);
-        public ATMAirbaseClass FindATMAirbase(VU_ID abid);
-        public ATMAirbaseClass AddToAirbaseList(CampEntity airbase);
-        public int FindNearestActiveTanker(ref GridIndex x, ref GridIndex y, ref CampaignTime time);
-        public int FindNearestActiveJammer(ref GridIndex x, ref GridIndex y, ref CampaignTime time);
+        public int BuildPackage(Package pc, MissionRequest mis)
+		{throw new NotImplementedException();}
+        public int BuildDivert(MissionRequest mis)
+		{throw new NotImplementedException();}
+        public int BuildSpecificDivert(Flight flight)
+		{throw new NotImplementedException();}
+        public void ProcessRequest(MissionRequest request)
+		{throw new NotImplementedException();}
+        public Squadron FindBestAir(MissionRequest mis, GridIndex bx, GridIndex by)
+		{throw new NotImplementedException();}
+        public Flight FindBestAirFlight(MissionRequest mis)
+		{throw new NotImplementedException();}
+        public void SendATMMessage(VU_ID from, Team to, short msg, short d1, short d2, object d3, int flags)
+		{throw new NotImplementedException();}
+        public int FindTakeoffSlot(VU_ID abid, WayPoint w)
+		{throw new NotImplementedException();}
+        public void ScheduleAircraft(VU_ID abid, WayPoint wp, int aircraft)
+		{throw new NotImplementedException();}
+        public void ZapAirbase(VU_ID abid)
+		{throw new NotImplementedException();}
+        public void ZapSchedule(int rw, ATMAirbaseClass  airbase, int tilblock)
+		{throw new NotImplementedException();}
+        public ATMAirbaseClass FindATMAirbase(VU_ID abid)
+		{throw new NotImplementedException();}
+        public ATMAirbaseClass AddToAirbaseList(CampEntity airbase)
+		{throw new NotImplementedException();}
+        public int FindNearestActiveTanker(ref GridIndex x, ref GridIndex y, ref CampaignTime time)
+		{throw new NotImplementedException();}
+        public int FindNearestActiveJammer(ref GridIndex x, ref GridIndex y, ref CampaignTime time)
+		{throw new NotImplementedException();}
     };
 #if TODO
 typedef AirTaskingManagerClass *AirTaskingManager;
@@ -120,19 +151,26 @@ typedef AirTaskingManagerClass *ATM;
         // However, if our cycle is < 8 minutes long, we need modify the meaning of 'full'
         public const int ATM_CYCLE_FULL = 0x1F;							//	What a full schedule looks like (5 bits)
 
-        public static void InitATM();
+        public static void InitATM()
+		{throw new NotImplementedException();}
 
-        public static void EndATM();
+        public static void EndATM()
+		{throw new NotImplementedException();}
 
-        public static int LoadMissionLists(string scenario);
+        public static int LoadMissionLists(string scenario)
+		{throw new NotImplementedException();}
 
-        public static int SaveMissionLists(string scenario);
+        public static int SaveMissionLists(string scenario)
+		{throw new NotImplementedException();}
 
-        public static int RequestSARMission(FlightClass flight);
+        public static int RequestSARMission(FlightClass flight)
+		{throw new NotImplementedException();}
 
-        public static void RequestIntercept(FlightClass enemy, int who, RequIntHint hint = RI_NORMAL);
+        public static void RequestIntercept(FlightClass enemy, int who, RequIntHint hint = RI_NORMAL)
+		{throw new NotImplementedException();}
 
-        public static int TargetAllSites(ObjectiveClass po, int action, int team, CampaignTime startTime);
+        public static int TargetAllSites(ObjectiveClass po, int action, int team, CampaignTime startTime)
+		{throw new NotImplementedException();}
 
         //extern void TargetAdditionalSites (void);
     }

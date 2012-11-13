@@ -1,6 +1,8 @@
 using System;
 using FalconNet.Common;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using Flight=FalconNet.Campaign.FlightClass;
 
 namespace FalconNet.Campaign
 {
@@ -340,7 +342,7 @@ namespace FalconNet.Campaign
 		}
 	};
 	
-// TODO typedef MissionRequestClass *MissionRequest;
+// TODO typedef MissionRequestClass MissionRequest;
 
 // ======================================================
 // Mission Data Type - Stores data used to build missions
@@ -379,17 +381,17 @@ namespace FalconNet.Campaign
 // Global functions
 // ===================================================
 
-		public static  int BuildPathToTarget (Flight u, MissionRequestClass *mis, VU_ID airbaseID)
+		public static  int BuildPathToTarget (Flight u, MissionRequestClass mis, VU_ID airbaseID)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public static  void BuildDivertPath (Flight u, MissionRequestClass *mis)
+		public static  void BuildDivertPath (Flight u, MissionRequestClass mis)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public static  void AddInformationWPs (Flight u, MissionRequestClass *mis)
+		public static  void AddInformationWPs (Flight u, MissionRequestClass mis)
 		{
 			throw new NotImplementedException ();
 		}
@@ -404,12 +406,12 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		} // M.N.
 
-		public static  long SetWPTimes (Flight u, MissionRequestClass *mis)
+		public static  long SetWPTimes (Flight u, MissionRequestClass mis)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public static  long SetWPTimesTanker (Flight u, MissionRequestClass *mis, bool type, CampaignTime time)
+		public static  long SetWPTimesTanker (Flight u, MissionRequestClass mis, bool type, CampaignTime time)
 		{
 			throw new NotImplementedException ();
 		}
@@ -424,7 +426,7 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public static  int TargetThreats (Team team, int priority, F4PFList list, MoveType mt, CampaignTime time, long target_flags, short* targeted)
+		public static  int TargetThreats (Team team, int priority, F4PFList list, MoveType mt, CampaignTime time, long target_flags, ref short targeted)
 		{
 			throw new NotImplementedException ();
 		}

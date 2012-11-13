@@ -2,6 +2,7 @@ using System;
 
 namespace FalconNet.Graphics
 {
+#if TODO
 	public enum PpolyType
 	{
 		PointF = 0,
@@ -38,7 +39,7 @@ namespace FalconNet.Graphics
 
 		PpolyTypeNum
 	};
-#if TODO
+
 //typedef Trotation	Pmatrix;
 
 //typedef Tpoint		Tpoint;
@@ -58,8 +59,12 @@ namespace FalconNet.Graphics
 		public float	u, v;
 	};
 
-//typedef float	Pintensity;
-
+	//typedef float	Pintensity;
+	public struct	Pintensity
+	{
+		public float v;
+	};
+	
 	public struct	PclipInfo
 	{
 		public UInt32	clipFlag;			// Which edges this point is outside
@@ -67,9 +72,9 @@ namespace FalconNet.Graphics
 	};
 
 
-/********************************************\
-	Polygon structures
-\********************************************/
+	/********************************************\
+		Polygon structures
+	\********************************************/
 	public class Prim
 	{
 		public PpolyType	type;
@@ -82,12 +87,12 @@ namespace FalconNet.Graphics
 		public int			rgba;		// Indexes ColorPool
 	};
 
-	public  class PrimLineFC: Prim
+	public class PrimLineFC: Prim
 	{
 		public int			rgba;		// Indexes ColorPool
 	};
 
-	public  class PrimLtStr: Prim
+	public class PrimLtStr: Prim
 	{
 		public int			rgba;			// Indexes ColorPool
 		public int			rgbaBack;		// Indexes ColorPool (-1 means omnidirectional -- could subclass instead)

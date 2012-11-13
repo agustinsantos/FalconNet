@@ -2,6 +2,7 @@ using System;
 using FalconNet.Common;
 using System.IO;
 using System.Diagnostics;
+using FalconNet.VU;
 
 namespace FalconNet.FalcLib
 {
@@ -31,129 +32,136 @@ namespace FalconNet.FalcLib
 	
 	[Flags]
 	public enum EntityEnum : sbyte
-    {
+	{
 		FalconCampaignEntity = 0x1,
 		FalconSimEntity = 0x2,
 		FalconPersistantEntity = 0x8,
 		FalconSimObjective = 0x20
 	}
-	
+	// Radar Modes
+	public enum FEC_RADAR
+	{
+		FEC_RADAR_OFF = 0x00,	   	// Radar always off
+		FEC_RADAR_SEARCH_100 = 0x01,	   	// Search Radar - 100 % of the time (always on)
+		FEC_RADAR_SEARCH_1 = 0x02,	   	// Search Sequence #1
+		FEC_RADAR_SEARCH_2 = 0x03,	   	// Search Sequence #2
+		FEC_RADAR_SEARCH_3 = 0x04,	   	// Search Sequence #3
+		FEC_RADAR_AQUIRE = 0x05,	   	// Aquire Mode (looking for a target)
+		FEC_RADAR_GUIDE = 0x06,	   	// Missile in flight. Death is imminent
+		FEC_RADAR_CHANGEMODE = 0x07	   	// Missile in flight. Death is imminent
+	}
 // ================================
 // FalcEntity class
 // ================================
 
 	public abstract class FalconEntity :  VuEntity
 	{
-		// Radar Modes
-		public const int FEC_RADAR_OFF = 0x00;	   	// Radar always off
-		public const int FEC_RADAR_SEARCH_100 = 0x01;	   	// Search Radar - 100 % of the time (always on)
-		public const int FEC_RADAR_SEARCH_1 = 0x02;	   	// Search Sequence #1
-		public const int FEC_RADAR_SEARCH_2 = 0x03;	   	// Search Sequence #2
-		public const int FEC_RADAR_SEARCH_3 = 0x04;	   	// Search Sequence #3
-		public const int FEC_RADAR_AQUIRE = 0x05;	   	// Aquire Mode (looking for a target)
-		public const int FEC_RADAR_GUIDE = 0x06;	   	// Missile in flight. Death is imminent
-		public const int FEC_RADAR_CHANGEMODE = 0x07;	   	// Missile in flight. Death is imminent
+
 		
 		private int			dirty_falcent;
 		private int			dirty_classes;
 		private int			dirty_score;
 
 		private int calc_dirty_bucket ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		private FEC_FLAGS		falconFlags;
-		protected EntityEnum		falconType;
-
+		protected EntityEnum	falconType;
 
 		public FalconEntity (int type)
             : base (type)
-        {
-            falconType = 0;
-            falconFlags = 0;
-            dirty_falcent = 0;
-            dirty_classes = 0;
-            dirty_score = 0;
-        }
-
+		{
+			falconType = 0;
+			falconFlags = 0;
+			dirty_falcent = 0;
+			dirty_classes = 0;
+			dirty_score = 0;
+		}
 		
 		public FalconEntity (byte[] stream, ref int pos)
             : base(stream, ref pos)
-        {
-            dirty_falcent = 0;
-            dirty_classes = 0;
-            dirty_score = 0;
-            falconType = (EntityEnum)(stream[pos]);
-            pos += sizeof(EntityEnum);
-            if (gCampDataVersion >= 32)
-            {
-                falconFlags = (FEC_FLAGS)(stream[pos]);
-                pos += sizeof(FEC_FLAGS);
-            }
-        }
-
+		{
+			dirty_falcent = 0;
+			dirty_classes = 0;
+			dirty_score = 0;
+			falconType = (EntityEnum)(stream [pos]);
+			pos += sizeof(EntityEnum);
+#if TODO
+			if (CampaignClass.gCampDataVersion >= 32) {
+				falconFlags = (FEC_FLAGS)(stream [pos]);
+				pos += sizeof(FEC_FLAGS);
+			}
+#endif 
+			throw new NotImplementedException();
+		}
 
 		public FalconEntity (FileStream filePtr) 
             :base(filePtr)
-        {
-            dirty_falcent = 0;
-            dirty_classes = 0;
-            dirty_score = 0;
-            falconType = (EntityEnum)(filePtr.ReadByte());
-            if (gCampDataVersion >= 32)
-                falconFlags = (FEC_FLAGS)(filePtr.ReadByte());
-        }
-
-        public int Save(byte[] stream, ref int pos)
 		{
-	        int saveSize = base.Save (stream, ref pos);
+			dirty_falcent = 0;
+			dirty_classes = 0;
+			dirty_score = 0;
+			falconType = (EntityEnum)(filePtr.ReadByte ());
+#if TODO			
+			if (CampaignClass.gCampDataVersion >= 32)
+				falconFlags = (FEC_FLAGS)(filePtr.ReadByte ());
+#endif 
+			throw new NotImplementedException();
+		}
 
-	        stream[pos] = (byte)falconType;
-            pos += sizeof(EntityEnum);
-            saveSize += sizeof(EntityEnum);	
-	        stream[pos] = (byte)falconFlags;
-            pos += sizeof(FEC_FLAGS);
-            saveSize += sizeof(FEC_FLAGS);
-            return (saveSize);
-        }
+		public int Save (byte[] stream, ref int pos)
+		{
+			int saveSize = base.Save (stream, ref pos);
+
+			stream [pos] = (byte)falconType;
+			pos += sizeof(EntityEnum);
+			saveSize += sizeof(EntityEnum);	
+			stream [pos] = (byte)falconFlags;
+			pos += sizeof(FEC_FLAGS);
+			saveSize += sizeof(FEC_FLAGS);
+			return (saveSize);
+		}
 
 		public int Save (FileStream filePtr)
 		{
-	        int saveSize = base.Save (filePtr);
+			int saveSize = base.Save (filePtr);
 
-            filePtr.WriteByte((byte)falconType);
-            saveSize += sizeof(EntityEnum);
-            filePtr.WriteByte((byte)falconFlags);
-            saveSize += sizeof(FEC_FLAGS);
-	        return (saveSize);
-        }
+			filePtr.WriteByte ((byte)falconType);
+			saveSize += sizeof(EntityEnum);
+			filePtr.WriteByte ((byte)falconFlags);
+			saveSize += sizeof(FEC_FLAGS);
+			return (saveSize);
+		}
 
 		public int SaveSize ()
 		{
-            return base.SaveSize() + sizeof(EntityEnum) + sizeof(FEC_FLAGS);
-    	    //   return VuEntity::SaveSize();
-	    }
+			return base.SaveSize () + sizeof(EntityEnum) + sizeof(FEC_FLAGS);
+			//   return VuEntity::SaveSize();
+		}
 
 
 		//TODO public virtual ~FalconEntity();
 
 		public bool IsCampaign ()
 		{
-			return (falconType.IsFlagSet(EntityEnum.FalconCampaignEntity)) ? true : false;
+			return (falconType.IsFlagSet (EntityEnum.FalconCampaignEntity)) ? true : false;
 		}
 
 		public bool IsSim ()
 		{
-			return (falconType.IsFlagSet(EntityEnum.FalconSimEntity)) ? true : false;
+			return (falconType.IsFlagSet (EntityEnum.FalconSimEntity)) ? true : false;
 		}
 
 		public bool IsSimObjective ()
 		{
-			return (falconType.IsFlagSet(EntityEnum.FalconSimObjective)) ? true : false;
+			return (falconType.IsFlagSet (EntityEnum.FalconSimObjective)) ? true : false;
 		}
 
 		public bool IsPersistant ()
 		{
-			return (falconType.IsFlagSet(EntityEnum.FalconPersistantEntity)) ? true : false;
+			return (falconType.IsFlagSet (EntityEnum.FalconPersistantEntity)) ? true : false;
 		}
 
 		public void SetTypeFlag (EntityEnum flag)
@@ -168,7 +176,7 @@ namespace FalconNet.FalcLib
 
 		public void SetFalcFlag (FEC_FLAGS flag)
 		{
-			if (!(falconFlags.IsFlagSet(flag))) {
+			if (!(falconFlags.IsFlagSet (flag))) {
 				falconFlags |= flag;
 				MakeFlagsDirty ();
 			}
@@ -176,7 +184,7 @@ namespace FalconNet.FalcLib
 
 		public void UnSetFalcFlag (FEC_FLAGS flag)
 		{
-			if (falconFlags.IsFlagSet(flag)) {
+			if (falconFlags.IsFlagSet (flag)) {
 				falconFlags &= ~flag;
 				MakeFlagsDirty ();
 			}
@@ -184,7 +192,7 @@ namespace FalconNet.FalcLib
 
 		public bool IsSetFalcFlag (FEC_FLAGS flag)
 		{
-			return falconFlags.IsFlagSet(flag);
+			return falconFlags.IsFlagSet (flag);
 		}
 
 		public bool IsPlayer ()
@@ -215,17 +223,17 @@ namespace FalconNet.FalcLib
 		}
 
 		public virtual byte GetDomain ()
-        {
-          //TODO  return Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_DOMAIN];
-            throw new NotImplementedException();
-        }
-
-		public virtual int GetRadarMode ()
 		{
-			return FEC_RADAR_OFF;
+			//TODO  return Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_DOMAIN];
+			throw new NotImplementedException ();
 		}
 
-		public virtual void SetRadarMode (int p)
+		public virtual FEC_RADAR GetRadarMode ()
+		{
+			return FEC_RADAR.FEC_RADAR_OFF;
+		}
+
+		public virtual void SetRadarMode (FEC_RADAR p)
 		{
 		}
 
@@ -240,7 +248,9 @@ namespace FalconNet.FalcLib
 		public virtual int CombatClass ()
 		{
 			return 999;
-		} // 2002-02-25 ADDED BY S.G. No combat class for non flight or non aircraft class
+		} 
+		
+		// 2002-02-25 ADDED BY S.G. No combat class for non flight or non aircraft class
 		public virtual bool OnGround ()
 		{
 			return false;
@@ -411,55 +421,97 @@ namespace FalconNet.FalcLib
 			return 0.0f;
 		}
 
-		public virtual int	GetRadarType ()
-		{ throw new NotImplementedException(); }
+		public virtual Radar_types GetRadarType ()
+		{
+			return Radar_types.RDR_NO_RADAR;
+		}
 	
 		public virtual byte[] GetDamageModifiers ()
-        {
-            return DefaultDamageMods;
-        }
+		{
+		#if TODO
+			return CampaignStatic.DefaultDamageMods;
+		#endif 
+			throw new NotImplementedException();
+		}
 
 		public void GetLocation (ref short x, ref short y)
-		{ throw new NotImplementedException(); }
+		{
+			vector v;
+			
+			v.x = XPos ();
+			v.y = YPos ();
+			v.z = 0.0F;
+		#if TODO
+			ConvertSimToGrid (v, x, y);
+		#endif 
+			throw new NotImplementedException();
+		}
 
 		public int GetAltitude ()
 		{
-			return (int) (ZPos () * -1.0F);
+			return (int)(ZPos () * -1.0F);
 		}
 	
 		public void SetOwner (FalconSessionEntity session)
-		{ throw new NotImplementedException(); }
+		{
+#if TODO
+			// Set the owner to session
+			share_.ownerId_ = session.OwnerId ();
+#endif 
+			throw new NotImplementedException();
+		}
 
 		public void SetOwner (VU_ID sessionId)
-		{ throw new NotImplementedException(); }
+		{
+			// Set the owner to session
+			share_.ownerId_ = sessionId;
+		}
 
 		public void DoFullUpdate ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		// Dirty Functions
 		public void ClearDirty ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public void MakeDirty (Dirty_Class bits, Dirtyness score)
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public int EncodeDirty (ref byte[] stream)
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public int DecodeDirty (ref byte[] stream)
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public static void DoSimDirtyData ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public static void DoCampaignDirtyData ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public void MakeFlagsDirty ()
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		public void MakeFalconEntityDirty (Dirty_Falcon_Entity bits, Dirtyness score)
-		{ throw new NotImplementedException(); }
+		{
+			throw new NotImplementedException ();
+		}
 
 		// 2002-03-22 ADDED BY S.G. Needs them outside of battalion class
 		public virtual void SetAQUIREtimer (VU_TIME newTime)

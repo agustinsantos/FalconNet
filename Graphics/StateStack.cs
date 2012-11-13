@@ -315,7 +315,7 @@ namespace FalconNet.Graphics
 			MatrixMultTranspose( rot, &tempP2, &ObjSpaceLight );
 		}
 
-		public static void	Light (Pnormal *pNormals, int nNormals)
+		public static void	Light (Pnormal pNormals, int nNormals)
 		{
 			// Make sure we've got enough room in the light value pool
 			Debug.Assert( IsValidIntensityIndex( n-1 ) );
@@ -582,7 +582,7 @@ namespace FalconNet.Graphics
 			return ON_SCREEN;
 		}
 
-		protected static  void	TransformInline (Tpoint *pCoords, int nCoords, bool clip)
+		protected static  void	TransformInline (Tpoint[] p, int nCoords, bool clip)
 		{
 			float	scratch_x, scratch_y, scratch_z;
 		

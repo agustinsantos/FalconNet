@@ -1,6 +1,7 @@
 ﻿using System;
 using FalconNet.Common;
-
+using FalconNet.VU;
+using Objective=FalconNet.Campaign.ObjectiveClass;
 
 namespace FalconNet.Campaign
 {
@@ -9,7 +10,7 @@ namespace FalconNet.Campaign
     // Primary and secondary objective data
     // ====================================
 
-    public struct PrimaryObjectiveData
+    public class PrimaryObjectiveData
     {
         public VU_ID objective;						// Id of the objective
         public short[] ground_priority = new short[NUM_TEAMS];		// It's calculated priority (per team)
@@ -28,19 +29,25 @@ typedef PrimaryObjectiveData* POData;
         public Unit unit;
         public int score;
         public int distance;
-        public UnitScoreNode* next;
+        public UnitScoreNode next;
 
 
-        public UnitScoreNode();
+        public UnitScoreNode()
+		{throw new NotImplementedException();}
 
-        public UnitScoreNode* Insert(UnitScoreNode* to_insert, int sort_by);
-        public UnitScoreNode* Remove(UnitScoreNode* to_remove);
-        public UnitScoreNode* Remove(Unit u);
-        public UnitScoreNode* Purge();
-        public UnitScoreNode* Sort(int sort_by);
+        public UnitScoreNode Insert(UnitScoreNode to_insert, int sort_by)
+		{throw new NotImplementedException();}
+        public UnitScoreNode Remove(UnitScoreNode to_remove)
+		{throw new NotImplementedException();}
+        public UnitScoreNode Remove(Unit u)
+		{throw new NotImplementedException();}
+        public UnitScoreNode Purge()
+		{throw new NotImplementedException();}
+        public UnitScoreNode Sort(int sort_by)
+		{throw new NotImplementedException();}
     };
 
-    // TODO typedef UnitScoreNode* USNode;
+    // TODO typedef UnitScoreNode USNode;
 
     public class GndObjDataType
     {
@@ -48,29 +55,39 @@ typedef PrimaryObjectiveData* POData;
         public Objective obj;
         public int priority_score;
         public int unit_options;
-        public UnitScoreNode* unit_list;
-        public GndObjDataType* next;
+        public UnitScoreNode unit_list;
+        public GndObjDataType next;
 
 
-        public GndObjDataType();
+        public GndObjDataType()
+		{throw new NotImplementedException();}
         //TODO public ~GndObjDataType ( );
 
-        public GndObjDataType* Insert(GndObjDataType* to_insert, int sort_by);
-        public GndObjDataType* Remove(GndObjDataType* to_remove);
-        public GndObjDataType* Remove(Objective o);
-        public GndObjDataType* Purge();
-        public GndObjDataType* Sort(int sort_by);
+        public GndObjDataType Insert(GndObjDataType to_insert, int sort_by)
+		{throw new NotImplementedException();}
+        public GndObjDataType Remove(GndObjDataType to_remove)
+		{throw new NotImplementedException();}
+        public GndObjDataType Remove(Objective o)
+		{throw new NotImplementedException();}
+        public GndObjDataType Purge()
+		{throw new NotImplementedException();}
+        public GndObjDataType Sort(int sort_by)
+		{throw new NotImplementedException();}
 
-        public void InsertUnit(Unit u, int s, int d);
-        public UnitScoreNode* RemoveUnit(Unit u);
-        public void RemoveUnitFromAll(Unit u);
-        public void PurgeUnits();
+        public void InsertUnit(Unit u, int s, int d)
+		{throw new NotImplementedException();}
+        public UnitScoreNode RemoveUnit(Unit u)
+		{throw new NotImplementedException();}
+        public void RemoveUnitFromAll(Unit u)
+		{throw new NotImplementedException();}
+        public void PurgeUnits()
+		{throw new NotImplementedException();}
 
-        //		GndObjDataType* FindWorstOption (Unit u);
+        //		GndObjDataType FindWorstOption (Unit u);
         //		int FindNewOptions (Unit u);
     }
 #if TODO 
-typedef GndObjDataType* GODNode;
+typedef GndObjDataType GODNode;
 #endif
 
     public static class GtmobjStatic
@@ -99,16 +116,22 @@ typedef GndObjDataType* GODNode;
         // Global functions
         // ==========================================
 
-        public static void CleanupObjList();
+        public static void CleanupObjList()
+		{throw new NotImplementedException();}
 
-        public static void DisposeObjList();
+        public static void DisposeObjList()
+		{throw new NotImplementedException();}
 
-        public static PrimaryObjectiveData GetPOData(Objective po);
+        public static PrimaryObjectiveData GetPOData(Objective po)
+		{throw new NotImplementedException();}
 
-        public static void AddPODataEntry(Objective po);
+        public static void AddPODataEntry(Objective po)
+		{throw new NotImplementedException();}
 
-        public static void ResetObjectiveAssignmentScores();
+        public static void ResetObjectiveAssignmentScores()
+		{throw new NotImplementedException();}
 
-        public static int GetOptions(int score);
+        public static int GetOptions(int score)
+		{throw new NotImplementedException();}
     }
 }

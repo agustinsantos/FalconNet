@@ -1,6 +1,7 @@
 using System;
 using FalconNet.Common;
 using FalconNet.Campaign;
+using FalconNet.VU;
 
 namespace FalconNet.FalcLib
 {

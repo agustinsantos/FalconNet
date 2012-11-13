@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</ProjectGuid>
+    <ProjectGuid>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FalconNet.FalcLib</RootNamespace>
-    <AssemblyName>FalcLib</AssemblyName>
+    <RootNamespace>FalconNet.VU</RootNamespace>
+    <AssemblyName>VU</AssemblyName>
     <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,38 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="mddriver.cs" />
-    <Compile Include="F4Find.cs" />
-    <Compile Include="PlayerOp.cs" />
-    <Compile Include="PlayerOpDef.cs" />
-    <Compile Include="rules.cs" />
-    <Compile Include="SoundGroups.cs" />
-    <Compile Include="Camplib.cs" />
-    <Compile Include="entity.cs" />
-    <Compile Include="FalcEnt.cs" />
-    <Compile Include="Campweap.cs" />
-    <Compile Include="dispcfg.cs" />
-    <Compile Include="dirtybits.cs" />
-    <Compile Include="FalcDmg.cs" />
-    <Compile Include="TheaterDef.cs" />
-    <Compile Include="F4VU.cs" />
-    <Compile Include="FalcSess.cs" />
-    <Compile Include="Classtbl.cs" />
-    <Compile Include="FalcGame.cs" />
+    <Compile Include="VuEntity.cs" />
+    <Compile Include="Commons.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
-      <Name>Graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VU\VU.csproj">
-      <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>
-      <Name>VU</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

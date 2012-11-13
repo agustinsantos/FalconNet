@@ -1,5 +1,8 @@
 using System;
-
+using FalconNet.VU;
+using Objective=FalconNet.Campaign.ObjectiveClass;
+using FalconNet.FalcLib;
+using FalconNet.Common;
 namespace FalconNet.Campaign
 {
 	//
@@ -92,7 +95,7 @@ namespace FalconNet.Campaign
 		public const int MAX_NORMAL_DIST = 20;
 		public static int[] OrderPriority = new int[GORD_LAST];		// Update this if new orders are added
 	
-		private uchar				orders;    		// Current orders
+		private byte				orders;    		// Current orders
 		private short				division;		// What division it belongs to (abstract)
 		private VU_ID				pobj;			// Primary objective we're assigned to
 		private VU_ID				sobj;			// Secondary objective we're attached to
@@ -103,24 +106,32 @@ namespace FalconNet.Campaign
 	
 		// constructors and serial functions
 		public GroundUnitClass (int type)
-;
-		public GroundUnitClass (VU_BYTE **stream);
+		{throw new NotImplementedException();}
+		public GroundUnitClass (VU_BYTE[] stream) 
+		{throw new NotImplementedException();}
 		//TODO public virtual ~GroundUnitClass();
-		public virtual int SaveSize () ;
+		public virtual int SaveSize () 
+		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE **stream);
+		public virtual int Save (VU_BYTE[] stream) 
+		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent *evnt);
+		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt) 
+		{throw new NotImplementedException();}
 
 		// Required pure virtuals handled by GroundUnitClass
-		public virtual MoveType GetMovementType () ;
+		public virtual MoveType GetMovementType () 
+		{throw new NotImplementedException();}
 
-		public virtual MoveType GetObjMovementType (Objective o, int n);
+		public virtual MoveType GetObjMovementType (Objective o, int n) 
+		{throw new NotImplementedException();}
 
-		public virtual int DetectOnMove () ;
+		public virtual int DetectOnMove () 
+		{throw new NotImplementedException();}
 
-		public virtual int ChooseTarget () ;
+		public virtual int ChooseTarget () 
+		{throw new NotImplementedException();}
 
 		public virtual CampaignTime UpdateTime ()
 		{
@@ -143,7 +154,7 @@ namespace FalconNet.Campaign
 		}
 
 		// Access functions
-		public uchar GetOrders ()
+		public byte GetOrders ()
 		{
 			return orders;
 		}
@@ -153,22 +164,29 @@ namespace FalconNet.Campaign
 			return division;
 		}
 
-		public void SetOrders (uchar p);
+		public void SetOrders (byte p) 
+		{throw new NotImplementedException();}
 
-		public void SetDivision (short p);
+		public void SetDivision (short p) 
+		{throw new NotImplementedException();}
 
-		public void SetPObj (VU_ID p);
+		public void SetPObj (VU_ID p) 
+		{throw new NotImplementedException();}
 
-		public void SetSObj (VU_ID p);
+		public void SetSObj (VU_ID p) 
+		{throw new NotImplementedException();}
 
-		public void SetAObj (VU_ID p);
+		public void SetAObj (VU_ID p) 
+		{throw new NotImplementedException();}
 
 		// Core functions
-		public int DetectVs (AircraftClass *ac, float *d, int *combat, int *spotted, int *capture, int *nomove, int *estr);
+		public int DetectVs (AircraftClass ac, ref float d, ref int combat, ref int spotted, ref int capture, ref int nomove, ref int estr) 
+		{throw new NotImplementedException();}
 
-		public int DetectVs (CampEntity e, float *d, int *combat, int *spotted, int *capture, int *nomove, int *estr);
+		public int DetectVs (CampEntity e, ref float d, ref int combat, ref int spotted, ref int capture, ref int nomove, ref int estr) 
+		{throw new NotImplementedException();}
 
-		public virtual void SetUnitOrders (uchar o)
+		public virtual void SetUnitOrders (byte o)
 		{
 			orders = o;
 		}
@@ -233,77 +251,108 @@ namespace FalconNet.Campaign
 			return aobj;
 		}
 
-		public virtual int CheckForSurrender () ;
+		public virtual int CheckForSurrender () 
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitNormalRole () ;
+		public virtual int GetUnitNormalRole () 
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitCurrentRole () ;
+		public virtual int GetUnitCurrentRole () 
+		{throw new NotImplementedException();}
 
-		public virtual int BuildMission () ;
+		public virtual int BuildMission () 
+		{throw new NotImplementedException();}
 
-		public void MakeGndUnitDirty (Dirty_Ground_Unit bits, Dirtyness score);
+		public void MakeGndUnitDirty (Dirty_Ground_Unit bits, Dirtyness score)
+		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte **stream);
+		public void WriteDirty (byte[] stream)
+		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte **stream);
+		public void ReadDirty (byte[] stream)
+		{throw new NotImplementedException();}
 		
 		// ============================
 		// Global functions
 		// ============================
 		
-		public static  char* DirectionToEnemy (char* buf, GridIndex x, GridIndex y, Team who);
+		public static  char[] DirectionToEnemy (char[] buf, GridIndex x, GridIndex y, Team who) 
+		{throw new NotImplementedException();}
 		
-		public static  void ReorderRallied (Unit u);
+		public static  void ReorderRallied (Unit u) 
+		{throw new NotImplementedException();}
 		
-		public static  Unit BestElement (Unit u, int at, int role);
+		public static  Unit BestElement (Unit u, int at, int role) 
+		{throw new NotImplementedException();}
 		
-		public static  int FindNextBest (int d, int[] pos);
+		public static  int FindNextBest (int d, int[] pos) 
+		{throw new NotImplementedException();}
 		
-		public static  void ReorganizeUnit (Unit u);
+		public static  void ReorganizeUnit (Unit u) 
+		{throw new NotImplementedException();}
 		
-		public static  int BuildGroundWP (Unit u);
+		public static  int BuildGroundWP (Unit u) 
+		{throw new NotImplementedException();}
 		
-		public static  void GetCombatPos (Unit e, int[] positions, char[] ed, ref GridIndex tx, ref GridIndex ty);
+		public static  void GetCombatPos (Unit e, int[] positions, char[] ed, ref GridIndex tx, ref GridIndex ty) 
+		{throw new NotImplementedException();}
 		
-		public static  int GetActionFromOrders (int orders);
+		public static  int GetActionFromOrders (int orders) 
+		{throw new NotImplementedException();}
 		
-		public static  int CheckUnitStatus (Unit u);
+		public static  int CheckUnitStatus (Unit u) 
+		{throw new NotImplementedException();}
 		
-		public static  int CheckReady (Unit u);
+		public static  int CheckReady (Unit u) 
+		{throw new NotImplementedException();}
 		
-		public static  int CalculateOpposingStrength (Unit u, F4PFList list);
+		public static  int CalculateOpposingStrength (Unit u, F4PFList list) 
+		{throw new NotImplementedException();}
 		
-		public static  int SOSecured (Objective o, Team who);
+		public static  int SOSecured (Objective o, Team who) 
+		{throw new NotImplementedException();}
 		
-		public static  int GetActionFromOrders (int orders);
+		public static  CampaignHeading GetAlternateHeading (Unit u, GridIndex x, GridIndex y, GridIndex nx, GridIndex ny, CampaignHeading h) 
+		{throw new NotImplementedException();}
 		
-		public static  CampaignHeading GetAlternateHeading (Unit u, GridIndex x, GridIndex y, GridIndex nx, GridIndex ny, CampaignHeading h);
+		public static  int ScorePosition (GridIndex x, GridIndex y, GridIndex px, GridIndex py, int position, int ours) 
+		{throw new NotImplementedException();}
 		
-		public static  int ScorePosition (GridIndex x, GridIndex y, GridIndex px, GridIndex py, int position, int ours);
+		public static  Objective FindBestPosition (Unit u, Unit e, F4PFList nearlist) 
+		{throw new NotImplementedException();}
 		
-		public static  Objective FindBestPosition (Unit u, Unit e, F4PFList nearlist);
+		public static  void ClassifyUnitElements (Unit u, ref int recon, ref int combat, ref int reserve, ref int support) 
+		{throw new NotImplementedException();}
 		
-		public static  void ClassifyUnitElements (Unit u, int *recon, int *combat, int *reserve, int *support);
+		public static  int GetPositionOrders (Unit e)
+		{throw new NotImplementedException();}
 		
-		public static  int GetPositionOrders (Unit e);
+		public static  void FindBestCover (GridIndex x, GridIndex y, CampaignHeading h, ref GridIndex cx, ref GridIndex cy, int roadok) 
+		{throw new NotImplementedException();}
 		
-		public static  void FindBestCover (GridIndex x, GridIndex y, CampaignHeading h, GridIndex *cx, GridIndex *cy, int roadok);
+		public static  Objective FindRetreatPath (Unit u, int depth, int flags) 
+		{throw new NotImplementedException();}
 		
-		public static  Objective FindRetreatPath (Unit u, int depth, int flags);
+		public static  Unit RequestArtillerySupport (Unit req, Unit target) 
+		{throw new NotImplementedException();}
 		
-		public static  Unit RequestArtillerySupport (Unit req, Unit target);
+		public static  int RequestCAS (int Team, Unit target) 
+		{throw new NotImplementedException();}
 		
-		public static  int RequestCAS (int Team, Unit target);
+		public static  int RequestSupport (Unit req, Unit target) 
+		{throw new NotImplementedException();}
 		
-		public static  int RequestSupport (Unit req, Unit target);
+		public static  void RequestOCCAS (Unit u, GridIndex x, GridIndex y, CampaignTime time) 
+		{throw new NotImplementedException();}
 		
-		public static  void RequestOCCAS (Unit u, GridIndex x, GridIndex y, CampaignTime time);
+		public static  void RequestBAI (Unit u, GridIndex x, GridIndex y, CampaignTime time) 
+		{throw new NotImplementedException();}
 		
-		public static  void RequestBAI (Unit u, GridIndex x, GridIndex y, CampaignTime time);
+		public static  int GetGroundRole (int orders) 
+		{throw new NotImplementedException();}
 		
-		public static  int GetGroundRole (int orders);
-		
-		public static  int GetGroundOrders (int role);
+		public static  int GetGroundOrders (int role) 
+		{throw new NotImplementedException();}
 	}
 }
 

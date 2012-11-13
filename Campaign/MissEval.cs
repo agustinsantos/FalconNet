@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using FalconNet.Common;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using Flight=FalconNet.Campaign.FlightClass;
 
 namespace FalconNet.Campaign
 {
@@ -1448,7 +1450,7 @@ namespace FalconNet.Campaign
 				}
 			}
 
-		public void CollectThreats (GridIndex X, GridIndex Y, int Z, int flags, int *dists)
+		public void CollectThreats (GridIndex X, GridIndex Y, int Z, int flags, int[] dists)
 				{
 	int				d,hc,alt=0,i,j,k,wd,wid;
 	MoveType		mt;
@@ -1702,7 +1704,9 @@ namespace FalconNet.Campaign
 
 	
 		// Event list builders
-		public void RegisterDivert(FalconDivertMessage dm);
+		public void RegisterDivert(FalconDivertMessage dm)
+		{throw new NotImplementedException();}
+		
 		public void RegisterShotAtPlayer(FalconWeaponsFire wfm, ushort CampID,byte fPilotID)
 				{
 	EventElement			*theEvent;
@@ -1715,10 +1719,10 @@ namespace FalconNet.Campaign
 	CampEnterCriticalSection();
 
 	// Check if the target is also someone we're tracking messages for
-	PilotDataClass	*target_data = null;
-	FlightDataClass	*target_flight = flight_data;
-	PilotDataClass	*shooter_data = null;
-	FlightDataClass	*shooter_flight = flight_data;
+	PilotDataClass	target_data = null;
+	FlightDataClass	target_flight = flight_data;
+	PilotDataClass	shooter_data = null;
+	FlightDataClass	shooter_flight = flight_data;
 
 //find the target
 	while (target_flight && !target_data)
@@ -2723,7 +2727,7 @@ else
 	}
 
 	
-		public PilotDataClass AddNewPlayerPilot (FlightDataClass flight_ptr, int pilot_num, Flight flight, FalconSessionEntity *player)
+		public PilotDataClass AddNewPlayerPilot (FlightDataClass flight_ptr, int pilot_num, Flight flight, FalconSessionEntity player)
 		{
 	if (!player)
 		return null;
@@ -2882,7 +2886,7 @@ else
 	return retval;
 	}
 
-		public PilotDataClass FindPilotDataFromAC (FlightDataClass *flight_ptr, int aircraft_slot)	{
+		public PilotDataClass FindPilotDataFromAC (FlightDataClass flight_ptr, int aircraft_slot)	{
 	// Find the current pilot for this aircraft/flight combo.
 	PilotDataClass *pilot_data = null;
 	PilotDataClass *ret_data = null;
@@ -3166,7 +3170,8 @@ else
 	// =============================
 	public static class MissEval 
 	{
-		public static int OverFriendlyTerritory (Flight flight);
+		public static int OverFriendlyTerritory (Flight flight)
+		{throw new NotImplementedException();}
 	}
 }
 

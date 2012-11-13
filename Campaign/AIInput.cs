@@ -136,7 +136,8 @@ namespace FalconNet.Campaign
 		public static  int TheaterXPosition;					// central theater x/y position for calculating new bullseye posit
 		public static  int TheaterYPosition;					// central theater x/y position for calculating new bullseye posit
 
-		public static void ReadCampAIInputs (string name);
+		public static void ReadCampAIInputs (string name)
+		{throw new NotImplementedException();}
 	}
 }
 

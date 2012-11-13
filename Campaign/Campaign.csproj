@@ -60,6 +60,7 @@
     <Compile Include="GndUnit.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="Squadron.cs" />
+    <Compile Include="Flight.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -70,6 +71,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VU\VU.csproj">
+      <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>
+      <Name>VU</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

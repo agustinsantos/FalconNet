@@ -1,6 +1,8 @@
 ﻿using System;
 using FalconNet.Common;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using Objective=FalconNet.Campaign.ObjectiveClass;
 
 namespace FalconNet.Campaign
 {
@@ -72,25 +74,35 @@ public static  VU_ID_NUMBER lastVolitileId;
 // Global functions
 // ===========================
 
-		public static CampEntity GetFirstEntity (F4LIt list);
+		public static CampEntity GetFirstEntity (F4LIt list)
+		{throw new NotImplementedException();}
 
-		public static CampEntity GetNextEntity (F4LIt list);
+		public static CampEntity GetNextEntity (F4LIt list)
+		{throw new NotImplementedException();}
 
-		public static int Parent (CampEntity e);
+		public static int Parent (CampEntity e)
+		{throw new NotImplementedException();}
 
-		public static int Real (int type);
+		public static int Real (int type)
+		{throw new NotImplementedException();}
 
-		public static short GetEntityClass (VuEntity* h);
+		public static short GetEntityClass (VuEntity h)
+		{throw new NotImplementedException();}
 
-		public static short GetEntityDomain (VuEntity* h);
+		public static short GetEntityDomain (VuEntity h)
+		{throw new NotImplementedException();}
 
-		public static Unit GetEntityUnit (VuEntity* h);
+		public static Unit GetEntityUnit (VuEntity h)
+		{throw new NotImplementedException();}
 
-		public static Objective GetEntityObjective (VuEntity* h);
+		public static Objective GetEntityObjective (VuEntity h)
+		{throw new NotImplementedException();}
 
-		public static short FindUniqueID ();
+		public static short FindUniqueID ()
+		{throw new NotImplementedException();}
 
-		public static int GetVisualDetectionRange (int mt);
+		public static int GetVisualDetectionRange (int mt)
+		{throw new NotImplementedException();}
 	}
 
 	public class CampBaseClass :  FalconEntity
@@ -135,7 +147,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 			return local_flags;
 		}
 
-		public TailInsertList * GetComponents ()
+		public TailInsertList GetComponents ()
 		{
 			return components;
 		}
@@ -145,78 +157,97 @@ public static  VU_ID_NUMBER lastVolitileId;
 			return deag_owner;
 		}
 
-		public void SetBaseFlags (short s);
+		public void SetBaseFlags (short s)
+		{throw new NotImplementedException();}
 
-		public virtual void SetOwner (Control c);
+		public virtual void SetOwner (Control c)
+		{throw new NotImplementedException();}
 
-		public void SetCampId (short s);
+		public void SetCampId (short s)
+		{throw new NotImplementedException();}
 
-		public void SetLocalFlags ();
+		public void SetLocalFlags ()
+		{throw new NotImplementedException();}
 
-		public void SetComponents (TailInsertList *t);
+		public void SetComponents (TailInsertList t)
+		{throw new NotImplementedException();}
 
-		public void SetDeagOwner (VU_ID v);
+		public void SetDeagOwner (VU_ID v)
+		{throw new NotImplementedException();}
 
 		// Dirty Functions
-		public void MakeCampBaseDirty (Dirty_Campaign_Base bits, Dirtyness score);
+		public void MakeCampBaseDirty (Dirty_Campaign_Base bits, Dirtyness score)
+		{throw new NotImplementedException();}
 
-		public void WriteDirty (ref byte[] stream);
+		public void WriteDirty (ref byte[] stream)
+		{throw new NotImplementedException();}
 
-		public void ReadDirty (ref byte[] stream);
+		public void ReadDirty (ref byte[] stream)
+		{throw new NotImplementedException();}
 
 		// Constructors and serial functions
 		public CampBaseClass (int typeindex)
-;
-		public CampBaseClass (VU_BYTE **stream);
-		// public virtual ~CampBaseClass ();
-		public virtual int SaveSize ();
+		{throw new NotImplementedException();}
 
-		public virtual int Save (ref VU_BYTE[] stream);
+		public CampBaseClass (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
+		// public virtual ~CampBaseClass ();
+		public virtual int SaveSize ()
+		{throw new NotImplementedException();}
+
+		public virtual int Save (ref VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 
 		// event handlers
-		public virtual int Handle (VuEvent *evnt);
+		public virtual int Handle (VuEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuFullUpdateEvent *evnt);
+		public virtual int Handle (VuFullUpdateEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuPositionUpdateEvent *evnt);
+		public virtual int Handle (VuPositionUpdateEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuEntityCollisionEvent *evnt);
+		public virtual int Handle (VuEntityCollisionEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuTransferEvent *evnt);
+		public virtual int Handle (VuTransferEvent evnt)
+		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuSessionEvent *evnt);
+		public virtual int Handle (VuSessionEvent evnt)
+		{throw new NotImplementedException();}
 
 		// Required pure virtuals
-		public virtual void SendDeaggregateData (VuTargetEntity *t)
+		public virtual void SendDeaggregateData (VuTargetEntity t)
 		{
 		}
 
-		public virtual int RecordCurrentState (FalconSessionEntity* s, int i)
-		{
-			return 0;
-		}
-
-		public virtual int Deaggregate (FalconSessionEntity* s)
+		public virtual int RecordCurrentState (FalconSessionEntity s, int i)
 		{
 			return 0;
 		}
 
-		public virtual int Reaggregate (FalconSessionEntity* s)
+		public virtual int Deaggregate (FalconSessionEntity s)
 		{
 			return 0;
 		}
 
-		public virtual int TransferOwnership (FalconSessionEntity* s)
+		public virtual int Reaggregate (FalconSessionEntity s)
 		{
 			return 0;
 		}
 
-		public virtual int Wake ()
+		public virtual int TransferOwnership (FalconSessionEntity s)
 		{
 			return 0;
 		}
 
-		public virtual int Sleep ()
+		public override int Wake ()
+		{
+			return 0;
+		}
+
+		public override int Sleep ()
 		{
 			return 0;
 		}
@@ -229,37 +260,37 @@ public static  VU_ID_NUMBER lastVolitileId;
 		{
 		}
 
-		public virtual void DeaggregateFromData (int i, byte* b)
+		public virtual void DeaggregateFromData (int i, byte[] b)
 		{
 			return;
 		}
 
-		public virtual void ReaggregateFromData (int i, byte* b)
+		public virtual void ReaggregateFromData (int i, byte[] b)
 		{
 			return;
 		}
 
-		public virtual void TransferOwnershipFromData (int i, byte* b)
+		public virtual void TransferOwnershipFromData (int i, byte[] b)
 		{
 			return;
 		}
 
-		public virtual int ApplyDamage (FalconCampWeaponsFire *f, byte b)
+		public virtual int ApplyDamage (FalconCampWeaponsFire f, byte b)
 		{
 			return 0;
 		}
 
-		public virtual int ApplyDamage (DamType d, int* i, int i2, short s)
+		public virtual int ApplyDamage (DamType d, ref int i, int i2, short s)
 		{
 			return 0;
 		}
 
-		public virtual int DecodeDamageData (byte* b, Unit u, FalconDeathMessage* m)
+		public virtual int DecodeDamageData (byte[] b, Unit u, FalconDeathMessage m)
 		{
 			return 0;
 		}
 
-		public virtual int CollectWeapons (byte* buf, MoveType m, short [] s, byte [] b, int i)
+		public virtual int CollectWeapons (byte[] buf, MoveType m, short [] s, byte [] b, int i)
 		{
 			return 0;
 		}
@@ -375,33 +406,43 @@ public static  VU_ID_NUMBER lastVolitileId;
 			return 0.0F;
 		}
 
-		public virtual void GetArcAngle (int i, float* a1, float *a2)
-		{	*
-			a1 = 0.0F; *
+		public virtual void GetArcAngle (int i, ref float a1, ref float a2)
+		{	
+			a1 = 0.0F; 
 			a2 = 2 * PI;
 		}
 
 		// Core functions
-		public void SendMessage (VU_ID id, short msg, short d1, short d2, short d3, short d4);
+		public void SendMessage (VU_ID id, short msg, short d1, short d2, short d3, short d4)
+		{throw new NotImplementedException();}
 
-		public void BroadcastMessage (VU_ID id, short msg, short d1, short d2, short d3, short d4);
+		public void BroadcastMessage (VU_ID id, short msg, short d1, short d2, short d3, short d4)
+		{throw new NotImplementedException();}
 
-		public VU_ERRCODE Remove ();
+		public VU_ERRCODE Remove ()
+		{throw new NotImplementedException();}
 
-		public int ReSpot ();
+		public int ReSpot ()
+		{throw new NotImplementedException();}
 
-		public FalconSessionEntity* GetDeaggregateOwner ();
+		public FalconSessionEntity GetDeaggregateOwner ()
+		{throw new NotImplementedException();}
 
 		// Component accessers (Sim Flight emulators)
-		public int GetComponentIndex (VuEntity me);
+		public int GetComponentIndex (VuEntity me)
+		{throw new NotImplementedException();}
 
-		public SimBaseClass* GetComponentEntity (int idx);
+		public SimBaseClass GetComponentEntity (int idx)
+		{throw new NotImplementedException();}
 
-		public SimBaseClass* GetComponentLead ();
+		public SimBaseClass GetComponentLead ()
+		{throw new NotImplementedException();}
 
-		public SimBaseClass* GetComponentNumber (int component);
+		public SimBaseClass GetComponentNumber (int component)
+		{throw new NotImplementedException();}
 
-		public int NumberOfComponents ();
+		public int NumberOfComponents ()
+		{throw new NotImplementedException();}
 
 		public byte Domain ()
 		{
@@ -409,7 +450,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 		}
 
 		// Queries
-		public virtual bool IsEmitting ()
+		public override bool IsEmitting ()
 		{
 			return base_flags.IsFlagSet (Transmittable.CBC_EMITTING);
 		}
@@ -495,7 +536,8 @@ public static  VU_ID_NUMBER lastVolitileId;
 			return spotTime;
 		}
 
-		public int GetSpotted (Team t);
+		public int GetSpotted (Team t)
+		{throw new NotImplementedException();}
 
 		public int GetIdentified (Team t)
 		{
@@ -503,23 +545,30 @@ public static  VU_ID_NUMBER lastVolitileId;
 		} // 2002-02-11 ADDED BY S.G. Getter to know if the target is identified or not.
 
 		// Setters
-		public void SetLocation (GridIndex x, GridIndex y);
+		public void SetLocation (GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-		public void SetAltitude (int alt);
+		public void SetAltitude (int alt)
+		{throw new NotImplementedException();}
 
 		public void SetSpottedTime (CampaignTime t)
 		{
 			spotTime = t;
 		}
 
-		public void SetSpotted (Team t, CampaignTime time, int identified = 0); // 2002-02-11 ADDED S.G. Added identified which defaults to 0 (not identified or don't change)
-		public void SetEmitting (int e);
+		public void SetSpotted (Team t, CampaignTime time, int identified = 0)
+		{throw new NotImplementedException();} // 2002-02-11 ADDED S.G. Added identified which defaults to 0 (not identified or don't change)
+		public void SetEmitting (int e)
+		{throw new NotImplementedException();}
 
-		public void SetAggregate (int a);
+		public void SetAggregate (int a)
+		{throw new NotImplementedException();}
 
-		public void SetJammed (int j);
+		public void SetJammed (int j)
+		{throw new NotImplementedException();}
 
-		public void SetTacan (int t);
+		public void SetTacan (int t)
+		{throw new NotImplementedException();}
 
 		public void SetChecked ()
 		{
@@ -541,14 +590,19 @@ public static  VU_ID_NUMBER lastVolitileId;
 			local_flags &= ~CBC_ENUM.CBC_INTEREST;
 		}
 
-		public void SetAwake (int d);
+		public void SetAwake (int d)
+		{throw new NotImplementedException();}
 
-		public void SetInPackage (int p);
+		public void SetInPackage (int p)
+		{throw new NotImplementedException();}
 
-		public void SetDelta (int d);
+		public void SetDelta (int d)
+		{throw new NotImplementedException();}
 
-		public void SetInSimLists (int l);
+		public void SetInSimLists (int l)
+		{throw new NotImplementedException();}
 
-		public void SetReserved (int r);
+		public void SetReserved (int r)
+		{throw new NotImplementedException();}
 	}
 }

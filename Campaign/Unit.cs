@@ -1,5 +1,10 @@
 using System;
 using System.Diagnostics;
+using Unit=FalconNet.Campaign.UnitClass;
+using Objective=FalconNet.Campaign.ObjectiveClass;
+using FalconNet.VU;
+using FalconNet.FalcLib;
+using FalconNet.Common;
 
 namespace FalconNet.Campaign
 {
@@ -87,8 +92,8 @@ namespace FalconNet.Campaign
 	{
  	
 		private CampaignTime		last_check;		// Last time we checked this unit
-		private fourbyte			roster;			// 4 byte bitwise roster
-		private fourbyte			unit_flags;		// Various user flags
+		private Int32			roster;			// 4 byte bitwise roster
+		private Int32			unit_flags;		// Various user flags
 		private GridIndex			dest_x;			// Destination
 		private GridIndex			dest_y;
 		private VU_ID				cargo_id;		// id of our cargo, or our carrier unit
@@ -101,8 +106,8 @@ namespace FalconNet.Campaign
 		private short				reinforcement;	// What reinforcement level this unit becomes active at
 		private short				odds;			// How much shit is coming our way
 		private int					dirty_unit;
-		public UnitClassDataType	*class_data;
-		public DrawablePoint		*draw_pointer;	// inserted into draw list when unit aggregated
+		public UnitClassDataType	class_data;
+		public DrawablePoint		draw_pointer;	// inserted into draw list when unit aggregated
 		public WayPoint			wp_list;
 
 	
@@ -112,12 +117,12 @@ namespace FalconNet.Campaign
 			return last_check;
 		}
 
-		public fourbyte GetRoster ()
+		public Int32 GetRoster ()
 		{
 			return roster;
 		}
 
-		public fourbyte GetUnitFlags ()
+		public Int32 GetUnitFlags ()
 		{
 			return unit_flags;
 		}
@@ -177,135 +182,196 @@ namespace FalconNet.Campaign
 			return odds;
 		}
 
-		public UnitClassDataType *GetClassData ()
+		public UnitClassDataType GetClassData ()
 		{
 			return class_data;
 		}
 
-		public void SetLastCheck (CampaignTime p);
+		public void SetLastCheck (CampaignTime p)
+		{throw new NotImplementedException();}
 
-		public void SetRoster (fourbyte p);
+		public void SetRoster (Int32 p)
+		{throw new NotImplementedException();}
 
-		public void SetUnitFlags (fourbyte p);
+		public void SetUnitFlags (Int32 p)
+		{throw new NotImplementedException();}
 
-		public void SetDestX (GridIndex p);
+		public void SetDestX (GridIndex p)
+		{throw new NotImplementedException();}
 
-		public void SetDestY (GridIndex p);
+		public void SetDestY (GridIndex p)
+		{throw new NotImplementedException();}
 
-		public void SetCargoId (VU_ID p);
+		public void SetCargoId (VU_ID p)
+		{throw new NotImplementedException();}
 
-		public void SetTargetId (VU_ID p);
+		public void SetTargetId (VU_ID p)
+		{throw new NotImplementedException();}
 
-		public void SetMoved (byte p);
+		public void SetMoved (byte p)
+		{throw new NotImplementedException();}
 
-		public void SetLosses (byte p);
+		public void SetLosses (byte p)
+		{throw new NotImplementedException();}
 
-		public void SetTactic (byte p);
+		public void SetTactic (byte p)
+		{throw new NotImplementedException();}
 
-		public void SetCurrentWaypoint (ushort p);
+		public void SetCurrentWaypoint (ushort p)
+		{throw new NotImplementedException();}
 
-		public void SetNameId (short p);
+		public void SetNameId (short p)
+		{throw new NotImplementedException();}
 
-		public void SetReinforcement (short p);
+		public void SetReinforcement (short p)
+		{throw new NotImplementedException();}
 
-		public void SetOdds (short p);
+		public void SetOdds (short p)
+		{throw new NotImplementedException();}
 
-		public void MakeWaypointsDirty () ;
+		public void MakeWaypointsDirty ()
+		{throw new NotImplementedException();}
 
 		// Dirty Functions
-		public void MakeUnitDirty (Dirty_Unit bits, Dirtyness score);
+		public void MakeUnitDirty (Dirty_Unit bits, Dirtyness score)
+		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte **stream);
+		public virtual void WriteDirty (byte[] stream)
+		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte **stream);
+		public virtual void ReadDirty (byte[] stream)
+		{throw new NotImplementedException();}
 
 		// constructors and serial functions
 		public UnitClass (int type)
-;
-		public UnitClass (VU_BYTE **stream);
+		{throw new NotImplementedException();}
+		public UnitClass (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 		//TODO public virtual ~UnitClass();
-		public virtual int SaveSize () ;
+		public override int SaveSize ()
+		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE **stream);
+		public virtual int Save (VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent *evnt);
+		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
+		{throw new NotImplementedException();}
 
 		// Required pure virtuals handled by UnitClass
-		public virtual void SendDeaggregateData (VuTargetEntity *p);
+		public virtual void SendDeaggregateData (VuTargetEntity p)
+		{throw new NotImplementedException();}
 
-		public virtual int RecordCurrentState (FalconSessionEntity* p, int i);
+		public virtual int RecordCurrentState (FalconSessionEntity p, int i)
+		{throw new NotImplementedException();}
 
-		public virtual int Deaggregate (FalconSessionEntity* session);
+		public virtual int Deaggregate (FalconSessionEntity session)
+		{throw new NotImplementedException();}
 
-		public virtual int Reaggregate (FalconSessionEntity* session);
+		public virtual int Reaggregate (FalconSessionEntity session)
+		{throw new NotImplementedException();}
 
-		public virtual int TransferOwnership (FalconSessionEntity* session);
+		public virtual int TransferOwnership (FalconSessionEntity session)
+		{throw new NotImplementedException();}
 
-		public virtual int Wake () ;
+		public virtual int Wake ()
+		{throw new NotImplementedException();}
 
-		public virtual int Sleep () ;
+		public virtual int Sleep ()
+		{throw new NotImplementedException();}
 
-		public virtual void InsertInSimLists (float cameraX, float cameraY);
+		public virtual void InsertInSimLists (float cameraX, float cameraY)
+		{throw new NotImplementedException();}
 
-		public virtual void RemoveFromSimLists () ;
+		public virtual void RemoveFromSimLists ()
+		{throw new NotImplementedException();}
 
-		public virtual void DeaggregateFromData (int size, byte* data);
+		public virtual void DeaggregateFromData (int size, byte[] data)
+		{throw new NotImplementedException();}
 
-		public virtual void ReaggregateFromData (int size, byte* data);
+		public virtual void ReaggregateFromData (int size, byte[] data)
+		{throw new NotImplementedException();}
 
-		public virtual void TransferOwnershipFromData (int size, byte* data);
+		public virtual void TransferOwnershipFromData (int size, byte[] data)
+		{throw new NotImplementedException();}
 
-		public virtual int ResetPlayerStatus () ;
+		public virtual int ResetPlayerStatus () 
+		{throw new NotImplementedException();}
 
-		public virtual int ApplyDamage (FalconCampWeaponsFire *cwfm, byte p);
+		public virtual int ApplyDamage (FalconCampWeaponsFire cwfm, byte p)
+		{throw new NotImplementedException();}
 
-		public virtual int ApplyDamage (DamType d, int *str, int where, short flags);
+		public virtual int ApplyDamage (DamType d, ref int  str, int where, short flags)
+		{throw new NotImplementedException();}
 
-		public virtual int DecodeDamageData (byte *data, Unit shooter, FalconDeathMessage *dtm);
+		public virtual int DecodeDamageData (byte[] data, Unit shooter, FalconDeathMessage dtm)
+		{throw new NotImplementedException();}
 
-		public virtual int CollectWeapons (byte* dam, MoveType m, short[] w, byte[] wc, int dist);
+		public virtual int CollectWeapons (byte[] dam, MoveType m, short[] w, byte[] wc, int dist)
+		{throw new NotImplementedException();}
 
-		public virtual byte* GetDamageModifiers () ;
+		public virtual byte[] GetDamageModifiers () 
+		{throw new NotImplementedException();}
 
-		public virtual string GetName (string buffer, int size, int obj);
+		public virtual string GetName (string buffer, int size, int obj)
+		{throw new NotImplementedException();}
 
-		public virtual string GetFullName (string buffer, int size, int obj);
+		public virtual string GetFullName (string buffer, int size, int obj)
+		{throw new NotImplementedException();}
 
-		public virtual string GetDivisionName (string buffer, int size, int obj);
+		public virtual string GetDivisionName (string buffer, int size, int obj)
+		{throw new NotImplementedException();}
 
-		public virtual int GetHitChance (int mt, int range);
+		public virtual int GetHitChance (int mt, int range)
+		{throw new NotImplementedException();}
 
-		public virtual int GetAproxHitChance (int mt, int range);
+		public virtual int GetAproxHitChance (int mt, int range)
+		{throw new NotImplementedException();}
 
-		public virtual int GetCombatStrength (int mt, int range);
+		public virtual int GetCombatStrength (int mt, int range)
+		{throw new NotImplementedException();}
 
-		public virtual int GetAproxCombatStrength (int mt, int range);
+		public virtual int GetAproxCombatStrength (int mt, int range)
+		{throw new NotImplementedException();}
 
-		public virtual int GetWeaponRange (int mt, FalconEntity *target = null); // 2002-03-08 MODIFIED BY S.G. Need to pass it a target sometime so default to null for most cases
-		public virtual int GetAproxWeaponRange (int mt);
+		public virtual int GetWeaponRange (int mt, FalconEntity target = null)
+		{throw new NotImplementedException();} // 2002-03-08 MODIFIED BY S.G. Need to pass it a target sometime so default to null for most cases
+		public virtual int GetAproxWeaponRange (int mt)
+		{throw new NotImplementedException();}
 
-		public virtual int GetDetectionRange (int mt);						// Takes into account emitter status
-		public virtual int GetElectronicDetectionRange (int mt);			// Max Electronic detection range, even if turned off
-		public virtual int CanDetect (FalconEntity* ent);						// Nonzero if this entity can see ent
-		public virtual void GetComponentLocation (GridIndex* x, GridIndex* y, int component);
+		public override int GetDetectionRange (int mt)
+		{throw new NotImplementedException();}						// Takes into account emitter status
+		public override int GetElectronicDetectionRange (int mt)
+		{throw new NotImplementedException();}			// Max Electronic detection range, even if turned off
+		public override int CanDetect (FalconEntity ent)
+		{throw new NotImplementedException();}						// Nonzero if this entity can see ent
+		public virtual void GetComponentLocation (ref GridIndex x, ref GridIndex y, int component)
+		{throw new NotImplementedException();}
 
-		public virtual int GetComponentAltitude (int component);
+		public virtual int GetComponentAltitude (int component)
+		{throw new NotImplementedException();}
 
-		public virtual float GetRCSFactor () ;
+		public override float GetRCSFactor () 
+		{throw new NotImplementedException();}
 
-		public virtual float GetIRFactor () ;
+		public override float GetIRFactor () 
+		{throw new NotImplementedException();}
 
 		// These are only really relevant for sam/airdefense/radar entities
-		public virtual int GetNumberOfArcs () ;
+		public override int GetNumberOfArcs ()
+		{throw new NotImplementedException();}
 
-		public virtual float GetArcRatio (int anum);
+		public override float GetArcRatio (int anum)
+		{throw new NotImplementedException();}
 
-		public virtual float GetArcRange (int anum);
+		public override float GetArcRange (int anum)
+		{throw new NotImplementedException();}
 
-		public virtual void GetArcAngle (int anum, float* a1, float *a2);
+		public virtual void GetArcAngle (int anum, ref float a1, ref float a2)
+		{throw new NotImplementedException();}
 
-		public virtual int GetRadarType () ;
+		public override Radar_types GetRadarType ()
+		{throw new NotImplementedException();}
 
 		// Addition Virtual functions required by all derived classes
 		public virtual int CanShootWeapon (int p)
@@ -313,12 +379,12 @@ namespace FalconNet.Campaign
 			return true ;
 		}
 
-		public virtual int GetDeaggregationPoint (int i, CampEntity* p)
+		public virtual int GetDeaggregationPoint (int i, CampEntity p)
 		{
 			return 0;
 		}
 
-		public virtual UnitDeaggregationData* GetUnitDeaggregationData ()
+		public virtual UnitDeaggregationData GetUnitDeaggregationData ()
 		{
 			return null;
 		}
@@ -411,22 +477,27 @@ namespace FalconNet.Campaign
 		{
 		}
 
-		public virtual int GetVehicleDeagData (SimInitDataClass* d, int p)
+		public virtual int GetVehicleDeagData (SimInitDataClass d, int p)
 		{
 			Debug.Assert ("Shouldn't be here");
 			return 0;
 		}
 
 		// Core functions
-		public void Setup (byte stype, byte sptype, Control who, Unit Parent);
+		public void Setup (byte stype, byte sptype, Control who, Unit Parent)
+		{ throw new NotImplementedException();}
 
-		public void SendUnitMessage (VU_ID id, short msg, short d1, short d2, short d3);
+		public void SendUnitMessage (VU_ID id, short msg, short d1, short d2, short d3)
+		{throw new NotImplementedException();}
 
-		public void BroadcastUnitMessage (VU_ID id, short msg, short d1, short d2, short d3);
+		public void BroadcastUnitMessage (VU_ID id, short msg, short d1, short d2, short d3)
+		{throw new NotImplementedException();}
 
-		public int	ChangeUnitLocation (CampaignHeading h);
+		public int	ChangeUnitLocation (CampaignHeading h)
+		{throw new NotImplementedException();}
 
-		public int MoraleCheck (int shot, int lost);
+		public int MoraleCheck (int shot, int lost)
+		{throw new NotImplementedException();}
 
 		public virtual int IsUnit ()
 		{
@@ -434,65 +505,95 @@ namespace FalconNet.Campaign
 		}
 
 		// Unit flags
-		public void SetDead (int p);
+		public void SetDead (int p)
+		{throw new NotImplementedException();}
 
-		public void SetAssigned (int p);
+		public void SetAssigned (int p)
+		{throw new NotImplementedException();}
 
-		public void SetOrdered (int p);
+		public void SetOrdered (int p)
+		{throw new NotImplementedException();}
 
-		public void SetDontPlan (int p);
+		public void SetDontPlan (int p)
+		{throw new NotImplementedException();}
 
-		public void SetParent (int p);
+		public void SetParent (int p)
+		{throw new NotImplementedException();}
 
-		public void SetEngaged (int p);
+		public void SetEngaged (int p)
+		{throw new NotImplementedException();}
 
-		public void SetScripted (int p);
+		public void SetScripted (int p)
+		{throw new NotImplementedException();}
 
-		public void SetCommando (int c);
+		public void SetCommando (int c)
+		{throw new NotImplementedException();}
 
-		public void SetMoving (int p);
+		public void SetMoving (int p)
+		{throw new NotImplementedException();}
 
-		public void SetRefused (int r);
+		public void SetRefused (int r)
+		{throw new NotImplementedException();}
 
-		public void SetHasECM (int e);
+		public void SetHasECM (int e)
+		{throw new NotImplementedException();}
 
-		public void SetCargo (int c);
+		public void SetCargo (int c)
+		{throw new NotImplementedException();}
 
-		public void SetCombat (int p);
+		public void SetCombat (int p)
+		{throw new NotImplementedException();}
 
-		public void SetBroken (int p);
+		public void SetBroken (int p)
+		{throw new NotImplementedException();}
 
-		public void SetAborted (int p);
+		public void SetAborted (int p)
+		{throw new NotImplementedException();}
 
-		public void SetLosses (int p);
+		public void SetLosses (int p)
+		{throw new NotImplementedException();}
 
-		public void SetInactive (int i);
+		public void SetInactive (int i)
+		{throw new NotImplementedException();}
 
-		public void SetFragment (int f);
+		public void SetFragment (int f)
+		{throw new NotImplementedException();}
 
-		public void SetTargeted (int p);
+		public void SetTargeted (int p)
+		{throw new NotImplementedException();}
 
-		public void SetRetreating (int p);
+		public void SetRetreating (int p)
+		{throw new NotImplementedException();}
 
-		public void SetDetached (int p);
+		public void SetDetached (int p)
+		{throw new NotImplementedException();}
 
-		public void SetSupported (int s);
+		public void SetSupported (int s)
+		{throw new NotImplementedException();}
 
-		public void SetTempDest (int t);
+		public void SetTempDest (int t)
+		{throw new NotImplementedException();}
 
-		public void SetFinal (int p);
+		public void SetFinal (int p)
+		{throw new NotImplementedException();}
 
-		public void SetPilots (int f);
+		public void SetPilots (int f)
+		{throw new NotImplementedException();}
 
-		public void SetDiverted (int d);
+		public void SetDiverted (int d)
+		{throw new NotImplementedException();}
 
-		public void SetFired (int f);
+		public void SetFired (int f)
+		{throw new NotImplementedException();}
 
-		public void SetLocked (int l);
+		public void SetLocked (int l)
+		{throw new NotImplementedException();}
 
-		public void SetIAKill (int f);
+		public void SetIAKill (int f)
+		{throw new NotImplementedException();}
 
-		public void SetNoAbort (int f);
+		public void SetNoAbort (int f)
+		{throw new NotImplementedException();}
 
 		public virtual int IsDead ()
 		{
@@ -645,9 +746,11 @@ namespace FalconNet.Campaign
 		}
 
 		// Entity information
-		public UnitClassDataType* GetUnitClassData () ;
+		public UnitClassDataType GetUnitClassData ()
+		{throw new NotImplementedException();}
 
-		public string GetUnitClassName () ;
+		public string GetUnitClassName ()
+		{throw new NotImplementedException();}
 
 		public void SetUnitAltitude (int alt)
 		{
@@ -671,20 +774,26 @@ namespace FalconNet.Campaign
 		{
 		}
 
-		public virtual void GetRealPosition (float* f1, float* f2, float* f3)
+		public virtual void GetRealPosition (ref float f1, ref float f2, ref float f3)
 		{
 		}
 
-		public virtual int GetBestVehicleWeapon (int i, byte* buf, MoveType m, int a, int* b);
+		public virtual int GetBestVehicleWeapon (int i, byte[] buf, MoveType m, int a, int[] b)
+		{throw new NotImplementedException();}
 
-		public virtual int GetVehicleHitChance (int slot, MoveType mt, int range, int hitflags);
+		public virtual int GetVehicleHitChance (int slot, MoveType mt, int range, int hitflags)
+		{throw new NotImplementedException();}
 
-		public virtual int GetVehicleCombatStrength (int slot, MoveType mt, int range);
+		public virtual int GetVehicleCombatStrength (int slot, MoveType mt, int range)
+		{throw new NotImplementedException();}
 
-		public virtual int GetVehicleRange (int slot, int mt, FalconEntity *target = null); // 2002-03-08 MODIFIED BY S.G. Need to pass it a target sometime so default to null for most cases
-		public virtual int GetUnitWeaponId (int hp, int slot);
+		public virtual int GetVehicleRange (int slot, int mt, FalconEntity target = null)
+		{throw new NotImplementedException();} // 2002-03-08 MODIFIED BY S.G. Need to pass it a target sometime so default to null for most cases
+		public virtual int GetUnitWeaponId (int hp, int slot)
+		{throw new NotImplementedException();}
 
-		public virtual int GetUnitWeaponCount (int hp, int slot);
+		public virtual int GetUnitWeaponCount (int hp, int slot)
+		{throw new NotImplementedException();}
 
 		// Unit_data information
 		public void SetUnitDestination (GridIndex x, GridIndex y)
@@ -698,9 +807,9 @@ namespace FalconNet.Campaign
 			SetRoster ((roster & ~(3 << (v * 2))) | (n << (v * 2)));
 		}
 
-		public void SetTarget (FalconEntity *e)
+		public void SetTarget (FalconEntity e)
 		{
-			target_id = (e) ? e->Id () : FalconNullId;
+			target_id = (e) ? e.Id () : FalconNullId;
 		}
 
 		public void SetUnitMoved (byte m)
@@ -718,16 +827,17 @@ namespace FalconNet.Campaign
 			reinforcement = r;
 		}
 
-		public void GetUnitDestination (GridIndex* x, GridIndex* y);
+		public void GetUnitDestination (ref GridIndex x, ref GridIndex y)
+		{throw new NotImplementedException();}
 //		fourbyte GetUnitRoster () 					{ return roster; }
 		public int GetNumVehicles (int v)
 		{
 			return (int)((roster >> (v * 2)) & 0x03);
 		}
 
-		public FalconEntity* GetTarget ()
+		public FalconEntity  GetTarget ()
 		{
-			return (FalconEntity*)vuDatabase->Find (target_id);
+			return (FalconEntity )vuDatabase.Find (target_id);
 		}
 
 		public VU_ID GetTargetID ()
@@ -735,17 +845,23 @@ namespace FalconNet.Campaign
 			return target_id;
 		}
 
-		public SimBaseClass* GetSimTarget () ;
+		public SimBaseClass GetSimTarget ()
+		{throw new NotImplementedException();}
 
-		public CampBaseClass* GetCampTarget () ;
+		public CampBaseClass GetCampTarget ()
+		{throw new NotImplementedException();}
 
-		public CampEntity GetCargo () ;
+		public CampEntity GetCargo ()
+		{throw new NotImplementedException();}
 
-		public CampEntity GetTransport () ;
+		public CampEntity GetTransport ()
+		{throw new NotImplementedException();}
 
-		public VU_ID GetCargoID () ;
+		public VU_ID GetCargoID ()
+		{throw new NotImplementedException();}
 
-		public VU_ID GetTransportID () ;
+		public VU_ID GetTransportID ()
+		{throw new NotImplementedException();}
 
 		public int GetUnitMoved ()
 		{
@@ -762,16 +878,19 @@ namespace FalconNet.Campaign
 			return reinforcement;
 		}
 
-		public void AssignUnit (VU_ID mgr, VU_ID po, VU_ID so, VU_ID ao, int orders);
+		public void AssignUnit (VU_ID mgr, VU_ID po, VU_ID so, VU_ID ao, int orders)
+		{throw new NotImplementedException();}
 
 		public void SetUnitNameID (short id)
 		{
 			name_id = id;
 		}
 
-		public int SetUnitSType (char t);
+		public int SetUnitSType (char t)
+		{throw new NotImplementedException();}
 
-		public int SetUnitSPType (char t);
+		public int SetUnitSPType (char t)
+		{throw new NotImplementedException();}
 
 		public int GetUnitNameID ()
 		{
@@ -779,106 +898,153 @@ namespace FalconNet.Campaign
 		}
 
 		// Attribute data
-		public VehicleID GetVehicleID (int v);
+		public VehicleID GetVehicleID (int v)
+		{throw new NotImplementedException();}
 
-		public int GetTotalVehicles () ;
+		public int GetTotalVehicles ()
+		{throw new NotImplementedException();}
 
-		public int GetFullstrengthVehicles () ;
+		public int GetFullstrengthVehicles ()
+		{throw new NotImplementedException();}
 
-		public int GetFullstrengthVehicles (int slot);
+		public int GetFullstrengthVehicles (int slot)
+		{throw new NotImplementedException();}
 
-		public int GetMaxSpeed () ;
+		public int GetMaxSpeed ()
+		{throw new NotImplementedException();}
 
-		public int GetCruiseSpeed () ;
+		public int GetCruiseSpeed ()
+		{throw new NotImplementedException();}
 
-		public int GetCombatSpeed () ;
+		public int GetCombatSpeed ()
+		{throw new NotImplementedException();}
 
-		public int GetUnitEndurance () ;
+		public int GetUnitEndurance ()
+		{throw new NotImplementedException();}
 
-		public int GetUnitRange () ;
+		public int GetUnitRange ()
+		{throw new NotImplementedException();}
 
-		public int GetRClass () ;
+		public int GetRClass ()
+		{throw new NotImplementedException();}
 
 		// Support routines
-		public CampaignTime GetUnitReassesTime () ;
+		public CampaignTime GetUnitReassesTime ()
+		{throw new NotImplementedException();}
 
-		public int CountUnitElements () ;
+		public int CountUnitElements ()
+		{throw new NotImplementedException();}
 
-		public Unit GetRandomElement () ;
+		public Unit GetRandomElement ()
+		{throw new NotImplementedException();}
 
-		public void ResetMoves () ;
+		public void ResetMoves ()
+		{throw new NotImplementedException();}
 
-		public void ResetLocations (GridIndex x, GridIndex y);
+		public void ResetLocations (GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-		public void ResetDestinations (GridIndex x, GridIndex y);
+		public void ResetDestinations (GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-		public void ResetFlags () ;
+		public void ResetFlags ()
+		{throw new NotImplementedException();}
 
-		public void SortElementsByDistance (GridIndex x, GridIndex y);
+		public void SortElementsByDistance (GridIndex x, GridIndex y)
+		{throw new NotImplementedException();}
 
-		public int FirstSP () ;
+		public int FirstSP ()
+		{throw new NotImplementedException();}
 
-		public Unit FindPrevUnit (short *type);
+		public Unit FindPrevUnit (ref short type)
+		{throw new NotImplementedException();}
 
-		public void SaveUnits (int FHandle, int flags);
+		public void SaveUnits (int FHandle, int flags)
+		{throw new NotImplementedException();}
 
-		public void BuildElements () ;
+		public void BuildElements ()
+		{throw new NotImplementedException();}
 
-		public int ChangeVehicles (int a);
+		public int ChangeVehicles (int a)
+		{throw new NotImplementedException();}
 
-		public int GetFormationCruiseSpeed () ;
+		public int GetFormationCruiseSpeed ()
+		{throw new NotImplementedException();}
 
-		public void KillUnit () ;
+		public void KillUnit ()
+		{throw new NotImplementedException();}
 
-		public int NoMission () ;
+		public int NoMission ()
+		{throw new NotImplementedException();}
 
-		public int AtDestination () ;
+		public int AtDestination ()
+		{throw new NotImplementedException();}
 
-		public int GetUnitFormation () ;
+		public int GetUnitFormation ()
+		{throw new NotImplementedException();}
 
-		public int GetUnitRoleScore (int role, int calcType, int use_to_calc);
+		public int GetUnitRoleScore (int role, int calcType, int use_to_calc)
+		{throw new NotImplementedException();}
 
-		public float GetUnitMovementCost (GridIndex x, GridIndex y, CampaignHeading h);
+		public float GetUnitMovementCost (GridIndex x, GridIndex y, CampaignHeading h)
+		{throw new NotImplementedException();}
 
-		public int GetUnitObjectivePath (Path p, Objective o, Objective t);
+		public int GetUnitObjectivePath (Path p, Objective o, Objective t)
+		{throw new NotImplementedException();}
 
-		public int GetUnitGridPath (Path p, GridIndex x, GridIndex y, GridIndex xx, GridIndex yy);
+		public int GetUnitGridPath (Path p, GridIndex x, GridIndex y, GridIndex xx, GridIndex yy)
+		{throw new NotImplementedException();}
 
-		public void LoadUnit (Unit cargo);
+		public void LoadUnit (Unit cargo)
+		{throw new NotImplementedException();}
 
-		public void UnloadUnit () ;
+		public void UnloadUnit ()
+		{throw new NotImplementedException();}
 
-		public CampaignTime GetUnitSupplyTime () ;
+		public CampaignTime GetUnitSupplyTime ()
+		{throw new NotImplementedException();}
 
 		// Waypoint routines
-		public WayPoint AddUnitWP (GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, int station, byte mission);
+		public WayPoint AddUnitWP (GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, int station, byte mission)
+		{throw new NotImplementedException();}
 
-		public WayPoint AddWPAfter (WayPoint pw, GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, int station, byte mission);
+		public WayPoint AddWPAfter (WayPoint pw, GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, int station, byte mission)
+		{throw new NotImplementedException();}
 
-		public void DeleteUnitWP (WayPoint w);
+		public void DeleteUnitWP (WayPoint w)
+		{throw new NotImplementedException();}
 
-		public int EncodeWaypoints (byte **stream);
+		public int EncodeWaypoints (byte[] stream)
+		{throw new NotImplementedException();}
 
-		public void DecodeWaypoints (byte **stream);
+		public void DecodeWaypoints (byte[]stream)
+		{throw new NotImplementedException();}
 
 		public WayPoint GetFirstUnitWP ()
 		{
 			return wp_list;
 		}
 
-		public WayPoint GetCurrentUnitWP () ;
+		public WayPoint GetCurrentUnitWP ()
+		{throw new NotImplementedException();}
 
-		public WayPoint GetUnitMissionWP () ;
+		public WayPoint GetUnitMissionWP ()
+		{throw new NotImplementedException();}
 
-		public void FinishUnitWP () ;
+		public void FinishUnitWP ()
+		{throw new NotImplementedException();}
 
-		public void DisposeWayPoints () ;
+		public void DisposeWayPoints ()
+		{throw new NotImplementedException();}
 
-		public void CheckBroken () ;
+		public void CheckBroken ()
+		{throw new NotImplementedException();}
 
-		public void SetCurrentUnitWP (WayPoint w);
+		public void SetCurrentUnitWP (WayPoint w)
+		{throw new NotImplementedException();}
 
-		public void AdjustWayPoints () ;
+		public void AdjustWayPoints ()
+		{throw new NotImplementedException();}
 
 		// Virtual Functions (These are empty except for those derived classes they belong to)
 		// AirUnit virtuals
@@ -929,7 +1095,7 @@ namespace FalconNet.Campaign
 		{
 		}
 
-		public virtual void SetLoadout (LoadoutStruct* p, int i)
+		public virtual void SetLoadout (LoadoutStruct p, int i)
 		{
 			Debug.Assert ("Shouldn't be here");
 		}
@@ -954,7 +1120,7 @@ namespace FalconNet.Campaign
 			return FalconNullId;
 		}
 
-		public virtual FalconEntity* GetAirTarget ()
+		public virtual FalconEntity  GetAirTarget ()
 		{
 			return null;
 		}
@@ -1024,7 +1190,7 @@ namespace FalconNet.Campaign
 			return FalconNullId;
 		}
 
-		public virtual int LoadWeapons (object p, byte* buf, MoveType m, int a, int b, int c)
+		public virtual int LoadWeapons (object p, byte[] buf, MoveType m, int a, int b, int c)
 		{
 			return 0;
 		}
@@ -1044,7 +1210,7 @@ namespace FalconNet.Campaign
 			return null;
 		}
 
-		public virtual int BuildMission (MissionRequestClass* m)
+		public virtual int BuildMission (MissionRequestClass m)
 		{
 			return 0;
 		}
@@ -1352,7 +1518,8 @@ namespace FalconNet.Campaign
 			return 0;
 		}
 
-		public void CalculateSOJ (VuGridIterator iter);
+		public void CalculateSOJ (VuGridIterator iter)
+		{throw new NotImplementedException();}
 		// Naval Unit virtuals
 		// None
 
@@ -1365,12 +1532,15 @@ namespace FalconNet.Campaign
 
 	public class UnitDriver : VuMaster
 	{
-		public UnitDriver (VuEntity *entity);
+		public UnitDriver (VuEntity entity)
+		{throw new NotImplementedException();}
 		// TODO public virtual ~UnitDriver();
 
-		public virtual void AutoExec (VU_TIME timestamp);
+		public virtual void AutoExec (VU_TIME timestamp)
+		{throw new NotImplementedException();}
 
-		public virtual VU_BOOL ExecModel (VU_TIME timestamp);
+		public virtual bool ExecModel (VU_TIME timestamp)
+		{throw new NotImplementedException();}
 	}
 
 	// ============================================================
@@ -1400,10 +1570,12 @@ namespace FalconNet.Campaign
 		public short			num_vehicles;
 		public UnitPosition[]	position_data = new UnitPosition[VEHICLES_PER_UNIT * 3];
 
-		public UnitDeaggregationData () ;
+		public UnitDeaggregationData ()
+		{throw new NotImplementedException();}
 		// TODO public ~UnitDeaggregationData ();
 
-		public void StoreDeaggregationData (Unit theUnit);
+		public void StoreDeaggregationData (Unit theUnit)
+		{throw new NotImplementedException();}
 	}
 
 // ============================================================
@@ -1411,39 +1583,56 @@ namespace FalconNet.Campaign
 // ============================================================
 	public static class UnitStatic
 	{
-		public static  void SaveUnits (string FileName);
+		public static  void SaveUnits (string FileName)
+		{throw new NotImplementedException();}
 		
-		public static  int LoadUnits (string FileName);
+		public static  int LoadUnits (string FileName)
+		{throw new NotImplementedException();}
 		
-		public static  Unit GetFirstUnit (F4LIt l);
+		public static  Unit GetFirstUnit (F4LIt l)
+		{throw new NotImplementedException();}
 		
-		public static  Unit GetNextUnit (F4LIt l);
+		public static  Unit GetNextUnit (F4LIt l)
+		{throw new NotImplementedException();}
 		
-		public static  Unit LoadAUnit (int Num, int FHandle, Unit parent);
+		public static  Unit LoadAUnit (int Num, int FHandle, Unit parent)
+		{throw new NotImplementedException();}
 		
-		public static  DamageDataType GetDamageType (Unit u);
+		public static  DamageDataType GetDamageType (Unit u)
+		{throw new NotImplementedException();}
 		
-		public static  Unit ConvertUnit (Unit u, int domain, int type, int stype, int sptype);
+		public static  Unit ConvertUnit (Unit u, int domain, int type, int stype, int sptype)
+		{throw new NotImplementedException();}
 		
-		public static  int GetUnitRole (Unit u);
+		public static  int GetUnitRole (Unit u)
+		{throw new NotImplementedException();}
 		
-		public static  string GetSizeName (int domain, int type, char *buffer);
+		public static  string GetSizeName (int domain, int type, char[] buffer)
+		{throw new NotImplementedException();}
 		
-		public static  string GetDivisionName (int div, char *buffer, int size, int obj);
+		public static  string GetDivisionName (int div, char[] buffer, int size, int obj)
+		{throw new NotImplementedException();}
 		
-		public static  int FindUnitNameID (Unit u);
+		public static  int FindUnitNameID (Unit u)
+		{throw new NotImplementedException();}
 		
-		public static  Unit NewUnit (int domain, int type, int stype, int sptype, Unit parent);
+		public static  Unit NewUnit (int domain, int type, int stype, int sptype, Unit parent)
+		{throw new NotImplementedException();}
 		
-		public static  Unit NewUnit (short tid, VU_BYTE **stream);
+		public static  Unit NewUnit (short tid, VU_BYTE[] stream)
+		{throw new NotImplementedException();}
 		
-		public static  float GetOdds (Unit us, CampEntity them, int range);
+		public static  float GetOdds (Unit us, CampEntity them, int range)
+		{throw new NotImplementedException();}
 		
-		public static  float GetRange (Unit us, CampEntity them);
+		public static  float GetRange (Unit us, CampEntity them)
+		{throw new NotImplementedException();}
 		
-		public static  int EncodeUnitData (VU_BYTE **stream, FalconSessionEntity *owner);
+		public static  int EncodeUnitData (VU_BYTE[] stream, FalconSessionEntity owner)
+		{throw new NotImplementedException();}
 		
-		public static  int DecodeUnitData (VU_BYTE **stream, FalconSessionEntity *owner);
+		public static  int DecodeUnitData (VU_BYTE[] stream, FalconSessionEntity owner)
+		{throw new NotImplementedException();}
 	}
 }
 

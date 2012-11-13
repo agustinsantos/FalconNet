@@ -1,27 +1,62 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Squadron.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Objectiv.cs">
     <Files>
-      <File FileName="Sim/Simloop.cs" Line="14" Column="3" />
-      <File FileName="Sim/Statistics.cs" Line="22" Column="42" />
-      <File FileName="Sim/Aircraft.cs" Line="691" Column="36" />
-      <File FileName="Campaign/ACSelect.cs" Line="13" Column="17" />
-      <File FileName="Campaign/AIInput.cs" Line="133" Column="3" />
-      <File FileName="Campaign/Airunit.cs" Line="46" Column="2" />
-      <File FileName="Campaign/Battalion.cs" Line="98" Column="10" />
-      <File FileName="Campaign/Brigade.cs" Line="27" Column="33" />
-      <File FileName="Campaign/GndUnit.cs" Line="84" Column="1" />
-      <File FileName="Campaign/Unit.cs" Line="72" Column="20" />
-      <File FileName="Campaign/Campbase.cs" Line="96" Column="37" />
-      <File FileName="FalcLib/FalcEnt.cs" Line="45" Column="24" />
+      <File FileName="Sim/Simloop.cs" Line="67" Column="21" />
+      <File FileName="Sim/Statistics.cs" Line="21" Column="17" />
+      <File FileName="Sim/Aircraft.cs" Line="1134" Column="7" />
+      <File FileName="Campaign/ACSelect.cs" Line="7" Column="69" />
+      <File FileName="Campaign/AIInput.cs" Line="140" Column="40" />
+      <File FileName="Campaign/Airunit.cs" Line="13" Column="37" />
+      <File FileName="Campaign/Battalion.cs" Line="272" Column="21" />
+      <File FileName="Campaign/Brigade.cs" Line="168" Column="29" />
+      <File FileName="Campaign/GndUnit.cs" Line="313" Column="41" />
+      <File FileName="Campaign/Unit.cs" Line="242" Column="18" />
+      <File FileName="Campaign/Campbase.cs" Line="511" Column="19" />
+      <File FileName="FalcLib/FalcEnt.cs" Line="444" Column="3" />
       <File FileName="Campaign/Name.cs" Line="1" Column="1" />
-      <File FileName="Campaign/Squadron.cs" Line="35" Column="4" />
+      <File FileName="Campaign/Squadron.cs" Line="373" Column="30" />
+      <File FileName="FalcLib/F4VU.cs" Line="86" Column="21" />
+      <File FileName="FalcLib/FalcSess.cs" Line="38" Column="15" />
+      <File FileName="FalcLib/Classtbl.cs" Line="4381" Column="41" />
+      <File FileName="Graphics/BSPnodes.cs" Line="690" Column="7" />
+      <File FileName="Campaign/Cmpclass.cs" Line="120" Column="24" />
+      <File FileName="FalcLib/FalcGame.cs" Line="86" Column="44" />
+      <File FileName="Common/ConvertionSupport.cs" Line="65" Column="30" />
+      <File FileName="Graphics/StateStack.cs" Line="5" Column="9" />
+      <File FileName="Graphics/PolyLib.cs" Line="304" Column="7" />
+      <File FileName="VU/VuEntity.cs" Line="71" Column="18" />
+      <File FileName="VU/Commons.cs" Line="27" Column="33" />
+      <File FileName="FalcLib/Camplib.cs" Line="98" Column="18" />
+      <File FileName="FalcLib/entity.cs" Line="13" Column="11" />
+      <File FileName="Campaign/Flight.cs" Line="482" Column="22" />
+      <File FileName="Common/EnumSupport.cs" Line="1" Column="1" />
+      <File FileName="Campaign/Campaign.cs" Line="57" Column="55" />
+      <File FileName="Campaign/Simbase.cs" Line="518" Column="70" />
+      <File FileName="Campaign/Team.cs" Line="233" Column="13" />
+      <File FileName="Campaign/Objectiv.cs" Line="354" Column="14" />
+      <File FileName="Campaign/Campterr.cs" Line="40" Column="40" />
+      <File FileName="Campaign/Campwp.cs" Line="13" Column="40" />
+      <File FileName="Campaign/Gtmobj.cs" Line="4" Column="51" />
+      <File FileName="Campaign/Mission.cs" Line="429" Column="70" />
+      <File FileName="Campaign/CampCell.cs" Line="37" Column="40" />
+      <File FileName="Campaign/MissEval.cs" Line="268" Column="26" />
+      <File FileName="Campaign/Gtm.cs" Line="10" Column="17" />
+      <File FileName="Campaign/Atm.cs" Line="114" Column="57" />
+      <File FileName="Campaign/Manager.cs" Line="66" Column="63" />
+      <File FileName="UI/logbook.cs" Line="324" Column="63" />
+      <File FileName="Campaign/Campglobl.cs" Line="87" Column="43" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Campaign" expanded="True" selected="True" />
-          <Node name="FalcLib" expanded="True" />
+          <Node name="Campaign" expanded="True">
+            <Node name="Objectiv.cs" selected="True" />
+          </Node>
+          <Node name="Common" expanded="True" />
+          <Node name="Sim" expanded="True" />
+          <Node name="UI" expanded="True" />
+          <Node name="VU" expanded="True" />
         </State>
       </Pad>
     </Pads>

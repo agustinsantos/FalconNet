@@ -112,6 +112,23 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 		public GroundUnitClass (VU_BYTE[] stream) :base(stream)
 		{throw new NotImplementedException();}
+		
+		public GroundUnitClass(byte[] bytes, ref int offset, int version)
+            : base(bytes, ref offset, version)
+        {
+#if TODO
+            orders = bytes[offset];
+            offset++;
+            division = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            aobj = new VU_ID();
+            aobj.num_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            aobj.creator_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+#endif 
+		}
+		
 		//TODO public virtual ~GroundUnitClass();
 		public override int SaveSize () 
 		{throw new NotImplementedException();}

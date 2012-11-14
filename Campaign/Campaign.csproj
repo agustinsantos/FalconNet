@@ -64,6 +64,7 @@
     <Compile Include="Pilot.cs" />
     <Compile Include="Find.cs" />
     <Compile Include="dogfight.cs" />
+    <Compile Include="Brief.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

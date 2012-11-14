@@ -4,7 +4,11 @@ namespace FalconNet.Campaign
 {
 	public struct CellData
 	{
-		private byte val;
+		public byte val;
+		public CellData(byte v)
+		{
+			val = v;
+		}
 	}
 	
 	public static class CampCell

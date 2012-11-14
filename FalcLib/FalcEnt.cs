@@ -110,7 +110,11 @@ namespace FalconNet.FalcLib
 #endif 
 			throw new NotImplementedException();
 		}
-
+		public FalconEntity(byte[] bytes, ref int offset, int version)
+		{
+			throw new NotImplementedException();
+		}
+		
 		public virtual int Save (byte[] stream, ref int pos)
 		{
 			int saveSize = base.Save (stream, ref pos);

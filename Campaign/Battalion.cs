@@ -65,6 +65,53 @@ namespace FalconNet.Campaign
 
 		public BattalionClass (VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
+		
+		public BattalionClass(byte[] bytes, ref int offset, int version)
+            : base(bytes, ref offset, version)
+        {
+#if TODO			
+            last_move = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+
+            last_combat = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+
+            parent_id = new VU_ID();
+            parent_id.num_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            parent_id.creator_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+
+            last_obj = new VU_ID();
+            last_obj.num_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            last_obj.creator_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+
+            supply = bytes[offset];
+            offset++;
+
+            fatigue = bytes[offset];
+            offset++;
+
+            morale = bytes[offset];
+            offset++;
+
+            heading = bytes[offset];
+            offset++;
+
+            final_heading = bytes[offset];
+            offset++;
+
+            if (version < 15)
+            {
+                dummy = bytes[offset];
+                offset++;
+            }
+            position = bytes[offset];
+            offset++;
+#endif
+        }
 		//TODO public virtual ~BattalionClass();
 		public override int SaveSize ()
 		{throw new NotImplementedException();}

@@ -206,6 +206,47 @@ public static  VU_ID_NUMBER lastVolitileId;
 
 		public CampBaseClass (VU_BYTE[] stream) : base(VuEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
+		public CampBaseClass(byte[] bytes, ref int offset, int version)
+            : base(bytes, ref offset, version)
+        {
+#if TODO
+            id = new VU_ID();
+            id.num_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            id.creator_ = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+
+            entityType = BitConverter.ToUInt16(bytes, offset);
+            offset += 2;
+
+            x = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+
+            y = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+
+            if (version < 70)
+            {
+                z = 0;
+            }
+            else
+            {
+                z = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+            }
+            spotTime = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            spotted = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            baseFlags = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            owner = bytes[offset];
+            offset++;
+            campId = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+#endif
+        }
+		
 		// public virtual ~CampBaseClass ();
 		public override int SaveSize ()
 		{throw new NotImplementedException();}

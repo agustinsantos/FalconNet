@@ -1,7 +1,10 @@
 using System;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using FalconNet.FalcLib;
 using Unit=FalconNet.Campaign.UnitClass;
+using FalconNet.Common;
+using FalconNet.Sim;
 
 namespace FalconNet.Campaign
 {
@@ -20,33 +23,33 @@ namespace FalconNet.Campaign
 
 	
 		// constructors and serial functions
-		public AirUnitClass(int type)
+		public AirUnitClass(int type):base(type)
 		{throw new NotImplementedException();}
-		public AirUnitClass(VU_BYTE[] stream)
+		public AirUnitClass(VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~AirUnitClass();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
-		public virtual int Save (VU_BYTE[] stream)
+		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle(VuFullUpdateEvent evnt)
+		public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
 		// Required pure virtuals handled by AirUnitClass
-		public virtual MoveType GetMovementType ( )
+		public override MoveType GetMovementType ( )
 		{throw new NotImplementedException();}
-		public virtual int GetUnitSpeed ( )
+		public override int GetUnitSpeed ( )
 		{throw new NotImplementedException();}
-		public virtual CampaignTime UpdateTime ( ) 	{ return AIR_UPDATE_CHECK_INTERVAL*CampaignSeconds; }
-      	public virtual float Vt ( )				   	{ return GetUnitSpeed() * KPH_TO_FPS; }
-      	public virtual float Kias ( )				{ return Vt() * FTPSEC_TO_KNOTS; }
+		public override CampaignTime UpdateTime ( ) 	{ return new CampaignTime((ulong)AIInput.AIR_UPDATE_CHECK_INTERVAL*CampaignTime.CampaignSeconds); }
+      	public override float Vt ( )				   	{ return GetUnitSpeed() * Phyconst.KPH_TO_FPS; }
+      	public override float Kias ( )				{ return Vt() * Phyconst.FTPSEC_TO_KNOTS; }
 
 		// core functions
-		public virtual int IsHelicopter ( )
+		public override bool IsHelicopter ( )
 		{throw new NotImplementedException();}
-		public virtual int OnGround ( )
+		public override bool OnGround ( )
 		{throw new NotImplementedException();}
 	
 		// =========================================

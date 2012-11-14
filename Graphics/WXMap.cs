@@ -74,7 +74,7 @@ public const float WxThickScale		= -250.0f;
 			{
 	// Release our weather map memory
 	delete[] map;
-	map = NULL;
+	map = null;
 }
 
 	public int Load(string filename, int type)
@@ -89,7 +89,7 @@ public const float WxThickScale		= -250.0f;
 		return 1;							// Map already loaded
 	}
 
-	ncs = CLOUD_CELL_SIZE * FEET_PER_KM;
+	ncs = CLOUD_CELL_SIZE * Constants.FEET_PER_KM;
 	nw = FloatToInt32( (float)floor(((TheMap.EastEdge()  - TheMap.WestEdge())  / cellSize) + 0.5f) );
 	nh = FloatToInt32( (float)floor(((TheMap.NorthEdge() - TheMap.SouthEdge()) / cellSize) + 0.5f) );
 	if (nw != w || nh != h || ncs != cellSize) {
@@ -101,26 +101,26 @@ public const float WxThickScale		= -250.0f;
 	yOffset = 0.0f;
 
 	// Open the specified file for reading
-	mapFile = CreateFile_Open( filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+	mapFile = CreateFile_Open( filename, GENERIC_READ, FILE_SHARE_READ, null, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, null );
 	if (mapFile == INVALID_HANDLE_VALUE) {
 		//char	string[80];
 		//char	message[120];
 		//PutErrorString( string );
 		//sprintf( message, "%s:  Couldn't open weather map.", string );
-		//MessageBox( NULL, message, "Proceeding without intial weather", MB_OK );
-		//result = FALSE;
+		//MessageBox( null, message, "Proceeding without intial weather", MB_OK );
+		//result = false;
 		// We can tolerate no weather
 	} else {
 		// Read the weather map file.
 #if TODO			
-		result = ReadFile( mapFile, map, w*h*sizeof(*map), &bytesRead, NULL );
+		result = ReadFile( mapFile, map, w*h*sizeof(*map), &bytesRead, null );
 		if ((!result) || (bytesRead != w*h*sizeof(*map))) {
 			char	string[80];
 			char	message[120];
 			PutErrorString( string );
 			sprintf( message, "%s:  Couldn'd read weather map.", string );
-			MessageBox( NULL, message, "Proceeding without intial weather", MB_OK );
-			result = FALSE;
+			MessageBox( null, message, "Proceeding without intial weather", MB_OK );
+			result = false;
 				}
 #endif
 					throw new NotImplementedException();

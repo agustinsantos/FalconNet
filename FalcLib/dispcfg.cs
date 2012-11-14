@@ -89,12 +89,12 @@ namespace FalconNet.FalcLib
 			wc.lpfnWndProc = FalconMessageHandler;
 			wc.cbClsExtra = 0;
 			wc.cbWndExtra = sizeof(DWORD);
-			wc.hInstance = NULL;
-			//   wc.hIcon = NULL;
-			 wc.hIcon = LoadIcon (GetModuleHandle(NULL), MAKEINTRESOURCE(105));	// OW BC
-			wc.hCursor = NULL;
+			wc.hInstance = null;
+			//   wc.hIcon = null;
+			 wc.hIcon = LoadIcon (GetModuleHandle(null), MAKEINTRESOURCE(105));	// OW BC
+			wc.hCursor = null;
 			wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-			wc.lpszMenuName = NULL;
+			wc.lpszMenuName = null;
 			wc.lpszClassName = "FalconDisplay";
 			
 			// Register this class.
@@ -125,10 +125,10 @@ namespace FalconNet.FalcLib
 				   40,			/* init. y pos */
 				   rect.right-rect.left,	/* init. x size */
 				   rect.bottom-rect.top,	/* init. y size */
-				   NULL,					/* parent window */
-				   NULL,					/* menu handle */
-				   NULL,					/* program handle */
-				   NULL					/* create parms */
+				   null,					/* parent window */
+				   null,					/* menu handle */
+				   null,					/* program handle */
+				   null					/* create parms */
 			   );
 			   if (!appWin) {
 				   ShiError( "Failed to construct main window" );
@@ -166,7 +166,7 @@ namespace FalconNet.FalcLib
 			RECT rect;
 		
 			#if _FORCE_MAIN_THREAD
-			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			Debug.Assert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, null));	// Make sure this is called by the main thread
 			#endif
 		
 			currentMode = newMode;
@@ -174,9 +174,9 @@ namespace FalconNet.FalcLib
 			rect.top = rect.left = 0;
 			rect.right = width[currentMode];
 			rect.bottom = height[currentMode];
-			AdjustWindowRect(&rect, windowStyle, FALSE);
+			AdjustWindowRect(&rect, windowStyle, false);
 		
-			SetWindowPos(appWin, NULL, xOffset, yOffset,
+			SetWindowPos(appWin, null, xOffset, yOffset,
 				rect.right-rect.left, rect.bottom-rect.top, SWP_NOZORDER);
 		
 		
@@ -184,18 +184,18 @@ namespace FalconNet.FalcLib
 		
 			if(pDI)
 			{
-				if((g_bForceSoftwareGUI || pDI->Is3dfx() || !pDI->CanRenderWindowed()) && currentMode != Sim)
+				if((g_bForceSoftwareGUI || pDI.Is3dfx() || !pDI.CanRenderWindowed()) && currentMode != Sim)
 				{
 		#if !NOTHING
 					// V1, V2 workaround - use primary display adapter with RGB Renderer
 					int nIndexPrimary = FalconDisplay.devmgr.FindPrimaryDisplayDriver();
-					ShiAssert(nIndexPrimary != -1);
+					Debug.Assert(nIndexPrimary != -1);
 		
 					if(nIndexPrimary != -1)
 					{
 						DeviceManager.DDDriverInfo pDI = FalconDisplay.devmgr.GetDriver(nIndexPrimary);
 						int nIndexRGBRenderer = pDI.FindRGBRenderer();
-						ShiAssert(nIndexRGBRenderer != -1);
+						Debug.Assert(nIndexRGBRenderer != -1);
 		
 						if(nIndexRGBRenderer != -1)
 						{
@@ -204,11 +204,11 @@ namespace FalconNet.FalcLib
 						}
 					}
 		#else
-					displayFullScreen = TRUE;	// force fullscreen
+					displayFullScreen = true;	// force fullscreen
 		#endif
 				}
 		
-				if(!pDI->SupportsSRT() && PlayerOptions.bFastGMRadar)
+				if(!pDI.SupportsSRT() && PlayerOptions.bFastGMRadar)
 					PlayerOptions.bFastGMRadar = false;
 			}
 		
@@ -226,7 +226,7 @@ namespace FalconNet.FalcLib
 		{
 #if TODO	
 			#if _FORCE_MAIN_THREAD
-			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			Debug.Assert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, null));	// Make sure this is called by the main thread
 			#endif
 		
 		   theDisplayDevice.Cleanup();
@@ -238,7 +238,7 @@ namespace FalconNet.FalcLib
 		{
 #if TODO			
 			#if _FORCE_MAIN_THREAD
-			ShiAssert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, NULL));	// Make sure this is called by the main thread
+			Debug.Assert(::GetCurrentThreadId() == GetWindowThreadProcessId(appWin, null));	// Make sure this is called by the main thread
 			#endif
 		
 			LeaveMode();
@@ -280,10 +280,10 @@ namespace FalconNet.FalcLib
 			   40,			/* init. y pos */
 			   rect.right-rect.left,	/* init. x size */
 			   rect.bottom-rect.top,	/* init. y size */
-			   NULL,					/* parent window */
-			   NULL,					/* menu handle */
-			   NULL,					/* program handle */
-			   NULL					/* create parms */
+			   null,					/* parent window */
+			   null,					/* menu handle */
+			   null,					/* program handle */
+			   null					/* create parms */
 			);
 			if (!appWin) {
 			   ShiError( "Failed to construct main window" );

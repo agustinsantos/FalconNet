@@ -1,7 +1,8 @@
 using System;
 using System.IO;
 using FalconNet.VU;
-
+using FalconNet.Common;
+using VU_BYTE=System.Byte;
 namespace FalconNet.FalcLib
 {
 	// ==========================================
@@ -37,7 +38,7 @@ namespace FalconNet.FalcLib
 
 	public class FalconSessionEntity : VuSessionEntity
 	{ 
-#if TODO
+
 		public enum SESSIONENUM
 		{
 			_AIR_KILLS_=0,
@@ -62,7 +63,7 @@ namespace FalconNet.FalcLib
 		private float			AceFactor;			// Player Ace Factor
 		private float			initAceFactor;		// AceFactor at beginning of match
 		private float			bubbleRatio;		// This session's multiplier for the player bubble size
-		private ushort[]		kills = new ushort[_KILL_CATS_]; // Player kills - can't keep in log book
+		private ushort[]		kills = new ushort[(int)SESSIONENUM._KILL_CATS_]; // Player kills - can't keep in log book
 		private ushort			missions;			// Player missions flown
 		private byte 			country;			// Country or Team player is on
 		private byte 			aircraftNum;		// Which aircraft in a flight we're using (0-3)
@@ -82,13 +83,13 @@ namespace FalconNet.FalcLib
 		private long			unitDataSendSize;
 		private byte[]			unitDataReceiveBuffer;	// Unit data the local session is receiving from this session
 		private short			unitDataReceiveSet;
-		private byte[] 			unitDataReceived = new byte[FS_MAXBLK / 8];
+		private byte[] 			unitDataReceived = new byte[FalcSessStatic.FS_MAXBLK / 8];
 		private byte[]			objDataSendBuffer;		// Objective data the local session is sending to this session
 		private short			objDataSendSet;
 		private long			objDataSendSize;
 		private byte[]			objDataReceiveBuffer;	// Objective data the local session is receiving from this session
 		private short			objDataReceiveSet;
-		private byte[] 			objDataReceived = new byte[FS_MAXBLK / 8];
+		private byte[] 			objDataReceived = new byte[FalcSessStatic.FS_MAXBLK / 8];
 		
 	
 		// constructors & destructor
@@ -222,7 +223,7 @@ namespace FalconNet.FalcLib
 
 		public ushort GetKill (ushort CAT)
 		{
-			if (CAT < _KILL_CATS_)
+			if (CAT < (int)SESSIONENUM._KILL_CATS_)
 				return(kills [CAT]);
 			return(0);
 		}
@@ -244,7 +245,7 @@ namespace FalconNet.FalcLib
 
 		public FalconGameEntity GetGame ()
 		{
-			return (FalconGameEntity*)game_;
+			return (FalconGameEntity)game_;
 		}
 
 		public byte  GetAssignedAircraftNum ()
@@ -257,7 +258,7 @@ namespace FalconNet.FalcLib
 			return assignedPilotSlot;
 		}
 
-		public FlightClass* GetAssignedPlayerFlight ()
+		public FlightClass GetAssignedPlayerFlight ()
 		{
 			return assignedPlayerFlightPtr;
 		}
@@ -355,7 +356,7 @@ namespace FalconNet.FalcLib
 
 		public void SetKill (ushort CAT, ushort kill)
 		{
-			if (CAT < _KILL_CATS_)
+			if (CAT < (int)SESSIONENUM._KILL_CATS_)
 				kills [CAT] = kill;
 		}
 
@@ -411,17 +412,51 @@ namespace FalconNet.FalcLib
 		{
 			throw new NotImplementedException ();
 		}
-#endif
+
 //		virtual VU_ERRCODE Handle(VuSessionEvent *event);
-	}
-	
-	/* TODO	
+		
 		// Some conversion equivalencies between vuLocalSession and FalconLocalSession
-		#define FalconLocalSession ((FalconSessionEntity*)vuLocalSessionEntity)
-		#define FalconLocalSessionId vuLocalSession
-		#define FalconLocalGame (((FalconSessionEntity*)vuLocalSessionEntity)->GetGame())
-		#define VuLocalGame (vuLocalSessionEntity->Game())
-		#define FalconLocalGameId (vuLocalSessionEntity->GameId())
-		TODO */
+		public static FalconSessionEntity virtualFalconLocalSession ()
+		{
+			#if TODO
+			return ((FalconSessionEntity)vuLocalSessionEntity);
+			#endif
+			throw new NotImplementedException ();
+		}
+
+		public static object FalconLocalSessionId ()
+		{
+			#if TODO
+			return vuLocalSession;
+			#endif
+			throw new NotImplementedException ();
+		}
+
+		public static FalconSessionEntity FalconLocalGame ()
+		{
+			#if TODO
+			return (((FalconSessionEntity)vuLocalSessionEntity).GetGame());
+			#endif
+			throw new NotImplementedException ();
+			
+		}
+
+		public static object VuLocalGame ()
+		{
+			#if TODO
+			return (vuLocalSessionEntity.Game());
+			#endif
+			throw new NotImplementedException ();
+		}
+
+		public static object FalconLocalGameId ()
+		{
+			#if TODO
+			return (vuLocalSessionEntity.GameId());
+			#endif
+			throw new NotImplementedException ();
+		}
+	}
+
 }
 

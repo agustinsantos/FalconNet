@@ -132,7 +132,7 @@ namespace FalconNet.Ui95
 		{
 			if(User_)
 			{
-				User_->Cleanup();
+				User_.Cleanup();
 				delete User_;
 			}
 		}
@@ -161,12 +161,12 @@ namespace FalconNet.Ui95
 		
 			if(User_)
 			{
-				rec=(USERDATA*)User_->GetFirst(&cur,&curidx);
+				rec=(USERDATA*)User_.GetFirst(&cur,&curidx);
 				while(rec)
 				{
-					if(rec->type == CSB_IS_VALUE)
+					if(rec.type == CSB_IS_VALUE)
 						size += sizeof(long)*2;
-					rec=(USERDATA*)User_->GetNext(&cur,&curidx);
+					rec=(USERDATA*)User_.GetNext(&cur,&curidx);
 				}
 			}
 			return(size);
@@ -198,25 +198,25 @@ namespace FalconNet.Ui95
 			count=0;
 			if(User_)
 			{
-				rec=(USERDATA*)User_->GetFirst(&cur,&curidx);
+				rec=(USERDATA*)User_.GetFirst(&cur,&curidx);
 				while(rec)
 				{
-					if(rec->type == CSB_IS_VALUE)
+					if(rec.type == CSB_IS_VALUE)
 						count++;
-					rec=(USERDATA*)User_->GetNext(&cur,&curidx);
+					rec=(USERDATA*)User_.GetNext(&cur,&curidx);
 				}
 				if(count)
 				{
 					memcpy(*stream,&count,sizeof(short));					*stream += sizeof(short);
-					rec=(USERDATA*)User_->GetFirst(&cur,&curidx);
+					rec=(USERDATA*)User_.GetFirst(&cur,&curidx);
 					while(rec)
 					{
-						if(rec->type == CSB_IS_VALUE)
+						if(rec.type == CSB_IS_VALUE)
 						{
 							memcpy(*stream,&curidx,sizeof(long));			*stream += sizeof(long);
-							memcpy(*stream,&rec->data.number,sizeof(long));	*stream += sizeof(long);
+							memcpy(*stream,&rec.data.number,sizeof(long));	*stream += sizeof(long);
 						}
-						rec=(USERDATA*)User_->GetNext(&cur,&curidx);
+						rec=(USERDATA*)User_.GetNext(&cur,&curidx);
 					}
 				}
 			}
@@ -251,25 +251,25 @@ namespace FalconNet.Ui95
 			count=0;
 			if(User_)
 			{
-				rec=(USERDATA*)User_->GetFirst(&cur,&curidx);
+				rec=(USERDATA*)User_.GetFirst(&cur,&curidx);
 				while(rec)
 				{
-					if(rec->type == CSB_IS_VALUE)
+					if(rec.type == CSB_IS_VALUE)
 						count++;
-					rec=(USERDATA*)User_->GetNext(&cur,&curidx);
+					rec=(USERDATA*)User_.GetNext(&cur,&curidx);
 				}
 				if(count)
 				{
 					fwrite(&count,sizeof(short),1,fp);
-					rec=(USERDATA*)User_->GetFirst(&cur,&curidx);
+					rec=(USERDATA*)User_.GetFirst(&cur,&curidx);
 					while(rec)
 					{
-						if(rec->type == CSB_IS_VALUE)
+						if(rec.type == CSB_IS_VALUE)
 						{
 							fwrite(&curidx,sizeof(long),1,fp);
-							fwrite(&rec->data.number,sizeof(long),1,fp);
+							fwrite(&rec.data.number,sizeof(long),1,fp);
 						}
-						rec=(USERDATA*)User_->GetNext(&cur,&curidx);
+						rec=(USERDATA*)User_.GetNext(&cur,&curidx);
 					}
 				}
 			}
@@ -426,7 +426,7 @@ namespace FalconNet.Ui95
 				else
 				{
 					#if USE_SH_POOLS
-					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),false);
 					#else
 					usr=new USERDATA();
 					#endif
@@ -461,7 +461,7 @@ namespace FalconNet.Ui95
 				else
 				{
 					#if USE_SH_POOLS
-					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),false);
 					#else
 					usr=new USERDATA();
 					#endif
@@ -497,7 +497,7 @@ namespace FalconNet.Ui95
 				else
 				{
 					#if USE_SH_POOLS
-					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),FALSE);
+					usr = (USERDATA *)MemAllocPtr(UI_Pools[UI_GENERAL_POOL],sizeof(USERDATA),false);
 					#else
 					usr=new USERDATA();
 					#endif

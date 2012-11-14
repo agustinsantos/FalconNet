@@ -1,5 +1,6 @@
 using System;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using FalconNet.FalcLib;
 using Flight=FalconNet.Campaign.FlightClass;
 using FalconNet.Common;
@@ -36,7 +37,7 @@ namespace FalconNet.Campaign
 #if USE_SH_POOLS
    
       // Overload new/delete to use a SmartHeap fixed size pool
-      void *operator new(size_t size) { ShiAssert( size == sizeof(SquadronClass) ); return MemAllocFS(pool);	};
+      void *operator new(size_t size) { Debug.Assert( size == sizeof(SquadronClass) ); return MemAllocFS(pool);	};
       void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
       static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(SquadronClass), 200, 0 ); };
       static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -46,12 +47,12 @@ namespace FalconNet.Campaign
 	 
 		private long				fuel;							// fuel avail, 100s of lbs
 		private byte				specialty;    					// Squadron's specialty
-		private byte[]				stores = new byte[MAXIMUM_WEAPTYPES];		// # of weapons available
-		private PilotClass[]		pilot_data = new PilotClass[PILOTS_PER_SQUADRON];// Pilot info
-		private ulong				schedule = new ulong[VEHICLES_PER_UNIT];	// Aircraft usage schedule.
+		private byte[]				stores = new byte[Camplib.MAXIMUM_WEAPTYPES];		// # of weapons available
+		private PilotClass[]		pilot_data = new PilotClass[PilotStatic.PILOTS_PER_SQUADRON];// Pilot info
+		private ulong[]				schedule = new ulong[Camplib.VEHICLES_PER_UNIT];	// Aircraft usage schedule.
 		private VU_ID				airbase_id;						// ID of this squadron's airbase/carrier
 		private VU_ID				hot_spot;						// ID of 'primary' Primary Objective
-		private byte[]				rating = new byte[ARO_OTHER];				// Rating by mission roll
+		private byte[]				rating = new byte[(int)MissionRollEnum.ARO_OTHER];				// Rating by mission roll
 		private short				aa_kills;						// Kill counts (air to air)
 		private short				ag_kills;						// (air to ground)
 		private short				as_kills;						// (air to static)
@@ -177,132 +178,132 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Other Functions
-		public SquadronClass (int type)
+		public SquadronClass (int type):base(type)
 		{throw new NotImplementedException();}
 		
-		public SquadronClass (VU_BYTE[] stream)
+		public SquadronClass (VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~SquadronClass();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE[] stream)
+		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
+		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
 		// Required pure virtuals
-		public virtual int Reaction (CampEntity c, int i, float f)
+		public override int Reaction (CampEntity c, int i, float f)
 		{
 			return 0;
 		}
 
-		public virtual int MoveUnit (CampaignTime t)
+		public override int MoveUnit (CampaignTime t)
 		{throw new NotImplementedException();}
 
-		public virtual int ChooseTactic ()
+		public override int ChooseTactic ()
 		{
 			return 0;
 		}
 
-		public virtual int CheckTactic (int i)
+		public override int CheckTactic (int i)
 		{
 			return 0;
 		}
 
-		public virtual int Real ()
+		public override int Real ()
 		{
 			return 0;
 		}
 
-		public virtual int IsSquadron ()
+		public override bool IsSquadron ()
 		{
-			return TRUE;
+			return true;
 		}
 
-		public virtual int GetUnitSupplyNeed (int total)
+		public override int GetUnitSupplyNeed (int total)
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitFuelNeed (int total)
+		public override int GetUnitFuelNeed (int total)
 		{throw new NotImplementedException();}
 
-		public virtual void SupplyUnit (int supply, int fuel)
+		public override void SupplyUnit (int supply, int fuel)
 		{throw new NotImplementedException();}
 
 		// Dirty Data Stuff
 		public void MakeSquadronDirty (Dirty_Squadron bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte[] stream)
+		public override void WriteDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte[] stream)
+		public override void ReadDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
 		// Core functions
-		public virtual void UseFuel (long f)
+		public override void UseFuel (long f)
 		{throw new NotImplementedException();}
 
-		public virtual void SetSquadronFuel (long f)
+		public override void SetSquadronFuel (long f)
 		{throw new NotImplementedException();}
 
-		public virtual void SetUnitSpecialty (int s)
+		public override void SetUnitSpecialty (int s)
 		{
 			specialty = (byte)s;
 		}
 
-		public virtual void SetUnitStores (int w, byte v)
+		public override void SetUnitStores (int w, byte v)
 		{throw new NotImplementedException();}
 
-		public virtual void SetUnitAirbase (VU_ID ID)
+		public override void SetUnitAirbase (VU_ID ID)
 		{throw new NotImplementedException();}
 
-		public virtual void SetLastResupply (int s)
+		public override void SetLastResupply (int s)
 		{throw new NotImplementedException();}
 
-		public virtual void SetLastResupplyTime (CampaignTime t)
+		public override void SetLastResupplyTime (CampaignTime t)
 		{
 			last_resupply_time = t;
 		}
 
-		public virtual long GetSquadronFuel ()
+		public override long GetSquadronFuel ()
 		{
 			return fuel;
 		}
 
-		public virtual int GetUnitSpecialty ()
+		public override int GetUnitSpecialty ()
 		{
 			return (int)specialty;
 		}
 
-		public virtual byte GetUnitStores (int w)
+		public override byte GetUnitStores (int w)
 		{
 			return stores [w];
 		}
 
-		public virtual CampaignTime GetLastResupplyTime ()
+		public override CampaignTime GetLastResupplyTime ()
 		{
 			return last_resupply_time;
 		}
 
-		public virtual int GetLastResupply ()
+		public override int GetLastResupply ()
 		{
 			return last_resupply;
 		}
 
-		public virtual CampEntity GetUnitAirbase ()
+		public override CampEntity GetUnitAirbase ()
 		{
-			return FindEntity (airbase_id);
+			return FindStatic.FindEntity (airbase_id);
 		}
 
-		public virtual VU_ID GetUnitAirbaseID ()
+		public override VU_ID GetUnitAirbaseID ()
 		{
 			return airbase_id;
 		}
 
-		public virtual void DisposeChildren ()
+		public override void DisposeChildren ()
 		{throw new NotImplementedException();}
 
 		public int GetPilotID (int pilot)
@@ -314,12 +315,13 @@ namespace FalconNet.Campaign
 		{
 			return pilot_data [pilot];
 		}
-
+		
+#if TODO		
 		public PilotInfoClass GetPilotInfo (int pilot)
 		{
 			return PilotInfo [pilot_data [pilot].pilot_id];
 		}
-
+#endif
 		public int NumActivePilots ()
 		{throw new NotImplementedException();}
 

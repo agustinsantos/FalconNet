@@ -3,6 +3,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Flight=FalconNet.Campaign.FlightClass;
+using Team=System.Int32;
 
 namespace FalconNet.Campaign
 {
@@ -11,7 +12,7 @@ namespace FalconNet.Campaign
 	// ===================================================
 	
 	// Mission defines for aircraft
-	public enum MissionTypeEnum
+	public enum MissionTypeEnum : byte
 	{        // NOTE: This must fit int a byte!
 		AMIS_NONE           = 0,
 		AMIS_BARCAP         = 1,			// BARCAP missions to protect a target area
@@ -293,7 +294,7 @@ namespace FalconNet.Campaign
 #if USE_SH_POOLS
    public:
       // Overload new/delete to use a SmartHeap fixed size pool
-      void *operator new(size_t size) { ShiAssert( size == sizeof(MissionRequestClass) ); return MemAllocFS(pool);	};
+      void *operator new(size_t size) { Debug.Assert( size == sizeof(MissionRequestClass) ); return MemAllocFS(pool);	};
       void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
       static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(MissionRequestClass), 50, 0 ); };
       static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -375,7 +376,7 @@ namespace FalconNet.Campaign
 	
 	public static class MissionStatic
 	{
-		public static MissionDataType[] MissionData = new MissionDataType [AMIS_OTHER];
+		public static MissionDataType[] MissionData = new MissionDataType [(int)MissionTypeEnum.AMIS_OTHER];
 
 // ===================================================
 // Global functions

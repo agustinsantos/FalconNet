@@ -28,7 +28,7 @@ namespace FalconNet.Graphics
 			int			resNum;
 			UInt		w, h, d;
 		
-			ShiAssert( !IsReady() );
+			Debug.Assert( !IsReady() );
 		
 		
 			// Remember our driver number so we know if we're software (driver 0) or hardware.
@@ -48,7 +48,7 @@ namespace FalconNet.Graphics
 		
 			// For now, we go figure out the number for the resolution we want
 			// TODO:  Change the DisplayDevice API to require the resNum to be passed in?
-			for (resNum=0; TRUE; resNum++) {
+			for (resNum=0; true; resNum++) {
 				if (FalconDisplay.devmgr.GetMode( driverNum, devNum, resNum, &w, &h, &d)) {
 					if((w == (unsigned) width) && (h == (unsigned)height) && (d == (unsigned)depth)) {
 						// Found it
@@ -79,7 +79,7 @@ namespace FalconNet.Graphics
 		
 				// Store the applications main window for later use
 				appWin = win;
-				privateWindow = FALSE;
+				privateWindow = false;
 		
 			} else {
 		
@@ -109,7 +109,7 @@ namespace FalconNet.Graphics
 				rect.top = rect.left = 0;
 				rect.right = width;
 				rect.bottom = height;
-				AdjustWindowRect(&rect,	style, FALSE);
+				AdjustWindowRect(&rect,	style, false);
 				appWin = CreateWindow(
 			    	"RenderTarget",			/* class */
 					"Falcon 4.0 Demo",		/* caption */
@@ -128,7 +128,7 @@ namespace FalconNet.Graphics
 				}
 		
 				// Make note of the fact that we'll have to release this window when we're done
-				privateWindow = TRUE;
+				privateWindow = true;
 			}
 		
 		
@@ -147,16 +147,16 @@ namespace FalconNet.Graphics
 		
 				// Create the primary surface(s)
 				if(dblBuffer)
-					image.Setup( this, width, height, Primary, Flip, appWin, FALSE, TRUE, bWillCallSwapBuffer );
+					image.Setup( this, width, height, Primary, Flip, appWin, false, true, bWillCallSwapBuffer );
 				else
-					image.Setup( this, width, height, Primary, IsHardware() ? VideoMem : SystemMem, appWin, FALSE, TRUE, bWillCallSwapBuffer);
+					image.Setup( this, width, height, Primary, IsHardware() ? VideoMem : SystemMem, appWin, false, true, bWillCallSwapBuffer);
 			}
 		
 			else
-				image.Setup( this, width, height, Primary, IsHardware() ? VideoMem : SystemMem, appWin, TRUE, FALSE, bWillCallSwapBuffer);
+				image.Setup( this, width, height, Primary, IsHardware() ? VideoMem : SystemMem, appWin, true, false, bWillCallSwapBuffer);
 		
 			// Make sure we haven't gotten confused about how many contexts we have
-		//	ShiAssert( ContextMPR.StateSetupCounter == 0 );
+		//	Debug.Assert( ContextMPR.StateSetupCounter == 0 );
 			if(ContextMPR.StateSetupCounter != 0)	
 				ContextMPR.StateSetupCounter = 0;	// Force it for now.  Shouldn't be required.
 		
@@ -172,7 +172,7 @@ namespace FalconNet.Graphics
 		public void	Cleanup ()
 		{
 #if TODO	
-			ShiAssert( IsReady() );
+			Debug.Assert( IsReady() );
 		
 			if(m_DXCtx)
 			{
@@ -185,7 +185,7 @@ namespace FalconNet.Graphics
 			image.Cleanup();
 		
 			// Make sure we haven't gotten confused about how many contexts we have
-		//	ShiAssert( ContextMPR.StateSetupCounter == 0 );
+		//	Debug.Assert( ContextMPR.StateSetupCounter == 0 );
 			if (ContextMPR.StateSetupCounter != 0) {	
 				ContextMPR.StateSetupCounter = 0;	// Force it for now.  Shouldn't be required.
 			}
@@ -209,7 +209,7 @@ namespace FalconNet.Graphics
 		public bool	IsHardware ()
 		{
 #if TODO		
-			ShiAssert (IsReady ());
+			Debug.Assert (IsReady ());
 			return m_DXCtx.m_eDeviceCategory > DXContext.D3DDeviceCategory_Software;
 #endif
 			throw new NotImplementedException();

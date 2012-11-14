@@ -154,39 +154,39 @@ public class ContextMPR
 		m_nInstCount++;
 		#endif
 	
-		m_pCtxDX = NULL;
-		m_pDD = NULL;
-		m_pD3DD = NULL;
-		m_pVB = NULL;
+		m_pCtxDX = null;
+		m_pDD = null;
+		m_pD3DD = null;
+		m_pVB = null;
 		m_dwVBSize = 0;
-		m_pIdx = NULL;
+		m_pIdx = null;
 		m_dwNumVtx = 0;
 		m_dwNumIdx = 0;
 		m_dwStartVtx = 0;
 		m_nCurPrimType = 0;
 		m_VtxInfo = 0;
-		m_pRenderTarget = NULL;
+		m_pRenderTarget = null;
 		m_bEnableScissors = false;
-		m_pDDSP = NULL;
+		m_pDDSP = null;
 		m_bNoD3DStatsAvail = false;
 		m_bUseSetStateInternal = false;
-		m_pIB = NULL;
+		m_pIB = null;
 		m_nFrameDepth = 0;
-		m_pVtx = NULL;
+		m_pVtx = null;
 		m_bRenderTargetHasZBuffer = false;
 		m_bViewportLocked = false;
 	
 		m_colFG = m_colBG = 0; // JPO initialise to something
 		m_colFG_Raw = m_colBG_Raw = 0; // and again
 		#if _DEBUG
-		m_pVtxEnd = NULL;
+		m_pVtxEnd = null;
 		#endif
 	}
 	// public virtual ~ContextMPR();
 
 	public BOOL Setup(ImageBuffer *pIB, DXContext *c)
 	{
-	BOOL bRetval = FALSE;
+	BOOL bRetval = false;
 
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Setup(0x%X, 0x%X)\n", pIB, c);
@@ -200,17 +200,17 @@ public class ContextMPR
 		if(!m_pCtxDX)
 		{
 			ShiWarning("Failed to create device!");
-			return FALSE;
+			return false;
 		}
 
-		Debug.Assert(m_pVtx == NULL);	// Cleanup() wasnt called if not zero
+		Debug.Assert(m_pVtx == null);	// Cleanup() wasnt called if not zero
 
 		Debug.Assert(pIB);
 		if(!pIB)
-			return FALSE;
+			return false;
 
 		m_pIB = pIB;
-//		m_pIB.Lock(TRUE);
+//		m_pIB.Lock(true);
 		IDirectDrawSurface7 *lpDDSBack = pIB.targetSurface();
 		NewImageBuffer((UInt) lpDDSBack);
 
@@ -224,7 +224,7 @@ public class ContextMPR
 /* Warning this generates an addref on the primary surface
 		if(m_pCtxDX.m_pcapsDD.dwCaps2 & DDCAPS2_PRIMARYGAMMA)
 			m_pDD.EnumSurfaces(DDENUMSURFACES_DOESEXIST | DDENUMSURFACES_ALL,
-				NULL, this, EnumSurfacesCB2);
+				null, this, EnumSurfacesCB2);
 */
 
 		// Create the main VB
@@ -249,7 +249,7 @@ public class ContextMPR
 
 		vbdesc.dwNumVertices = m_dwVBSize;	// MPR_MAX_VERTICES
 
-		CheckHR(m_pCtxDX.m_pD3D.CreateVertexBuffer(&vbdesc, &m_pVB, NULL));
+		CheckHR(m_pCtxDX.m_pD3D.CreateVertexBuffer(&vbdesc, &m_pVB, null));
 
 		// Alloc index buffer
 		m_pIdx = new WORD[vbdesc.dwNumVertices * 3];	// we intend to sent triangle lists
@@ -285,14 +285,14 @@ public class ContextMPR
 		SetupMPRState(CHECK_PREVIOUS_STATE);
 
 		// Start out in simple flat shaded mode
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_COLORVERTEX, TRUE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_LIGHTING, FALSE);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_COLORVERTEX, true);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_LIGHTING, false);
 		m_pD3DD.SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_NONE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, FALSE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, FALSE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_STIPPLEDALPHA, FALSE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_COLORKEYENABLE, FALSE);
-		m_pD3DD.SetRenderState(D3DRENDERSTATE_STENCILENABLE, FALSE);   
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, false);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, false);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_STIPPLEDALPHA, false);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_COLORKEYENABLE, false);
+		m_pD3DD.SetRenderState(D3DRENDERSTATE_STENCILENABLE, false);   
 
 		// Disable all stages
 		for(int i=0;i<8;i++)
@@ -324,7 +324,7 @@ public class ContextMPR
 		#endif
 
 
-		bRetval = TRUE;
+		bRetval = true;
 	}
 
 	catch(_com_error e)
@@ -367,7 +367,7 @@ public class ContextMPR
 
 	// JPO - now added reference counting so that it is shareable and releaseable - I think.
 //	m_pCtxDX.Release();
-	m_pCtxDX = NULL;
+	m_pCtxDX = null;
 
 
 
@@ -377,59 +377,59 @@ public class ContextMPR
 	if(m_pRenderTarget)
 	{
 		m_pRenderTarget.Release();
-		m_pRenderTarget = NULL;
+		m_pRenderTarget = null;
 	}
 	
 	if(m_pVB)
 	{
 		m_pVB.Release();
-		m_pVB = NULL;
+		m_pVB = null;
 	}
 
 	if(m_pDDSP)
 	{
 		m_pDDSP.Release();
-		m_pDDSP = NULL;
+		m_pDDSP = null;
 	}
 
 	if(m_pD3DD)
 	{
 		DWORD dwRefCnt = m_pD3DD.Release();
-		m_pD3DD = NULL;
+		m_pD3DD = null;
 	}
 
 	if(m_pDD)
 	{
 		DWORD dwRefCnt = m_pDD.Release();
-		m_pDD = NULL;
+		m_pDD = null;
 	}
 #endif
 // Only this release seems to work without problems, good that it is the largest one...
 	if(m_pVB)
 	{
 		m_pVB.Release();
-		m_pVB = NULL;
+		m_pVB = null;
 	}
 
 	if(m_pIdx)
 	{
 		delete[] m_pIdx;
-		m_pIdx = NULL;
+		m_pIdx = null;
 	}
 
-	m_pIdx = NULL;
+	m_pIdx = null;
 	m_dwNumVtx = 0;
 	m_dwNumIdx = 0;
 	m_dwStartVtx = 0;
 	m_nCurPrimType = 0;
 	m_VtxInfo = 0;
-	m_pIB = NULL;
+	m_pIB = null;
 	m_nFrameDepth = 0;
-	m_pVtx = NULL;
+	m_pVtx = null;
 	m_bRenderTargetHasZBuffer = false;
 
 	#if _DEBUG
-	m_pVtxEnd = NULL;
+	m_pVtxEnd = null;
 	#endif
 
 	#if _CONTEXT_RECORD_USED_STATES
@@ -450,7 +450,7 @@ public class ContextMPR
 	if(m_pRenderTarget)
 	{
 //		m_pRenderTarget.Release();
-		m_pRenderTarget = NULL;
+		m_pRenderTarget = null;
 	}
 
 	m_pRenderTarget = (IDirectDrawSurface7 *) lpDDSBack;
@@ -479,7 +479,7 @@ public class ContextMPR
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SetState(%d, 0x%X)\n", State, Value);
 	#endif
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	//TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 	Debug.Assert (State != MPR_STA_TEX_ID);
 	Debug.Assert (State != MPR_STA_FG_COLOR);
 
@@ -502,15 +502,15 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_CLIPPING, TRUE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_CLIPPING, true);
 			}
 
 			if(Value & MPR_SE_BLENDING)
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, TRUE);
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, true);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, false);
 
 				// Also modulate alpha from vertex and texture
 // OW, removed 23-07-2000 to fix cloud rendering problem when the transparency options was enabled in falcon
@@ -524,12 +524,12 @@ public class ContextMPR
 				// Use alpha testing to speed it up (if supported) - note: this is not redundant
 				if(m_pCtxDX.m_pD3DHWDeviceDesc.dpcTriCaps.dwAlphaCmpCaps & D3DCMP_GREATEREQUAL)
 				{
-					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, TRUE);
+					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, true);
 					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHAREF, (DWORD) 1);
 					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 				}
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, TRUE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, true);
 				m_pD3DD.SetRenderState(D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
 				m_pD3DD.SetRenderState(D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
 			}
@@ -538,7 +538,7 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE , FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE , false);
 			}
 
 			if(Value & MPR_SE_SHADING)
@@ -552,7 +552,7 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_DITHERENABLE , TRUE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_DITHERENABLE , true);
 
 				// see MPRcfg.h (MPR_BILINEAR_CLAMPED)
 				m_pD3DD.SetTextureStageState(0, D3DTSS_ADDRESS, D3DTADDRESS_CLAMP);
@@ -575,7 +575,7 @@ public class ContextMPR
 			if(Value & MPR_SE_FOG)
 			{
 #if NOTHING
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, TRUE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, true);
 
 				float fStart = 0.1f;    // for linear mode
 				float fEnd   = 0.8f;
@@ -591,7 +591,7 @@ public class ContextMPR
 				// FlushVB();
 
 				Debug.Assert(false);		// we do not create Z buffers for now
-				// HRESULT hr = m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, TRUE);
+				// HRESULT hr = m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, true);
 				// Debug.Assert(SUCCEEDED(hr));
 			}
 
@@ -657,7 +657,7 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetTexture(0, NULL);
+				m_pD3DD.SetTexture(0, null);
 			}
 
 			if(Value & MPR_SE_SHADING)
@@ -671,7 +671,7 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, false);
 
 				// Only use texture alpha
 				m_pD3DD.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
@@ -692,27 +692,27 @@ public class ContextMPR
 				// Use alpha testing to speed it up (if supported)
 				if(m_pCtxDX.m_pD3DHWDeviceDesc.dpcTriCaps.dwAlphaCmpCaps & D3DCMP_GREATEREQUAL)
 				{
-					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, FALSE);
+					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHATESTENABLE, false);
 
 					// For Voodoo 1
 					m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHAFUNC, D3DCMP_ALWAYS);
 				}
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, false);
 			}
 
 			if(Value & MPR_SE_NON_PERSPECTIVE_CORRECTION_MODE)
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE, TRUE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE, true);
 			}
 
 			if(Value & MPR_SE_DITHERING)
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_DITHERENABLE , FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_DITHERENABLE , false);
 			}
 
 			if((Value & MPR_SE_SCISSORING) && m_bEnableScissors)
@@ -727,21 +727,21 @@ public class ContextMPR
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_CLIPPING, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_CLIPPING, false);
 			}
 
 			if(Value & MPR_SE_FOG)
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_FOGENABLE, false);
 			}
 
 			if(Value & MPR_SE_Z_BUFFERING)
 			{
 				FlushVB();
 
-				m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, FALSE);
+				m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, false);
 			}
 
 			#if _DEBUG
@@ -1164,7 +1164,7 @@ public class ContextMPR
 	if(ClearInfo & MPR_CI_DRAW_BUFFER) dwClearFlags |= D3DCLEAR_TARGET;
 	if(ClearInfo & MPR_CI_ZBUFFER) dwClearFlags |= D3DCLEAR_ZBUFFER;
 
-	HRESULT hr = m_pD3DD.Clear(NULL, NULL, dwClearFlags, m_colBG, 1.0f, NULL);
+	HRESULT hr = m_pD3DD.Clear(null, null, dwClearFlags, m_colBG, 1.0f, null);
 	Debug.Assert(SUCCEEDED(hr));
 }
 
@@ -1180,12 +1180,12 @@ public class ContextMPR
 		UpdateViewport();
 
 	InvalidateState();
-//	m_pIB.Lock(TRUE);
+//	m_pIB.Lock(true);
 
 	HRESULT hr;
 	
 	if(m_bRenderTargetHasZBuffer)
-		hr = m_pD3DD.Clear(NULL, NULL, D3DCLEAR_ZBUFFER, 0, 0.0f, NULL);   // Clear the ZBuffer
+		hr = m_pD3DD.Clear(null, null, D3DCLEAR_ZBUFFER, 0, 0.0f, null);   // Clear the ZBuffer
 
 	hr = m_pD3DD.BeginScene();
 	if(FAILED(hr))
@@ -1272,7 +1272,7 @@ public class ContextMPR
 
 //	m_pIB.Unlock();
 
-	Debug.Assert(lpFnPtr == NULL);		// no idea what to do with it
+	Debug.Assert(lpFnPtr == null);		// no idea what to do with it
 	Stats();
 }
 	public void SetColorCorrection( DWORD color, float percent )
@@ -1397,12 +1397,12 @@ public class ContextMPR
 	public int CurrentForegroundColor( ) {return m_colFG_Raw;}
 	public void Render2DBitmap( int sX, int sY, int dX, int dY, int w, int h, int totalWidth, DWORD *pSrc )
 {
-	DWORD *pDst = NULL;
+	DWORD *pDst = null;
 
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Render2DBitmap(%d, %d, %d, %d, %d, %d, %d, 0x%X)\n", sX, sY, dX, dY, w, h, totalWidth, pSrc);
 	#endif
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	//TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 	try
 	{
 			// Convert from ABGR to ARGB ;(
@@ -1428,10 +1428,10 @@ public class ContextMPR
 
 		IDirectDrawSurface7Ptr pDDSTex;
 		CheckHR(D3DXCreateTexture(m_pD3DD, &dwFlags, &dwActualWidth, &dwActualHeight,
-			&fmt, NULL, &pDDSTex, &dwNumMipMaps));
-		//TODO Debug.Assert(FALSE==F4IsBadReadPtr(pDDSTex, sizeof *pDDSTex));
-		CheckHR(D3DXLoadTextureFromMemory(m_pD3DD, pDDSTex, 0, pDst, NULL,
-			D3DX_SF_A8R8G8B8, w << 2, NULL, D3DX_FT_LINEAR));
+			&fmt, null, &pDDSTex, &dwNumMipMaps));
+		//TODO Debug.Assert(false==F4IsBadReadPtr(pDDSTex, sizeof *pDDSTex));
+		CheckHR(D3DXLoadTextureFromMemory(m_pD3DD, pDDSTex, 0, pDst, null,
+			D3DX_SF_A8R8G8B8, w << 2, null, D3DX_FT_LINEAR));
 
 		// Setup vertices
 		TwoDVertex[] pVtx = new TwoDVertex[4];
@@ -1539,7 +1539,7 @@ public class ContextMPR
 	MonoPrint("ContextMPR::SetCurrentState (%d, 0x%X)\n", state, flag);
 	#endif
 
-	// TODO Debug.Assert(FALSE == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
+	// TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 
 	// OW FIXME: optimize
 	// see MPRcfg.h (MPR_BILINEAR_CLAMPED)
@@ -3861,7 +3861,7 @@ public class ContextMPR
 	HRESULT hr;
 	DWORD dwSize = 0;
 
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr (m_pVB, sizeof *m_pVB));
+	//TODO Debug.Assert(false == F4IsBadReadPtr (m_pVB, sizeof *m_pVB));
 	// Check for VB overflow
 	if((m_dwStartVtx + m_dwNumVtx + nVtxCount) >= m_dwVBSize)
 	{
@@ -3895,7 +3895,7 @@ public class ContextMPR
 
 	#if _DEBUG
 	if(SUCCEEDED(hr)) m_pVtxEnd = (BYTE *) *p + dwSize;
-	else m_pVtxEnd = NULL;
+	else m_pVtxEnd = null;
 	#endif
 
 	return SUCCEEDED(hr);
@@ -3910,7 +3910,7 @@ public class ContextMPR
 	// Unlock VB
 	HRESULT hr = m_pVB.Unlock();
 	Debug.Assert(SUCCEEDED(hr));
-	m_pVtx = NULL;
+	m_pVtx = null;
 }
 
 	protected   void FlushVB()
@@ -3957,10 +3957,10 @@ public class ContextMPR
 	#endif
 
 	if(m_dwNumIdx) hr = m_pD3DD.DrawIndexedPrimitiveVB((D3DPRIMITIVETYPE) nPrimType,
-		m_pVB, m_dwStartVtx, m_dwNumVtx, m_pIdx, m_dwNumIdx, NULL);
+		m_pVB, m_dwStartVtx, m_dwNumVtx, m_pIdx, m_dwNumIdx, null);
 
 	else hr = m_pD3DD.DrawPrimitiveVB((D3DPRIMITIVETYPE) nPrimType,
-		m_pVB, m_dwStartVtx, m_dwNumVtx, NULL);
+		m_pVB, m_dwStartVtx, m_dwNumVtx, null);
 
 	Debug.Assert(SUCCEEDED(hr));
 
@@ -3977,8 +3977,8 @@ public class ContextMPR
 	protected static HRESULT EnumSurfacesCB2(IDirectDrawSurface7 *lpDDSurface, _DDSURFACEDESC2 *lpDDSurfaceDesc, LPVOID lpContext)
 {
 	ContextMPR *pThis = (ContextMPR *) lpContext;
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(pThis, sizeof *pThis));
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(lpDDSurfaceDesc, sizeof *lpDDSurfaceDesc));
+	//TODO Debug.Assert(false == F4IsBadReadPtr(pThis, sizeof *pThis));
+	//TODO Debug.Assert(false == F4IsBadReadPtr(lpDDSurfaceDesc, sizeof *lpDDSurfaceDesc));
 
 	if(lpDDSurfaceDesc.ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE)
 	{
@@ -3994,10 +3994,10 @@ public class ContextMPR
 			{
 	// Note: incoming type is always MPR_PRM_TRIFAN
 	// OW FIXME: optimize loop
-	//TODO Debug.Assert(FALSE == F4IsBadReadPtr(poly, sizeof *poly));
+	//TODO Debug.Assert(false == F4IsBadReadPtr(poly, sizeof *poly));
 	Debug.Assert(poly.nVerts >= 3);
 	Debug.Assert(xyzIdxPtr);
-	Debug.Assert(!bUseFGColor || (bUseFGColor && rgbaIdxPtr == NULL));
+	Debug.Assert(!bUseFGColor || (bUseFGColor && rgbaIdxPtr == null));
 
 	#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPoly(0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, %s)\n",
@@ -4018,10 +4018,10 @@ public class ContextMPR
 	float *I;
 	Pcolor foggedColor;
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, poly.nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, poly.nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4163,10 +4163,10 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, sizeof *pVtx));
 
 	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
@@ -4204,12 +4204,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
 	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, sizeof *pVtx));
 
 	pVtx.sx = x;
 	pVtx.sy = y;
@@ -4247,12 +4247,12 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
 	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, 2*sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, 2*sizeof *pVtx));
 
 	/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX)) || F4IsBadReadPtr(v0, sizeof(Tpoint))) // JB 010305 CTD (too much CPU)
 		return;*/
@@ -4310,10 +4310,10 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, 2* sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, 2* sizeof *pVtx));
 
 	Debug.Assert((BYTE *) pVtx < m_pVtxEnd);	// check for overrun
 
@@ -4374,10 +4374,10 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	Tpoint *xyz;
 
@@ -4446,10 +4446,10 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	// Iterate for each vertex
 	for(int i=0;i<nVerts;i++)
@@ -4522,11 +4522,11 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4592,7 +4592,7 @@ public class ContextMPR
 
 		default:
 		{
-			Debug.Assert(VtxInfo == NULL);
+			Debug.Assert(VtxInfo == null);
 
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
@@ -4667,11 +4667,11 @@ public class ContextMPR
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
+	//TODO Debug.Assert(false == F4IsBadWritePtr(m_pVtx, sizeof *m_pVtx));	
 	Debug.Assert(m_dwStartVtx < m_dwVBSize);
 	pVtx = &m_pVtx[m_dwStartVtx + m_dwNumVtx];
 
-	//TODO Debug.Assert(FALSE == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
+	//TODO Debug.Assert(false == F4IsBadWritePtr(pVtx, nVerts * sizeof *pVtx));
 
 	if (!pVtx) // JB 011124 CTD
 		return;
@@ -4736,7 +4736,7 @@ public class ContextMPR
 
 		default:
 		{
-			Debug.Assert(VtxInfo == NULL);
+			Debug.Assert(VtxInfo == null);
 
 			// Iterate for each vertex
 			for(int i=0;i<nVerts;i++)
@@ -4810,7 +4810,7 @@ public class ContextMPR
 		{
 			SetBkMode(hdc, TRANSPARENT);
 			SetTextColor(hdc, col);
-			MoveToEx(hdc, x, y, NULL);
+			MoveToEx(hdc, x, y, null);
 
 			DrawText(hdc, str, strlen(str), &m_rcVP, DT_LEFT);
 
@@ -4849,7 +4849,7 @@ public class ContextMPR
 
 public void GetViewport(RECT *prc)
 {
-    //TODO Debug.Assert(FALSE == F4IsBadWritePtr(prc, sizeof *prc));
+    //TODO Debug.Assert(false == F4IsBadWritePtr(prc, sizeof *prc));
 	*prc = m_rcVP;
 }
 		public void Stats__TODO()
@@ -4862,12 +4862,12 @@ public void GetViewport(RECT *prc)
 	#if _CONTEXT_USE_MANAGED_TEXTURES
 	D3DDEVINFO_TEXTUREMANAGER ditexman;
 	hr = m_pD3DD.GetInfo(D3DDEVINFOID_TEXTUREMANAGER, &ditexman, sizeof(ditexman));
-	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_FALSE;
+	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_false;
 	#endif
 
 	D3DDEVINFO_TEXTURING ditex;
 	hr = m_pD3DD.GetInfo(D3DDEVINFOID_TEXTURING, &ditex, sizeof(ditex));
-	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_FALSE;
+	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_false;
 	#endif
 }
 #endif

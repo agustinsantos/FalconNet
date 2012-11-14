@@ -1,53 +1,66 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FalconNet.Common;
 using FalconNet.FalcLib;
+using FalconNet.UI;
 using FalconNet.VU;
-using Flight=FalconNet.Campaign.FlightClass;
-
+using Flight = FalconNet.Campaign.FlightClass;
+using Objective = FalconNet.Campaign.ObjectiveClass;
+using Team=System.Int32;
 namespace FalconNet.Campaign
 {
-	
-	// ====================================
-	// Some defines (maybe move to AIInput)
-	// ====================================
-/* TODO	
-	#define MAX_TARGET_FEATURES				5
-	#define MAX_POTENTIAL_TARGETS			5
-	#define MAX_COLLECTED_THREATS			5
-	#define MAX_RELATED_EVENTS				5
-	#define MINIMUM_VIABLE_THREAT			9
-	
 	// Flight specific status flags
-	#define MISEVAL_FLIGHT_LOSSES			0x00000001
-	#define MISEVAL_FLIGHT_DESTROYED		0x00000002
-	#define MISEVAL_FLIGHT_ABORTED			0x00000004
-	#define MISEVAL_FLIGHT_GOT_AKILL		0x00000010		// Air kill
-	#define MISEVAL_FLIGHT_GOT_GKILL		0x00000020		// Ground kill
-	#define MISEVAL_FLIGHT_GOT_NKILL		0x00000040		// Naval kill
-	#define MISEVAL_FLIGHT_GOT_SKILL		0x00000080		// Static kill
-	#define MISEVAL_FLIGHT_HIT_HIGH_VAL		0x00000100		// Hit a high value target (Feature with value)
-	#define MISEVAL_FLIGHT_HIT_BY_AIR		0x00001000		// Suffered loss to air (during ingress only!)
-	#define MISEVAL_FLIGHT_HIT_BY_GROUND	0x00002000		// Suffered loss to ground (during ingress only!)
-	#define MISEVAL_FLIGHT_HIT_BY_NAVAL		0x00004000		// Suffered loss to naval (during ingress only!)
-	#define MISEVAL_FLIGHT_TARGET_HIT		0x00010000		// We hit our target
-	#define MISEVAL_FLIGHT_TARGET_KILLED	0x00020000		// We killed out target
-	#define MISEVAL_FLIGHT_TARGET_ABORTED	0x00040000		// We forced our target to abort
-	#define MISEVAL_FLIGHT_AREA_HIT			0x00080000		// We hit an enemy in our target area
-	#define MISEVAL_FLIGHT_F_TARGET_HIT		0x00100000		// The friendly we were assigned to was hit
-	#define MISEVAL_FLIGHT_F_TARGET_KILLED	0x00200000		// The friendly we were assigned to was killed
-	#define MISEVAL_FLIGHT_F_TARGET_ABORTED	0x00400000		// The friendly we were assigned to aborted
-	#define MISEVAL_FLIGHT_F_AREA_HIT		0x00800000		// Our friendly target region was hit
-	#define MISEVAL_FLIGHT_STARTED_LATE		0x01000000		// This mission wasn't started in time to count full
-	#define MISEVAL_FLIGHT_GOT_TO_TARGET	0x02000000		// Flight got to target area
-	#define MISEVAL_FLIGHT_STATION_OVER		0x04000000		// Station/mission time is over
-	#define MISEVAL_FLIGHT_GOT_HOME			0x08000000		// We returned to friendly territory
-	#define MISEVAL_FLIGHT_RELIEVED			0x10000000		// Flight was allowed to leave by AWACS/FAC
-	#define MISEVAL_FLIGHT_OFF_STATION		0x20000000		// Flight left its station area
+	[Flags]
+ 	public enum FlightStatus
+	{
+		MISEVAL_FLIGHT_LOSSES			=0x00000001,
+		MISEVAL_FLIGHT_DESTROYED		=0x00000002,
+		MISEVAL_FLIGHT_ABORTED			=0x00000004,
+		MISEVAL_FLIGHT_GOT_AKILL		=0x00000010,		// Air kill
+		MISEVAL_FLIGHT_GOT_GKILL		=0x00000020,		// Ground kill
+		MISEVAL_FLIGHT_GOT_NKILL		=0x00000040,		// Naval kill
+		MISEVAL_FLIGHT_GOT_SKILL		=0x00000080,		// Static kill
+		MISEVAL_FLIGHT_HIT_HIGH_VAL		=0x00000100,		// Hit a high value target (Feature with value)
+		MISEVAL_FLIGHT_HIT_BY_AIR		=0x00001000,		// Suffered loss to air (during ingress only!)
+		MISEVAL_FLIGHT_HIT_BY_GROUND	=0x00002000,		// Suffered loss to ground (during ingress only!)
+		MISEVAL_FLIGHT_HIT_BY_NAVAL		=0x00004000,		// Suffered loss to naval (during ingress only!)
+		MISEVAL_FLIGHT_TARGET_HIT		=0x00010000,		// We hit our target
+		MISEVAL_FLIGHT_TARGET_KILLED	=0x00020000,		// We killed out target
+		MISEVAL_FLIGHT_TARGET_ABORTED	=0x00040000,		// We forced our target to abort
+		MISEVAL_FLIGHT_AREA_HIT			=0x00080000,		// We hit an enemy in our target area
+		MISEVAL_FLIGHT_F_TARGET_HIT		=0x00100000,		// The friendly we were assigned to was hit
+		MISEVAL_FLIGHT_F_TARGET_KILLED	=0x00200000,		// The friendly we were assigned to was killed
+		MISEVAL_FLIGHT_F_TARGET_ABORTED	=0x00400000,		// The friendly we were assigned to aborted
+		MISEVAL_FLIGHT_F_AREA_HIT		=0x00800000,		// Our friendly target region was hit
+		MISEVAL_FLIGHT_STARTED_LATE		=0x01000000,		// This mission wasn't started in time to count full
+		MISEVAL_FLIGHT_GOT_TO_TARGET	=0x02000000,		// Flight got to target area
+		MISEVAL_FLIGHT_STATION_OVER		=0x04000000,		// Station/mission time is over
+		MISEVAL_FLIGHT_GOT_HOME			=0x08000000,		// We returned to friendly territory
+		MISEVAL_FLIGHT_RELIEVED			=0x10000000,		// Flight was allowed to leave by AWACS/FAC
+		MISEVAL_FLIGHT_OFF_STATION		=0x20000000,		// Flight left its station area
 	
-	// 2002-02-13 MN 
-	#define MISEVAL_FLIGHT_ABORT_BY_AWACS	0x40000000		// flight aborted by AWACS instruction - we occupied the target
+		// 2002-02-13 MN 
+		MISEVAL_FLIGHT_ABORT_BY_AWACS	=0x40000000		// flight aborted by AWACS instruction - we occupied the target
+	}
 	
+	public class MissEvakStatic
+	{
+		// ====================================
+		// Some defines (maybe move to AIInput)
+		// ====================================
+
+		public const int MAX_TARGET_FEATURES = 5;
+		public const int  MAX_POTENTIAL_TARGETS = 5;
+		public const int  MAX_COLLECTED_THREATS = 5;
+		public const int  MAX_RELATED_EVENTS = 5;
+		public const int  MINIMUM_VIABLE_THREAT = 9;
+		// Kill tracking vs..
+		public const int  VS_AI = 0;
+		public const int  VS_HUMAN = 1;
+		public const int  VS_EITHER = 2;
+		
+		/* TODO
 	// Mission Evaluator status flags
 	#define MISEVAL_MISSION_IN_PROGRESS		0x01			// We want to start evaluating stuff
 	#define MISEVAL_EVALUATE_HITS_IN_AREA	0x02			// Check to see if someone has bombed our area
@@ -57,31 +70,31 @@ namespace FalconNet.Campaign
 	// Pilot flags
 	#define PFLAG_PLAYER_CONTROLLED			0x01			// Pilot is a player
 	#define PFLAG_WON_GAME					0x02			// Pilot is on the winning side
-	
-	// Kill tracking vs..
-	#define VS_AI			0
-	#define VS_HUMAN		1
-	#define VS_EITHER		2
-*/	
+*/
+	}
+		
 	// ===================================
 	// success enums
 	// ===================================
 	
-	public enum SuccessType {
+	public enum SuccessType
+	{
 		Failed,
 		PartFailed,
 		PartSuccess,
 		Success,
 		Incomplete,
 		AWACSAbort		// 2002-02-15 MN Added
-		};
+	};
 	
-	public enum RatingType {
+	public enum RatingType
+	{
 		Horrible,
 		Poor,
 		Average,
 		Good,
-		Excellent };
+		Excellent
+	};
 	
 	// ===================================
 	// Data Storage
@@ -98,7 +111,7 @@ namespace FalconNet.Campaign
 		public short		events;								// number of events
 		public List<EventElement>	root_event;						// List of relevant events
 		
-		public WeaponDataClass()	
+		public WeaponDataClass ()
 		{
 			starting_load = 0;
 			fired = 0;
@@ -127,15 +140,15 @@ namespace FalconNet.Campaign
 		public byte			an_kills;
 		public byte			player_kills;
 		public byte			shot_at;							// Times this player was shot at (only tracks for local player)
-		public short[]		deaths = new short[VS_EITHER];					// Dogfight statistics [AI/PLAYER]
+		public short[]		deaths = new short[MissEvakStatic.VS_EITHER];					// Dogfight statistics [AI/PLAYER]
 		public short		score;
 		public byte			rating;
 		public byte			weapon_types;						// number of actually different weapons
 		public bool			donefiledebrief;					//me123 has a file debrief already been made
-		public WeaponDataClass[]	weapon_data = new WeaponDataClass[(HARDPOINT_MAX/2)+2];	// Weapon data for this pilot/aircraft
+		public WeaponDataClass[]	weapon_data = new WeaponDataClass[(CampWeapons.HARDPOINT_MAX / 2) + 2];	// Weapon data for this pilot/aircraft
 		public PilotDataClass	next_pilot;
 		
-		public PilotDataClass()
+		public PilotDataClass ()
 		{
 			aircraft_slot = 0;
 			pilot_slot = 0;
@@ -146,14 +159,14 @@ namespace FalconNet.Campaign
 			aa_kills = ag_kills = as_kills = an_kills = 0;
 			donefiledebrief = false;
 			player_kills = 0;
-			//	memset(kills,0,MAX_DOGFIGHT_TEAMS*VS_EITHER*sizeof(short));
+			//	memset(kills,0,DogfightStatic.MAX_DOGFIGHT_TEAMS*VS_EITHER*sizeof(short));
 			// memset(deaths,0,VS_EITHER*sizeof(short));
 			shot_at = 0;
 			score = 0;
 			rating = 0;
 			weapon_types = 0;
 			next_pilot = null;
-			pilot_callsign[0] = 0;
+			pilot_callsign = "";
 			pilot_name = "";
 		}
 
@@ -170,7 +183,7 @@ namespace FalconNet.Campaign
 		public byte			start_aircraft;
 		public byte			finish_aircraft;
 		public Team			flight_team;
-		public byte			mission;
+		public MissionTypeEnum			mission;
 		public byte			old_mission;						// Old mission, if we were diverted
 		public VU_ID		requester_id;						// ID of entity which caused this mission
 		public VU_ID		target_id;
@@ -178,7 +191,7 @@ namespace FalconNet.Campaign
 		public byte			target_building;
 		public GridIndex	target_x;
 		public GridIndex	target_y;
-		public byte[]		target_features = new byte[MAX_TARGET_FEATURES];
+		public byte[]		target_features = new byte[MissEvakStatic.MAX_TARGET_FEATURES];
 		public byte			target_status;
 		public byte			mission_context;
 		public byte			mission_success;
@@ -192,17 +205,17 @@ namespace FalconNet.Campaign
 		public List<EventElement>		root_event;						// List of relevant events
 		public FlightDataClass	next_flight;
 	
-		public FlightDataClass()
+		public FlightDataClass ()
 		{
 			camp_id = 0;
-			flight_id = target_id = FalconNullId;
-			requester_id = FalconNullId;
+			flight_id = target_id = VU_ID.FalconNullId;
+			requester_id = VU_ID.FalconNullId;
 			start_aircraft = finish_aircraft = 0;
 			flight_team = 0;
 			mission = 0;
 			target_camp_id = 0;
 			target_building = 0;
-			target_x = target_y = 0;
+			//TODO target_x = target_y = null;
 			status_flags = 0;
 			mission_success = 0;
 			mission_context = 0;
@@ -238,9 +251,9 @@ namespace FalconNet.Campaign
 		public Team				team;
 		public short			flags;
 		public short			responses;
-		public short[]			threat_ids = new short[MAX_COLLECTED_THREATS];	// weapon ids of threats
-		public GridIndex[]		threat_x = new GridIndex[MAX_COLLECTED_THREATS];	
-		public GridIndex[]		threat_y = new GridIndex[MAX_COLLECTED_THREATS];	
+		public short[]			threat_ids = new short[MissEvakStatic.MAX_COLLECTED_THREATS];	// weapon ids of threats
+		public GridIndex[]		threat_x = new GridIndex[MissEvakStatic.MAX_COLLECTED_THREATS];
+		public GridIndex[]		threat_y = new GridIndex[MissEvakStatic.MAX_COLLECTED_THREATS];
 		public VU_ID			alternate_strip_id;
 		public VU_ID			requesting_ent;
 		public VU_ID			intercepting_ent;
@@ -249,38 +262,38 @@ namespace FalconNet.Campaign
 		public VU_ID			ecm_id;
 		public VU_ID			tanker_id;
 		public VU_ID			package_target_id;
-		public VU_ID[]			potential_targets = new VU_ID[MAX_POTENTIAL_TARGETS];
+		public VU_ID[]			potential_targets = new VU_ID[MissEvakStatic.MAX_POTENTIAL_TARGETS];
 		public CampaignTime		assigned_tot;
 		public CampaignTime		actual_tot;
 		public CampaignTime		patrol_time;
 		public CampaignTime		player_start_time;					// Time player started flying the mission
 		public CampaignTime		player_end_time;					// Time player stopped flying the mission
-		public GridIndex		tx,ty,abx,aby,awx,awy,jsx,jsy,tankx,tanky;
+		public GridIndex		tx, ty, abx, aby, awx, awy, jsx, jsy, tankx, tanky;
 		public FlightDataClass	flight_data;
 		public short			curr_data;							// Floating data point
 		public byte				curr_flight;						// What flight we're talking about
 		public byte				curr_weapon;						// What weapon we're talking about
 		public PilotDataClass	curr_pilot;						// What pilot we're talking about
-		public byte[]			parse_types = new byte[(LastFalconEvent+7)/8];	// messages types to parse
-		public byte[]		 	rounds_won = new byte[MAX_DOGFIGHT_TEAMS];		// Dogfight rounds won
+		public byte[]			parse_types = new byte[((int)FalconMsgID.LastFalconEvent + 7) / 8];	// messages types to parse
+		public byte[]		 	rounds_won = new byte[DogfightStatic.MAX_DOGFIGHT_TEAMS];		// Dogfight rounds won
 		public byte				last_related_event;
-		public string[]			related_events = new string[MAX_RELATED_EVENTS];	
+		public string[]			related_events = new string[MissEvakStatic.MAX_RELATED_EVENTS];
 		public CAMP_MISS_STRUCT	logbook_data;						// Structure we'll pass to the logbook
 		
-		public MissionEvaluationClass()
+		public MissionEvaluationClass ()
 		{
 			#if FUNKY_KEVIN_DEBUG_STUFF
-				ShiAssert(!inMission);
+				Debug.Assert(!inMission);
 			#endif
 			
-				memset (this, 0, sizeof (MissionEvaluationClass));
-				player_pilot = null;
-				package_element = null;
-				player_element = null;
-				flags = 0;
-				memset(rounds_won, 0, MAX_DOGFIGHT_TEAMS*sizeof(byte));
-				for (int i=0; i<MAX_RELATED_EVENTS; i++)
-					related_events[i] = null;
+			//TODO memset (this, 0, sizeof (MissionEvaluationClass));
+			player_pilot = null;
+			package_element = null;
+			player_element = null;
+			flags = 0;
+			//TODO memset(rounds_won, 0, DogfightStatic.MAX_DOGFIGHT_TEAMS*sizeof(byte));
+			for (int i=0; i<MissEvakStatic.MAX_RELATED_EVENTS; i++)
+				related_events [i] = null;
 		}
 
 		// TODO public ~MissionEvaluationClass();
@@ -289,58 +302,59 @@ namespace FalconNet.Campaign
 		{
 			FlightDataClass flight_ptr = flight_data, next_ptr;
 		
-			while (flight_ptr != null)
-				{
+			while (flight_ptr != null) {
 				next_ptr = flight_ptr.next_flight;
 				flight_ptr = null;
 				flight_ptr = next_ptr;
-				}
+			}
 			flight_data = null;
 		}
 
 		public void CleanupPilotData ()
 		{
-			int				k;
-			PilotDataClass	pilot_data, soon_to_die;
-			FlightDataClass	flight_ptr = flight_data;
+#if TODO
+			int k;
+			PilotDataClass pilot_data, soon_to_die;
+			FlightDataClass flight_ptr = flight_data;
 		
-			while (flight_ptr)
-				{
+			while (flight_ptr != null) {
 				pilot_data = flight_ptr.pilot_list;
-				while (pilot_data)
-					{
+				while (pilot_data != null) {
 					soon_to_die = pilot_data;
-					for (k=0; k<(HARDPOINT_MAX/2)+2; k++)
-						{
-						DisposeEventList(pilot_data.weapon_data[k].root_event);
-						pilot_data.weapon_data[k].root_event = null;
-						pilot_data.weapon_data[k].events = 0;
-						}
+					for (k=0; k<(CampWeapons.HARDPOINT_MAX/2)+2; k++) {
+						DisposeEventList (pilot_data.weapon_data [k].root_event);
+						pilot_data.weapon_data [k].root_event = null;
+						pilot_data.weapon_data [k].events = 0;
+					}
 					pilot_data = pilot_data.next_pilot;
 					soon_to_die = null;
-					}
+				}
 				flight_ptr.pilot_list = null;
 				flight_ptr = flight_ptr.next_flight;
-				}
 			}
+#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void PreDogfightEval ()
 		{
+#if TODO
 			// Called only upon entering/resetting a dogfight game
 			CampEnterCriticalSection();
 			
 			#if FUNKY_KEVIN_DEBUG_STUFF
-				ShiAssert(!inMission || FalconLocalGame.GetGameType() == game_Dogfight);
+				Debug.Assert(!inMission || FalconLocalGame.GetGameType() == game_Dogfight);
 			#endif
 			
 				CleanupFlightData();
 				ClearPackageData();
 			
-				for (int i=0; i<MAX_RELATED_EVENTS; i++)
+				for (int i=0; i<MissEvakStatic.MAX_RELATED_EVENTS; i++)
 					{
-					if (related_events[i])
-						delete(related_events[i]);
-					related_events[i] = null;
+					if (related_events[i] != null)
+						//delete(related_events[i]);
+						related_events[i] = null;
 					}
 				last_related_event = 0;
 			
@@ -350,21 +364,21 @@ namespace FalconNet.Campaign
 				player_element = null;
 				player_aircraft_slot = 255;
 				friendly_losses = 0;
-				actual_tot = 0;
-				patrol_time = 0;
-				package_mission = AMIS_SWEEP;
+				actual_tot = new CampaignTime(0);
+				patrol_time = new CampaignTime(0);
+				package_mission = MissionTypeEnum.AMIS_SWEEP;
 				package_context = 0;
 				responses = 0;
-				requesting_ent = FalconNullId;
-				intercepting_ent = FalconNullId;
-				awacs_id = FalconNullId;
-				jstar_id = FalconNullId;
-				ecm_id = FalconNullId;
-				tanker_id = FalconNullId;
+				requesting_ent = VU_ID.FalconNullId;
+				intercepting_ent = VU_ID.FalconNullId;
+				awacs_id = VU_ID.FalconNullId;
+				jstar_id = VU_ID.FalconNullId;
+				ecm_id = VU_ID.FalconNullId;
+				tanker_id = VU_ID.FalconNullId;
 				action_type = 0;
 				flags = 0;
 				team = 0;
-				alternate_strip_id = FalconNullId;
+				alternate_strip_id = VU_ID.FalconNullId;
 				abx = aby = -1;
 				player_start_time = vuxGameTime;
 				player_pilot = null;
@@ -382,7 +396,7 @@ namespace FalconNet.Campaign
 					uelement = (Unit) flit.GetNext();
 					}
 			
-				memset(rounds_won, 0, MAX_DOGFIGHT_TEAMS*sizeof(byte));
+				memset(rounds_won, 0, DogfightStatic.MAX_DOGFIGHT_TEAMS*sizeof(byte));
 			
 				friendly_losses = friendly_aa_losses = friendly_ga_losses = 0;
 				logbook_data.KilledByHuman = 0;
@@ -405,7 +419,7 @@ namespace FalconNet.Campaign
 		#endif
 		
 		#if FUNKY_KEVIN_DEBUG_STUFF
-			ShiAssert(!inMission);
+			Debug.Assert(!inMission);
 		#endif
 		
 		#if DEBUG
@@ -415,7 +429,7 @@ namespace FalconNet.Campaign
 			}
 		#endif
 		
-			ShiAssert (doUI|| (g_bLogEvents));
+			Debug.Assert (doUI|| (g_bLogEvents));
 		
 			CampEnterCriticalSection();
 		
@@ -438,9 +452,9 @@ namespace FalconNet.Campaign
 			player_aircraft_slot = 255;
 			friendly_losses = 0;
 			assigned_tot = flight.GetUnitTOT();
-			actual_tot = 0;
-			patrol_time = 0;
-			if (package)
+			actual_tot = new CampaignTime(0);
+			patrol_time = new CampaignTime(0);
+			if (package != null)
 				{
 				package.FindSupportFlights(package.GetMissionRequest(), 0);
 				package_mission = package.GetMissionRequest().mission;
@@ -457,16 +471,16 @@ namespace FalconNet.Campaign
 				}
 			else
 				{
-				package_mission = AMIS_SWEEP;
+				package_mission = MissionTypeEnum.AMIS_SWEEP;
 				package_context = 0;
 				responses = 0;
-				requesting_ent = FalconNullId;
-				intercepting_ent = FalconNullId;
-				awacs_id = FalconNullId;
-				jstar_id = FalconNullId;
-				ecm_id = FalconNullId;
-				tanker_id = FalconNullId;
-				flight.GetLocation(&tx,&ty);
+				requesting_ent = VU_ID.FalconNullId;
+				intercepting_ent = VU_ID.FalconNullId;
+				awacs_id = VU_ID.FalconNullId;
+				jstar_id = VU_ID.FalconNullId;
+				ecm_id = VU_ID.FalconNullId;
+				tanker_id = VU_ID.FalconNullId;
+				flight.GetLocation(ref tx, ref ty);
 				action_type = 0;
 				}
 			flags = 0;
@@ -475,11 +489,11 @@ namespace FalconNet.Campaign
 			if (aas)
 				{
 				alternate_strip_id = aas.Id();
-				aas.GetLocation(&abx,&aby);
+				aas.GetLocation(ref abx, ref aby);
 				}
 			else
 				{
-				alternate_strip_id = FalconNullId;
+				alternate_strip_id = VU_ID.FalconNullId;
 				abx = aby = -1;
 				}
 			player_start_time = vuxGameTime;
@@ -522,21 +536,25 @@ namespace FalconNet.Campaign
 			if (aircraft_slot < 255)
 				SetPackageData();
 		
-			ShiAssert(package_element);
+			Debug.Assert(package_element);
 		
 			CampLeaveCriticalSection();
 		
 			return 0;
-			}
+#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void PreEvalFlight (Flight element, Flight flight)	
+		public void PreEvalFlight (Flight element, Flight flight)
 		{
+#if TODO			
 			VehicleClassDataType	vc;
 			WayPoint				tw,w;
 			FlightDataClass			flight_ptr, tmp_ptr;
 			CampEntity				target = null;
 		
-		//	ShiAssert (FalconLocalSession.GetFlyState() == FLYSTATE_IN_UI);	- not in dogfight at least
+		//	Debug.Assert (FalconLocalSession.GetFlyState() == FLYSTATE_IN_UI);	- not in dogfight at least
 		
 			if (element)
 				{
@@ -581,7 +599,7 @@ namespace FalconNet.Campaign
 					flight_ptr.target_id = FalconNullId;
 					flight_ptr.target_building = 255; 
 					}
-				if (flight_ptr.mission == AMIS_INTERCEPT || flight_ptr.mission == AMIS_CAS)
+				if (flight_ptr.mission == MissionTypeEnum.AMIS_INTERCEPT || flight_ptr.mission == MissionTypeEnum.AMIS_CAS)
 					{
 					// Assign target to immediate target if it's intercepting/cas
 					if (flight)
@@ -641,10 +659,14 @@ namespace FalconNet.Campaign
 					flight_data = flight_ptr;
 				SetupPilots(flight_ptr, element);
 				}
-			}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void RecordTargetStatus (FlightDataClass flight_ptr, CampBaseClass target)
 		{
+#if TODO			
 			if (!target)
 				return;
 		
@@ -678,17 +700,21 @@ namespace FalconNet.Campaign
 			// Special case related unit data
 			if (flight_ptr.mission_context == enemyUnitAdvanceBridge || flight_ptr.mission_context == enemyUnitMoveBridge || flight_ptr.mission_context == friendlyUnitAirborneMovement)
 				{
-				CampEntity	relEnt = (CampEntity) vuDatabase.Find(flight_ptr.requester_id);
+				CampEntity	relEnt = (CampEntity) VuDatabase.vuDatabase.Find(flight_ptr.requester_id);
 				if (relEnt)
 					relEnt.GetName(flight_ptr.context_entity_name,39,false);
 				}
-			}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public int	PostMissionEval ()
 		{
+#if TODO
 			int					i;
-			PilotDataClass		*pilot_data;
-			FlightDataClass		*flight_ptr;
+			PilotDataClass		pilot_data;
+			FlightDataClass		flight_ptr;
 		
 			CampEnterCriticalSection();
 		#if DEBUG
@@ -700,7 +726,7 @@ namespace FalconNet.Campaign
 			pack_success = MissionSuccess(package_element);	
 		
 			flight_ptr = flight_data;
-			while (flight_ptr)
+			while (flight_ptr != null)
 				{
 				if (flight_ptr.camp_id)
 					{
@@ -708,7 +734,7 @@ namespace FalconNet.Campaign
 					flight_ptr.mission_success = MissionSuccess(flight_ptr);
 					pilot_data = flight_ptr.pilot_list;
 					flight_ptr.finish_aircraft = flight_ptr.start_aircraft;		
-					while (pilot_data)
+					while (pilot_data != null)
 						{
 						if (FalconLocalGame.GetGameType () != game_Dogfight)
 							{
@@ -741,7 +767,7 @@ namespace FalconNet.Campaign
 							pilot_data.rating = Horrible;
 		
 						// KCK HACK: Per Gilman - cap success to PartSuccess if player didn't land
-						if (pilot_data.pilot_slot >= PILOTS_PER_FLIGHT && !(logbook_data.Flags & LANDED_AIRCRAFT) && flight_ptr.mission_success == Success && (!gCommsMgr || !gCommsMgr.Online()))
+						if (pilot_data.pilot_slot >= PilotStatic.PILOTS_PER_FLIGHT && !(logbook_data.Flags & LANDED_AIRCRAFT) && flight_ptr.mission_success == Success && (!gCommsMgr || !gCommsMgr.Online()))
 							flight_ptr.mission_success = PartSuccess;
 						// END HACK
 		
@@ -749,7 +775,7 @@ namespace FalconNet.Campaign
 						// KCK:We probably don't have the flight at this point though...
 		// 2002-02-16 MN Only rate a pilot if we didn't have to abort mission
 						if (!(flight_ptr.mission_success == AWACSAbort))
-							RatePilot((Flight)vuDatabase.Find(flight_ptr.flight_id),pilot_data.aircraft_slot,pilot_data.rating);
+							RatePilot((Flight)VuDatabase.vuDatabase.Find(flight_ptr.flight_id),pilot_data.aircraft_slot,pilot_data.rating);
 						pilot_data = pilot_data.next_pilot;
 						}
 					friendly_losses += flight_ptr.start_aircraft - flight_ptr.finish_aircraft;
@@ -757,7 +783,7 @@ namespace FalconNet.Campaign
 					}
 		
 				// On Call CAS package succeed if any of the components succeeded
-				if (package_mission == AMIS_ONCALLCAS && flight_ptr.mission != AMIS_FAC && flight_ptr.mission_success > pack_success)
+				if (package_mission == MissionTypeEnum.AMIS_ONCALLCAS && flight_ptr.mission != MissionTypeEnum.AMIS_FAC && flight_ptr.mission_success > pack_success)
 					pack_success = flight_ptr.mission_success;
 		
 				flight_ptr = flight_ptr.next_flight;
@@ -773,7 +799,7 @@ namespace FalconNet.Campaign
 					ApplyPlayerInput(team, o.Id(), player_pilot.score);
 				}
 			// Update logbook data
-			ShiAssert (player_pilot);
+			Debug.Assert (player_pilot);
 			if (player_pilot)
 			{
 				logbook_data.WeaponsExpended = 0;
@@ -822,7 +848,7 @@ namespace FalconNet.Campaign
 						if (flags & MISEVAL_ONLINE_GAME)
 							vsHuman = 1;
 						LogBook.SetAceFactor(FalconLocalSession.GetAceFactor());
-						LogBook.UpdateDogfight(won, logbook_data.FlightHours, vsHuman, player_pilot.aa_kills, player_pilot.deaths[VS_AI]+player_pilot.deaths[VS_HUMAN], player_pilot.player_kills, player_pilot.deaths[VS_HUMAN] );
+						LogBook.UpdateDogfight(won, logbook_data.FlightHours, vsHuman, player_pilot.aa_kills, player_pilot.deaths[MissEvakStatic.VS_AI]+player_pilot.deaths[MissEvakStatic.VS_HUMAN], player_pilot.player_kills, player_pilot.deaths[MissEvakStatic.VS_HUMAN] );
 						}
 						break;
 					case game_Campaign:
@@ -895,13 +921,19 @@ namespace FalconNet.Campaign
 			CampLeaveCriticalSection();
 		
 			return 0;
+#endif
+			throw 
+				new NotImplementedException ();			
 		}
 
 		public void ServerFileLog (FalconPlayerStatusMessage fpsm)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 		
 		public int MissionSuccess (FlightDataClass flight_ptr)
 		{
+#if TODO			
 			int		retval = Failed, losses;
 		
 			if (!flight_ptr)
@@ -938,11 +970,11 @@ namespace FalconNet.Campaign
 				}
 		
 			// Check for in progress
-			if (!(flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_TO_TARGET) &&
-				!(flight_ptr.status_flags & MISEVAL_FLIGHT_STATION_OVER) &&
-				!(flight_ptr.status_flags & MISEVAL_FLIGHT_OFF_STATION) &&
-				!(flight_ptr.status_flags & MISEVAL_FLIGHT_DESTROYED) &&
-				!(flight_ptr.status_flags & MISEVAL_FLIGHT_ABORTED))
+			if (!(flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_GOT_TO_TARGET) &&
+				!(flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_STATION_OVER) &&
+				!(flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_OFF_STATION) &&
+				!(flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_DESTROYED) &&
+				!(flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_ABORTED))
 				{
 				flight_ptr.failure_code = 0;
 				return Incomplete;
@@ -950,11 +982,11 @@ namespace FalconNet.Campaign
 		
 			switch (flight_ptr.mission)
 				{
-				case AMIS_BARCAP:
-				case AMIS_BARCAP2:
-				case AMIS_TARCAP:
-				case AMIS_RESCAP:
-				case AMIS_AMBUSHCAP:
+				case MissionTypeEnum.AMIS_BARCAP:
+				case MissionTypeEnum.AMIS_BARCAP2:
+				case MissionTypeEnum.AMIS_TARCAP:
+				case MissionTypeEnum.AMIS_RESCAP:
+				case MissionTypeEnum.AMIS_AMBUSHCAP:
 					// Determine if we stayed in the area or not
 					if (!(flight_ptr.status_flags & MISEVAL_FLIGHT_OFF_STATION))
 						{
@@ -998,7 +1030,7 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 58;
 					break;
-				case AMIS_HAVCAP: 
+				case MissionTypeEnum.AMIS_HAVCAP: 
 					// Check if our target was killed
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_F_TARGET_KILLED)
 						flight_ptr.failure_code = 48;
@@ -1035,7 +1067,7 @@ namespace FalconNet.Campaign
 							}
 						}
 					break;
-				case AMIS_INTERCEPT: 
+				case MissionTypeEnum.AMIS_INTERCEPT: 
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_TARGET_KILLED)
 						{
 						retval = Success;
@@ -1046,7 +1078,7 @@ namespace FalconNet.Campaign
 						retval = PartSuccess;
 						flight_ptr.failure_code = 36;
 						}
-					else if (flight_ptr.status_flags & MISEVAL_FLIGHT_TARGET_HIT)
+					else if (flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_TARGET_HIT)
 						{
 						retval = PartFailed;
 						flight_ptr.failure_code = 37;
@@ -1054,12 +1086,12 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 38;
 					break;
-				case AMIS_SWEEP:
-					if (flight_ptr.status_flags & MISEVAL_FLIGHT_DESTROYED)
+				case MissionTypeEnum.AMIS_SWEEP:
+					if (flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_DESTROYED)
 						flight_ptr.failure_code = 30;
-					else if ((flight_ptr.status_flags & MISEVAL_FLIGHT_LOSSES) || !(flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_TO_TARGET))
+					else if ((flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_LOSSES) || !(flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_TO_TARGET))
 						{
-						if (flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_AKILL)
+						if (flight_ptr.status_flags & FlightStatus.MISEVAL_FLIGHT_GOT_AKILL)
 							{
 							retval = PartFailed;
 							flight_ptr.failure_code = 32;
@@ -1084,9 +1116,9 @@ namespace FalconNet.Campaign
 							}
 						}
 					break;
-				case AMIS_ESCORT:
-				case AMIS_SEADESCORT:
-					if (flight_ptr.mission == AMIS_ESCORT)
+				case MissionTypeEnum.AMIS_ESCORT:
+				case MissionTypeEnum.AMIS_SEADESCORT:
+					if (flight_ptr.mission == MissionTypeEnum.AMIS_ESCORT)
 						losses = friendly_aa_losses;
 					else
 						losses = friendly_ga_losses;
@@ -1126,18 +1158,18 @@ namespace FalconNet.Campaign
 					else
 						{
 						retval = Failed;
-						if (package_element.status_flags & MISEVAL_FLIGHT_STATION_OVER || package_element.status_flags & MISEVAL_FLIGHT_DESTROYED)
+						if (package_element.status_flags & FlightStatus.MISEVAL_FLIGHT_STATION_OVER || package_element.status_flags & FlightStatus.MISEVAL_FLIGHT_DESTROYED)
 							flight_ptr.failure_code = 25;
 						else
 							flight_ptr.failure_code = 24;
 						}
 					break;
-				case AMIS_OCASTRIKE:
-				case AMIS_INTSTRIKE:
-				case AMIS_STRIKE:	
-				case AMIS_DEEPSTRIKE:
-				case AMIS_STSTRIKE:
-				case AMIS_STRATBOMB:
+				case MissionTypeEnum.AMIS_OCASTRIKE:
+				case MissionTypeEnum.AMIS_INTSTRIKE:
+				case MissionTypeEnum.AMIS_STRIKE:	
+				case MissionTypeEnum.AMIS_DEEPSTRIKE:
+				case MissionTypeEnum.AMIS_STSTRIKE:
+				case MissionTypeEnum.AMIS_STRATBOMB:
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_TARGET_HIT)
 						{
 						int			statloss = 0;
@@ -1163,11 +1195,11 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 1;
 					break;			
-				case AMIS_SEADSTRIKE:
-				case AMIS_PRPLANCAS: 
-				case AMIS_CAS:	
-				case AMIS_ASW:     
-				case AMIS_ASHIP:   
+				case MissionTypeEnum.AMIS_SEADSTRIKE:
+				case MissionTypeEnum.AMIS_PRPLANCAS: 
+				case MissionTypeEnum.AMIS_CAS:	
+				case MissionTypeEnum.AMIS_ASW:     
+				case MissionTypeEnum.AMIS_ASHIP:   
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_TARGET_HIT)
 						{
 						int			statloss = 0;
@@ -1194,10 +1226,10 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 5;
 					break;			
-				case AMIS_SAD:	
-				case AMIS_INT:
-				case AMIS_BAI:
-				case AMIS_PATROL:	
+				case MissionTypeEnum.AMIS_SAD:	
+				case MissionTypeEnum.AMIS_INT:
+				case MissionTypeEnum.AMIS_BAI:
+				case MissionTypeEnum.AMIS_PATROL:	
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_AKILL ||
 						flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_GKILL ||
 						flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_NKILL)
@@ -1238,7 +1270,7 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 10;
 					break;
-				case AMIS_ONCALLCAS:
+				case MissionTypeEnum.AMIS_ONCALLCAS:
 					// Check to see that contact was made with FAC
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_TO_TARGET)
 						{
@@ -1256,9 +1288,9 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 51;
 					break;
-				case AMIS_RECON: 	
-				case AMIS_BDA:
-				case AMIS_RECONPATROL:
+				case MissionTypeEnum.AMIS_RECON: 	
+				case MissionTypeEnum.AMIS_BDA:
+				case MissionTypeEnum.AMIS_RECONPATROL:
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_TARGET_HIT)
 						{
 						flight_ptr.failure_code = 15;
@@ -1267,11 +1299,11 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 16;
 					break;
-				case AMIS_AWACS:    
-				case AMIS_JSTAR:     
-				case AMIS_TANKER:    
-				case AMIS_ECM:	
-				case AMIS_FAC:
+				case MissionTypeEnum.AMIS_AWACS:    
+				case MissionTypeEnum.AMIS_JSTAR:     
+				case MissionTypeEnum.AMIS_TANKER:    
+				case MissionTypeEnum.AMIS_ECM:	
+				case MissionTypeEnum.AMIS_FAC:
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_OFF_STATION)
 						{
 						retval = Failed;
@@ -1290,9 +1322,9 @@ namespace FalconNet.Campaign
 					else
 						flight_ptr.failure_code = 57;
 					break;
-				case AMIS_SAR:       
-				case AMIS_AIRCAV:  
-				case AMIS_AIRLIFT:   
+				case MissionTypeEnum.AMIS_SAR:       
+				case MissionTypeEnum.AMIS_AIRCAV:  
+				case MissionTypeEnum.AMIS_AIRLIFT:   
 					if (flight_ptr.status_flags & MISEVAL_FLIGHT_DESTROYED)
 						flight_ptr.failure_code = 30;
 					else if (flight_ptr.status_flags & MISEVAL_FLIGHT_GOT_TO_TARGET)
@@ -1317,26 +1349,34 @@ namespace FalconNet.Campaign
 				retval = PartSuccess;
 		
 			return retval;
-			}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void SetPackageData ()
 		{
+#if TOD	
 			// Set the package pointer for everything associated with the local player's package
 			CampEntity			ent;
-			FlightDataClass		*flight_ptr;
+			FlightDataClass		flight_ptr;
 		
 			flight_ptr = flight_data;
-			while (flight_ptr)
+			while (flight_ptr != null)
 				{
-				ent = (CampEntity) vuDatabase.Find(flight_ptr.flight_id);
+				ent = (CampEntity) VuDatabase.vuDatabase.Find(flight_ptr.flight_id);
 				if (ent)
 					ent.SetInPackage(1);
 				flight_ptr = flight_ptr.next_flight;
 				}
+	#endif
+			throw 
+				new NotImplementedException ();
 		}
 
 		public void ClearPackageData ()
 		{
+#if TOD
 			// Clear the package pointer for everything associated with the local player's package
 			CampEntity			ent;
 			FlightDataClass		*flight_ptr;
@@ -1344,37 +1384,41 @@ namespace FalconNet.Campaign
 			flight_ptr = flight_data;
 			while (flight_ptr)
 				{
-				ent = (CampEntity) vuDatabase.Find(flight_ptr.flight_id);
+				ent = (CampEntity) VuDatabase.vuDatabase.Find(flight_ptr.flight_id);
 				if (ent)
 					ent.SetInPackage(0);
 				flight_ptr = flight_ptr.next_flight;
 				}
+		#endif
+			throw 
+				new NotImplementedException ();
 		}
 
 		public void ClearPotentialTargets ()
 		{
-			for (int i=0; i<MAX_POTENTIAL_TARGETS; i++)
-				potential_targets[i] = FalconNullId;
+			for (int i=0; i<MissEvakStatic.MAX_POTENTIAL_TARGETS; i++)
+				potential_targets [i] = VU_ID.FalconNullId;
 		}
 
 		public void FindPotentialTargets ()
 		{
+#if TODO
 			int					i,j;
 			Objective			o;
 		
 			ClearPotentialTargets();
 		
-			if (package_mission == AMIS_BARCAP || package_mission == AMIS_BARCAP2)
+			if (package_mission == MissionTypeEnum.AMIS_BARCAP || package_mission == MissionTypeEnum.AMIS_BARCAP2)
 				{
 		#if VU_GRID_TREE_Y_MAJOR
 				VuGridIterator*		myit = new VuGridIterator(ObjProxList,(BIG_SCALAR)GridToSim(tx),(BIG_SCALAR)GridToSim(ty),(BIG_SCALAR)GridToSim(MissionData[package_mission].mindistance));
 		#else
 				VuGridIterator*		myit = new VuGridIterator(ObjProxList,(BIG_SCALAR)GridToSim(ty),(BIG_SCALAR)GridToSim(tx),(BIG_SCALAR)GridToSim(MissionData[package_mission].mindistance));
 		#endif
-				float[]				d,wd,dists = new float[MAX_POTENTIAL_TARGETS];
+				float[]				d,wd,dists = new float[MissEvakStatic.MAX_POTENTIAL_TARGETS];
 				GridIndex			x,y;
 		
-				for (i=0; i<MAX_POTENTIAL_TARGETS; i++)
+				for (i=0; i<MissEvakStatic.MAX_POTENTIAL_TARGETS; i++)
 					dists[i] = 999.9F;
 				o = (Objective) myit.GetFirst();
 				while (o)
@@ -1384,7 +1428,7 @@ namespace FalconNet.Campaign
 						o.GetLocation(&x,&y);
 						d = Distance(x,y,tx,ty);
 						// find the best distance to replace
-						for (i=0,j=-1,wd=0.0F; i<MAX_POTENTIAL_TARGETS; i++)
+						for (i=0,j=-1,wd=0.0F; i<MissEvakStatic.MAX_POTENTIAL_TARGETS; i++)
 							{
 							if (dists[i] > wd && d < dists[i])
 								{
@@ -1401,10 +1445,14 @@ namespace FalconNet.Campaign
 					o = (Objective) myit.GetNext();
 					}
 				}
-			}
+				#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void CollectThreats (Flight flight, WayPoint tw)
 		{
+#if TODO
 			WayPoint		w,nw;
 			int				step,i;
 			GridIndex		x,y,fx,fy,nx,ny;
@@ -1448,15 +1496,19 @@ namespace FalconNet.Campaign
 				w = nw;
 				nw = w.GetNextWP();
 				}
-			}
+				#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void CollectThreats (GridIndex X, GridIndex Y, int Z, int flags, int[] dists)
-				{
+		{
+#if TODO
 	int				d,hc,alt=0,i,j,k,wd,wid;
 	MoveType		mt;
 	GridIndex		x,y;
 	Unit			e;
-	byte[]			tteam = new byte[NUM_TEAMS];
+	byte[]			tteam = new byte[(int)TeamDataEnum.NUM_TEAMS];
 #if VU_GRID_TREE_Y_MAJOR
 	VuGridIterator	myit(RealUnitProxList,(BIG_SCALAR)GridToSim(X),(BIG_SCALAR)GridToSim(Y),(BIG_SCALAR)GridToSim(MAX_AIR_SEARCH));
 #else
@@ -1471,7 +1523,7 @@ namespace FalconNet.Campaign
 		mt = LowAir;
 	
 	// Set up roe checks
-	for (d=0; d<NUM_TEAMS && TeamInfo[d]; d++)
+	for (d=0; d<(int)TeamDataEnum.NUM_TEAMS && TeamInfo[d]; d++)
 		tteam[d] = GetRoE(d,team,ROE_AIR_ENGAGE);
 
 	// Tranverse our list
@@ -1503,7 +1555,7 @@ namespace FalconNet.Campaign
 							j=0;
 						}
 					// Now find which weapon it was which can hit us
-					for (i=0; i<VEHICLES_PER_UNIT && j<0; i++)
+					for (i=0; i<Camplib.VEHICLES_PER_UNIT && j<0; i++)
 						{
 						wid = e.GetBestVehicleWeapon(i, DefaultDamageMods, mt, d, &k);
 						if (wid && GetWeaponHitChance (wid, mt) > MINIMUM_VIABLE_THREAT)
@@ -1531,19 +1583,23 @@ namespace FalconNet.Campaign
 			}
 		e = (Unit) myit.GetNext();
 		}
-	}
+					#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 	
 		// Dogfight kill evalutators
 		public void GetTeamKills (ref short kills)
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 	int					t;
 
 	CampEnterCriticalSection();
 
-	for (t=0; t<MAX_DOGFIGHT_TEAMS; t++)
+	for (t=0; t<DogfightStatic.MAX_DOGFIGHT_TEAMS; t++)
 		kills[t] = 0;
 
 	// Check if someone in the package fired this.
@@ -1559,17 +1615,21 @@ namespace FalconNet.Campaign
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void GetTeamDeaths (ref short deaths)
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 	int					t;
 
 	CampEnterCriticalSection();
 
-	for (t=0; t<MAX_DOGFIGHT_TEAMS; t++)
+	for (t=0; t<DogfightStatic.MAX_DOGFIGHT_TEAMS; t++)
 		deaths[t] = 0;
 
 	// Check if someone in the package fired this.
@@ -1579,19 +1639,23 @@ namespace FalconNet.Campaign
 		pilot_data = flight_ptr.pilot_list;
 		while (pilot_data)
 			{
-			deaths[flight_ptr.flight_team] += pilot_data.deaths[VS_HUMAN] + pilot_data.deaths[VS_AI];
+			deaths[flight_ptr.flight_team] += pilot_data.deaths[MissEvakStatic.VS_HUMAN] + pilot_data.deaths[MissEvakStatic.VS_AI];
 			pilot_data = pilot_data.next_pilot;
 			}
 		flight_ptr = flight_ptr.next_flight;
 		}
 
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public void GetTeamScore (ref short score)
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 	int					t;
 
 	CampEnterCriticalSection();
@@ -1599,12 +1663,12 @@ namespace FalconNet.Campaign
 	// KCK: If we're in match play, we need to gather our 'score' from rounds won
 	if (SimDogfight.GetGameType() == dog_TeamMatchplay)
 		{
-		for (t=0; t<MAX_DOGFIGHT_TEAMS; t++)
+		for (t=0; t<DogfightStatic.MAX_DOGFIGHT_TEAMS; t++)
 			score[t] = rounds_won[t];
 		}
 	else
 		{
-		for (t=0; t<MAX_DOGFIGHT_TEAMS; t++)
+		for (t=0; t<DogfightStatic.MAX_DOGFIGHT_TEAMS; t++)
 			score[t] = 0;
 
 		// Check if someone in the package fired this.
@@ -1621,12 +1685,16 @@ namespace FalconNet.Campaign
 			}
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public int GetKills (FalconSessionEntity player)
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 
 	CampEnterCriticalSection();
 
@@ -1648,12 +1716,16 @@ namespace FalconNet.Campaign
 		}
 	CampLeaveCriticalSection();
 	return 0;
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public int GetMaxKills ()
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 	int					best=0;
 
 	CampEnterCriticalSection();
@@ -1674,12 +1746,16 @@ namespace FalconNet.Campaign
 
 	CampLeaveCriticalSection();
 	return best;
-	}
+					#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 		public int GetMaxScore ()
-				{
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
+		{
+#if TODO
+	FlightDataClass		flight_ptr;
+	PilotDataClass		pilot_data;
 	int					best=0;
 
 	CampEnterCriticalSection();
@@ -1700,16 +1776,22 @@ namespace FalconNet.Campaign
 
 	CampLeaveCriticalSection();
 	return best;
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 	
 		// Event list builders
-		public void RegisterDivert(FalconDivertMessage dm)
-		{throw new NotImplementedException();}
+		public void RegisterDivert (FalconDivertMessage dm)
+		{
+			throw new NotImplementedException ();
+		}
 		
-		public void RegisterShotAtPlayer(FalconWeaponsFire wfm, ushort CampID,byte fPilotID)
-				{
-	EventElement			*theEvent;
+		public void RegisterShotAtPlayer (FalconWeaponsFire wfm, ushort CampID, byte fPilotID)
+		{
+#if TODO
+	EventElement			theEvent;
 	string					time_str,format,pnum;
 
 // 2002-04-07 MN don't record gun shots at us or when someone takes a picture from us ;-)....
@@ -1760,7 +1842,7 @@ namespace FalconNet.Campaign
 	int weaponindx;
 	for (int loop =0; loop<203;loop++)
 	{
-		weaponindx = WeaponDataTable[loop].Index +VU_LAST_ENTITY_TYPE;
+		weaponindx = WeaponDataTable[loop].Index +VuEntity.VU_LAST_ENTITY_TYPE;
 		if (wfm.dataBlock.fWeaponID == weaponindx) break;
 	}
 if (shooter_data)
@@ -1772,20 +1854,24 @@ else
 	theEvent.eventTime = vuxGameTime;
 	AddEventToList(theEvent,target_flight,0,0);
 
-	ShiAssert(player_pilot);
+	Debug.Assert(player_pilot);
 
 	if (target_data)
 		target_data.shot_at++;
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterShot(FalconWeaponsFire wfm)
-	{
+		public void RegisterShot (FalconWeaponsFire wfm)
+		{
+#if TODO
 	string				time_str,format,target_name;
-	PilotDataClass		*pilot_data;
-	EventElement		*theEvent;
+	PilotDataClass		pilot_data;
+	EventElement		theEvent;
 	int					wn,windex;
-	FlightDataClass		*flight_ptr;
+	FlightDataClass		flight_ptr;
 
 	CampEnterCriticalSection();
 
@@ -1806,15 +1892,15 @@ else
 
 				for (wn=0; wn<pilot_data.weapon_types; wn++)
 					{
-					windex = WeaponDataTable[pilot_data.weapon_data[wn].weapon_id].Index + VU_LAST_ENTITY_TYPE;
+					windex = WeaponDataTable[pilot_data.weapon_data[wn].weapon_id].Index + VuEntity.VU_LAST_ENTITY_TYPE;
 					if (wfm.dataBlock.fWeaponID == windex) // && wfm.dataBlock.fireOnOff == 1)
 						{
 						// We're interested
 						theEvent = new EventElement();
 						// Only subtract from our score for non guns and non-photos
 						if (!(WeaponDataTable[pilot_data.weapon_data[wn].weapon_id].Flags & WEAP_ONETENTH) && wfm.dataBlock.weaponType != FalconWeaponsFire.Recon)
-							pilot_data.score += CalcScore (SCORE_FIRE_WEAPON, windex - VU_LAST_ENTITY_TYPE);
-						else if (TheCampaign.Flags & CAMP_LIGHT)
+							pilot_data.score += CalcScore (SCORE_FIRE_WEAPON, windex - VuEntity.VU_LAST_ENTITY_TYPE);
+						else if (CampaignClass.TheCampaign.Flags & CAMP_LIGHT)
 							{
 							// Don't record gun shots in IA and dogfight
 							CampLeaveCriticalSection();
@@ -1822,29 +1908,29 @@ else
 							}
 						// Chalk up a weapon fired mark (assume a miss):
 						pilot_data.weapon_data[wn].fired++;
-						ParseTime(TheCampaign.CurrentTime,time_str);
+						ParseTime(CampaignClass.TheCampaign.CurrentTime,time_str);
 #if DEBUG
 						// Try and find a bug where weapon shots are being doubled
-						ShiAssert (wfm.dataBlock.fWeaponUID.num_ != 0);
+						Debug.Assert (wfm.dataBlock.fWeaponUID.num_ != 0);
 						EventElement *tmpevent = pilot_data.weapon_data[wn].root_event;
 						while (tmpevent)
 							{
-							ShiAssert (tmpevent.vuIdData1 != wfm.dataBlock.fWeaponUID);
+							Debug.Assert (tmpevent.vuIdData1 != wfm.dataBlock.fWeaponUID);
 							tmpevent = tmpevent.next;
 							}
 #endif
 						// In case of camera "shots", evaluate hit immediately
 						if (wfm.dataBlock.weaponType == FalconWeaponsFire.Recon)
 							{
-							FalconEntity	*entity = (FalconEntity*) vuDatabase.Find(wfm.dataBlock.targetId);
+							FalconEntity	*entity = (FalconEntity*) VuDatabase.vuDatabase.Find(wfm.dataBlock.targetId);
 							if (entity && entity.IsSim())
 								{
 								if (((SimBaseClass*)entity).GetCampaignObject().Id() == flight_ptr.target_id)
 									flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
-								if (Falcon4ClassTable[entity.Type() - VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
-									_stprintf(target_name,GetVehicleClassData(entity.Type() - VU_LAST_ENTITY_TYPE).Name);
-								else if (Falcon4ClassTable[entity.Type() - VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
-									_stprintf(target_name,GetFeatureClassData(entity.Type() - VU_LAST_ENTITY_TYPE).Name);
+								if (Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
+									_stprintf(target_name,GetVehicleClassData(entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE).Name);
+								else if (Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+									_stprintf(target_name,GetFeatureClassData(entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE).Name);
 								pilot_data.weapon_data[wn].hit++;
 								GetFormatString(FET_PHOTO_TAKEN_HIT,format);
 								}
@@ -1857,14 +1943,14 @@ else
 						else
 							{
 							pilot_data.weapon_data[wn].missed++;
-							if (Falcon4ClassTable[wfm.dataBlock.fWeaponID-VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_TYPE] == TYPE_GUN)
+							if (Falcon4ClassTable[wfm.dataBlock.fWeaponID-VuEntity.VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_TYPE] == TYPE_GUN)
 								GetFormatString(FET_FIRED_MISSED,format);
 							else
 								GetFormatString(FET_RELEASED_MISSED,format);
 							}
 						ConstructOrderedSentence(MAX_EVENT_STRING_LEN, theEvent.eventString,format,pilot_data.weapon_data[wn].weapon_name,time_str,pilot_data.pilot_callsign,target_name);
 						theEvent.vuIdData1 = wfm.dataBlock.fWeaponUID;
-						theEvent.eventTime = TheCampaign.CurrentTime;
+						theEvent.eventTime = CampaignClass.TheCampaign.CurrentTime;
 						AddEventToList(theEvent,flight_ptr,pilot_data,wn);
 						CampLeaveCriticalSection();
 						return;
@@ -1876,10 +1962,14 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+					#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterHit(FalconDamageMessage dmm)
-				{
+		public void RegisterHit (FalconDamageMessage dmm)
+		{
+#if TODO
 	string					time_str,format,tmp;
 	PilotDataClass			pilot_data;
 	int						wn,windex;
@@ -1889,10 +1979,10 @@ else
 	EventElement			tmpevent,baseevent=null;
 
 // 2002-02-08 MN don't evaluate if FEAT_NO_HITEVAL (like trees...)
-	if (Falcon4ClassTable[dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+	if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
 	{
 		// get classtbl entry for feature
-		fc = GetFeatureClassData (dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE);
+		fc = GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 		if (fc && (fc.Flags & FEAT_NO_HITEVAL))
 			return;
 	}
@@ -1912,7 +2002,7 @@ else
 					{
 					for (wn=0; wn<pilot_data.weapon_types; wn++)
 						{
-						windex = WeaponDataTable[pilot_data.weapon_data[wn].weapon_id].Index + VU_LAST_ENTITY_TYPE;
+						windex = WeaponDataTable[pilot_data.weapon_data[wn].weapon_id].Index + VuEntity.VU_LAST_ENTITY_TYPE;
 						// Check if fired by this flight
 						if (dmm.dataBlock.fWeaponID == windex)
 							{
@@ -1944,7 +2034,7 @@ else
 											pilot_data.score += CalcScore (SCORE_HIT_FRIENDLY, 0);		// Hit friendly/neutral
 										pilot_data.weapon_data[wn].hit++;
 										pilot_data.weapon_data[wn].missed--;
-										foundEvent = TRUE;
+										foundEvent = true;
 										*sptr = 0;
 										}
 									else
@@ -1953,11 +2043,11 @@ else
 										ReadIndexedString(1798,tmp,79);
 										sptr = _tcsstr(tmpevent.eventString,tmp);
 										// We'd better have one or something is very wrong
-										ShiAssert(sptr);
+										Debug.Assert(sptr);
 										// Now determine if it's the same target or not
 										if (sptr && tmpevent.vuIdData2 == dmm.dataBlock.dEntityID)
 											{
-											foundEvent = TRUE;
+											foundEvent = true;
 											*sptr = 0;
 											}
 										}
@@ -1973,30 +2063,30 @@ else
 							if (!tmpevent)
 								{
 								// In IA or dogfight, don't list multiple hits
-								if (TheCampaign.Flags & CAMP_LIGHT)
+								if (CampaignClass.TheCampaign.Flags & CAMP_LIGHT)
 									{
 									CampLeaveCriticalSection();
 									return;
 									}
 								tmpevent = new EventElement();
 								tmpevent.vuIdData1 = dmm.dataBlock.fWeaponUID;
-								tmpevent.eventTime = TheCampaign.CurrentTime;
+								tmpevent.eventTime = CampaignClass.TheCampaign.CurrentTime;
 								ReadIndexedString(1726,tmpevent.eventString,MAX_EVENT_STRING_LEN);
 								InsertEventToList (tmpevent, baseevent);
 								}
 							tmpevent.vuIdData2 = dmm.dataBlock.dEntityID;
-							ParseTime(TheCampaign.CurrentTime,time_str);
-							if (Falcon4ClassTable[dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
+							ParseTime(CampaignClass.TheCampaign.CurrentTime,time_str);
+							if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
 								{
-								vc = GetVehicleClassData (dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE);
+								vc = GetVehicleClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 								if (vc) // JB 010113
 									_stprintf(tmp,vc.Name);
 								else
 									_stprintf(tmp,"");
 								}
-							else if (Falcon4ClassTable[dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+							else if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
 								{
-								fc = GetFeatureClassData (dmm.dataBlock.dIndex-VU_LAST_ENTITY_TYPE);
+								fc = GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 								if (fc) // JB 010113
 									_stprintf(tmp,fc.Name);
 								else
@@ -2032,12 +2122,19 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterKill(FalconDeathMessage dtm, int type, int pilot_status)
-		{throw new NotImplementedException();}
-		public void RegisterPlayerJoin(FalconPlayerStatusMessage fpsm)
-				{
+		public void RegisterKill (FalconDeathMessage dtm, int type, int pilot_status)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void RegisterPlayerJoin (FalconPlayerStatusMessage fpsm)
+		{
+#if TODO
 	string					time_str,format,pnum;
 	PilotDataClass			*pilot_data;
 	EventElement			*theEvent;
@@ -2079,7 +2176,7 @@ else
 					chat.dataBlock.size = (strlen (theEvent.eventString) + 1) * sizeof (char);
 					chat.dataBlock.message = new char [strlen (theEvent.eventString) + 1];
 					memcpy (chat.dataBlock.message, theEvent.eventString, chat.dataBlock.size);
-					FalconSendMessage (chat, TRUE);
+					FalconSendMessage (chat, true);
 				}
 
 				CampLeaveCriticalSection();
@@ -2090,10 +2187,14 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterEjection(FalconEjectMessage em, int pilot_status)
-				{
+		public void RegisterEjection (FalconEjectMessage em, int pilot_status)
+		{
+#if TODO
 	string					time_str,format;
 	PilotDataClass			*pilot_data;
 	EventElement			*theEvent;
@@ -2113,7 +2214,7 @@ else
 				{
 				// We're interested
 				theEvent = new EventElement();
-				ParseTime(TheCampaign.CurrentTime, time_str);
+				ParseTime(CampaignClass.TheCampaign.CurrentTime, time_str);
 				GetFormatString(FET_PILOT_EJECTED,format);
 				// Only record pilot status in non-dogfight games
 				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
@@ -2132,7 +2233,7 @@ else
 						logbook_data.Flags |= EJECT_UNDAMAGED;
 					}
 				ConstructOrderedSentence(MAX_EVENT_STRING_LEN, theEvent.eventString,format,pilot_data.pilot_callsign,time_str);
-				theEvent.eventTime = TheCampaign.CurrentTime;
+				theEvent.eventTime = CampaignClass.TheCampaign.CurrentTime;
 				AddEventToList(theEvent,flight_ptr,0,0);
 				CampLeaveCriticalSection();
 				return;
@@ -2142,10 +2243,14 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterLanding(FalconLandingMessage lm, int pilot_status)
-				{
+		public void RegisterLanding (FalconLandingMessage lm, int pilot_status)
+		{
+#if TODO
 	string					time_str,format;
 	PilotDataClass			pilot_data;
 	EventElement			theEvent;
@@ -2165,7 +2270,7 @@ else
 				{
 				// We're interested
 				theEvent = new EventElement();
-				ParseTime(TheCampaign.CurrentTime, time_str);
+				ParseTime(CampaignClass.TheCampaign.CurrentTime, time_str);
 				GetFormatString(FET_PILOT_LANDED,format);
 				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
 					pilot_data.pilot_status = pilot_status;
@@ -2174,7 +2279,7 @@ else
 				if (pilot_data == player_pilot)
 					logbook_data.Flags |= LANDED_AIRCRAFT;
 				ConstructOrderedSentence(MAX_EVENT_STRING_LEN, theEvent.eventString,format,pilot_data.pilot_callsign,time_str);
-				theEvent.eventTime = TheCampaign.CurrentTime;
+				theEvent.eventTime = CampaignClass.TheCampaign.CurrentTime;
 				AddEventToList(theEvent,flight_ptr,0,0);
 				CampLeaveCriticalSection();
 				return;
@@ -2184,10 +2289,14 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
-		public void RegisterContact(Unit contact)
-				{
+		public void RegisterContact (Unit contact)
+		{
+#if TODO
 	ulong		score;
 	// KCK NOTE: This assumes that Register Contact is only called once per contact!
 
@@ -2202,20 +2311,25 @@ else
 	if (contact.Broken())
 		score /= 4;
 	contact_score += score;
-	}
+			#endif
+			throw new NotImplementedException ();
+		}
 
 		public void ParseTime (CampaignTime time, string time_str)
-				{
-	GetTimeString(time, time_str);
-	}
+		{
+			// TODO GetTimeString (time, time_str);
+			throw new NotImplementedException ();
+		}
 
 		public void ParseTime (double time, string time_str)
-				{
-	GetTimeString(FloatToInt32((float)time*VU_TICS_PER_SECOND), time_str);
-	}
+		{
+			//TODO GetTimeString (FloatToInt32 ((float)time * VU_TICS_PER_SECOND), time_str);
+			throw new NotImplementedException ();
+		}
 
 		public void AddEventToList (EventElement theEvent, FlightDataClass flight_ptr, PilotDataClass pilot_data, int wn)
-				{
+		{
+#if TODO
 	EventElement* curEvent = null;
 
 	theEvent.next = null;
@@ -2241,561 +2355,570 @@ else
 	while (curEvent.next && curEvent.next != curEvent)
 		curEvent = curEvent.next;
 
-	ShiAssert (curEvent != theEvent);
+	Debug.Assert (curEvent != theEvent);
 
 	curEvent.next = theEvent;
-	}
+			#endif
+			throw 
+				new NotImplementedException ();
+		}
 
 	
 		// Event trigger checks
 		public void RegisterKill (FalconEntity shooter, FalconEntity target, int targetEl)
-				{
-	int				sid,tid,i;
-	CampEntity		campTarget,campShooter;
-	FlightDataClass	*flight_ptr;
-
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
-
-	CampEnterCriticalSection();
-
-	// Get their indexes
-	tid = target.Type() - VU_LAST_ENTITY_TYPE;
-	sid = shooter.Type() - VU_LAST_ENTITY_TYPE;
-
-	// Get campaign objects
-	if (target.IsCampaign())
-		campTarget = (CampBaseClass*)target;
-	else
 		{
-		campTarget = ((SimBaseClass*)target).GetCampaignObject();
-		targetEl = ((SimBaseClass*)target).GetSlot();
-		}
-	if (shooter.IsCampaign())
-		campShooter = (CampBaseClass*)shooter;
-	else
-		campShooter = ((SimBaseClass*)shooter).GetCampaignObject();
+#if TODO
+			int sid, tid, i;
+			CampEntity campTarget, campShooter;
+			FlightDataClass flight_ptr;
 
-	// Check for hits by us
-	if (campShooter.IsFlight() && campShooter.InPackage())
-		{
-		flight_ptr = FindFlightData((FlightClass*)campShooter);
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
+				return;
 
-		if (flight_ptr)
-			{
-			if (Falcon4ClassTable[tid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_AIR && GetRoE(campShooter.GetTeam(),campTarget.GetTeam(),ROE_AIR_FIRE))
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_AKILL;
-			else if (Falcon4ClassTable[tid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_LAND && GetRoE(campShooter.GetTeam(),campTarget.GetTeam(),ROE_GROUND_FIRE))
-				{
-				if (Falcon4ClassTable[tid].dataType == DTYPE_OBJECTIVE || Falcon4ClassTable[tid].dataType == DTYPE_FEATURE)
-					{
-					flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_SKILL;
-					// High value for hitting target feature
-					for (i=0; i<MAX_TARGET_FEATURES; i++)
-						{
-						if (flight_ptr.target_features[i] < 255 && flight_ptr.target_features[i] == targetEl)
+			CampEnterCriticalSection ();
+
+			// Get their indexes
+			tid = target.Type () - VuEntity.VU_LAST_ENTITY_TYPE;
+			sid = shooter.Type () - VuEntity.VU_LAST_ENTITY_TYPE;
+
+			// Get campaign objects
+			if (target.IsCampaign ())
+				campTarget = (CampBaseClass)target;
+			else {
+				campTarget = ((SimBaseClass)target).GetCampaignObject ();
+				targetEl = ((SimBaseClass)target).GetSlot ();
+			}
+			if (shooter.IsCampaign ())
+				campShooter = (CampBaseClass)shooter;
+			else
+				campShooter = ((SimBaseClass)shooter).GetCampaignObject ();
+
+			// Check for hits by us
+			if (campShooter.IsFlight () && campShooter.InPackage ()) {
+				flight_ptr = FindFlightData ((FlightClass)campShooter);
+
+				if (flight_ptr) {
+					if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_AIR_FIRE))
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_AKILL;
+					else if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_GROUND_FIRE)) {
+						if (Falcon4ClassTable [tid].dataType == DTYPE_OBJECTIVE || Falcon4ClassTable [tid].dataType == DTYPE_FEATURE) {
+							flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_SKILL;
+							// High value for hitting target feature
+							for (i=0; i<MAX_TARGET_FEATURES; i++) {
+								if (flight_ptr.target_features [i] < 255 && flight_ptr.target_features [i] == targetEl)
+									flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
+							}
+						} else if (Falcon4ClassTable [tid].dataType == DTYPE_UNIT || Falcon4ClassTable [tid].dataType == DTYPE_VEHICLE) {
+							flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_GKILL;
+							// High value for killing radar vehicle
+							if (targetEl == ((UnitClass*)campTarget).GetUnitClassData ().RadarVehicle)
+								flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
+							// For most air to ground missions, we're ok as long as we've hit the correct brigade
+							if (flight_ptr.target_id && (flight_ptr.target_id == ((UnitClass*)campTarget).GetUnitParentID () || flight_ptr.target_id == campTarget.Id ()))
+								flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
+						}
+					} else if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_NAVAL_FIRE)) {
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_NKILL;
+						// High value for hitting capital ship
+						if (!targetEl)
 							flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
+					}
+
+					if (campTarget.Id () == flight_ptr.target_id || campTarget.GetCampID () == flight_ptr.target_camp_id)
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
+					if (campTarget.IsUnit () && ((UnitClass*)campTarget).Dead ())
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_KILLED;
+				}
+			}
+
+			// Check for hits against us
+			if (campTarget.IsFlight () && campTarget.InPackage ()) {
+				flight_ptr = FindFlightData ((FlightClass*)campTarget);
+
+				if (flight_ptr) {
+					flight_ptr.status_flags |= MISEVAL_FLIGHT_LOSSES;
+					if (campTarget.IsUnit () && ((UnitClass*)campTarget).Dead ())
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_DESTROYED;
+					if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR)
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_AIR;
+					else if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND)
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_GROUND;
+					else if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA)
+						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_NAVAL;
+
+					if (package_element && campTarget.Id () == package_element.flight_id) {
+						// Package element hit - set flags on all elements
+						FlightDataClass		* tmp_ptr;
+						int copyFlags;
+
+						copyFlags = MISEVAL_FLIGHT_F_TARGET_HIT;
+						if (flight_ptr.status_flags & MISEVAL_FLIGHT_DESTROYED)
+							copyFlags |= MISEVAL_FLIGHT_F_TARGET_KILLED;
+						tmp_ptr = flight_data;
+						while (tmp_ptr) {
+							tmp_ptr.status_flags |= copyFlags;
+							tmp_ptr = tmp_ptr.next_flight;
 						}
 					}
-				else if (Falcon4ClassTable[tid].dataType == DTYPE_UNIT || Falcon4ClassTable[tid].dataType == DTYPE_VEHICLE)
-					{
-					flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_GKILL;
-					// High value for killing radar vehicle
-					if (targetEl == ((UnitClass*)campTarget).GetUnitClassData().RadarVehicle)
-						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
-					// For most air to ground missions, we're ok as long as we've hit the correct brigade
-					if (flight_ptr.target_id && (flight_ptr.target_id == ((UnitClass*)campTarget).GetUnitParentID() || flight_ptr.target_id == campTarget.Id()))
-						flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
-					}
 				}
-			else if (Falcon4ClassTable[tid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_SEA && GetRoE(campShooter.GetTeam(),campTarget.GetTeam(),ROE_NAVAL_FIRE))
-				{
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_NKILL;
-				// High value for hitting capital ship
-				if (!targetEl)
-					flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
-				}
-
-			if (campTarget.Id() == flight_ptr.target_id || campTarget.GetCampID() == flight_ptr.target_camp_id)
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
-			if (campTarget.IsUnit() && ((UnitClass*)campTarget).Dead())
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_KILLED;
 			}
-		}
 
-	// Check for hits against us
-	if (campTarget.IsFlight() && campTarget.InPackage())
-		{
-		flight_ptr = FindFlightData((FlightClass*)campTarget);
-
-		if (flight_ptr)
-			{
-			flight_ptr.status_flags |= MISEVAL_FLIGHT_LOSSES;
-			if (campTarget.IsUnit() && ((UnitClass*)campTarget).Dead())
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_DESTROYED;
-			if (Falcon4ClassTable[sid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_AIR)
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_AIR;
-			else if (Falcon4ClassTable[sid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_LAND)
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_GROUND;
-			else if (Falcon4ClassTable[sid].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_SEA)
-				flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_NAVAL;
-
-			if (package_element && campTarget.Id() == package_element.flight_id)
-				{
-				// Package element hit - set flags on all elements
-				FlightDataClass		*tmp_ptr;
-				int					copyFlags;
-
-				copyFlags = MISEVAL_FLIGHT_F_TARGET_HIT;
-				if (flight_ptr.status_flags & MISEVAL_FLIGHT_DESTROYED)
-					copyFlags |= MISEVAL_FLIGHT_F_TARGET_KILLED;
-				tmp_ptr = flight_data;
-				while (tmp_ptr)
-					{
-					tmp_ptr.status_flags |= copyFlags;
-					tmp_ptr = tmp_ptr.next_flight;
+			// Check for area hits
+			if (flags & MISEVAL_EVALUATE_HITS_IN_AREA) {
+				GridIndex cx, cy;
+				campTarget.GetLocation (&cx, &cy);
+				//if (DistSqu(tx,ty,cx,cy) < 0.5F * STATION_DIST_LENIENCY*STATION_DIST_LENIENCY) // JB 010215
+				if (DistSqu (tx, ty, cx, cy) < 0.5F * STATION_DIST_HITS_LENIENCY * STATION_DIST_HITS_LENIENCY) { // JB 010215
+					// Area hit - set flags on all elements which were covering VOL
+					FlightDataClass		* tmp_ptr;
+					Flight flight;
+					tmp_ptr = flight_data;
+					while (tmp_ptr) {
+						flight = (Flight)VuDatabase.vuDatabase.Find (tmp_ptr.flight_id);
+						if (flight.GetEvalFlags () & FEVAL_ON_STATION)
+							tmp_ptr.status_flags |= MISEVAL_FLIGHT_F_AREA_HIT;
+						tmp_ptr = tmp_ptr.next_flight;
 					}
 				}
 			}
-		}
 
-	// Check for area hits
-	if (flags & MISEVAL_EVALUATE_HITS_IN_AREA)
-		{
-		GridIndex		cx,cy;
-		campTarget.GetLocation(&cx,&cy);
-		//if (DistSqu(tx,ty,cx,cy) < 0.5F * STATION_DIST_LENIENCY*STATION_DIST_LENIENCY) // JB 010215
-		if (DistSqu(tx,ty,cx,cy) < 0.5F * STATION_DIST_HITS_LENIENCY*STATION_DIST_HITS_LENIENCY) // JB 010215
-			{
-			// Area hit - set flags on all elements which were covering VOL
-			FlightDataClass		*tmp_ptr;
-			Flight				flight;
-			tmp_ptr = flight_data;
-			while (tmp_ptr)
-				{
-				flight = (Flight)vuDatabase.Find(tmp_ptr.flight_id);
-				if (flight.GetEvalFlags() & FEVAL_ON_STATION)
-					tmp_ptr.status_flags |= MISEVAL_FLIGHT_F_AREA_HIT;
-				tmp_ptr = tmp_ptr.next_flight;
-				}
-			}
+			CampLeaveCriticalSection ();
+				#endif
+			throw 
+				new NotImplementedException ();
 		}
-
-	CampLeaveCriticalSection();
-	}
 
 		public void RegisterMove (Flight flight)
-				{
-	WayPoint		w,nw;
-	GridIndex		fx,fy,wx,wy;
-	float			ds,cds=1000000.0F;
-	int				feflags, meflags = 0;
-	CampaignTime	now = TheCampaign.CurrentTime;
-	FlightDataClass	*flight_ptr = null;
-
-	ShiAssert(flight);
-	if (!flight)
-		return;
-
-	CampEnterCriticalSection();
-
-	// Determine stuff about the flight
-	flight.GetLocation(&fx,&fy);
-	feflags = flight.GetEvalFlags();
-	if ((flags & MISEVAL_MISSION_IN_PROGRESS) && flight.InPackage())
 		{
-		// Detailed check for flights in our package
-		flight_ptr = FindFlightData(flight);
-		if (flight_ptr)
-			meflags = flight_ptr.status_flags;
-		else
-			flight.SetInPackage(0);
-		}
+#if TODO
+			WayPoint w, nw;
+			GridIndex fx, fy, wx, wy;
+			float ds, cds = 1000000.0F;
+			int feflags, meflags = 0;
+			CampaignTime now = CampaignClass.TheCampaign.CurrentTime;
+			FlightDataClass	* flight_ptr = null;
 
-	// Check for friendly territory
-	if (GetOwner(TheCampaign.CampMapData, fx, fy) == flight.GetTeam())
-		{
-		// Check for getting home if we've been at our target, and either our mission time is over, or we've been relieved
-		if (meflags & MISEVAL_FLIGHT_GOT_TO_TARGET && (meflags & MISEVAL_FLIGHT_STATION_OVER || meflags & MISEVAL_FLIGHT_RELIEVED))
-			meflags |= MISEVAL_FLIGHT_GOT_HOME;
-		}
-	else
-		{
-		// Set mission started if we're over enemy territory
-		feflags |= FEVAL_MISSION_STARTED;
-		}
+			Debug.Assert (flight);
+			if (!flight)
+				return;
 
-	// Check waypoint related stuff
-	w = flight.GetFirstUnitWP();
-	while (w)
-		{
-		w.GetWPLocation(&wx,&wy);
-		if (w.GetWPFlags() & WPF_TARGET)
-			{
+			CampEnterCriticalSection ();
+
+			// Determine stuff about the flight
+			flight.GetLocation (&fx, &fy);
+			feflags = flight.GetEvalFlags ();
+			if ((flags & MISEVAL_MISSION_IN_PROGRESS) && flight.InPackage ()) {
+				// Detailed check for flights in our package
+				flight_ptr = FindFlightData (flight);
+				if (flight_ptr)
+					meflags = flight_ptr.status_flags;
+				else
+					flight.SetInPackage (0);
+			}
+
+			// Check for friendly territory
+			if (GetOwner (CampaignClass.TheCampaign.CampMapData, fx, fy) == flight.GetTeam ()) {
+				// Check for getting home if we've been at our target, and either our mission time is over, or we've been relieved
+				if (meflags & MISEVAL_FLIGHT_GOT_TO_TARGET && (meflags & MISEVAL_FLIGHT_STATION_OVER || meflags & MISEVAL_FLIGHT_RELIEVED))
+					meflags |= MISEVAL_FLIGHT_GOT_HOME;
+			} else {
+				// Set mission started if we're over enemy territory
+				feflags |= FEVAL_MISSION_STARTED;
+			}
+
+			// Check waypoint related stuff
+			w = flight.GetFirstUnitWP ();
+			while (w) {
+				w.GetWPLocation (&wx, &wy);
+				if (w.GetWPFlags () & WPF_TARGET) {
 // 2002-02-13 MN check if target got occupied by us and has not been engaged yet - for 2D flights
 // 2002-03-03 MN fix - only for strike missions
-			if (w.GetWPTarget() && w.GetWPTarget().GetTeam() == flight.GetTeam() &&
-				(flight.GetUnitMission() > AMIS_SEADESCORT && flight.GetUnitMission() < AMIS_FAC))
-				meflags |= MISEVAL_FLIGHT_ABORT_BY_AWACS;
-			// Determine station times
-			CampaignTime	tont,tofft;
-			ds = (float)DistSqu(fx,fy,wx,wy);
-			tont = w.GetWPArrivalTime();
-			tofft = w.GetWPDepartureTime();
-			nw = w.GetNextWP();
-			if (nw && nw.GetWPFlags() & WPF_TARGET)
-				tofft = nw.GetWPDepartureTime();
-			// Determine if we're in our VOL or not
-			if (now > tont && now < tofft)
-				feflags |= FEVAL_ON_STATION;
+					if (w.GetWPTarget () && w.GetWPTarget ().GetTeam () == flight.GetTeam () &&
+				(flight.GetUnitMission () > MissionTypeEnum.AMIS_SEADESCORT && flight.GetUnitMission () < MissionTypeEnum.AMIS_FAC))
+						meflags |= MISEVAL_FLIGHT_ABORT_BY_AWACS;
+					// Determine station times
+					CampaignTime tont, tofft;
+					ds = (float)DistSqu (fx, fy, wx, wy);
+					tont = w.GetWPArrivalTime ();
+					tofft = w.GetWPDepartureTime ();
+					nw = w.GetNextWP ();
+					if (nw && nw.GetWPFlags () & WPF_TARGET)
+						tofft = nw.GetWPDepartureTime ();
+					// Determine if we're in our VOL or not
+					if (now > tont && now < tofft)
+						feflags |= FEVAL_ON_STATION;
 			// Check if our VOL time is over
-			else if (now > tofft)
-				{
-				feflags &= ~FEVAL_ON_STATION;
-				meflags |= MISEVAL_FLIGHT_STATION_OVER;
+					else if (now > tofft) {
+						feflags &= ~FEVAL_ON_STATION;
+						meflags |= MISEVAL_FLIGHT_STATION_OVER;
+					}
+					// Determine if we're close enough for government work
+					if (now > tont + STATION_TIME_LENIENCY && now < tofft - STATION_TIME_LENIENCY && ds > STATION_DIST_LENIENCY * STATION_DIST_LENIENCY)
+						meflags |= MISEVAL_FLIGHT_OFF_STATION;
+					// Check if we got to our target
+					if (ds < TARGET_DIST_LENIENCY * TARGET_DIST_LENIENCY) {
+						if (flight_ptr && flight_ptr == player_element && !(meflags & MISEVAL_FLIGHT_GOT_TO_TARGET))
+							actual_tot = CampaignClass.TheCampaign.CurrentTime;
+						feflags |= FEVAL_GOT_TO_TARGET;
+						meflags |= MISEVAL_FLIGHT_GOT_TO_TARGET;
+						// Set mission started
+						feflags |= FEVAL_MISSION_STARTED;
+					}
 				}
-			// Determine if we're close enough for government work
-			if (now > tont + STATION_TIME_LENIENCY && now < tofft - STATION_TIME_LENIENCY && ds > STATION_DIST_LENIENCY*STATION_DIST_LENIENCY)
-				meflags |= MISEVAL_FLIGHT_OFF_STATION;
-			// Check if we got to our target
-			if (ds < TARGET_DIST_LENIENCY*TARGET_DIST_LENIENCY)
-				{
-				if (flight_ptr && flight_ptr == player_element && !(meflags & MISEVAL_FLIGHT_GOT_TO_TARGET))
-					actual_tot = TheCampaign.CurrentTime;
-				feflags |= FEVAL_GOT_TO_TARGET;
-				meflags |= MISEVAL_FLIGHT_GOT_TO_TARGET;
-				// Set mission started
-				feflags |= FEVAL_MISSION_STARTED;
-				}
+				w = w.GetNextWP ();
 			}
-		w = w.GetNextWP();
+
+			// copy the flags back in
+			flight.SetEvalFlag (feflags, 1); // 2002-02-19 MODIFIED BY S.G. Added the 1 at then end of the function to specify feflags contains all the flags.
+			if (flight_ptr)
+				flight_ptr.status_flags = meflags;
+
+			CampLeaveCriticalSection ();
+		#endif
+			throw 
+				new NotImplementedException ();
 		}
 
-	// copy the flags back in
-	flight.SetEvalFlag(feflags, 1); // 2002-02-19 MODIFIED BY S.G. Added the 1 at then end of the function to specify feflags contains all the flags.
-	if (flight_ptr)
-		flight_ptr.status_flags = meflags;
-
-	CampLeaveCriticalSection();
-	}
-
-		public void RegisterAbort (Flight flight)	{
-	FlightDataClass		*flight_ptr;
-	int					copyFlags = 0;
-
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
-
-	if (package_element && package_element.flight_id == flight.Id())
-		copyFlags = MISEVAL_FLIGHT_F_TARGET_ABORTED;
-
-	CampEnterCriticalSection();
-	flight_ptr = flight_data;
-	while (flight_ptr)
+		public void RegisterAbort (Flight flight)
 		{
-		if (flight_ptr.flight_id == flight.Id())
-			flight_ptr.status_flags |= MISEVAL_FLIGHT_ABORTED;
-		if (flight_ptr.target_id == flight.Id())
-			flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_ABORTED;
-		flight_ptr.status_flags |= copyFlags;
-		flight_ptr = flight_ptr.next_flight;
-		}
-	CampLeaveCriticalSection();
-	}
+#if TODO
+			FlightDataClass		* flight_ptr;
+			int copyFlags = 0;
 
-		public void RegisterRelief (Flight flight)	{
-	FlightDataClass		*flight_ptr;
-
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
-
-	CampEnterCriticalSection();
-	flight_ptr = FindFlightData(flight);
-	if (flight_ptr)
-		flight_ptr.status_flags |= MISEVAL_FLIGHT_RELIEVED;
-	CampLeaveCriticalSection();
-	}
-
-		public void RegisterDivert (Flight flight, MissionRequestClass mis)	{
-	FlightDataClass		*flight_ptr;
-	CampEntity			target = null;
-
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
-
-	CampEnterCriticalSection();
-	flight_ptr = FindFlightData(flight);
-	if (flight_ptr)
-		{
-		// KCK TODO: Convert this flight's mission to the divert mission
-		flight_ptr.mission = mis.mission;
-		if (flight_ptr == package_element)
-			{
-			// Trying to track down a potential bug here.. It's hard enough to
-			// get diverts I figure I'll let QA do the testing..
-			// ShiAssert (!"Show this to Kevin K."); - Not any more - RH
-
-			flight_ptr.mission_context = flight.GetMissionContext();
-			flight_ptr.requester_id = flight.GetRequesterID();
-			flight_ptr.target_id = flight.GetUnitMissionTargetID();
-			ShiAssert (flight_ptr.target_id == mis.targetID);
-			if (flight_ptr.target_id != FalconNullId)
-				target = (CampEntity) vuDatabase.Find(flight_ptr.target_id);
-			RecordTargetStatus(flight_ptr, target);
-			}
-		}
-	CampLeaveCriticalSection();
-	}
-
-		public void RegisterRoundWon (int team)	{
-	rounds_won[team]++;
-	}
-
-		public void RegisterWin (int team)	{
-	// This team won (-1 means player with highest score won)
-	FlightDataClass		*flight_ptr;
-	PilotDataClass		*pilot_data;
-	int					best=GetMaxScore();
-
-	CampEnterCriticalSection();
-	flags |= MISEVAL_GAME_COMPLETED;
-	flight_ptr = flight_data;
-	while (flight_ptr)
-		{
-		if (team == -1 || flight_ptr.flight_team == team)
-			{
-			pilot_data = flight_ptr.pilot_list;
-			while (pilot_data)
-				{
-				if (team != -1)
-					pilot_data.pilot_flags |= PFLAG_WON_GAME;
-				else if (pilot_data.score >= best)
-					pilot_data.pilot_flags |= PFLAG_WON_GAME;
-				if (pilot_data.player_kills)
-					flags |= MISEVAL_ONLINE_GAME;
-				pilot_data = pilot_data.next_pilot;
-				}
-			}
-		flight_ptr = flight_ptr.next_flight;
-		}
-	CampLeaveCriticalSection();
-	}
-
-		public void RegisterEvent (GridIndex x, GridIndex y, int team, int type, string evt)	{
-	int		role;
-
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
-
-	if (team != eteam)
-		return;
-
-	// Filter out types by role
-	role = MissionData[package_mission].skill;
-	if (type != FalconCampEventMessage.campStrike)
-		{
-		if (role == ARO_CA && type != FalconCampEventMessage.campAirCombat)
-			return;
-		else if (role == ARO_GA && type != FalconCampEventMessage.campGroundAttack)
-			return;
-		}
-
-	if (DistSqu(x,y,tx,ty) < RELATED_EVENT_RANGE_SQ)
-		{
-		// Check if already in our list
-		for (int i=0; i<MAX_RELATED_EVENTS; i++)
-			{
-			if (related_events[i] && _tcscmp(related_events[i],evnt) == 0)
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
 				return;
+
+			if (package_element && package_element.flight_id == flight.Id ())
+				copyFlags = MISEVAL_FLIGHT_F_TARGET_ABORTED;
+
+			CampEnterCriticalSection ();
+			flight_ptr = flight_data;
+			while (flight_ptr) {
+				if (flight_ptr.flight_id == flight.Id ())
+					flight_ptr.status_flags |= MISEVAL_FLIGHT_ABORTED;
+				if (flight_ptr.target_id == flight.Id ())
+					flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_ABORTED;
+				flight_ptr.status_flags |= copyFlags;
+				flight_ptr = flight_ptr.next_flight;
 			}
-		if (related_events[last_related_event])
-			delete(related_events[last_related_event]);
+			CampLeaveCriticalSection ();
+	#endif
+			throw 
+				new NotImplementedException ();
+		}
+
+		public void RegisterRelief (Flight flight)
+		{
+#if TODO
+			FlightDataClass		* flight_ptr;
+
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
+				return;
+
+			CampEnterCriticalSection ();
+			flight_ptr = FindFlightData (flight);
+			if (flight_ptr)
+				flight_ptr.status_flags |= MISEVAL_FLIGHT_RELIEVED;
+			CampLeaveCriticalSection ();
+	#endif
+			throw 
+			new NotImplementedException ();
+		}
+
+		public void RegisterDivert (Flight flight, MissionRequestClass mis)
+		{
+#if TODO
+			FlightDataClass		 flight_ptr;
+			CampEntity target = null;
+
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
+				return;
+
+			CampEnterCriticalSection ();
+			flight_ptr = FindFlightData (flight);
+			if (flight_ptr) {
+				// KCK TODO: Convert this flight's mission to the divert mission
+				flight_ptr.mission = mis.mission;
+				if (flight_ptr == package_element) {
+					// Trying to track down a potential bug here.. It's hard enough to
+					// get diverts I figure I'll let QA do the testing..
+					// Debug.Assert (!"Show this to Kevin K."); - Not any more - RH
+
+					flight_ptr.mission_context = flight.GetMissionContext ();
+					flight_ptr.requester_id = flight.GetRequesterID ();
+					flight_ptr.target_id = flight.GetUnitMissionTargetID ();
+					Debug.Assert (flight_ptr.target_id == mis.targetID);
+					if (flight_ptr.target_id != FalconNullId)
+						target = (CampEntity)VuDatabase.vuDatabase.Find (flight_ptr.target_id);
+					RecordTargetStatus (flight_ptr, target);
+				}
+			}
+			CampLeaveCriticalSection ();
+				#endif
+			throw 
+				new NotImplementedException ();
+		}
+
+		public void RegisterRoundWon (int team)
+		{
+			rounds_won [team]++;
+		}
+
+		public void RegisterWin (int team)
+		{
+#if TODO
+			// This team won (-1 means player with highest score won)
+			FlightDataClass		* flight_ptr;
+			PilotDataClass		* pilot_data;
+			int best = GetMaxScore ();
+
+			CampEnterCriticalSection ();
+			flags |= MISEVAL_GAME_COMPLETED;
+			flight_ptr = flight_data;
+			while (flight_ptr) {
+				if (team == -1 || flight_ptr.flight_team == team) {
+					pilot_data = flight_ptr.pilot_list;
+					while (pilot_data) {
+						if (team != -1)
+							pilot_data.pilot_flags |= PFLAG_WON_GAME;
+						else if (pilot_data.score >= best)
+							pilot_data.pilot_flags |= PFLAG_WON_GAME;
+						if (pilot_data.player_kills)
+							flags |= MISEVAL_ONLINE_GAME;
+						pilot_data = pilot_data.next_pilot;
+					}
+				}
+				flight_ptr = flight_ptr.next_flight;
+			}
+			CampLeaveCriticalSection ();
+	#endif
+			throw 
+				new NotImplementedException ();
+		}
+
+		public void RegisterEvent (GridIndex x, GridIndex y, int team, int type, string evt)
+		{
+#if TODO
+			int role;
+
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
+				return;
+
+			if (team != eteam)
+				return;
+
+			// Filter out types by role
+			role = MissionData [package_mission].skill;
+			if (type != FalconCampEventMessage.campStrike) {
+				if (role == ARO_CA && type != FalconCampEventMessage.campAirCombat)
+					return;
+				else if (role == ARO_GA && type != FalconCampEventMessage.campGroundAttack)
+					return;
+			}
+
+			if (DistSqu (x, y, tx, ty) < RELATED_EVENT_RANGE_SQ) {
+				// Check if already in our list
+				for (int i=0; i<MAX_RELATED_EVENTS; i++) {
+					if (related_events [i] && _tcscmp (related_events [i], evnt) == 0)
+						return;
+				}
+				if (related_events [last_related_event])
+					delete (related_events [last_related_event]);
 		#if USE_SH_POOLS
 		related_events[last_related_event] = (_TCHAR *)MemAllocPtr( gTextMemPool, sizeof(_TCHAR)*(_tcslen(event)+1), false );
 		#else
-		related_events[last_related_event] = new _TCHAR[_tcslen(evnt)+1];
+				related_events [last_related_event] = new _TCHAR[_tcslen (evnt) + 1];
 		#endif
-		strcpy(related_events[last_related_event],evnt);
-		last_related_event++;
-		if (last_related_event >= MAX_RELATED_EVENTS)
-			last_related_event = 0;
+				strcpy (related_events [last_related_event], evnt);
+				last_related_event++;
+				if (last_related_event >= MAX_RELATED_EVENTS)
+					last_related_event = 0;
+			}
+				#endif
+			throw 
+				new NotImplementedException ();
 		}
-	}
 
 	
 		// Register 3D AWACS abort call
-		public void Register3DAWACSabort (Flight flight)	
+		public void Register3DAWACSabort (Flight flight)
 		{
-	FlightDataClass		*flight_ptr;
-	int					copyFlags = 0;
+#if TODO
+			FlightDataClass		* flight_ptr;
+			int copyFlags = 0;
 
-	if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
-		return;
+			if (!(flags & MISEVAL_MISSION_IN_PROGRESS))
+				return;
 
-	if (package_element && package_element.flight_id == flight.Id())
-		copyFlags = MISEVAL_FLIGHT_F_TARGET_ABORTED;
+			if (package_element && package_element.flight_id == flight.Id ())
+				copyFlags = MISEVAL_FLIGHT_F_TARGET_ABORTED;
 
-	CampEnterCriticalSection();
-	flight_ptr = flight_data;
-	while (flight_ptr)
-		{
-		if (flight_ptr.flight_id == flight.Id())
-			flight_ptr.status_flags |= MISEVAL_FLIGHT_ABORTED;
-		if (flight_ptr.target_id == flight.Id())
-			flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_ABORTED;
-		flight_ptr.status_flags |= copyFlags;
-		flight_ptr = flight_ptr.next_flight;
-		}
-	CampLeaveCriticalSection();
-	}
-
-	
-		public void SetFinalAircraft (Flight flight)	{
-	short				campId,numAC,i;
-	FlightDataClass		*flight_ptr;
-
-	CampEnterCriticalSection();
-
-	campId = flight.GetCampID();
-	numAC = 0;
-	flight_ptr = flight_data;
-	while (flight_ptr)
-		{
-		if (flight_ptr.camp_id == campId)
-			{
-			// Count remaining aircraft
-			for (i=0; i<PILOTS_PER_FLIGHT; i++)
-				{
-				if (flight.plane_stats[i] == AIRCRAFT_AVAILABLE)
-					numAC++;
-				}
-			// Record remaining aircraft
-			flight_ptr.finish_aircraft = static_cast<byte>(numAC);
-			}		
-		flight_ptr = flight_ptr.next_flight;
-		}
-
-	CampLeaveCriticalSection();
-	}
-
-	
-		public int GetPilotName (int pilot_num, ref string buffer)	{
-	PilotDataClass	*pilot_ptr = null;
-	int				retval=0;
-
-	CampEnterCriticalSection();
-
-	if (player_element)
-		{
-		pilot_ptr = player_element.pilot_list;
-
-		if (pilot_ptr)
-			{
-			while (pilot_ptr && pilot_ptr.pilot_slot != pilot_num)
-				pilot_ptr = pilot_ptr.next_pilot;
+			CampEnterCriticalSection ();
+			flight_ptr = flight_data;
+			while (flight_ptr) {
+				if (flight_ptr.flight_id == flight.Id ())
+					flight_ptr.status_flags |= MISEVAL_FLIGHT_ABORTED;
+				if (flight_ptr.target_id == flight.Id ())
+					flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_ABORTED;
+				flight_ptr.status_flags |= copyFlags;
+				flight_ptr = flight_ptr.next_flight;
 			}
+			CampLeaveCriticalSection ();
+				#endif
+			throw 
+				new NotImplementedException ();
 		}
-	if (pilot_ptr && pilot_ptr.pilot_id != NO_PILOT)
+	
+		public void SetFinalAircraft (Flight flight)
 		{
-		_tcscpy(buffer, pilot_ptr.pilot_name);
-		retval = 1;
+#if TODO
+			short campId, numAC, i;
+			FlightDataClass		* flight_ptr;
+
+			CampEnterCriticalSection ();
+
+			campId = flight.GetCampID ();
+			numAC = 0;
+			flight_ptr = flight_data;
+			while (flight_ptr) {
+				if (flight_ptr.camp_id == campId) {
+					// Count remaining aircraft
+					for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
+						if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE)
+							numAC++;
+					}
+					// Record remaining aircraft
+					flight_ptr.finish_aircraft = static_cast<byte> (numAC);
+				}		
+				flight_ptr = flight_ptr.next_flight;
+			}
+
+			CampLeaveCriticalSection ();
+	#endif
+			throw 
+				new NotImplementedException ();
 		}
-	else
-		_tcscpy(buffer, "");
-
-	CampLeaveCriticalSection();
-
-	return retval;
-	}
-
-		public int GetFlightName (ref string buffer)	{
-	int				retval=0;
-
-	CampEnterCriticalSection();
-
-	if (player_element)
+	
+		public int GetPilotName (int pilot_num, ref string buffer)
 		{
-		_tcscpy(buffer, player_element.name);
-		retval = 1;
+#if TODO
+			PilotDataClass	* pilot_ptr = null;
+			int retval = 0;
+
+			CampEnterCriticalSection ();
+
+			if (player_element) {
+				pilot_ptr = player_element.pilot_list;
+
+				if (pilot_ptr) {
+					while (pilot_ptr && pilot_ptr.pilot_slot != pilot_num)
+						pilot_ptr = pilot_ptr.next_pilot;
+				}
+			}
+			if (pilot_ptr && pilot_ptr.pilot_id != NO_PILOT) {
+				_tcscpy (buffer, pilot_ptr.pilot_name);
+				retval = 1;
+			} else
+				_tcscpy (buffer, "");
+
+			CampLeaveCriticalSection ();
+
+			return retval;
+	#endif
+			throw 
+				new NotImplementedException ();
 		}
-	else
-		_tcscpy(buffer, "");
 
-	CampLeaveCriticalSection();
+		public int GetFlightName (ref string buffer)
+		{
+#if TODO
+			int retval = 0;
 
-	return retval;
-	}
+			CampEnterCriticalSection ();
 
+			if (player_element) {
+				_tcscpy (buffer, player_element.name);
+				retval = 1;
+			} else
+				_tcscpy (buffer, "");
+
+			CampLeaveCriticalSection ();
+
+			return retval;
+	#endif
+			throw 
+				new NotImplementedException ();
+		}
 	
 		public PilotDataClass AddNewPlayerPilot (FlightDataClass flight_ptr, int pilot_num, Flight flight, FalconSessionEntity player)
 		{
-	if (!player)
-		return null;
+#if TODO
+			if (player == null)
+				return null;
 
 #if FUNKY_KEVIN_DEBUG_STUFF
-	ShiAssert(!inMission || player != FalconLocalSession);
+	Debug.Assert(!inMission || player != FalconLocalSession);
 #endif
 
-	// Tack on a new slot
-	PilotDataClass	*pilot_data = AddNewPilot(flight_ptr,player.GetPilotSlot(),ac_num,flight);
-	sprintf(pilot_data.pilot_name,player.GetPlayerName());
-	sprintf(pilot_data.pilot_callsign,player.GetPlayerCallsign());
-	pilot_data.pilot_flags |= PFLAG_PLAYER_CONTROLLED;
-	if (player == FalconLocalSession)
-		{
-		player_pilot = pilot_data;
-		player_aircraft_slot = ac_num;
+			// Tack on a new slot
+			PilotDataClass	* pilot_data = AddNewPilot (flight_ptr, player.GetPilotSlot (), ac_num, flight);
+			sprintf (pilot_data.pilot_name, player.GetPlayerName ());
+			sprintf (pilot_data.pilot_callsign, player.GetPlayerCallsign ());
+			pilot_data.pilot_flags |= PFLAG_PLAYER_CONTROLLED;
+			if (player == FalconLocalSession) {
+				player_pilot = pilot_data;
+				player_aircraft_slot = ac_num;
+			}
+			return pilot_data;
+				#endif
+			throw 
+				new NotImplementedException ();
 		}
-	return pilot_data;
-	}
+
 		public PilotDataClass AddNewPilot (FlightDataClass flight_ptr, int pilot_num, int ac_num, Flight flight)
-				{
-	PilotDataClass	*pilot_data = new PilotDataClass();
-	PilotDataClass	*prev_pilot=null;
-	int				k=0,w=0,wid=0,wi=0,nw=0,new_weap=0,load=0;
-	LoadoutStruct	*loadout = null;
-
-	// Assign a new pilot_slot
-	pilot_data.pilot_slot = pilot_num;
-	flight_ptr.num_pilots++;
-
-	// Insert it into the list properly
-	prev_pilot = flight_ptr.pilot_list;
-	while (prev_pilot && prev_pilot.next_pilot && prev_pilot.next_pilot.pilot_slot <= pilot_data.pilot_slot)
-		prev_pilot = prev_pilot.next_pilot;
-
-	if (prev_pilot)
 		{
-		pilot_data.next_pilot = prev_pilot.next_pilot;
-		prev_pilot.next_pilot = pilot_data;
-		}
-	else
-		{
-		flight_ptr.pilot_list = pilot_data;
-		pilot_data.next_pilot = null;
-		}
+#if TODO
+			PilotDataClass	* pilot_data = new PilotDataClass ();
+			PilotDataClass	* prev_pilot = null;
+			int k = 0, w = 0, wid = 0, wi = 0, nw = 0, new_weap = 0, load = 0;
+			LoadoutStruct	* loadout = null;
 
-	pilot_data.aircraft_slot = ac_num;
-	if (ac_num == pilot_num)
-		pilot_data.pilot_id = flight.GetPilotID(ac_num);
-	else
-		pilot_data.pilot_id = -1;							// Player Pilot
-	pilot_data.pilot_status = PILOT_IN_USE;		
-	for (k=0; k<(HARDPOINT_MAX/2)+2; k++)
-		{
-		pilot_data.weapon_data[k].root_event = null;
-		pilot_data.weapon_data[k].events = 0;
-		}
-	// Check for player defined loadouts..
-	loadout = flight.GetLoadout(ac_num);
-	// Move to constructor
+			// Assign a new pilot_slot
+			pilot_data.pilot_slot = pilot_num;
+			flight_ptr.num_pilots++;
+
+			// Insert it into the list properly
+			prev_pilot = flight_ptr.pilot_list;
+			while (prev_pilot && prev_pilot.next_pilot && prev_pilot.next_pilot.pilot_slot <= pilot_data.pilot_slot)
+				prev_pilot = prev_pilot.next_pilot;
+
+			if (prev_pilot) {
+				pilot_data.next_pilot = prev_pilot.next_pilot;
+				prev_pilot.next_pilot = pilot_data;
+			} else {
+				flight_ptr.pilot_list = pilot_data;
+				pilot_data.next_pilot = null;
+			}
+
+			pilot_data.aircraft_slot = ac_num;
+			if (ac_num == pilot_num)
+				pilot_data.pilot_id = flight.GetPilotID (ac_num);
+			else
+				pilot_data.pilot_id = -1;							// Player Pilot
+			pilot_data.pilot_status = PILOT_IN_USE;		
+			for (k=0; k<(CampWeapons.HARDPOINT_MAX/2)+2; k++) {
+				pilot_data.weapon_data [k].root_event = null;
+				pilot_data.weapon_data [k].events = 0;
+			}
+			// Check for player defined loadouts..
+			loadout = flight.GetLoadout (ac_num);
+			// Move to constructor
 //	memset(pilot_data.weapon_data,0,sizeof(WeaponDataClass)*(HARDPOINT_MAX/2)+1);
-	for (nw=0,w=0; w<HARDPOINT_MAX; w++)
-		{
-		wid = flight.GetUnitWeaponId(w,ac_num);
-		if (!wid)
-			continue;
-		wi = 0;
+			for (nw=0,w=0; w<CampWeapons.HARDPOINT_MAX; w++) {
+				wid = flight.GetUnitWeaponId (w, ac_num);
+				if (!wid)
+					continue;
+				wi = 0;
 
 /*		// JB 010104 Marco Edit 
 		// Check if LAU3A - if so set to 2.75in FFAR
@@ -2808,335 +2931,327 @@ else
 */
 
 // 2002-04-14 MN use RocketDataType instead of hack
-		bool entryfound = false;
-		for (int j=0; j<NumRocketTypes; j++)
-		{
-			if (wid == RocketDataTable[j].weaponId)
-			{
-				if (RocketDataTable[j].nweaponId) // 0 = don't change weapon ID
-					wid = RocketDataTable[j].nweaponId;
-				entryfound = true;
-				break;
-			}
-		}
+				bool entryfound = false;
+				for (int j=0; j<NumRocketTypes; j++) {
+					if (wid == RocketDataTable [j].weaponId) {
+						if (RocketDataTable [j].nweaponId) // 0 = don't change weapon ID
+							wid = RocketDataTable [j].nweaponId;
+						entryfound = true;
+						break;
+					}
+				}
 // 2002-04-16 MN sh*t... what should that do here ? copy and paste error...
 /*		if (!entryfound)	// use generic 2.75mm rocket
 		{
 			wid = gRocketId;
 		}
 */
-		for (k=HARDPOINT_MAX/2+1; k>=0; k--)
-			{
-			if (pilot_data.weapon_data[k].weapon_id == wid)
-				{
-				wi = k;
-				new_weap = 0;
-				}
-			if (!pilot_data.weapon_data[k].weapon_id)
-				{
-				wi = k;
-				new_weap = 1;
-				}
-			}
-		if (new_weap)
-			{
-			nw++;
-			_stprintf(pilot_data.weapon_data[wi].weapon_name,WeaponDataTable[wid].Name);
-			pilot_data.weapon_data[wi].weapon_id = wid;
-			}
-		load = flight.GetUnitWeaponCount(w,ac_num);
-		if (WeaponDataTable[wid].Flags & WEAP_ONETENTH)
-			pilot_data.weapon_data[wi].starting_load += 10 * load;
-		else
-			pilot_data.weapon_data[wi].starting_load += load;
-		}
-	pilot_data.weapon_types = nw;
-
-	return pilot_data;
-	}
-
-		public PilotDataClass FindPilotData (FlightDataClass flight_ptr, int pilot_num)	{
-	PilotDataClass	*pilot_data;
-
-	CampEnterCriticalSection();
-
-	pilot_data = flight_ptr.pilot_list;
-	while ((pilot_data) && (pilot_data.pilot_slot != pilot_num))
-		pilot_data = pilot_data.next_pilot;
-
-	CampLeaveCriticalSection();
-	return pilot_data;
-	}
-
-		public PilotDataClass FindPilotData (int flight_id, int pilot_num)	{
-	FlightDataClass			*flight_ptr;
-	PilotDataClass			*retval=null;
-
-	CampEnterCriticalSection();
-
-	flight_ptr = flight_data;
-	while (flight_ptr && !retval)
-		{
-		if (flight_ptr.camp_id == flight_id)
-			retval = FindPilotData(flight_ptr,pilot_num);
-		flight_ptr = flight_ptr.next_flight;
-		}
-
-	CampLeaveCriticalSection();
-	return retval;
-	}
-
-		public PilotDataClass FindPilotDataFromAC (FlightDataClass flight_ptr, int aircraft_slot)	{
-	// Find the current pilot for this aircraft/flight combo.
-	PilotDataClass *pilot_data = null;
-	PilotDataClass *ret_data = null;
-
-	if (!flight_ptr) // JB 010628 CTD
-		return null;
-
-	CampEnterCriticalSection();
-
-	// Since several players can have the same ac number, we take the last we find.
-	pilot_data = flight_ptr.pilot_list;
-	while (pilot_data)
-		{
-		if (pilot_data.aircraft_slot == aircraft_slot)
-			ret_data = pilot_data;
-		pilot_data = pilot_data.next_pilot;
-		}
-
-	CampLeaveCriticalSection();
-	return ret_data;
-	}
-
-	
-		public FlightDataClass FindFlightData (Flight flight)	{
-	FlightDataClass	*flight_ptr;
-
-	CampEnterCriticalSection();
-
-	flight_ptr = TheCampaign.MissionEvaluator.flight_data;
-	while (flight_ptr)
-		{
-		if (flight_ptr.flight_id == flight.Id())
-			{
-			CampLeaveCriticalSection();
-			return flight_ptr;
-			}
-		flight_ptr = flight_ptr.next_flight;
-		}
-
-	CampLeaveCriticalSection();
-	return null;
-	}
-
-	
-		public void SetupPilots (FlightDataClass flight_ptr, Flight flight)	{
-	int					i,p;
-	FalconSessionEntity	*session;
-
-	CampEnterCriticalSection();
-
-	if (FalconLocalGame.GetGameType() == game_Dogfight)
-		{
-		// Add all pilots
-		for (i=0; i<PILOTS_PER_FLIGHT; i++)
-			{
-			if (flight.plane_stats[i] == AIRCRAFT_AVAILABLE)
-				{
-				session = gCommsMgr.FindCampaignPlayer(flight.Id(),i);
-				if (session)
-					AddNewPlayerPilot(flight_ptr, i, flight, session);
-				else
-					{
-					PilotDataClass	*pilot_data = AddNewPilot (flight_ptr, i, i, flight);
-					// AI Pilots named by callsign
-					_stprintf(pilot_data.pilot_name,"%s%d",flight_ptr.name,i+1);
-					_stprintf(pilot_data.pilot_callsign,"%s%d",flight_ptr.name,i+1);
+				for (k=CampWeapons.HARDPOINT_MAX/2+1; k>=0; k--) {
+					if (pilot_data.weapon_data [k].weapon_id == wid) {
+						wi = k;
+						new_weap = 0;
+					}
+					if (!pilot_data.weapon_data [k].weapon_id) {
+						wi = k;
+						new_weap = 1;
 					}
 				}
-			}
-		}
-	else
-		{
-		// Add all default pilots
-		for (i=0; i<PILOTS_PER_FLIGHT; i++)
-			{
-			if (flight.plane_stats[i] == AIRCRAFT_AVAILABLE)
-				{
-				PilotDataClass	*pilot_data = AddNewPilot (flight_ptr, i, i, flight);
-				p = flight.GetPilotID(i);
-				GetPilotName(p,pilot_data.pilot_name,29);
-				_stprintf(pilot_data.pilot_callsign,"%s%d",flight_ptr.name,i+1);
+				if (new_weap) {
+					nw++;
+					_stprintf (pilot_data.weapon_data [wi].weapon_name, WeaponDataTable [wid].Name);
+					pilot_data.weapon_data [wi].weapon_id = wid;
 				}
-			}
-		// Now add any current player pilots
-		for (i=0; i<PILOTS_PER_FLIGHT; i++)
-			{
-			if (flight.plane_stats[i] == AIRCRAFT_AVAILABLE)
-				{
-				session = gCommsMgr.FindCampaignPlayer(flight.Id(),i);
-				if (session)
-					AddNewPlayerPilot(flight_ptr, i, flight, session);
-				}
-			}
-		}
-	CampLeaveCriticalSection();
-	}
-
-		public void SetPlayerPilot (Flight flight, byte aircraft_slot)	{
-	Flight				element;
-	FlightDataClass		*flight_ptr;
-
-	// KCK: Currently, this function isn't being called.
-	CampEnterCriticalSection();
-	CleanupPilotData();
-
-	flight_ptr = flight_data;
-	while (flight_ptr)
-		{
-		element = (Flight)FindUnit(flight_ptr.flight_id);
-		if (element && flight_ptr.camp_id)
-			{
-			if (element == flight)
-				player_element = flight_ptr;
-			flight_ptr.num_pilots = 0;
-			SetupPilots(flight_ptr, element);
-			}
-		else
-			flight_ptr.camp_id = 0;		
-		flight_ptr = flight_ptr.next_flight;
-		}
-	CampLeaveCriticalSection();
-	}
-
-		static int			evalCount=0;
-		public void RebuildEvaluationData ()
-				{
-	// KCK: This function will traverse all our data structures, throwing out any which 
-	// we don't need anymore and adding any new ones which have popped up
-
-	// NOTE: Dogfight only
-	if (!FalconLocalGame || FalconLocalGame.GetGameType() != game_Dogfight)
-		return;
-	else
-		{
-		VuListIterator		flit = new VuListIterator(AllAirList);
-		Unit				uelement;
-		FlightDataClass		flight_ptr,last_ptr=null,tmp_ptr;
-		PilotDataClass		pilot_data,last_pilot,tmp_pilot;
-		Flight				flight;
-		int					i,kill;
-		
-		FalconSessionEntity	session;
-
-		//TODO ShiAssert(flight_data == null || false == F4IsBadReadPtr(flight_data, sizeof *flight_data));
-		if (flight_data && F4IsBadReadPtr(flight_data, sizeof(FlightDataClass))) // JB 010305 CTD
-			return;
-
-		CampEnterCriticalSection();
-
-		// Traverse all our lists and remove anything we don't have references to anymore
-		flight_ptr = flight_data;
-		while (flight_ptr)
-			{
-			flight = (Flight)FindUnit(flight_ptr.flight_id);
-			if (!flight)
-				{
-				if (last_ptr)
-					last_ptr.next_flight = flight_ptr.next_flight;
+				load = flight.GetUnitWeaponCount (w, ac_num);
+				if (WeaponDataTable [wid].Flags & WEAP_ONETENTH)
+					pilot_data.weapon_data [wi].starting_load += 10 * load;
 				else
-					flight_data = flight_ptr.next_flight;
-				tmp_ptr = flight_ptr;
-				if (player_element == tmp_ptr)
-					player_element = null;
-				if (package_element == tmp_ptr)
-					package_element = null;
-				flight_ptr = flight_ptr.next_flight;
-				delete(tmp_ptr);
-				}
-			else
-				{
-				// Check for team change
-				flight_ptr.flight_team = flight.GetTeam();
-				// Check pilots
-				last_pilot = null;
-				pilot_data = flight_ptr.pilot_list;
-				while (pilot_data)
-					{
-					kill = 0;
-					if (flight.pilots[pilot_data.aircraft_slot] == NO_PILOT && flight.player_slots[pilot_data.aircraft_slot] == NO_PILOT)
-						kill++;		// Neither slot
-					else if (flight.pilots[pilot_data.aircraft_slot] != NO_PILOT && flight.player_slots[pilot_data.aircraft_slot] == NO_PILOT && pilot_data.pilot_slot != pilot_data.aircraft_slot)
-						kill++;		// Player in AI slot
-					else if (flight.player_slots[pilot_data.aircraft_slot] != NO_PILOT && pilot_data.pilot_slot == pilot_data.aircraft_slot)
-						kill++;		// AI in player slot
-					if (kill)
-						{
-						if (last_pilot)
-							last_pilot.next_pilot = pilot_data.next_pilot;
-						else
-							flight_ptr.pilot_list = pilot_data.next_pilot;
-						tmp_pilot = pilot_data;
-						if (player_pilot == tmp_pilot)
-							{
-#if FUNKY_KEVIN_DEBUG_STUFF
-							ShiAssert(!inMission);
+					pilot_data.weapon_data [wi].starting_load += load;
+			}
+			pilot_data.weapon_types = nw;
+
+			return pilot_data;
+				#endif
+			throw 
+				new NotImplementedException();
+		}
+
+		public PilotDataClass FindPilotData (FlightDataClass flight_ptr, int pilot_num)
+		{
+#if TODO
+			PilotDataClass	* pilot_data;
+
+			CampEnterCriticalSection ();
+
+			pilot_data = flight_ptr.pilot_list;
+			while ((pilot_data) && (pilot_data.pilot_slot != pilot_num))
+				pilot_data = pilot_data.next_pilot;
+
+			CampLeaveCriticalSection ();
+			return pilot_data;
 #endif
-							player_pilot = null;
-							}
-						pilot_data = pilot_data.next_pilot;
-						delete(tmp_pilot);
-						}
-					else
-						{
-						last_pilot = pilot_data;
-						pilot_data = pilot_data.next_pilot;
-						}
-					}
-				last_ptr = flight_ptr;
+			throw 
+				new NotImplementedException();
+		}
+
+		public PilotDataClass FindPilotData (int flight_id, int pilot_num)
+		{
+#if TODO
+			FlightDataClass			* flight_ptr;
+			PilotDataClass			* retval = null;
+
+			CampEnterCriticalSection ();
+
+			flight_ptr = flight_data;
+			while (flight_ptr && !retval) {
+				if (flight_ptr.camp_id == flight_id)
+					retval = FindPilotData (flight_ptr, pilot_num);
 				flight_ptr = flight_ptr.next_flight;
-				}
 			}
 
-		// Now add any additional flights which matter
-		uelement = (Unit) flit.GetFirst();
-		while (uelement)
-			{
-			if (uelement.IsFlight())
-				{
-				flight = (FlightClass*)uelement;
-				flight_ptr = FindFlightData(flight);
-				if (flight_ptr)
-					{
-					// Already exists - just check for new players
-					for (i=0; i<PILOTS_PER_FLIGHT; i++)
-						{
-						if (flight.plane_stats[i] == AIRCRAFT_AVAILABLE && !FindPilotDataFromAC(flight_ptr,i))
-							{
-							// Add this pilot
-							session = FindPlayer((Flight)uelement,i);
-							if (session)
-								AddNewPlayerPilot(flight_ptr, i, (Flight)uelement, session);
-							else
-								{
-								PilotDataClass	pilot_data2 = AddNewPilot(flight_ptr, i, i, flight);
-								// AI Pilots named by callsign
-								_stprintf(pilot_data2.pilot_name,"%s%d",flight_ptr.name,i+1);
-								_stprintf(pilot_data2.pilot_callsign,"%s%d",flight_ptr.name,i+1);
+			CampLeaveCriticalSection ();
+			return retval;
+				#endif
+			throw 
+				new NotImplementedException();
+		}
+
+		public PilotDataClass FindPilotDataFromAC (FlightDataClass flight_ptr, int aircraft_slot)
+		{
+#if TODO
+			// Find the current pilot for this aircraft/flight combo.
+			PilotDataClass * pilot_data = null;
+			PilotDataClass * ret_data = null;
+
+			if (!flight_ptr) // JB 010628 CTD
+				return null;
+
+			CampEnterCriticalSection ();
+
+			// Since several players can have the same ac number, we take the last we find.
+			pilot_data = flight_ptr.pilot_list;
+			while (pilot_data) {
+				if (pilot_data.aircraft_slot == aircraft_slot)
+					ret_data = pilot_data;
+				pilot_data = pilot_data.next_pilot;
+			}
+
+			CampLeaveCriticalSection ();
+			return ret_data;
+	#endif
+			throw 
+				new NotImplementedException();
+		}
+	
+		public FlightDataClass FindFlightData (Flight flight)
+		{
+#if TODO
+			FlightDataClass	* flight_ptr;
+
+			CampEnterCriticalSection ();
+
+			flight_ptr = CampaignClass.TheCampaign.MissionEvaluator.flight_data;
+			while (flight_ptr) {
+				if (flight_ptr.flight_id == flight.Id ()) {
+					CampLeaveCriticalSection ();
+					return flight_ptr;
+				}
+				flight_ptr = flight_ptr.next_flight;
+			}
+
+			CampLeaveCriticalSection ();
+			return null;
+#endif
+			throw 
+				new NotImplementedException();
+		}
+	
+		public void SetupPilots (FlightDataClass flight_ptr, Flight flight)
+		{
+#if TODO		
+			int i, p;
+			FalconSessionEntity	* session;
+
+			CampEnterCriticalSection ();
+
+			if (FalconLocalGame.GetGameType () == game_Dogfight) {
+				// Add all pilots
+				for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
+					if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE) {
+						session = gCommsMgr.FindCampaignPlayer (flight.Id (), i);
+						if (session)
+							AddNewPlayerPilot (flight_ptr, i, flight, session);
+						else {
+							PilotDataClass	* pilot_data = AddNewPilot (flight_ptr, i, i, flight);
+							// AI Pilots named by callsign
+							_stprintf (pilot_data.pilot_name, "%s%d", flight_ptr.name, i + 1);
+							_stprintf (pilot_data.pilot_callsign, "%s%d", flight_ptr.name, i + 1);
+						}
+					}
+				}
+			} else {
+				// Add all default pilots
+				for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
+					if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE) {
+						PilotDataClass	* pilot_data = AddNewPilot (flight_ptr, i, i, flight);
+						p = flight.GetPilotID (i);
+						GetPilotName (p, pilot_data.pilot_name, 29);
+						_stprintf (pilot_data.pilot_callsign, "%s%d", flight_ptr.name, i + 1);
+					}
+				}
+				// Now add any current player pilots
+				for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
+					if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE) {
+						session = gCommsMgr.FindCampaignPlayer (flight.Id (), i);
+						if (session)
+							AddNewPlayerPilot (flight_ptr, i, flight, session);
+					}
+				}
+			}
+			CampLeaveCriticalSection ();
+		#endif
+			throw 
+				new NotImplementedException();
+		}
+
+		public void SetPlayerPilot (Flight flight, byte aircraft_slot)
+		{
+#if TODO	
+			Flight element;
+			FlightDataClass		* flight_ptr;
+
+			// KCK: Currently, this function isn't being called.
+			CampEnterCriticalSection ();
+			CleanupPilotData ();
+
+			flight_ptr = flight_data;
+			while (flight_ptr) {
+				element = (Flight)FindStatic.FindUnit (flight_ptr.flight_id);
+				if (element && flight_ptr.camp_id) {
+					if (element == flight)
+						player_element = flight_ptr;
+					flight_ptr.num_pilots = 0;
+					SetupPilots (flight_ptr, element);
+				} else
+					flight_ptr.camp_id = 0;		
+				flight_ptr = flight_ptr.next_flight;
+			}
+			CampLeaveCriticalSection ();
+		#endif
+			throw 
+				new NotImplementedException();
+		}
+
+		static int			evalCount = 0;
+
+		public void RebuildEvaluationData ()
+		{
+#if TODO
+			// KCK: This function will traverse all our data structures, throwing out any which 
+			// we don't need anymore and adding any new ones which have popped up
+
+			// NOTE: Dogfight only
+			if (!FalconLocalGame || FalconLocalGame.GetGameType () != game_Dogfight)
+				return;
+			else {
+				VuListIterator flit = new VuListIterator (AllAirList);
+				Unit uelement;
+				FlightDataClass flight_ptr, last_ptr = null, tmp_ptr;
+				PilotDataClass pilot_data, last_pilot, tmp_pilot;
+				Flight flight;
+				int i, kill;
+		
+				FalconSessionEntity session;
+
+				//TODO Debug.Assert(flight_data == null || false == F4IsBadReadPtr(flight_data, sizeof *flight_data));
+				if (flight_data && F4IsBadReadPtr (flight_data, sizeof(FlightDataClass))) // JB 010305 CTD
+					return;
+
+				CampEnterCriticalSection ();
+
+				// Traverse all our lists and remove anything we don't have references to anymore
+				flight_ptr = flight_data;
+				while (flight_ptr) {
+					flight = (Flight)FindStatic.FindUnit (flight_ptr.flight_id);
+					if (!flight) {
+						if (last_ptr)
+							last_ptr.next_flight = flight_ptr.next_flight;
+						else
+							flight_data = flight_ptr.next_flight;
+						tmp_ptr = flight_ptr;
+						if (player_element == tmp_ptr)
+							player_element = null;
+						if (package_element == tmp_ptr)
+							package_element = null;
+						flight_ptr = flight_ptr.next_flight;
+						delete (tmp_ptr);
+					} else {
+						// Check for team change
+						flight_ptr.flight_team = flight.GetTeam ();
+						// Check pilots
+						last_pilot = null;
+						pilot_data = flight_ptr.pilot_list;
+						while (pilot_data) {
+							kill = 0;
+							if (flight.pilots [pilot_data.aircraft_slot] == NO_PILOT && flight.player_slots [pilot_data.aircraft_slot] == NO_PILOT)
+								kill++;		// Neither slot
+							else if (flight.pilots [pilot_data.aircraft_slot] != NO_PILOT && flight.player_slots [pilot_data.aircraft_slot] == NO_PILOT && pilot_data.pilot_slot != pilot_data.aircraft_slot)
+								kill++;		// Player in AI slot
+							else if (flight.player_slots [pilot_data.aircraft_slot] != NO_PILOT && pilot_data.pilot_slot == pilot_data.aircraft_slot)
+								kill++;		// AI in player slot
+							if (kill) {
+								if (last_pilot)
+									last_pilot.next_pilot = pilot_data.next_pilot;
+								else
+									flight_ptr.pilot_list = pilot_data.next_pilot;
+								tmp_pilot = pilot_data;
+								if (player_pilot == tmp_pilot) {
+#if FUNKY_KEVIN_DEBUG_STUFF
+							Debug.Assert(!inMission);
+#endif
+									player_pilot = null;
+								}
+								pilot_data = pilot_data.next_pilot;
+								delete (tmp_pilot);
+							} else {
+								last_pilot = pilot_data;
+								pilot_data = pilot_data.next_pilot;
+							}
+						}
+						last_ptr = flight_ptr;
+						flight_ptr = flight_ptr.next_flight;
+					}
+				}
+
+				// Now add any additional flights which matter
+				uelement = (Unit)flit.GetFirst ();
+				while (uelement) {
+					if (uelement.IsFlight ()) {
+						flight = (FlightClass*)uelement;
+						flight_ptr = FindFlightData (flight);
+						if (flight_ptr) {
+							// Already exists - just check for new players
+							for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
+								if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE && !FindPilotDataFromAC (flight_ptr, i)) {
+									// Add this pilot
+									session = FindPlayer ((Flight)uelement, i);
+									if (session)
+										AddNewPlayerPilot (flight_ptr, i, (Flight)uelement, session);
+									else {
+										PilotDataClass pilot_data2 = AddNewPilot (flight_ptr, i, i, flight);
+										// AI Pilots named by callsign
+										_stprintf (pilot_data2.pilot_name, "%s%d", flight_ptr.name, i + 1);
+										_stprintf (pilot_data2.pilot_callsign, "%s%d", flight_ptr.name, i + 1);
+									}
 								}
 							}
+						} else {
+							// Add the whole thing
+							PreEvalFlight (flight, null);
 						}
+						uelement.SetInPackage (1);
 					}
-				else
-					{
-					// Add the whole thing
-					PreEvalFlight(flight, null);
-					}
-				uelement.SetInPackage(1);
+					uelement = (Unit)flit.GetNext ();
 				}
-			uelement = (Unit) flit.GetNext();
-			}
 
 //		evalCount++;
 //		if (evalCount > 500 && !(SimDogfight.flags & DF_GAME_OVER))
@@ -3145,9 +3260,11 @@ else
 //			SendAllEvalData();
 //			}
 
-		CampLeaveCriticalSection();
-		}
-
+				CampLeaveCriticalSection ();
+			}
+			#endif
+			throw 
+				new NotImplementedException();
 		}
 
 	}
@@ -3162,16 +3279,22 @@ else
 		public PilotDataClass pilot_data;
 		public PilotSortClass next;
 	
-		public PilotSortClass(PilotDataClass pilot_ptr)	{ pilot_data = pilot_ptr; next = null; }
+		public PilotSortClass (PilotDataClass pilot_ptr)
+		{
+			pilot_data = pilot_ptr;
+			next = null;
+		}
 	}
 	
 	// =============================
 	// Global setter/query functions
 	// =============================
-	public static class MissEval 
+	public static class MissEval
 	{
 		public static int OverFriendlyTerritory (Flight flight)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 	}
 }
 

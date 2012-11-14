@@ -2,6 +2,7 @@
 using FalconNet.Common;
 using FalconNet.VU;
 using Objective=FalconNet.Campaign.ObjectiveClass;
+using Unit=FalconNet.Campaign.UnitClass;
 
 namespace FalconNet.Campaign
 {
@@ -13,10 +14,10 @@ namespace FalconNet.Campaign
     public class PrimaryObjectiveData
     {
         public VU_ID objective;						// Id of the objective
-        public short[] ground_priority = new short[NUM_TEAMS];		// It's calculated priority (per team)
-        public short[] ground_assigned = new short[NUM_TEAMS];		// Combat factors assigned (per team)
-        public short[] air_priority = new short[NUM_TEAMS];		// Air tasking manager's assessment of priority
-        public short[] player_priority = new short[NUM_TEAMS];		// Player adjusted priorities (or ATM's if no modifications)
+        public short[] ground_priority = new short[(int)TeamDataEnum.NUM_TEAMS];		// It's calculated priority (per team)
+        public short[] ground_assigned = new short[(int)TeamDataEnum.NUM_TEAMS];		// Combat factors assigned (per team)
+        public short[] air_priority = new short[(int)TeamDataEnum.NUM_TEAMS];		// Air tasking manager's assessment of priority
+        public short[] player_priority = new short[(int)TeamDataEnum.NUM_TEAMS];		// Player adjusted priorities (or ATM's if no modifications)
         public byte flags;
     }
 #if TODO

@@ -1,5 +1,6 @@
 using System;
 using FalconNet.Common;
+using Unit=FalconNet.Campaign.UnitClass;
 
 namespace FalconNet.Campaign
 {

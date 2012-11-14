@@ -39,7 +39,6 @@
     <Compile Include="Palette.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="BSPnodes.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Display.cs" />
     <Compile Include="GrTypes.cs" />

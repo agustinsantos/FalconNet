@@ -3,13 +3,15 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
+using Team=System.Int32;
 
 namespace FalconNet.Campaign
 {
 
     public class GroundDoctrineType
     {
-        byte[] stance = new byte[NUM_COUNS];					// Our air stance towards them: allied/friendly/neutral/alert/hostile/war
+        byte[] stance = new byte[(int)CountryListEnum.NUM_COUNS];					// Our air stance towards them: allied/friendly/neutral/alert/hostile/war
         byte loss_ratio;							// Acceptable loss ratio
         byte loss_score;							// Score loss for each friendly air loss
     };
@@ -18,32 +20,38 @@ namespace FalconNet.Campaign
     {
         public short flags;
         // These don't need to be transmitted
-        public GndObjDataType objList = new GndObjDataType[GORD_LAST];				// Sorted lists of objectives we want to assign to
-        public UnitScoreNode canidateList = new UnitScoreNode[GORD_LAST];		// List of all possible canidate units for each order
+        public GndObjDataType[] objList = new GndObjDataType[(int)GORD.GORD_LAST];				// Sorted lists of objectives we want to assign to
+        public UnitScoreNode[] canidateList = new UnitScoreNode[(int)GORD.GORD_LAST];		// List of all possible canidate units for each order
         public short topPriority;					// Highest PO priority (for scaling)
         public short priorityObj;					// CampID of highest priority objective
 
         // constructors
-        public GroundTaskingManagerClass(ushort type, Team t)
+        public GroundTaskingManagerClass(ushort type, Team t) :	 base(type, t)
+		{
+			flags = 0;
+			topPriority = 0;
+			//TODO memset(canidateList,0,sizeof(void*)*GORD_LAST);
+			//TODO memset(objList,0,sizeof(void*)*GORD_LAST);
+		}
+		
+        public GroundTaskingManagerClass(VU_BYTE[] stream): base(stream)
 		{throw new NotImplementedException();}
-        public GroundTaskingManagerClass(VU_BYTE[] stream)
-		{throw new NotImplementedException();}
-        public GroundTaskingManagerClass(FileStream file)
+        public GroundTaskingManagerClass(FileStream file): base(file)
 		{throw new NotImplementedException();}
         // public virtual ~GroundTaskingManagerClass();
-        public virtual int SaveSize()
+        public override int SaveSize()
 		{throw new NotImplementedException();}
-        public virtual int Save(VU_BYTE[] stream)
+        public override int Save(VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-        public virtual int Save(FileStream file)
+        public override int Save(FileStream file)
 		{throw new NotImplementedException();}
-        public virtual int Handle(VuFullUpdateEvent evnt)
+        public override int Handle(VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
         // Required pure virtuals
-        public virtual void DoCalculations()
+        public override void DoCalculations()
 		{throw new NotImplementedException();}
-        public virtual int Task()
+        public override int Task()
 		{throw new NotImplementedException();}
 
         // support functions

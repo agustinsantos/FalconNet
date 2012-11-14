@@ -1,9 +1,11 @@
 using System;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Flight=FalconNet.Campaign.FlightClass;
+using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 
 namespace FalconNet.Campaign
 {
@@ -40,7 +42,7 @@ namespace FalconNet.Campaign
 	{
 		#if USE_SH_POOLS
 		      public // Overload new/delete to use a SmartHeap fixed size pool
-		      public void *operator new(size_t size)	{ ShiAssert( size == sizeof(FlightClass) ); return MemAllocFS(pool);	};
+		      public void *operator new(size_t size)	{ Debug.Assert( size == sizeof(FlightClass) ); return MemAllocFS(pool);	};
 		      public void operator delete(void *mem)	{ if (mem) MemFreeFS(mem); };
 		      public static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(FlightClass), 200, 0 ); };
 		      public static void ReleaseStorage()		{ MemPoolFree( pool ); };
@@ -74,10 +76,10 @@ namespace FalconNet.Campaign
 		private VU_ID					requester;					// ID of entity requesting our mission
 
    
-		public byte[]				slots = new byte[PILOTS_PER_FLIGHT];	// Which vehicle slots this flight is using
-		public byte[]					pilots = new byte[PILOTS_PER_FLIGHT];	// Which squadron pilots we're using
-		public byte[]					plane_stats = new byte[PILOTS_PER_FLIGHT];	// The status of this aircraft
-		public byte[]					player_slots = new byte[PILOTS_PER_FLIGHT];// Which player pilot is in this slot
+		public byte[]				slots = new byte[PilotStatic.PILOTS_PER_FLIGHT];	// Which vehicle slots this flight is using
+		public byte[]					pilots = new byte[PilotStatic.PILOTS_PER_FLIGHT];	// Which squadron pilots we're using
+		public byte[]					plane_stats = new byte[PilotStatic.PILOTS_PER_FLIGHT];	// The status of this aircraft
+		public byte[]					player_slots = new byte[PilotStatic.PILOTS_PER_FLIGHT];// Which player pilot is in this slot
 		public byte					last_player_slot;			// Slot # of last pilot in this slot
 		public byte					callsign_id;				// Index into callsign table
 		public byte					callsign_num;
@@ -162,7 +164,7 @@ namespace FalconNet.Campaign
 		}
 
 //		virtual int CombatClass ()				{ return SimACDefTable[((Falcon4EntityClassType*)EntityType()).vehicleDataIndex].combatClass; } // 2002-02-25 ADDED BY S.G. FlightClass needs to have a combat class like aircrafts.
-		public virtual int CombatClass ()
+		public override int CombatClass ()
 		{throw new NotImplementedException();} // 2002-03-04 MODIFIED BY S.G. Moved inside Flight.cpp
 		public void SetLastDirection (byte b)
 		{throw new NotImplementedException();}
@@ -188,7 +190,7 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Dirty Data
-		public void ClearDirty ()
+		public override void ClearDirty ()
 		{throw new NotImplementedException();}
 
 		public void MakeFlightDirty (Dirty_Flight bits, Dirtyness score)
@@ -201,123 +203,123 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Other Functions
-		public FlightClass (int type, Unit parent, Unit squadron)
+		public FlightClass (int type, Unit parent, Unit squadron):base(type)
 		{throw new NotImplementedException();}
 		
-		public FlightClass (VU_BYTE[] stream)
+		public FlightClass (VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~FlightClass();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE[] stream)
+		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
 
 		public virtual VU_ERRCODE RemovalCallback ()
 		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
+		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 		
 		// virtuals handled by flight.h
-		public virtual int GetDeaggregationPoint (int slot, CampEntity ent)
+		public override int GetDeaggregationPoint (int slot, CampEntity ent)
 		{throw new NotImplementedException();}
 
-		public virtual int	ShouldDeaggregate ()
+		public override bool	ShouldDeaggregate ()
 		{throw new NotImplementedException();}
 
-		public virtual int Reaction (CampEntity what, int zone, float range)
+		public override int Reaction (CampEntity what, int zone, float range)
 		{throw new NotImplementedException();}
 
-		public virtual int MoveUnit (CampaignTime time)
+		public override int MoveUnit (CampaignTime time)
 		{throw new NotImplementedException();}
 
-		public virtual int DoCombat ()
+		public override int DoCombat ()
 		{throw new NotImplementedException();}
 
-		public virtual int ChooseTactic ()
+		public override int ChooseTactic ()
 		{throw new NotImplementedException();}
 
-		public virtual int CheckTactic (int tid)
+		public override int CheckTactic (int tid)
 		{throw new NotImplementedException();}
 
-		public virtual int DetectOnMove ()
+		public override int DetectOnMove ()
 		{throw new NotImplementedException();}
 
-		public virtual int ChooseTarget ()
+		public override int ChooseTarget ()
 		{throw new NotImplementedException();}
 
-		public virtual int Real ()
+		public override int Real ()
 		{
 			return 1;
 		}
 
-		public virtual int CollectWeapons (byte[] dam, MoveType m, short[] w, byte[] wc, int dist)
+		public override int CollectWeapons (byte[] dam, MoveType m, short[] w, byte[] wc, int dist)
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime UpdateTime ()
+		public override CampaignTime UpdateTime ()
 		{
-			return FLIGHT_MOVE_CHECK_INTERVAL * CampaignSeconds;
+			return new CampaignTime((ulong)AIInput.FLIGHT_MOVE_CHECK_INTERVAL * CampaignTime.CampaignSeconds);
 		}
 
-		public virtual CampaignTime CombatTime ()
+		public override CampaignTime CombatTime ()
 		{
-			return FLIGHT_COMBAT_CHECK_INTERVAL * CampaignSeconds;
+			return new CampaignTime((ulong)AIInput.FLIGHT_COMBAT_CHECK_INTERVAL * CampaignTime.CampaignSeconds);
 		}
 
-		public virtual int IsFlight ()
+		public override bool IsFlight ()
 		{
-			return TRUE;
+			return true;
 		}
 
-		public virtual int GetDetectionRange (int mt)
+		public override int GetDetectionRange (int mt)
 		{throw new NotImplementedException();}
 
-		public virtual int GetRadarMode ()
+		public override FEC_RADAR GetRadarMode ()
 		{
-			return FEC_RADAR_SEARCH_100;
+			return FEC_RADAR.FEC_RADAR_SEARCH_100;
 		}
 
-		public virtual int IsSPJamming ()
+		public override bool IsSPJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int IsAreaJamming ()
+		public override bool IsAreaJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int HasSPJamming ()
+		public override bool HasSPJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int HasAreaJamming ()
+		public override bool HasAreaJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetVehicleDeagData (SimInitDataClass simdata, int remote)
+		public override int GetVehicleDeagData (SimInitDataClass simdata, int remote)
 		{throw new NotImplementedException();}
 			
-		public virtual void SetUnitLastMove (CampaignTime t)
+		public override void SetUnitLastMove (CampaignTime t)
 		{
 			last_move = t;
 		}
 
-		public virtual void SetCombatTime (CampaignTime t)
+		public override void SetCombatTime (CampaignTime t)
 		{
 			last_combat = t;
 		}
 
-		public virtual void SetBurntFuel (long fuel)
+		public override void SetBurntFuel (long fuel)
 		{
 			fuel_burnt = fuel;
 		}
 
-		public virtual void SetUnitMission (byte mis)
+		public override void SetUnitMission (byte mis)
 		{throw new NotImplementedException();}
 
-		public virtual void SetUnitPriority (int p)
+		public override void SetUnitPriority (int p)
 		{
 			priority = (byte)p;
 		}
 
-		public virtual void SetUnitMissionID (int id)
+		public override void SetUnitMissionID (int id)
 		{
 			mission_id = (byte)id;
 		}
@@ -327,26 +329,26 @@ namespace FalconNet.Campaign
 			mission_target = id;
 		}
 
-		public virtual void SetUnitTOT (CampaignTime tot)
+		public override void SetUnitTOT (CampaignTime tot)
 		{
 			time_on_target = tot;
 		}
 
-		public virtual void SetUnitSquadron (VU_ID ID)
+		public override void SetUnitSquadron (VU_ID ID)
 		{
 			squadron = ID;
 		}
 //		virtual void SetUnitTakeoffSlot (int ts)				{ takeoff_slot = ts; }
-		public virtual void SimSetLocation (float x, float y, float z)
+		public override void SimSetLocation (float x, float y, float z)
 		{throw new NotImplementedException();}
 
-		public virtual void GetRealPosition (ref float x, ref float y, ref float z)
+		public override void GetRealPosition (ref float x, ref float y, ref float z)
 		{throw new NotImplementedException();}
 
-		public virtual void SimSetOrientation (float yaw, float pitch, float roll)
+		public override void SimSetOrientation (float yaw, float pitch, float roll)
 		{throw new NotImplementedException();}
 
-		public virtual void SetLoadout (LoadoutStruct loadout, int count)
+		public override void SetLoadout (LoadoutStruct loadout, int count)
 		{throw new NotImplementedException();}
 
 		public virtual void RemoveLoadout ()
@@ -355,121 +357,125 @@ namespace FalconNet.Campaign
 		public virtual LoadoutStruct  GetLoadout (int ac)
 		{throw new NotImplementedException();}
 
-		public virtual int GetNumberOfLoadouts ()
+		public override int GetNumberOfLoadouts ()
 		{
 			return loadouts;
 		}
 
-		public virtual CampaignTime GetMoveTime ()
+		public override CampaignTime GetMoveTime ()
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime GetCombatTime ()
+		public override CampaignTime GetCombatTime ()
 		{
-			return (TheCampaign.CurrentTime > last_combat) ? TheCampaign.CurrentTime - last_combat : 0;
+			return new CampaignTime((CampaignClass.TheCampaign.CurrentTime.time > last_combat.time) ? 
+			                        CampaignClass.TheCampaign.CurrentTime.time - last_combat .time: 0);
 		}
 
-		public virtual int GetBurntFuel ()
+		public override int GetBurntFuel ()
 		{
-			return fuel_burnt;
+			return (int)fuel_burnt; // TODO I have inserted the casting to int
 		}
 
-		public virtual MissionTypeEnum GetUnitMission ()
+		public override MissionTypeEnum GetUnitMission ()
 		{
 			return (MissionTypeEnum)mission;
 		}
 
-		public virtual int GetUnitCurrentRole ()
+		public override int GetUnitCurrentRole ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitPriority ()
+		public override int GetUnitPriority ()
 		{
 			return (int)priority;
 		}
 
-		public virtual int GetUnitWeaponId (int hp, int slot)
+		public override int GetUnitWeaponId (int hp, int slot)
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitWeaponCount (int hp, int slot)
+		public override int GetUnitWeaponCount (int hp, int slot)
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitMissionID ()
+		public override int GetUnitMissionID ()
 		{
 			return (int)mission_id;
 		}
 
-		public virtual CampEntity GetUnitMissionTarget ()
+		public override CampEntity GetUnitMissionTarget ()
 		{
-			return (CampEntity)vuDatabase.Find (mission_target);
+			return (CampEntity)VuDatabase.vuDatabase.Find (mission_target);
 		}
 
-		public virtual VU_ID GetUnitMissionTargetID ()
+		public override VU_ID GetUnitMissionTargetID ()
 		{
 			return mission_target;
 		}
 
-		public virtual CampaignTime GetUnitTOT ()
+		public override CampaignTime GetUnitTOT ()
 		{
 			return time_on_target;
 		}
 
-		public virtual Unit GetUnitSquadron ()
+		public override Unit GetUnitSquadron ()
 		{
-			return FindUnit (squadron);
+#if TODO
+			return FindStatic.FindUnit (squadron);
+#endif
+			throw new NotImplementedException();
 		}
 
-		public virtual VU_ID GetUnitSquadronID ()
+		public override VU_ID GetUnitSquadronID ()
 		{
 			return squadron;
 		}
 
-		public virtual CampEntity GetUnitAirbase ()
+		public override CampEntity GetUnitAirbase ()
 		{throw new NotImplementedException();}
 
-		public virtual VU_ID GetUnitAirbaseID ()
+		public override VU_ID GetUnitAirbaseID ()
 		{throw new NotImplementedException();}
 //		virtual int GetUnitTakeoffSlot ()					{ return (int)takeoff_slot; }
 		public virtual int LoadWeapons (object  squadron, ref byte dam, MoveType mt, int num, int type_flags, int guide_flags)
 		{throw new NotImplementedException();}
 
-		public virtual int DumpWeapons ()
+		public override int DumpWeapons ()
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime ETA ()
+		public override CampaignTime ETA ()
 		{throw new NotImplementedException();}
 
-		public virtual F4PFList GetKnownEmitters ()
+		public override F4PFList GetKnownEmitters ()
 		{throw new NotImplementedException();}
 
-		public virtual int BuildMission (MissionRequestClass  mis)
+		public override int BuildMission (MissionRequestClass  mis)
 		{throw new NotImplementedException();}
 
-		public virtual void GetUnitAssemblyPoint (int type, ref GridIndex x, ref GridIndex y)
+		public override void GetUnitAssemblyPoint (int type, ref GridIndex x, ref GridIndex y)
 		{throw new NotImplementedException();}
 
-		public virtual Unit GetUnitParent ()
+		public override Unit GetUnitParent ()
 		{
-			return (Unit)vuDatabase.Find (package);
+			return (Unit)VuDatabase.vuDatabase.Find (package);
 		}
 
-		public virtual VU_ID GetUnitParentID ()
+		public override VU_ID GetUnitParentID ()
 		{
 			return package;
 		}
 
-		public virtual void SetUnitParent (Unit p)
+		public override void SetUnitParent (Unit p)
 		{
 			SetPackage (p.Id ());
 		}
 
-		public virtual void IncrementTime (CampaignTime dt)
+		public override void IncrementTime (CampaignTime dt)
 		{
 			last_move += dt;
 		}
 
-		public virtual int GetBestVehicleWeapon (int i, byte[] b, MoveType m, int i2, int[] i3)
+		public override int GetBestVehicleWeapon (int i, byte[] b, MoveType m, int i2, int[] i3)
 		{throw new NotImplementedException();}
 
-		public virtual void UseFuel (long l)
+		public override void UseFuel (long l)
 		{throw new NotImplementedException();}
 
 		// Core functions
@@ -481,7 +487,7 @@ namespace FalconNet.Campaign
 
 		public PackageClass GetUnitPackage ()
 		{
-			return (PackageClass)vuDatabase.Find (package);
+			return (PackageClass)VuDatabase.vuDatabase.Find (package);
 		}
 
 		public int PickRandomPilot (int seed)

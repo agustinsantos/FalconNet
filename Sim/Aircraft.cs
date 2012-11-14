@@ -32,7 +32,7 @@ namespace FalconNet.Sim
 		#if USE_SH_POOLS
 		
 			public // Overload new/delete to use a SmartHeap fixed size pool
-			public public void *operator new(size_t size) { ShiAssert( size == sizeof(AircraftClass) ); return MemAllocFS(pool);	};
+			public public void *operator new(size_t size) { Debug.Assert( size == sizeof(AircraftClass) ); return MemAllocFS(pool);	};
 			public void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
 			public static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(AircraftClass), 200, 0 ); };
 			public static void ReleaseStorage()	{ MemPoolFree( pool ); };

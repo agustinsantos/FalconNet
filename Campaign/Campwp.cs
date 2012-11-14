@@ -3,7 +3,7 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
-
+using VU_BYTE=System.Byte;
 
 namespace FalconNet.Campaign
 {
@@ -51,7 +51,7 @@ namespace FalconNet.Campaign
 
         // M.N. fix for Airlift missions
         //public const int  WP_LAND2			27				// this is our 2nd landing waypoint for Airlift missions
-        // supply will be given at WP_LAND MNLOOK -> Change in string.txt 377
+        // supply will be given at WP_LAND MNLOOK . Change in string.txt 377
 
         public const int WP_B5 = 27;
         public const int WP_B6 = 28;
@@ -147,7 +147,7 @@ namespace FalconNet.Campaign
 #if USE_SH_POOLS
    
       public // Overload new/delete to use a SmartHeap fixed size pool
-      public void *operator new(size_t size) { ShiAssert( size == sizeof(WayPointClass) ); return MemAllocFS(pool);	};
+      public void *operator new(size_t size) { Debug.Assert( size == sizeof(WayPointClass) ); return MemAllocFS(pool);	};
       public void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
       public static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(WayPointClass), 200, 0 ); };
       public static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -197,7 +197,7 @@ namespace FalconNet.Campaign
         public void UnSetWPFlag(ulong f) { Flags &= ~((ulong)(f)); }
         public void SetWPTactic(int f) { Tactic = (short)f; }
         public VU_ID GetWPTargetID() { return TargetID; }
-        public CampBaseClass GetWPTarget() { return (CampBaseClass)vuDatabase.Find(TargetID); }
+        public CampBaseClass GetWPTarget() { return (CampBaseClass)VuDatabase.vuDatabase.Find(TargetID); }
         public byte GetWPTargetBuilding() { return TargetBuilding; }
         public int GetWPAction() { return (int)Action; }
         public int GetWPRouteAction() { return (int)RouteAction; }
@@ -229,7 +229,7 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
         // These functions are intended for use by the campaign (They use Campaign Coordinates and times)
-        public void SetWPAltitude(int alt) { GridZ = (short)(alt / GRIDZ_SCALE_FACTOR); }
+        public void SetWPAltitude(int alt) { GridZ = (short)(alt / CampwpStatic.GRIDZ_SCALE_FACTOR); }
         public void SetWPAltitudeLevel(int alt) { GridZ = (short)alt; }
         public void SetWPStationTime(CampaignTime t) { Depart = Arrive + t; }
         public void SetWPDepartTime(CampaignTime t) { Depart = t; }
@@ -237,7 +237,7 @@ namespace FalconNet.Campaign
         public void SetWPSpeed(float s) { Speed = s; }
         public float GetWPSpeed() { return Speed; }
         public void SetWPLocation(GridIndex x, GridIndex y) { GridX = x; GridY = y; }
-        public int GetWPAltitude() { return (int)(GridZ * GRIDZ_SCALE_FACTOR); }
+        public int GetWPAltitude() { return (int)(GridZ * CampwpStatic.GRIDZ_SCALE_FACTOR); }
         public int GetWPAltitudeLevel() { return GridZ; }
         public CampaignTime GetWPStationTime() { return Depart - Arrive; }
         public CampaignTime GetWPArrivalTime() { return Arrive; }
@@ -246,8 +246,8 @@ namespace FalconNet.Campaign
         public void GetWPLocation(ref GridIndex x, ref GridIndex y) { x = GridX; y = GridY; }
 
         // These functions are intended for use by the Sim (They use sim coordinates and times)
-        public void SetLocation(float x, float y, float z) { GridX = CampwpStatic.SimToGrid(y); GridY = CampwpStatic.SimToGrid(x); GridZ = (short)((-1.0F * z) / GRIDZ_SCALE_FACTOR); }
-        public void GetLocation(ref float x, ref float y, ref float z) { x = CampwpStatic.GridToSim(GridY); y = CampwpStatic.GridToSim(GridX); z = -1.0F * GridZ * GRIDZ_SCALE_FACTOR; }
+        public void SetLocation(float x, float y, float z) { GridX = CampwpStatic.SimToGrid(y); GridY = CampwpStatic.SimToGrid(x); GridZ = (short)((-1.0F * z) / CampwpStatic.GRIDZ_SCALE_FACTOR); }
+        public void GetLocation(ref float x, ref float y, ref float z) { x = CampwpStatic.GridToSim(GridY); y = CampwpStatic.GridToSim(GridX); z = -1.0F * GridZ * CampwpStatic.GRIDZ_SCALE_FACTOR; }
     }
 
 

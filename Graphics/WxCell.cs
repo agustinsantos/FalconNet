@@ -8,9 +8,9 @@ namespace FalconNet.Graphics
 #if TODO
 		public WeatherCell ()
 		{
-			drawable = NULL;
+			drawable = null;
 		}
-		//public ~WeatherCell()	{ Debug.Assert( drawable == NULL ); };
+		//public ~WeatherCell()	{ Debug.Assert( drawable == null ); };
 
 		public void	Setup (int row, int col, ObjectDisplayList* objList)
 		{
@@ -48,7 +48,7 @@ namespace FalconNet.Graphics
 			if (!code) {
 				// Clear sky
 				thickness = 0.0f;
-				drawable = NULL;
+				drawable = null;
 			} else {
 				// Get our thickness
 				thickness = TheWeather.ThicknessAt (r, c);
@@ -89,7 +89,7 @@ namespace FalconNet.Graphics
 				// Remove the visual object for the object manager list
 				objList.RemoveObject (drawable);
 				delete drawable;
-				drawable = NULL;
+				drawable = null;
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace FalconNet.Graphics
 
 		public bool	IsEmpty ()
 		{
-			return drawable == NULL;
+			return drawable == null;
 		}
 
 		public float	GetAlpha (float x, float y)

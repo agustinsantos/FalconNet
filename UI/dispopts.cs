@@ -45,7 +45,7 @@ namespace FalconNet.UI
 				if(!fp)
 				{
 					MonoPrint("Couldn't open display options\n");
-					return FALSE;
+					return false;
 				}
 			
 				fseek(fp,0,SEEK_END);
@@ -55,7 +55,7 @@ namespace FalconNet.UI
 				if(size != sizeof(class DisplayOptionsClass))
 				{
 					MonoPrint("Display options are in old file format\n",filename);
-					return FALSE;
+					return false;
 				}
 			
 				success = fread(this, sizeof(class DisplayOptionsClass), 1, fp);
@@ -64,7 +64,7 @@ namespace FalconNet.UI
 				{
 					MonoPrint("Failed to read display options\n",filename);
 					Initialize();
-					return FALSE;
+					return false;
 				}
 			
 				const char	*buf;
@@ -100,7 +100,7 @@ namespace FalconNet.UI
 			
 				FalconDisplay.SetSimMode(DispWidth, DispHeight, DispDepth);
 			
-				return TRUE;
+				return true;
 			#endif 
 				throw new NotImplementedException();
 			}
@@ -114,17 +114,17 @@ namespace FalconNet.UI
 			
 				sprintf(path,"%s\\config\\display.dsp",FalconDataDirectory);
 					
-				if((fp = fopen(path,"wb")) == NULL)
+				if((fp = fopen(path,"wb")) == null)
 				{
 					MonoPrint("Couldn't save display options");
-					return FALSE;
+					return false;
 				}
 				success = fwrite(this, sizeof(class DisplayOptionsClass), 1, fp);
 				fclose(fp);
 				if(success == 1)
-					return TRUE;
+					return true;
 			
-				return FALSE;
+				return false;
 		#endif			
 				throw new NotImplementedException();
 			}

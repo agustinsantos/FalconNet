@@ -19,7 +19,7 @@ namespace FalconNet.Graphics
 		//public virtual ~ImageBuffer();
 
 		// Functions used to set up and manage this buffer
-		public bool Setup (DisplayDevice *dev, int width, int height, MPRSurfaceType front, MPRSurfaceType back, HWND targetWin = NULL, bool clip = FALSE, bool fullScreen = FALSE, bool bWillCallSwapBuffer = FALSE);
+		public bool Setup (DisplayDevice *dev, int width, int height, MPRSurfaceType front, MPRSurfaceType back, HWND targetWin = null, bool clip = false, bool fullScreen = false, bool bWillCallSwapBuffer = false);
 
 		public void Cleanup ();
 

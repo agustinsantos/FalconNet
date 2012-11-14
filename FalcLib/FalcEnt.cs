@@ -111,7 +111,7 @@ namespace FalconNet.FalcLib
 			throw new NotImplementedException();
 		}
 
-		public int Save (byte[] stream, ref int pos)
+		public virtual int Save (byte[] stream, ref int pos)
 		{
 			int saveSize = base.Save (stream, ref pos);
 
@@ -124,7 +124,7 @@ namespace FalconNet.FalcLib
 			return (saveSize);
 		}
 
-		public int Save (FileStream filePtr)
+		public virtual int Save (FileStream filePtr)
 		{
 			int saveSize = base.Save (filePtr);
 
@@ -135,7 +135,7 @@ namespace FalconNet.FalcLib
 			return (saveSize);
 		}
 
-		public int SaveSize ()
+		public override int SaveSize ()
 		{
 			return base.SaveSize () + sizeof(EntityEnum) + sizeof(FEC_FLAGS);
 			//   return VuEntity::SaveSize();
@@ -207,19 +207,19 @@ namespace FalconNet.FalcLib
 		public virtual short GetCampID ()
 		{
 			Debug.WriteLine ("Illegal use of FalconEntity");
-			return 0;
+			throw new NotSupportedException();
 		}
 
 		public virtual byte GetTeam ()
 		{
 			Debug.WriteLine ("Illegal use of FalconEntity");
-			return 0;
+			throw new NotSupportedException();
 		}
 
-		public virtual byte GetCountry ()
+		public virtual Control GetCountry ()
 		{
 			Debug.WriteLine ("Illegal use of FalconEntity");
-			return 0;
+			throw new NotSupportedException();
 		}
 
 		public virtual byte GetDomain ()
@@ -473,7 +473,7 @@ namespace FalconNet.FalcLib
 		}
 
 		// Dirty Functions
-		public void ClearDirty ()
+		public virtual void ClearDirty ()
 		{
 			throw new NotImplementedException ();
 		}

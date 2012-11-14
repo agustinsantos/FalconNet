@@ -175,7 +175,7 @@ namespace FalconNet.Graphics
 			}
 		
 			child = subTree;
-			//TODO Debug.Assert(FALSE == F4IsBadReadPtr( child, sizeof*child) );
+			//TODO Debug.Assert(false == F4IsBadReadPtr( child, sizeof*child) );
 			do
 			{
 				child.Draw();

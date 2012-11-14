@@ -113,7 +113,7 @@ public class C_Control :  C_Base
 		{
 			if(Sound_)
 			{
-				Sound_->Cleanup();
+				Sound_.Cleanup();
 				delete Sound_;
 			}
 		}

@@ -3,6 +3,8 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
+using Team=System.Int32;
 
 namespace FalconNet.Campaign
 {
@@ -14,18 +16,18 @@ namespace FalconNet.Campaign
 
 
         // Constructors
-        public CampManagerClass(ushort type, Team t)
+        public CampManagerClass(ushort type, Team t) :base(type)
 		{throw new NotImplementedException();}
-        public CampManagerClass(VU_BYTE[] stream)
+        public CampManagerClass(VU_BYTE[] stream): base(FalconEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
-        public CampManagerClass(FileStream file)
+        public CampManagerClass(FileStream file): base(FalconEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
         //TODO public ~CampManagerClass (void);
-        public virtual int SaveSize()
+        public override int SaveSize()
 		{throw new NotImplementedException();}
         public virtual int Save(VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-        public virtual int Save(FileStream file)
+        public override int Save(FileStream file)
 		{throw new NotImplementedException();}
 
         // event handlers
@@ -53,8 +55,8 @@ namespace FalconNet.Campaign
         public virtual void DoCalculations() { }
 
         // Core functions
-        public int MyTasker(ushort p) { return IsLocal(); }
-        public int GetTaskTeam() { return owner; }
+        public bool MyTasker(ushort p) { return IsLocal(); }
+        public Team GetTaskTeam() { return owner; }
         public void SendMessage(VU_ID id, short msg, short d1, short d2, short d3)
 		{throw new NotImplementedException();}
 

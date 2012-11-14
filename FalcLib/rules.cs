@@ -77,17 +77,17 @@ namespace FalconNet.FalcLib
 			if(rules)
 				memcpy(this,rules,sizeof(RulesStruct));
 			/*
-			_tcscpy(Password,rules->Password);
-			MaxPlayers			= rules->MaxPlayers;
-			ObjMagnification	= rules->ObjMagnification;	
-			SimFlags			= rules->SimFlags;					// Sim flags
-			SimFlightModel		= rules->SimFlightModel;			// Flight model type
-			SimWeaponEffect		= rules->SimWeaponEffect;
-			SimAvionicsType		= rules->SimAvionicsType;
-			SimAutopilotType	= rules->SimAutopilotType;
-			SimAirRefuelingMode	= rules->SimAirRefuelingMode;				
-			SimPadlockMode		= rules->SimPadlockMode;
-			GeneralFlags		= rules->GeneralFlags;*/
+			_tcscpy(Password,rules.Password);
+			MaxPlayers			= rules.MaxPlayers;
+			ObjMagnification	= rules.ObjMagnification;	
+			SimFlags			= rules.SimFlags;					// Sim flags
+			SimFlightModel		= rules.SimFlightModel;			// Flight model type
+			SimWeaponEffect		= rules.SimWeaponEffect;
+			SimAvionicsType		= rules.SimAvionicsType;
+			SimAutopilotType	= rules.SimAutopilotType;
+			SimAirRefuelingMode	= rules.SimAirRefuelingMode;				
+			SimPadlockMode		= rules.SimPadlockMode;
+			GeneralFlags		= rules.GeneralFlags;*/
 #endif
 			throw new NotImplementedException();
 		}
@@ -102,20 +102,20 @@ namespace FalconNet.FalcLib
 			
 			_stprintf(path,_T("%s\\config\\%s.rul"),FalconDataDirectory,filename);
 				
-			if((fp = _tfopen(path,"wb")) == NULL)
+			if((fp = _tfopen(path,"wb")) == null)
 			{
 				MonoPrint(_T("Couldn't save rules"));
-				return FALSE;
+				return false;
 			}
 			success = fwrite(gRules, sizeof(RulesStruct), rNUM_MODES, fp);
 			fclose(fp);
 			if(success != rNUM_MODES)
 			{
 				MonoPrint(_T("Couldn't save rules"));
-				return FALSE;
+				return false;
 			}
 			
-			return TRUE;
+			return true;
 #endif
 			throw new NotImplementedException();
 		}
@@ -143,7 +143,7 @@ namespace FalconNet.FalcLib
 				{
 					MonoPrint(_T("Couldn't open default rules\n"),filename);
 					Initialize();
-					return FALSE;
+					return false;
 				}
 			}
 			
@@ -154,7 +154,7 @@ namespace FalconNet.FalcLib
 			if(size != sizeof(RulesStruct) * rNUM_MODES)
 			{
 				MonoPrint(_T("%s's rules are in old file format\n"),filename);
-				return FALSE;
+				return false;
 			}
 		
 		
@@ -166,7 +166,7 @@ namespace FalconNet.FalcLib
 			{
 				MonoPrint(_T("Failed to read %s's rules file\n"),filename);
 				//Initialize();
-				return FALSE;
+				return false;
 			}
 			char dataFileName[_MAX_PATH];
 			sprintf (dataFileName, "%s\\atc.ini", FalconCampaignSaveDirectory);
@@ -180,7 +180,7 @@ namespace FalconNet.FalcLib
 			tempRules[RuleMode].AtcPatience		*= 1000;
 		
 			memcpy(this,&(tempRules[RuleMode]),sizeof(RulesStruct));
-			return TRUE;
+			return true;
 #endif
 			throw new NotImplementedException();
 		}
@@ -214,18 +214,18 @@ namespace FalconNet.FalcLib
 		{
 		#if TODO
 			//if(Pilot.Password[0] == 0)
-				//return TRUE;
+				//return true;
 		
 			//EncryptPwd();
 			if( _tcscmp( Pwd, Password) )
 			{
 				//EncryptPwd();
-				return FALSE;
+				return false;
 			}
 			else
 			{
 				//EncryptPwd();
-				return TRUE;
+				return true;
 			}
 		#endif
 					throw new NotImplementedException();
@@ -238,10 +238,10 @@ namespace FalconNet.FalcLib
 			{
 				_tcscpy(Password,newPassword);
 				//EncryptPwd();
-				return TRUE;
+				return true;
 			}
 		
-			return FALSE;
+			return false;
 #endif
 			throw new NotImplementedException();
 		}
@@ -252,7 +252,7 @@ namespace FalconNet.FalcLib
 			//EncryptPwd();
 			_tcscpy( Pwd, Password );
 			//EncryptPwd();
-			return TRUE;
+			return true;
 		#endif
 					throw new NotImplementedException();
 		}
@@ -445,7 +445,7 @@ namespace FalconNet.FalcLib
 				if(!fp)
 				{
 					MonoPrint(_T("Couldn't open default rules\n"),filename);
-					return FALSE;
+					return false;
 				}
 			}
 			
@@ -456,7 +456,7 @@ namespace FalconNet.FalcLib
 			if(size != sizeof(RulesStruct) * rNUM_MODES)
 			{
 				MonoPrint(_T("%s's rules are in old file format\n"),filename);
-				return FALSE;
+				return false;
 			}
 		
 		
@@ -468,7 +468,7 @@ namespace FalconNet.FalcLib
 			{
 				MonoPrint(_T("Failed to read %s's rules file\n"),filename);
 				//Initialize();
-				return FALSE;
+				return false;
 			}
 		
 			for(int i = 0; i < rNUM_MODES;i++)
@@ -485,7 +485,7 @@ namespace FalconNet.FalcLib
 				tempRules[i].AtcPatience	*= 1000;
 			}
 			memcpy(&gRules,&tempRules,sizeof(RulesStruct)*rNUM_MODES);
-			return TRUE;
+			return true;
 #endif
 			throw new NotImplementedException();
 		}

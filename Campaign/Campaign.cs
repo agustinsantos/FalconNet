@@ -26,8 +26,8 @@ namespace FalconNet.Campaign
         // =====================
 
         public static F4CSECTIONHANDLE campCritical;
-        public static int[] VisualDetectionRange = new int[OtherDam];
-        public static byte[] DefaultDamageMods = new byte[OtherDam + 1];
+        public static int[] VisualDetectionRange = new int[(int)DamageDataType.OtherDam];
+        public static byte[] DefaultDamageMods = new byte[(int)DamageDataType.OtherDam + 1];
 
         // ================
         // Defines & macros

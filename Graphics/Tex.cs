@@ -7,9 +7,9 @@ namespace FalconNet.Graphics
 #if TODO
 		public Texture()
 		{
-			texHandle = NULL; 
-			imageData = NULL; 
-			palette = NULL; 
+			texHandle = null; 
+			imageData = null; 
+			palette = null; 
 			flags = 0;
 			
 			#if _DEBUG
@@ -64,7 +64,7 @@ namespace FalconNet.Graphics
 		public static void CleanupForDevice(DXContext *texRC)
 		{
 			Palette.CleanupForDevice( texRC );
-			rc = NULL;
+			rc = null;
 		
 			TextureHandle.StaticCleanup();
 		}
@@ -74,20 +74,20 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public static bool IsSetup() // JB 010616
 		{
-			return rc != NULL;
+			return rc != null;
 		}
 		
 		/***************************************************************************\
 			Read a data file and store its information.
 		\***************************************************************************/
-		public BOOL LoadImage(string filename, DWORD newFlags = 0, BOOL addDefaultPath = TRUE)
+		public BOOL LoadImage(string filename, DWORD newFlags = 0, BOOL addDefaultPath = true)
 		{
 			string fullname;
 			CImageFileMemory 	texFile;
 			int result;
 		
 			Debug.Assert( filename );
-			Debug.Assert( imageData == NULL );
+			Debug.Assert( imageData == null );
 		
 			// Add in the users requested flags to any already set
 			flags |= newFlags;
@@ -109,7 +109,7 @@ namespace FalconNet.Graphics
 			if (texFile.imageType == IMAGE_TYPE_UNKNOWN)
 			{
 				ShiWarning( "Unrecognized image type" );
-				return FALSE;
+				return false;
 			}
 		
 			// If the image type has alpha in it, create an alpha per texel texture
@@ -121,7 +121,7 @@ namespace FalconNet.Graphics
 			if(result != 1)
 			{
 				ShiWarning( "Failed texture open" );
-				return FALSE;
+				return false;
 			}
 		
 			// Read the image data (note that ReadTextureImage will close texFile for us)
@@ -131,14 +131,14 @@ namespace FalconNet.Graphics
 			if(result != GOOD_READ)
 			{
 				ShiWarning( "Failed texture read" );
-				return FALSE;
+				return false;
 			}
 		
 			// Store the image properties in our local storage
 			if(texFile.image.width != texFile.image.height)
 			{
 				ShiWarning( "Texture isn't square" );
-				return FALSE;
+				return false;
 			}
 		
 			dimensions = texFile.image.width;
@@ -159,11 +159,11 @@ namespace FalconNet.Graphics
 			if(!palette)
 			{
 				palette = new Palette();
-				palette->Setup32( (DWORD*)texFile.image.palette );
+				palette.Setup32( (DWORD*)texFile.image.palette );
 			}
 		
 			else
-				palette->Reference();
+				palette.Reference();
 		
 			// Release the image's palette data now that we've got our own copy
 			glReleaseMemory( texFile.image.palette );
@@ -172,7 +172,7 @@ namespace FalconNet.Graphics
 			InterlockedExchangeAdd((long *) &m_dwTotalBytes, dimensions * dimensions);
 			#endif
 		
-			return TRUE;
+			return true;
 		}
 		
 
@@ -184,14 +184,14 @@ namespace FalconNet.Graphics
 			if(texHandle)
 			{
 				delete texHandle;
-				texHandle = NULL;
+				texHandle = null;
 			}
 		
 			if(!imageData)
 				FreePalette(); 	// We're totally gone, so get rid of our palette if we had one
 		}
 		
-		public bool CreateTexture(char *strName = NULL);
+		public bool CreateTexture(char *strName = null);
 		public void FreeTexture();
 		
 		/***************************************************************************\
@@ -202,19 +202,19 @@ namespace FalconNet.Graphics
 			if(LoadImage(filename, newFlags))
 			{
 				CreateTexture(filename);
-				return TRUE;
+				return true;
 			}
 		
-			return FALSE; 
+			return false; 
 		}
 
 		
 		/***************************************************************************\
 			Reload the MPR texels with the ones we have stored locally.
 		\***************************************************************************/
-		public bool UpdateMPR(string strName = NULL)
+		public bool UpdateMPR(string strName = null)
 		{
-			Debug.Assert( rc != NULL);
+			Debug.Assert( rc != null);
 			Debug.Assert( imageData );
 			Debug.Assert( texHandle );
 		
@@ -222,9 +222,9 @@ namespace FalconNet.Graphics
 				return false;
 		
 			if(flags & MPR_TI_PALETTE)
-				return texHandle->Load(0, chromaKey, (BYTE*) imageData);
+				return texHandle.Load(0, chromaKey, (BYTE*) imageData);
 			else
-				return texHandle->Load(0, chromaKey, (BYTE*) imageData);
+				return texHandle.Load(0, chromaKey, (BYTE*) imageData);
 		}
 
 		
@@ -235,10 +235,10 @@ namespace FalconNet.Graphics
 		{
 			if(palette)
 			{
-				if(palette->Release() == 0)
+				if(palette.Release() == 0)
 					palette = null;
 		
-				palette = NULL;
+				palette = null;
 			}
 		}
 
@@ -248,7 +248,7 @@ namespace FalconNet.Graphics
 		// OW
 		public void RestoreAll() 
 		{
-			if(texHandle) texHandle->RestoreAll();
+			if(texHandle) texHandle.RestoreAll();
 		}
 
 		#if _DEBUG
@@ -259,7 +259,7 @@ namespace FalconNet.Graphics
 
 		
 		private static string TexturePath = "";
-		private static DXContext *rc = NULL; 
+		private static DXContext *rc = null; 
 #endif
 	};
 }

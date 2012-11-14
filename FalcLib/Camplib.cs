@@ -3,8 +3,10 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.VU;
 
+	
 namespace FalconNet.FalcLib
 {
+	 
 // =====================================
 // Campaign defines and typedefs
 // =====================================
@@ -84,7 +86,7 @@ TODO */
 		{
 			throw new NotImplementedException ();
 		}
-
+		
 		public static void Camp_SetPlayerSquadron (Unit squadron)
 		{
 			throw new NotImplementedException ();
@@ -121,4 +123,8 @@ TODO */
 		}
 	}
 
+	public class Unit {
+		public VU_ID id(){throw new NotImplementedException();}
+		//TODO There is another definition in Campaign lib
+	}
 }

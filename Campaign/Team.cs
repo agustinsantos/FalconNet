@@ -1,8 +1,10 @@
 using System;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using GTM=FalconNet.Campaign.GroundTaskingManagerClass;
 using ATM=FalconNet.Campaign.AirTaskingManagerClass;
+using Team=System.Byte;
 using FalconNet.Common;
 using System.IO;
 
@@ -42,7 +44,7 @@ namespace FalconNet.Campaign
 	
 	// Team flags
 	[Flags]
-	public enum TeamFlagEnum {
+	public enum TeamFlagEnum : short {
 	       TEAM_ACTIVE         = 0x01,	// Set if team is being used
 	       TEAM_HASSATS        = 0x02,	// Has satelites
 	       TEAM_UPDATED        = 0x04,	// We've gotten remote data for this team
@@ -69,11 +71,7 @@ namespace FalconNet.Campaign
 	       ROE_NOT_ALLOWED     = 0,
 	};
 	
-	/* TODO
-	#define MAX_BONUSES				20		// Number of SOs which can receive bonuses at one time
-	#define MAX_TGTTYPE				36
-	#define MAX_UNITTYPE			20
-	TODO */
+
 	
 	// Ground Action types
 	public enum GroundActionTypeEnum {
@@ -118,7 +116,7 @@ namespace FalconNet.Campaign
 #if TODO	
 	extern byte	DefaultObjtypePriority[TAT_CAS][MAX_TGTTYPE];		// AI's suggested settings
 	extern byte	DefaultUnittypePriority[TAT_CAS][MAX_UNITTYPE];		// 
-	extern byte	DefaultMissionPriority[TAT_CAS][AMIS_OTHER];		// 
+	extern byte	DefaultMissionPriority[TAT_CAS][(int)MissionTypeEnum.AMIS_OTHER];		// 
 	
 	// =======================================
 	// Local classes
@@ -150,12 +148,12 @@ namespace FalconNet.Campaign
 	
 	// TODO #pragma pack(1) // place on byte boundary
 	public struct TeamGndActionType {
-		CampaignTime	actionTime;								// When we start.
-		CampaignTime	actionTimeout;							// Our action will fail if not completed by this time
-		VU_ID			actionObjective;						// Primary objective this is all about
-		byte			actionType;
-		byte			actionTempo;							// How "active" we want the action to be
-		byte			actionPoints;							// Countdown of how much longer it will go on
+		public CampaignTime	actionTime;								// When we start.
+		public CampaignTime	actionTimeout;							// Our action will fail if not completed by this time
+		public VU_ID			actionObjective;						// Primary objective this is all about
+		public byte			actionType;
+		public byte			actionTempo;							// How "active" we want the action to be
+		public byte			actionPoints;							// Countdown of how much longer it will go on
 		};
 	// TODO #pragma pack()
 	
@@ -191,6 +189,9 @@ namespace FalconNet.Campaign
 	
 	public class TeamClass :  FalconEntity
 	{
+		public const int MAX_BONUSES		=20;		// Number of SOs which can receive bonuses at one time
+		public const int MAX_TGTTYPE		=36;
+		public const int MAX_UNITTYPE		=20;
 		
 		private short				initiative;
 		private ushort				supplyAvail;
@@ -200,7 +201,7 @@ namespace FalconNet.Campaign
 		private short				reinforcement;
 		private byte[]				objtype_priority = new byte[MAX_TGTTYPE];		// base priority, based on target type (obj)
 		private byte[]				unittype_priority = new byte[MAX_UNITTYPE];	// base priority for unit types (cmbt/AD)
-		private byte[]				mission_priority = new byte[AMIS_OTHER];		// bonus by mission type
+		private byte[]				mission_priority = new byte[(int)MissionTypeEnum.AMIS_OTHER];		// bonus by mission type
 		private TeamGndActionType	groundAction;						// Team's current ground action
 		private TeamAirActionType	defensiveAirAction;					// Current defensive air action
 		private TeamAirActionType	offensiveAirAction;					// Current offensive air action
@@ -209,11 +210,11 @@ namespace FalconNet.Campaign
 		
 		public Team 			who;
 		public Team				cteam;								// The team this relative is on (for quick reference)
-		public short			flags;
+		public TeamFlagEnum			flags;
 		public string			name;
 		public string			teamMotto;
-		public byte[]			member = new byte[NUM_COUNS];
-		public short[]			stance = new byte[NUM_TEAMS];
+		public byte[]			member = new byte[(int)CountryListEnum.NUM_COUNS];
+		public short[]			stance = new short[(int)TeamDataEnum.NUM_TEAMS];
 		public short			firstColonel;						// Pilot ID indexies for this country
 		public short			firstCommander;
 		public short			firstWingman;
@@ -238,12 +239,12 @@ namespace FalconNet.Campaign
 	
 		
 			// Constructors
-		public TeamClass (int typeindex, Control owner)
+		public TeamClass (int typeindex, Control owner) : base(typeindex)
 		{throw new NotImplementedException();}
 		
-		public TeamClass (VU_BYTE[] stream)
+		public TeamClass (VU_BYTE[] stream) : base(VuEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
-		public TeamClass (FileStream file)
+		public TeamClass (FileStream file): base(VuEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
 		// TODO public ~TeamClass ();
 	
@@ -318,11 +319,11 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 	
 			// Core functions
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 		public virtual int Save (ref VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-		public virtual int Save (FileStream file)
+		public override int Save (FileStream file)
 		{throw new NotImplementedException();}
 	
 		public void ReadDoctrineFile ()
@@ -340,10 +341,10 @@ namespace FalconNet.Campaign
 		public void DoFullUpdate (VuTargetEntity target)
 		{throw new NotImplementedException();}
 	
-		public int CStance(Control country)				{ return stance[GetTeam(country)]; }
+		//TODO public int CStance(Control country)				{ return stance[GetTeam(country)]; }
 		public int TStance(Team team)						{ return stance[team]; }
 		public int Initiative()						{ return initiative; }
-		public int HasSatelites()						{ return flags & TEAM_HASSATS; }
+		public bool HasSatelites()						{ return flags.IsFlagSet(TeamFlagEnum.TEAM_HASSATS); }
 		public ATM GetATM()							{ return atm; }
 		public GTM GetGTM()							{ return gtm; }
 		public NTM GetNTM()							{ return ntm; }
@@ -361,7 +362,7 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 		public string GetMotto ()
 		{throw new NotImplementedException();}
-		public TeamDoctrine GetDoctrine ()			{ return &doctrine; }
+		public TeamDoctrine GetDoctrine ()			{ return doctrine; }
 	//		int OnOffensive()						{ return offensiveLoss; }
 		public byte GetGroundActionType ()			{ return groundAction.actionType; }
 		public void SelectGroundAction ()
@@ -371,7 +372,7 @@ namespace FalconNet.Campaign
 		public void SetGroundAction (TeamGndActionType action)
 		{throw new NotImplementedException();}
 	
-		public virtual int IsTeam ()					{ return true; }
+		public override bool IsTeam ()					{ return true; }
 	
 			// Dirty Data
 		public void MakeTeamDirty (Dirty_Team bits, Dirtyness score)
@@ -386,7 +387,7 @@ namespace FalconNet.Campaign
 	public static class TeamStatic
 	{
 		
-		public static TeamClass[]	TeamInfo = new TeamClass[NUM_TEAMS];
+		public static TeamClass[]	TeamInfo = new TeamClass[(int)TeamDataEnum.NUM_TEAMS];
 	
 	// =============================================
 	// Global functions

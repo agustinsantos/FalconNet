@@ -3,8 +3,10 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using Flight=FalconNet.Campaign.FlightClass;
 using Squadron=FalconNet.Campaign.SquadronClass;
+using Team=System.Int32;
 
 namespace FalconNet.Campaign
 {
@@ -13,23 +15,23 @@ namespace FalconNet.Campaign
     {
 
         public VU_ID id;
-        public byte[] schedule = new byte[ATM_MAX_CYCLES];
+        public byte[] schedule = new byte[AtmStatic.ATM_MAX_CYCLES];
         public byte usage;
         public ATMAirbaseClass next;
 
         public ATMAirbaseClass()
         {
-            id = FalconNullId;
-            memset(schedule, 0, sizeof(byte) * ATM_MAX_CYCLES);
+            id = VU_ID.FalconNullId;
+           //TODO memset(schedule, 0, sizeof(byte) * AtmStatic.ATM_MAX_CYCLES);
             usage = 0;
-            next = NULL;
+            next = null;
         }
         public ATMAirbaseClass(CampBaseClass ent)
         {
-            id = ent->Id();
-            memset(schedule, 0, sizeof(byte) * ATM_MAX_CYCLES);
+            id = ent.Id();
+            //TODO memset(schedule, 0, sizeof(byte) * AtmStatic.ATM_MAX_CYCLES);
             usage = 0;
-            next = NULL;
+            next = null;
         }
         public ATMAirbaseClass(ref VU_BYTE[] stream)
 			{throw new NotImplementedException();}
@@ -40,8 +42,11 @@ namespace FalconNet.Campaign
 			{throw new NotImplementedException();}
         public int Save(FileStream file)
 			{throw new NotImplementedException();}
-        public int Size() { return sizeof(VU_ID) + AtmStatic.ATM_MAX_CYCLES; }
-    };
+        public int Size() { 
+			// TODO return sizeof(VU_ID) + AtmStatic.ATM_MAX_CYCLES;
+			throw new NotImplementedException();
+		}
+    }
 
     public class AirTaskingManagerClass : CampManagerClass
     {
@@ -68,11 +73,11 @@ namespace FalconNet.Campaign
         public CampaignTime scheduleTime;						// Last time we updated our blocks
 
         // constructors & serial functions
-        public AirTaskingManagerClass(ushort type, Team t)
+        public AirTaskingManagerClass(ushort type, Team t) :base(type, t)
 		{throw new NotImplementedException();}
-        public AirTaskingManagerClass(ref VU_BYTE[] stream)
+        public AirTaskingManagerClass(ref VU_BYTE[] stream) :base(stream)
 		{throw new NotImplementedException();}
-        public AirTaskingManagerClass(FileStream file)
+        public AirTaskingManagerClass(FileStream file):base(file)
 		{throw new NotImplementedException();}
         //TODO public virtual ~AirTaskingManagerClass();
         public override int SaveSize()
@@ -87,7 +92,7 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
         public override void DoCalculations()
 		{throw new NotImplementedException();}
-        public virtual int Handle(VuFullUpdateEvent evnt)
+        public override int Handle(VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
         // core functions
@@ -166,7 +171,7 @@ typedef AirTaskingManagerClass *ATM;
         public static int RequestSARMission(FlightClass flight)
 		{throw new NotImplementedException();}
 
-        public static void RequestIntercept(FlightClass enemy, int who, RequIntHint hint = RI_NORMAL)
+        public static void RequestIntercept(FlightClass enemy, int who, RequIntHint hint = RequIntHint.RI_NORMAL)
 		{throw new NotImplementedException();}
 
         public static int TargetAllSites(ObjectiveClass po, int action, int team, CampaignTime startTime)

@@ -34,32 +34,32 @@ namespace FalconNet.UI
 
 	public struct CAMP_MISS_STRUCT
 	{
-		internal CAMP_MISS_FLAGS	Flags;
-		internal float	FlightHours;
+		public CAMP_MISS_FLAGS	Flags;
+		public float	FlightHours;
 
 		//for mission complexity
-		internal int		WeaponsExpended;
-		internal int		ShotsAtPlayer;
-		internal int		AircraftInPackage;
+		public int		WeaponsExpended;
+		public int		ShotsAtPlayer;
+		public int		AircraftInPackage;
 		
 		//mission score from Kevin
-		internal int		Score;
+		public int		Score;
 		
 		//Air-to-Air
-		internal int		Kills;
-		internal int		HumanKills;
-		internal int		Killed;
-		internal int		KilledByHuman;
-		internal int		KilledBySelf;
+		public int		Kills;
+		public int		HumanKills;
+		public int		Killed;
+		public int		KilledByHuman;
+		public int		KilledBySelf;
 
 		//Air-to-Ground
-		internal int		GroundUnitsKilled;
-		internal int		FeaturesDestroyed;
-		internal int		NavalUnitsKilled;
+		public int		GroundUnitsKilled;
+		public int		FeaturesDestroyed;
+		public int		NavalUnitsKilled;
 
 		//other
-		internal int		FriendlyFireKills;
-		internal int		WingmenLost;
+		public int		FriendlyFireKills;
+		public int		WingmenLost;
 	};
 
 	public static class CampaignMission

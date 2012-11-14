@@ -52,7 +52,7 @@ namespace FalconNet.FalcLib
 		  buffer[bufSize - 1] = 0;
 		   *fileLen = 0;
 	   	*fileOffset = 0;
-	//		return NULL;
+	//		return null;
 			}
 	   return (buffer);
 #endif
@@ -77,10 +77,10 @@ namespace FalconNet.FalcLib
 				{
 				sprintf(tmpStr,"%s\\%s,0,0",ppath,filename);
 				if (!WritePrivateProfileString("Files", filename, tmpStr, filedir))
-					return NULL;
+					return null;
 				}
 			sprintf(path,"%s\\%s",path,filename);
-			if ((fp = fopen(path, mode)) == NULL)
+			if ((fp = fopen(path, mode)) == null)
 				{
 				sprintf(tmpStr,"Unable to create file: %s",path);
 				F4Warning(tmpStr);

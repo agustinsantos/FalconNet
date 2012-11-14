@@ -2,8 +2,9 @@
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using Objective=FalconNet.Campaign.ObjectiveClass;
-
+using Team=System.Int32;
 namespace FalconNet.Campaign
 {
 	// Transmittable
@@ -68,7 +69,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 // Camp base globals
 // ===================================
 
-		public static  byte[] CampSearch = new byte[MAX_CAMP_ENTITIES];	// Search data - Could reduce to bitwise
+		public static  byte[] CampSearch = new byte[Camplib.MAX_CAMP_ENTITIES];	// Search data - Could reduce to bitwise
 
 		// ===========================
 // Global functions
@@ -179,20 +180,34 @@ public static  VU_ID_NUMBER lastVolitileId;
 		public void MakeCampBaseDirty (Dirty_Campaign_Base bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public void WriteDirty (ref byte[] stream)
+		public virtual void WriteDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
-		public void ReadDirty (ref byte[] stream)
+		public virtual void ReadDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
 		// Constructors and serial functions
-		public CampBaseClass (int typeindex)
-		{throw new NotImplementedException();}
+		public CampBaseClass (int typeindex) : base(typeindex)
+		{
+			SetTypeFlag(EntityEnum.FalconCampaignEntity);
+			spotted = 0;
+			base_flags = Transmittable.CBC_EMITTING;
+			local_flags = CBC_ENUM.CBC_AGGREGATE;	
+			owner = Control.nullCONTROL;	
+			camp_id = CampbaseStatic.FindUniqueID();
+			pos_.z_ = 0.0F;
+			components = null;
+			deag_owner = VU_ID.FalconNullId;
+			SetAggregate(1);
+			SetAssociation(FalconSessionEntity.FalconLocalGame().Id());
+			dirty_camp_base = 0;
+			spotTime = new CampaignTime(0); // JB 010719
+		}
 
-		public CampBaseClass (VU_BYTE[] stream)
+		public CampBaseClass (VU_BYTE[] stream) : base(VuEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
 		// public virtual ~CampBaseClass ();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
 		public virtual int Save (ref VU_BYTE[] stream)
@@ -202,19 +217,19 @@ public static  VU_ID_NUMBER lastVolitileId;
 		public virtual int Handle (VuEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuFullUpdateEvent evnt)
+		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuPositionUpdateEvent evnt)
+		public virtual VU_ERRCODE Handle (VuPositionUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuEntityCollisionEvent evnt)
+		public virtual VU_ERRCODE Handle (VuEntityCollisionEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuTransferEvent evnt)
+		public virtual VU_ERRCODE Handle (VuTransferEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuSessionEvent evnt)
+		public virtual VU_ERRCODE Handle (VuSessionEvent evnt)
 		{throw new NotImplementedException();}
 
 		// Required pure virtuals
@@ -351,38 +366,38 @@ public static  VU_ID_NUMBER lastVolitileId;
 		{
 			return 0;
 		}			// Nonzero if this entity can see ent
-		public virtual bool OnGround ()
+		public override bool OnGround ()
 		{
 			return false;
 		}
 
-		public virtual float Vt ()
+		public override float Vt ()
 		{
 			return 0.0F;
 		}
 
-		public virtual float Kias ()
+		public override float Kias ()
 		{
 			return 0.0F;
 		}
 
-		public virtual short GetCampID ()
+		public override short GetCampID ()
 		{
 			return camp_id;
 		}
 
-		public virtual byte GetTeam ()
+		public override byte GetTeam ()
 		{
-			return  GetTeam (owner);
+			return  TeamStatic.GetTeam (owner);
 		}
 
-		public virtual byte GetCountry ()
+		public override Control GetCountry ()
 		{
 			return owner;
 		}		// New FalcEnt friendly form
-		public virtual int StepRadar (int t, int d, float range)
+		public virtual FEC_RADAR StepRadar (int t, int d, float range)
 		{
-			return FEC_RADAR_OFF;
+			return FEC_RADAR.FEC_RADAR_OFF;
 		}
 
 		public Control GetOwner ()
@@ -409,7 +424,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 		public virtual void GetArcAngle (int i, ref float a1, ref float a2)
 		{	
 			a1 = 0.0F; 
-			a2 = 2 * PI;
+			a2 = (float)(2 * Math.PI);
 		}
 
 		// Core functions
@@ -506,29 +521,29 @@ public static  VU_ID_NUMBER lastVolitileId;
 		}
 
 		// Getters
-		public byte GetDomain ()
+		public override byte GetDomain ()
 		{
-			return (EntityType ()).classInfo_ [VU_DOMAIN];
+			return (EntityType ()).classInfo_ [(int)VU_CLASS.VU_DOMAIN];
 		}
 
 		public byte GetClass ()
 		{
-			return (EntityType ()).classInfo_ [VU_CLASS];
+			return (EntityType ()).classInfo_ [(int)VU_CLASS.VU_CLASS];
 		}
 
 		public byte GetType ()
 		{
-			return (EntityType ()).classInfo_ [VU_TYPE];
+			return (EntityType ()).classInfo_ [(int)VU_CLASS.VU_TYPE];
 		}
 
 		public byte GetSType ()
 		{
-			return (EntityType ()).classInfo_ [VU_STYPE];
+			return (EntityType ()).classInfo_ [(int)VU_CLASS.VU_STYPE];
 		}
 
 		public byte GetSPType ()
 		{
-			return (EntityType ()).classInfo_ [VU_SPTYPE];
+			return (EntityType ()).classInfo_ [(int)VU_CLASS.VU_SPTYPE];
 		}
 
 		public CampaignTime GetSpottedTime ()
@@ -564,7 +579,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 		public void SetAggregate (int a)
 		{throw new NotImplementedException();}
 
-		public void SetJammed (int j)
+		public virtual void SetJammed (int j)
 		{throw new NotImplementedException();}
 
 		public void SetTacan (int t)

@@ -246,7 +246,7 @@ bool g_b3dHUD = true;
 		public static bool g_bNoMFDsIn1View = false;
 		// DEMON 110106
 		public static bool g_bIFF = true;
-		// END - FALSE
+		// END - false
 		public static bool g_bINS = true;
 		public static bool g_bNoRPMOnHud = true;
 		public static bool g_bNoPadlockBoxes = false;	//MI 18/01/02 removes the box around padlocked objects
@@ -383,7 +383,7 @@ bool g_b3dHUD = true;
 		public static int g_nMissileFix = 0x7f;				// several missile fixes:
 		/*
 		
-				0x01	"Bomb missile" flag support -> do a ground/feature impact missile end instead 
+				0x01	"Bomb missile" flag support . do a ground/feature impact missile end instead 
 					    of lethalradius detonation
 				0x02	also check if range*range > lethalRadiusSqrd at "closestApprch" flag
 				0x04	Use ArmingDelay MissileEndMessage instead of MinTime if warhead is 
@@ -403,8 +403,8 @@ bool g_b3dHUD = true;
 		public static bool g_bDarkHudFix = true;				// fix for the host player getting a dark HUD in TAKEOFF/TAXI mode
 
 		public static float g_fBombMissileAltitude = 13000.0f;// altitude at which "bomb-like" missiles are being released
-		public static int g_nFogRenderState = 0x01;			// 0x01 turn on the D3D call m_pD3DD->SetRenderState in context.cpp
-		// 0x02 turns on StateStack::SetFog call to context->SetState
+		public static int g_nFogRenderState = 0x01;			// 0x01 turn on the D3D call m_pD3DD.SetRenderState in context.cpp
+		// 0x02 turns on StateStack::SetFog call to context.SetState
 		//		which seems, according to comment, to be only some test code...
 		public static bool g_bTankerFMFix = true;				// fix for tankers simple af flightmodel 
 		//M.N.
@@ -650,7 +650,7 @@ bool g_b3dHUD = true;
 			{ "minimum_available_aircraft", v => g_nminimum_available_aircraft = v },
 			{ "MasterServerPort", v => g_nMasterServerPort = v },
 			{ "MaxVertexSpace", v => g_nMaxVertexSpace = v },
-		//	{ "MinTacanChannel", v => g_nMinTacanChannel = v }, -> Theater definition file
+		//	{ "MinTacanChannel", v => g_nMinTacanChannel = v }, . Theater definition file
 			{ "FlightVisualBonus", v => g_nFlightVisualBonus = v },
 			{ "RelocationWait", v => g_nRelocationWait = v },
 			{ "LoadoutTimeLimit", v => g_nLoadoutTimeLimit = v },

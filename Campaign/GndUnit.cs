@@ -1,8 +1,11 @@
 using System;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 using Objective=FalconNet.Campaign.ObjectiveClass;
+using Team=System.Int32;
 using FalconNet.FalcLib;
 using FalconNet.Common;
+
 namespace FalconNet.Campaign
 {
 	//
@@ -93,7 +96,7 @@ namespace FalconNet.Campaign
 		public const int WPA_ENROUTE = 1;
 		public const int MAX_SUPPORT_DIST = 20;
 		public const int MAX_NORMAL_DIST = 20;
-		public static int[] OrderPriority = new int[GORD_LAST];		// Update this if new orders are added
+		public static int[] OrderPriority = new int[(int)GORD.GORD_LAST];		// Update this if new orders are added
 	
 		private byte				orders;    		// Current orders
 		private short				division;		// What division it belongs to (abstract)
@@ -105,50 +108,50 @@ namespace FalconNet.Campaign
 
 	
 		// constructors and serial functions
-		public GroundUnitClass (int type)
+		public GroundUnitClass (int type) : base(type)
 		{throw new NotImplementedException();}
-		public GroundUnitClass (VU_BYTE[] stream) 
+		public GroundUnitClass (VU_BYTE[] stream) :base(stream)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~GroundUnitClass();
-		public virtual int SaveSize () 
+		public override int SaveSize () 
 		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE[] stream) 
+		public override int Save (VU_BYTE[] stream) 
 		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt) 
+		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt) 
 		{throw new NotImplementedException();}
 
 		// Required pure virtuals handled by GroundUnitClass
-		public virtual MoveType GetMovementType () 
+		public override MoveType GetMovementType () 
 		{throw new NotImplementedException();}
 
-		public virtual MoveType GetObjMovementType (Objective o, int n) 
+		public override MoveType GetObjMovementType (Objective o, int n) 
 		{throw new NotImplementedException();}
 
-		public virtual int DetectOnMove () 
+		public override int DetectOnMove () 
 		{throw new NotImplementedException();}
 
-		public virtual int ChooseTarget () 
+		public override int ChooseTarget () 
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime UpdateTime ()
+		public override CampaignTime UpdateTime ()
 		{
-			return GROUND_UPDATE_CHECK_INTERVAL * CampaignSeconds;
+			return new CampaignTime((ulong)AIInput.GROUND_UPDATE_CHECK_INTERVAL * CampaignTime.CampaignSeconds);
 		}
 
-		public virtual int OnGround ()
+		public override bool OnGround ()
 		{
-			return TRUE;
+			return true;
 		}
 
-		public virtual float Vt ()
+		public override float Vt ()
 		{
 			return (Moving () ? 40.0F : 0.0F);
 		}
 
-		public virtual float Kias ()
+		public override float Kias ()
 		{
 			return (Moving () ? 40.0F : 0.0F);
 		}
@@ -196,80 +199,80 @@ namespace FalconNet.Campaign
 			division = d;
 		}
 
-		public void SetUnitPrimaryObj (VU_ID id)
+		public override void SetUnitPrimaryObj (VU_ID id)
 		{
 			pobj = id;
 		}
 
-		public void SetUnitSecondaryObj (VU_ID id)
+		public override void SetUnitSecondaryObj (VU_ID id)
 		{
 			sobj = id;
 		}
 
-		public void SetUnitObjective (VU_ID id)
+		public override void SetUnitObjective (VU_ID id)
 		{
 			aobj = id;
 		}
 
-		public virtual int GetUnitOrders ()
+		public override int GetUnitOrders ()
 		{
 			return (int)orders;
 		}
 
-		public virtual int GetUnitDivision ()
+		public override int GetUnitDivision ()
 		{
 			return (int)division;
 		}
 
-		public Objective GetUnitPrimaryObj ()
+		public override Objective GetUnitPrimaryObj ()
 		{
-			return (Objective)vuDatabase->Find (pobj);
+			return (Objective)VuDatabase.vuDatabase.Find (pobj);
 		}
 
-		public Objective GetUnitSecondaryObj ()
+		public override Objective GetUnitSecondaryObj ()
 		{
-			return (Objective)vuDatabase->Find (sobj);
+			return (Objective)VuDatabase.vuDatabase.Find (sobj);
 		}
 
-		public Objective GetUnitObjective ()
+		public override Objective GetUnitObjective ()
 		{
-			return (Objective)vuDatabase->Find (aobj);
+			return (Objective)VuDatabase.vuDatabase.Find (aobj);
 		}
 
-		public VU_ID GetUnitPrimaryObjID ()
+		public override VU_ID GetUnitPrimaryObjID ()
 		{
 			return pobj;
 		}
 
-		public VU_ID GetUnitSecondaryObjID ()
+		public override VU_ID GetUnitSecondaryObjID ()
 		{
 			return sobj;
 		}
 
-		public VU_ID GetUnitObjectiveID ()
+		public override VU_ID GetUnitObjectiveID ()
 		{
 			return aobj;
 		}
 
-		public virtual int CheckForSurrender () 
+		public override  int CheckForSurrender () 
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitNormalRole () 
+		public override  int GetUnitNormalRole () 
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitCurrentRole () 
+		public override  int GetUnitCurrentRole () 
 		{throw new NotImplementedException();}
 
-		public virtual int BuildMission () 
+		public override int BuildMission () 
 		{throw new NotImplementedException();}
 
 		public void MakeGndUnitDirty (Dirty_Ground_Unit bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte[] stream)
+		public override void WriteDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte[] stream)
+		public override void ReadDirty (byte[] stream)
 		{throw new NotImplementedException();}
 		
 		// ============================

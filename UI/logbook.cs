@@ -246,9 +246,9 @@ namespace FalconNet.UI
 		private float CampaignDifficulty ()
 		{
 #if TODO
-			return ((13.0F - TheCampaign.GroundRatio - TheCampaign.AirRatio -
-								TheCampaign.AirDefenseRatio - TheCampaign.NavalRatio / 4.0F) / 39.0F +
-								(TheCampaign.EnemyAirExp + TheCampaign.EnemyADExp) / 12.0F) * 5.0F + 15.0F;
+			return ((13.0F - CampaignClass.TheCampaign.GroundRatio - CampaignClass.TheCampaign.AirRatio -
+								CampaignClass.TheCampaign.AirDefenseRatio - CampaignClass.TheCampaign.NavalRatio / 4.0F) / 39.0F +
+								(CampaignClass.TheCampaign.EnemyAirExp + CampaignClass.TheCampaign.EnemyADExp) / 12.0F) * 5.0F + 15.0F;
 #endif
 			throw new NotImplementedException();
 		}
@@ -415,7 +415,7 @@ namespace FalconNet.UI
 			if(fp != null)
 			{
 				MonoPrint(_T("Couldn't save logbook"));
-				return FALSE;
+				return false;
 			}
 			byte[] buff = EncryptBuffer (0x58, Pilot);
 			
@@ -802,7 +802,7 @@ namespace FalconNet.UI
 		public bool CheckPassword (string Pwd)
 		{
 			//if(Pilot.Password[0] == 0)
-			//return TRUE;
+			//return true;
 		
 			EncryptPwd ();
 			if (Pwd.Equals (Pilot.Password)) {

@@ -46,7 +46,7 @@ namespace FalconNet.Graphics
             ready = false;
         }
 
-        // public virtual ~VirtualDisplay()	{ Debug.Assert( ready == FALSE ); };
+        // public virtual ~VirtualDisplay()	{ Debug.Assert( ready == false ); };
 
         // One time call to create inverse font
         public static void InitializeFonts()
@@ -466,7 +466,7 @@ namespace FalconNet.Graphics
 				// While we need to shorten the string...
 				while (pixelsLeft < 0) {
 
-					// Take the synthetic NULL back out
+					// Take the synthetic null back out
 			*
 					lineBreak = prevChar;
 
@@ -481,7 +481,7 @@ namespace FalconNet.Graphics
 					} while (*lineBreak == ' ');
 					lineBreak++;	// Step back to the first space after the word
 
-					// Save the existing character, then insert NULL terminator
+					// Save the existing character, then insert null terminator
 					prevChar = *lineBreak;
 			*
 					lineBreak = '\0';
@@ -493,7 +493,7 @@ namespace FalconNet.Graphics
 				// Now print the trimmed string
 				TextLeft (h, v - line * spacing, str);
 
-				// Take the synthetic NULL back out and advance
+				// Take the synthetic null back out and advance
 		*
 				lineBreak = prevChar;
 				str = lineBreak;
@@ -629,7 +629,7 @@ namespace FalconNet.Graphics
 
 	// boxed 2 is inverse
 	// for boxed 1, 4 and 8 we'll just use vert bars.
-	// if *string is NULL and boxed is a box, that means we draw a vert bar
+	// if *string is null and boxed is a box, that means we draw a vert bar
 	if ( *str == 0 &&
 		 (boxed == 1 || boxed ==4 || boxed == 8 ) )
 	{

@@ -52,6 +52,7 @@
     <Compile Include="FalcSess.cs" />
     <Compile Include="Classtbl.cs" />
     <Compile Include="FalcGame.cs" />
+    <Compile Include="Mesg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

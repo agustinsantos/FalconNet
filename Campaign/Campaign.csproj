@@ -61,6 +61,9 @@
     <Compile Include="Unit.cs" />
     <Compile Include="Squadron.cs" />
     <Compile Include="Flight.cs" />
+    <Compile Include="Pilot.cs" />
+    <Compile Include="Find.cs" />
+    <Compile Include="dogfight.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -75,6 +78,14 @@
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>
       <Name>VU</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UI\UI.csproj">
+      <Project>{5EFB2579-EA16-49B7-94FC-430735B35DF9}</Project>
+      <Name>UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sim\Sim.csproj">
+      <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
+      <Name>Sim</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

@@ -4,13 +4,13 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using System.IO;
-
+using VU_BYTE=System.Byte;
 namespace FalconNet.Campaign
 {
 // Flags used to convey special data
 //NOTE top 16 bits are used for motion type
 	[Flags]
-    public enum SpecialFlags
+    public enum SpecialFlags : int
 	{
 		RADAR_ON          = 0x1,
 		ECM_ON             =0x2,
@@ -31,7 +31,7 @@ namespace FalconNet.Campaign
 	}
 	// Local flags
 	[Flags]
-    public enum LocalFlags
+    public enum LocalFlags:byte
 	{
 		OBJ_AWAKE         = 0x01,
 		REMOVE_NEXT_FRAME  =0x02,
@@ -66,9 +66,9 @@ namespace FalconNet.Campaign
 		public float			rdrAz, rdrEl, rdrNominalRng;
 		public float			rdrAzCenter, rdrElCenter;
 		public float			rdrCycleTime;
-		public int				flags;
+		public SpecialFlags		flags;
 		public int				status;
-		public int				country;
+		public Control				country;
 		public byte	afterburner_stage;
 
 		// These should really move into SimMover or SimVeh, since they're only relevant there...
@@ -132,7 +132,7 @@ namespace FalconNet.Campaign
 		protected VU_ID lastShooter;				// KCK: replaces vu's lastShooter - Last person to hit this entity
 		protected VU_TIME lastChaff, lastFlare;		// When will the most recently dropped counter-measures expire?
 		protected long campaignFlags;
-		protected byte localFlags;					// Don't transmit these, or else..
+		protected LocalFlags localFlags;					// Don't transmit these, or else..
 	
   
 		public long timeOfDeath;
@@ -160,13 +160,13 @@ namespace FalconNet.Campaign
 		}
 	
 		//Functions
-		public SimBaseClass (int type)
+		public SimBaseClass (int type) : base(type)
 		{throw new NotImplementedException();}
  
-		public SimBaseClass (VU_BYTE[] stream)
+		public SimBaseClass (VU_BYTE[] stream) : base(FalconEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
  
-		public SimBaseClass (FileStream filePtr)
+		public SimBaseClass (FileStream filePtr) : base(FalconEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
 		
 		//TODO public virtual ~SimBaseClass();
@@ -180,40 +180,40 @@ namespace FalconNet.Campaign
 			return slotNumber;
 		}
 
-		public virtual byte GetTeam ()
+		public override byte GetTeam ()
 		{throw new NotImplementedException();}
 
-		public virtual byte GetCountry ()
+		public override Control GetCountry ()
 		{
-			return (byte)specialData.country;
+			return specialData.country;
 		}
 
-		public virtual short GetCampID ()
+		public override short GetCampID ()
 		{throw new NotImplementedException();}
 
-		public byte GetDomain ()
+		public override byte GetDomain ()
 		{
-			return (EntityType ()). classInfo_ [VU_DOMAIN];
+			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_DOMAIN];
 		}
 
 		public byte GetClass ()
 		{
-			return (EntityType ()). classInfo_ [VU_CLASS];
+			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_CLASS];
 		}
 
 		public byte GetType ()
 		{
-			return (EntityType ()). classInfo_ [VU_TYPE];
+			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_TYPE];
 		}
 
 		public byte GetSType ()
 		{
-			return (EntityType ()). classInfo_ [VU_STYPE];
+			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_STYPE];
 		}
 
 		public byte GetSPType ()
 		{
-			return (EntityType ()). classInfo_ [VU_SPTYPE];
+			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_SPTYPE];
 		}
 
 		public void ChangeOwner (VU_ID new_owner)
@@ -234,59 +234,59 @@ namespace FalconNet.Campaign
 		public virtual void MakeRemote ()
 		{throw new NotImplementedException();}
 
-		public virtual int OnGround ()
+		public override bool OnGround ()
 		{
-			return (specialData.flags & ON_GROUND ? true : false);
+			return (specialData.flags.IsFlagSet(SpecialFlags.ON_GROUND) ? true : false);
 		}
 
-		public virtual int IsExploding ()
+		public override bool IsExploding ()
 		{
-			return (specialData.flags & OBJ_EXPLODING ? true : false);
+			return (specialData.flags.IsFlagSet(SpecialFlags.OBJ_EXPLODING) ? true : false);
 		}
 
-		public int IsDead ()
+		public override bool IsDead ()
 		{
-			return (specialData.flags & OBJ_DEAD ? true : false);
+			return (specialData.flags.IsFlagSet(SpecialFlags.OBJ_DEAD) ? true : false);
 		}
 
-		public int IsDying ()
+		public bool IsDying ()
 		{
-			return (specialData.flags & OBJ_DYING ? true : false);
+			return (specialData.flags.IsFlagSet(SpecialFlags.OBJ_DYING) ? true : false);
 		}
 
-		public int IsFiring ()
+		public bool IsFiring ()
 		{
-			return (specialData.flags & OBJ_FIRING_GUN ? true : false);
+			return (specialData.flags.IsFlagSet(SpecialFlags.OBJ_FIRING_GUN) ? true : false);
 		}
 
-		public int IsAwake ()
+		public bool IsAwake ()
 		{
-			return localFlags & OBJ_AWAKE;
+			return localFlags.IsFlagSet(LocalFlags.OBJ_AWAKE);
 		}
 
-		public int  IsSetFlag (int flag)
+		public bool  IsSetFlag (SpecialFlags flag)
 		{
-			return ((specialData.flags & flag) ? true : false);
+			return ((specialData.flags.IsFlagSet(flag)) ? true : false);
 		}
 
-		public int  IsSetLocalFlag (int flag)
+		public bool  IsSetLocalFlag (LocalFlags flag)
 		{
-			return ((localFlags & flag) ? true : false);
+			return ((localFlags.IsFlagSet(flag)) ? true : false);
 		}
 
-		public void SetLocalFlag (int flag)
+		public void SetLocalFlag (LocalFlags flag)
 		{
 			localFlags |= flag;
 		}
 
-		public void UnSetLocalFlag (int flag)
+		public void UnSetLocalFlag (LocalFlags flag)
 		{
 			localFlags &= ~(flag);
 		}
 
-		public int  IsSetCampaignFlag (int flag)
+		public bool  IsSetCampaignFlag (int flag)
 		{
-			return ((campaignFlags & flag) ? true : false);
+			return ((campaignFlags.IsFlagSet(flag)) ? true : false);
 		}
 
 		public void SetCampaignFlag (int flag)
@@ -299,9 +299,9 @@ namespace FalconNet.Campaign
 			campaignFlags &= ~(flag);
 		}
 
-		public int IsSetRemoveFlag ()
+		public bool IsSetRemoveFlag ()
 		{
-			return localFlags & REMOVE_NEXT_FRAME;
+			return localFlags.IsFlagSet(LocalFlags.REMOVE_NEXT_FRAME);
 		}
 
 		public void SetRemoveFlag ()
@@ -373,16 +373,16 @@ namespace FalconNet.Campaign
 			return specialData.FlareID;
 		}
 
-		public virtual int IsSPJamming ()
+		public override  bool IsSPJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int IsAreaJamming ()
+		public override  bool IsAreaJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int HasSPJamming ()
+		public override  bool HasSPJamming ()
 		{throw new NotImplementedException();}
 
-		public virtual int HasAreaJamming ()
+		public override  bool HasAreaJamming ()
 		{throw new NotImplementedException();}
 	
 		public CampBaseClass GetCampaignObject ()
@@ -506,7 +506,7 @@ namespace FalconNet.Campaign
 		public virtual void Init (SimInitDataClass initData)
 		{throw new NotImplementedException();}
 
-		public virtual int Exec ()
+		public virtual bool Exec ()
 		{
 			return true;
 		}
@@ -591,12 +591,12 @@ namespace FalconNet.Campaign
 	
 		// virtual function interface
 		// serialization functions
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
 		public virtual int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}	// returns bytes written
-		public virtual int Save (FileStream file)
+		public override int Save (FileStream file)
 		{throw new NotImplementedException();}		// returns bytes written
 	
 		// event handlers

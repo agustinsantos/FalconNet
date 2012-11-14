@@ -9,7 +9,7 @@ namespace FalconNet.Ui95
 	#if USE_SH_POOLS
 		public:
 			// Overload new/delete to use a SmartHeap pool
-			void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,FALSE);	};
+			void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,false);	};
 			void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 	#endif
 		

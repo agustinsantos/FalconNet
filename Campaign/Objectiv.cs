@@ -3,6 +3,9 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Objective= FalconNet.Campaign.ObjectiveClass;
+using Unit=FalconNet.Campaign.UnitClass;
+using VU_BYTE=System.Byte;
+//using VU_ERRCODE=System.Int32;
 
 namespace FalconNet.Campaign
 {
@@ -12,32 +15,32 @@ namespace FalconNet.Campaign
 	// =======================
 	public struct CampObjectiveTransmitDataType
 	{
-		CampaignTime last_repair;	// Last time this objective got something repaired
-		short aiscore;		// Used for scoring junque
-		ulong obj_flags;		// Transmitable flags
-		byte supply;			// Amount of supply going through here
-		byte fuel;			// Amount of fuel going through here 
-		byte losses;			// Amount of supply/fuel losses (in percentage)
-		byte status;			// % operational
-		byte priority;		// Target's general priority
-		byte[] fstatus;		// Array of feature statuses (was [((FEATURES_PER_OBJ*2)+7)/8])
+		public CampaignTime last_repair;	// Last time this objective got something repaired
+		public short aiscore;		// Used for scoring junque
+		public O_FLAGS obj_flags;		// Transmitable flags
+		public byte supply;			// Amount of supply going through here
+		public byte fuel;			// Amount of fuel going through here 
+		public byte losses;			// Amount of supply/fuel losses (in percentage)
+		public byte status;			// % operational
+		public byte priority;		// Target's general priority
+		public byte[] fstatus;		// Array of feature statuses (was [((FEATURES_PER_OBJ*2)+7)/8])
 	};
 
 	public struct CampObjectiveStaticDataType
 	{
-		short nameid;			// Index into name table
-		short local_data;		// Local AI data dump
-		VU_ID parent;			// ID of parent SO or PO
-		Control first_owner;	// Origional objective owner
-		byte links;			// Number of links
-		RadarRangeClass radar_data;		// Data on what a radar stationed here can see
-		ObjClassDataType class_data;		// Pointer to class data
+		public short nameid;			// Index into name table
+		public short local_data;		// Local AI data dump
+		public VU_ID parent;			// ID of parent SO or PO
+		public Control first_owner;	// Origional objective owner
+		public byte links;			// Number of links
+		public RadarRangeClass radar_data;		// Data on what a radar stationed here can see
+		public ObjClassDataType class_data;		// Pointer to class data
 	};
 
 	public class CampObjectiveLinkDataType
 	{
-		byte[] costs = new byte[MOVEMENT_TYPES];	// Cost to go here, depending on movement type
-		VU_ID id;
+		public byte[] costs = new byte[(int)MoveType.MOVEMENT_TYPES];	// Cost to go here, depending on movement type
+		public VU_ID id;
 	};
 
 	public class ObjectiveClass : CampBaseClass
@@ -45,7 +48,7 @@ namespace FalconNet.Campaign
 #if USE_SH_POOLS
 	public:
 		// Overload new/delete to use a SmartHeap fixed size pool
-		void *operator new(size_t size) { ShiAssert( size == sizeof(ObjectiveClass) ); return MemAllocFS(pool);	};
+		void *operator new(size_t size) { Debug.Assert( size == sizeof(ObjectiveClass) ); return MemAllocFS(pool);	};
 		void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
 		static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(ObjectiveClass), 2500, 0 ); };
 		static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -55,35 +58,35 @@ namespace FalconNet.Campaign
 		private CampObjectiveTransmitDataType obj_data;
 		private int dirty_objective;
 		public CampObjectiveStaticDataType static_data;
-		public CampObjectiveLinkDataType link_data;		// The actual link data (was [OBJ_MAX_NEIGHBORS])
+		public CampObjectiveLinkDataType[] link_data;		// The actual link data (was [OBJ_MAX_NEIGHBORS])
 		public ATCBrain brain;
 
 		// access functions
 		public ulong GetObjFlags ()
 		{ throw new NotImplementedException();}
 
-		public void ClearObjFlags (ulong flags)
+		public void ClearObjFlags (O_FLAGS flags)
 		{
 			obj_data.obj_flags &= ~(flags);
 		}
 
-		public void SetObjFlags (ulong flags)
+		public void SetObjFlags (O_FLAGS flags)
 		{
 			obj_data.obj_flags |= (flags);
 		}
 
 		// constructors
-		public ObjectiveClass (int type)
+		public ObjectiveClass (int type) : base(type)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public ObjectiveClass (VU_BYTE[]  stream)
+		public ObjectiveClass (VU_BYTE[]  stream) : base(stream)
 		{
 			throw new NotImplementedException ();
 		}
 		//public virtual ~ObjectiveClass();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{
 			throw new NotImplementedException ();
 		}
@@ -109,78 +112,78 @@ namespace FalconNet.Campaign
 		}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent  evnt)
+		public override VU_ERRCODE Handle (VuFullUpdateEvent  evnt)
 		{
 			throw new NotImplementedException ();
 		}
 
 		// Required pure virtuals handled by objective.h
-		public virtual void SendDeaggregateData (VuTargetEntity p)
+		public override void SendDeaggregateData (VuTargetEntity p)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int RecordCurrentState (FalconSessionEntity  f, int i)
+		public override int RecordCurrentState (FalconSessionEntity  f, int i)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int Deaggregate (FalconSessionEntity  session)
+		public override int Deaggregate (FalconSessionEntity  session)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int Reaggregate (FalconSessionEntity  session)
+		public override int Reaggregate (FalconSessionEntity  session)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int TransferOwnership (FalconSessionEntity  session)
+		public override int TransferOwnership (FalconSessionEntity  session)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int Wake ()
+		public override int Wake ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int Sleep ()
+		public override int Sleep ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void InsertInSimLists (float cameraX, float cameraY)
+		public override void InsertInSimLists (float cameraX, float cameraY)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void RemoveFromSimLists ()
+		public override void RemoveFromSimLists ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void DeaggregateFromData (int size, byte[] data)
+		public override void DeaggregateFromData (int size, byte[] data)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void ReaggregateFromData (int size, byte[] data)
+		public override void ReaggregateFromData (int size, byte[] data)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void TransferOwnershipFromData (int size, byte[] data)
+		public override void TransferOwnershipFromData (int size, byte[] data)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual MoveType GetMovementType ()
+		public override MoveType GetMovementType ()
 		{
-			return NoMove;
+			return MoveType.NoMove;
 		}
 
-		public virtual int ApplyDamage (FalconCampWeaponsFire cwfm, byte b)
+		public override int ApplyDamage (FalconCampWeaponsFire cwfm, byte b)
 		{
 			throw new NotImplementedException ();
 		}
@@ -195,94 +198,94 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public virtual byte[] GetDamageModifiers ()
+		public override byte[] GetDamageModifiers ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual string GetName (string buffer, int size, int obj)
+		public override string GetName (string buffer, int size, int obj)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual string GetFullName (string buffer, int size, int obj)
+		public override string GetFullName (string buffer, int size, int obj)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetHitChance (int mt, int range)
+		public override int GetHitChance (int mt, int range)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetAproxHitChance (int mt, int range)
+		public override int GetAproxHitChance (int mt, int range)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetCombatStrength (int mt, int range)
+		public override int GetCombatStrength (int mt, int range)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetAproxCombatStrength (int mt, int range)
+		public override int GetAproxCombatStrength (int mt, int range)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetWeaponRange (int mt, FalconEntity  target = null)
+		public override int GetWeaponRange (int mt, FalconEntity  target = null)
 		{
 			throw new NotImplementedException ();
 		} // 2008-03-08 ADDED SECOND DEFAULT PARM
-		public virtual int GetAproxWeaponRange (int mt)
+		public override int GetAproxWeaponRange (int mt)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetDetectionRange (int mt)
+		public override int GetDetectionRange (int mt)
 		{
 			throw new NotImplementedException ();
 		}						// Takes into account emitter status
-		public virtual int GetElectronicDetectionRange (int mt)
+		public override int GetElectronicDetectionRange (int mt)
 		{
 			throw new NotImplementedException ();
 		}			// Max Electronic detection range, even if turned off
-		public virtual int CanDetect (FalconEntity  ent)
+		public override int CanDetect (FalconEntity  ent)
 		{
 			throw new NotImplementedException ();
 		}					// Nonzero if this entity can see ent
-		public virtual int OnGround ()
+		public override bool OnGround ()
 		{
 			return true;
 		}
 
-		public virtual int GetRadarMode ()
+		public override FEC_RADAR GetRadarMode ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual int GetRadarType ()
+		public override Radar_types GetRadarType ()
 		{
 			throw new NotImplementedException ();
 		}
 
 		// These are only really relevant for sam/airdefense/radar entities
-		public virtual int GetNumberOfArcs ()
+		public override int GetNumberOfArcs ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual float GetArcRatio (int anum)
+		public override float GetArcRatio (int anum)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual float GetArcRange (int anum)
+		public override float GetArcRange (int anum)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public virtual void GetArcAngle (int anum, ref float a1, ref float a2)
+		public override void GetArcAngle (int anum, ref float a1, ref float a2)
 		{
 			throw new NotImplementedException ();
 		}
@@ -326,34 +329,34 @@ namespace FalconNet.Campaign
 		{
 			throw new NotImplementedException ();
 		} // TODO [MOVEMENT_TYPES]);
-		public virtual bool IsObjective ()
+		public override bool IsObjective ()
 		{
 			return true;
 		}
 
 		public bool IsFrontline ()
 		{
-			return (int)(O_FRONTLINE & obj_data.obj_flags);
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_FRONTLINE);
 		}
 
 		public bool IsSecondline ()
 		{
-			return (int)(O_SECONDLINE & obj_data.obj_flags);
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_SECONDLINE);
 		}
 
 		public bool IsThirdline ()
 		{
-			return (int)(O_THIRDLINE & obj_data.obj_flags);
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_THIRDLINE);
 		}
 
 		public bool IsNearfront ()
 		{
-			return (int)((O_THIRDLINE | O_SECONDLINE | O_FRONTLINE) & obj_data.obj_flags);
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_THIRDLINE | O_FLAGS.O_SECONDLINE | O_FLAGS.O_FRONTLINE);
 		}
 
 		public bool IsBeach ()
 		{
-			return (int)(O_BEACH & obj_data.obj_flags);
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_BEACH);
 		}
 
 		public int IsPrimary ()
@@ -373,11 +376,11 @@ namespace FalconNet.Campaign
 
 		public int IsGCI ()
 		{
-			return (int)(O_IS_GCI & obj_data.obj_flags);
+			return (int)(O_FLAGS.O_IS_GCI & obj_data.obj_flags);
 		}	// 2002-02-13 ADDED BY S.G.
 		public int HasNCTR ()
 		{
-			return (int)(O_HAS_NCTR & obj_data.obj_flags);
+			return (int)(O_FLAGS.O_HAS_NCTR & obj_data.obj_flags);
 		}	// 2002-02-13 ADDED BY S.G.
 		public int HasRadarRanges ()
 		{
@@ -410,19 +413,19 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int ManualSet ()
+		public bool ManualSet ()
 		{
-			return obj_data.obj_flags & O_MANUAL_SET;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_MANUAL_SET);
 		}
 
-		public void SetJammed (int j)
+		public override  void SetJammed (int j)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public int Jammed ()
+		public bool Jammed ()
 		{
-			return obj_data.obj_flags & O_JAMMED;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_JAMMED);
 		}
 
 		public void SetSamSite (int j)
@@ -430,9 +433,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int SamSite ()
+		public bool SamSite ()
 		{
-			return obj_data.obj_flags & O_SAM_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_SAM_SITE);
 		}
 
 		public void SetArtillerySite (int j)
@@ -440,9 +443,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int ArtillerySite ()
+		public bool ArtillerySite ()
 		{
-			return obj_data.obj_flags & O_ARTILLERY_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_ARTILLERY_SITE);
 		}
 
 		public void SetAmbushCAPSite (int j)
@@ -450,9 +453,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int AmbushCAPSite ()
+		public bool AmbushCAPSite ()
 		{
-			return obj_data.obj_flags & O_AMBUSHCAP_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_AMBUSHCAP_SITE);
 		}
 
 		public void SetBorderSite (int j)
@@ -460,9 +463,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int BorderSite ()
+		public bool BorderSite ()
 		{
-			return obj_data.obj_flags & O_BORDER_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_BORDER_SITE);
 		}
 
 		public void SetMountainSite (int j)
@@ -470,9 +473,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int MountainSite ()
+		public bool MountainSite ()
 		{
-			return obj_data.obj_flags & O_MOUNTAIN_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_MOUNTAIN_SITE);
 		}
 
 		public void SetCommandoSite (int j)
@@ -480,9 +483,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int CommandoSite ()
+		public bool CommandoSite ()
 		{
-			return obj_data.obj_flags & O_COMMANDO_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_COMMANDO_SITE);
 		}
 
 		public void SetFlatSite (int j)
@@ -490,9 +493,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int FlatSite ()
+		public bool FlatSite ()
 		{
-			return obj_data.obj_flags & O_FLAT_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_FLAT_SITE);
 		}
 
 		public void SetRadarSite (int j)
@@ -500,9 +503,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int RadarSite ()
+		public bool RadarSite ()
 		{
-			return obj_data.obj_flags & O_RADAR_SITE;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_RADAR_SITE);
 		}
 
 		public void SetAbandoned (int t)
@@ -510,9 +513,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int Abandoned ()
+		public bool Abandoned ()
 		{
-			return obj_data.obj_flags & O_ABANDONED;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_ABANDONED);
 		}
 
 		public void SetNeedRepair (int t)
@@ -520,9 +523,9 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public int NeedRepair ()
+		public bool NeedRepair ()
 		{
-			return obj_data.obj_flags & O_NEED_REPAIR;
+			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_NEED_REPAIR);
 		}
 
 		// Dirty Functions
@@ -531,20 +534,20 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
-		public void WriteDirty (ref byte[] stream)
+		public override void WriteDirty (byte[] stream)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public void ReadDirty (ref byte[] stream)
+		public override void ReadDirty (byte[] stream)
 		{
 			throw new NotImplementedException ();
 		}
 
 		// Objective data stuff
-		public virtual void SetOwner (Control c)
+		public override void SetOwner (Control c)
 		{
-			CampBaseClass.SetOwner (c);
+			base.SetOwner (c);
 			SetDelta (1);
 		}
 
@@ -570,7 +573,10 @@ namespace FalconNet.Campaign
 
 		public void SetObjectivePriority (PriorityLevel p)
 		{
+#if TODO		
 			obj_data.priority = p;
+#endif 
+			throw new NotImplementedException();
 		}
 
 		public void SetObjectiveScore (short score)
@@ -587,10 +593,13 @@ namespace FalconNet.Campaign
 		//void SetObjectiveStatus (byte s)						{	obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
 		public void SetObjectiveStatus (byte s)
 		{
+#if TODO		
 			if (obj_data.status > s)
 				obj_data.last_repair = Camp_GetCurrentTime ();
 			obj_data.status = s;
-			MakeObjectiveDirty (DIRTY_STATUS, DDP [180].priority);
+			MakeObjectiveDirty (Dirty_Objective.DIRTY_STATUS, DDP [180].priority);
+#endif
+			throw new NotImplementedException();
 		}
 		//void SetObjectiveStatus (byte s)						{	if (obj_data.status > s) obj_data.last_repair = Camp_GetCurrentTime(); obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
 		// JB 000811
@@ -646,7 +655,7 @@ namespace FalconNet.Campaign
 
 		public float GetNeighborCost (int n, MoveType t)
 		{
-			return link_data [n].costs [t];
+			return link_data [n].costs [(int)t];
 		}
 
 		public Control GetObjectiveOldown ()
@@ -656,7 +665,7 @@ namespace FalconNet.Campaign
 
 		public ObjectiveClass GetObjectiveParent ()
 		{
-			return FindObjective (static_data.parent);
+			return FindStatic.FindObjective (static_data.parent);
 		}
 
 		public ObjectiveClass GetObjectiveSecondary ()
@@ -729,7 +738,7 @@ namespace FalconNet.Campaign
 
 		public short GetTotalFeatures ()
 		{
-			return static_data.class_data->Features;
+			return static_data.class_data.Features;
 		}
 
 		public int GetFeatureStatus (int f)
@@ -773,36 +782,41 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 	}
 
+	// =======================
+	// Transmitable flags
+	// =======================
+	[Flags]
+	public enum O_FLAGS : ulong
+	{		
+		O_FRONTLINE = 0x1,
+		O_SECONDLINE = 0x2,
+		O_THIRDLINE = 0x4,
+		O_B3 = 0x8,
+		O_JAMMED = 0x10,
+		O_BEACH = 0x20,
+		O_B1 = 0x40,
+		O_B2 = 0x80,
+		O_MANUAL_SET = 0x100,
+		O_MOUNTAIN_SITE = 0x200,
+		O_SAM_SITE = 0x400,
+		O_ARTILLERY_SITE = 0x800,
+		O_AMBUSHCAP_SITE = 0x1000,
+		O_BORDER_SITE = 0x2000,
+		O_COMMANDO_SITE = 0x4000,
+		O_FLAT_SITE = 0x8000,
+		O_RADAR_SITE = 0x10000,
+		O_NEED_REPAIR = 0x20000,
+		O_EMPTY1 = 0x40000,
+		O_EMPTY2 = 0x80000,
+		O_ABANDONED = 0x100000,
+		// 2002-02-13 ADDED BY MN for Sylvain's new Identify
+		O_HAS_NCTR = 0x200000,
+		O_IS_GCI = 0x400000 
+	}
+	
 	public static class ObjectivStatic
 	{
-		// =======================
-		// Transmitable flags
-		// =======================
 
-		public const int O_FRONTLINE = 0x1;
-		public const int O_SECONDLINE = 0x2;
-		public const int O_THIRDLINE = 0x4;
-		public const int O_B3 = 0x8;
-		public const int O_JAMMED = 0x10;
-		public const int O_BEACH = 0x20;
-		public const int O_B1 = 0x40;
-		public const int O_B2 = 0x80;
-		public const int O_MANUAL_SET = 0x100;
-		public const int O_MOUNTAIN_SITE = 0x200;
-		public const int O_SAM_SITE = 0x400;
-		public const int O_ARTILLERY_SITE = 0x800;
-		public const int O_AMBUSHCAP_SITE = 0x1000;
-		public const int O_BORDER_SITE = 0x2000;
-		public const int O_COMMANDO_SITE = 0x4000;
-		public const int O_FLAT_SITE = 0x8000;
-		public const int O_RADAR_SITE = 0x10000;
-		public const int O_NEED_REPAIR = 0x20000;
-		public const int O_EMPTY1 = 0x40000;
-		public const int O_EMPTY2 = 0x80000;
-		public const int O_ABANDONED = 0x100000;
-		// 2002-02-13 ADDED BY MN for Sylvain's new Identify
-		public const int O_HAS_NCTR = 0x200000;
-		public const int O_IS_GCI = 0x400000;
 
 		// =======================
 		// Random externals

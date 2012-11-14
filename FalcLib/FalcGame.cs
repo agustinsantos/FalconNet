@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
 
 namespace FalconNet.FalcLib
 {

@@ -38,19 +38,19 @@ namespace FalconNet.Graphics
 #if GRAPHICS_USE_RES_MGR
 			// Setup our attach points
 			sprintf( fullPath, "%s\\Texture", theaterPath );
-			ResAddPath( fullPath, FALSE );
+			ResAddPath( fullPath, false );
 			sprintf( fullPath, "%s\\Weather", theaterPath );
-			ResAddPath( fullPath, FALSE );
-			ResAddPath( objectPath, FALSE );
-			ResAddPath( misctexPath, FALSE );
+			ResAddPath( fullPath, false );
+			ResAddPath( objectPath, false );
+			ResAddPath( misctexPath, false );
 		
 			// Attach our resource files
 			sprintf( fullPath, "%s\\texture\\", theaterPath );
 			sprintf( zipName, "%s\\texture\\%s", theaterPath, TerrainTexArchiveName );
-			ResHandleTerrainTex = ResAttach_Open ( fullPath, zipName, FALSE );
+			ResHandleTerrainTex = ResAttach_Open ( fullPath, zipName, false );
 			if(ResHandleTerrainTex < 0)
 			{
-				//ShiAssert( ResHandleTerrainTex >= 0 );
+				//Debug.Assert( ResHandleTerrainTex >= 0 );
 				// we need to exit cleanly... cuz the file couldn't be opened which we need
 			}
 #endif
@@ -76,7 +76,7 @@ namespace FalconNet.Graphics
 			TheTimeOfDay.Setup ( fullPath );
 			
 			// Setup the weather database
-			ShiAssert( TheWeather );
+			Debug.Assert( TheWeather );
 			TheWeather.Setup();
 		
 			// Setup the BSP object library

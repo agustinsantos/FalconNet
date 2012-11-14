@@ -44,8 +44,8 @@ namespace FalconNet.Graphics
 			IntensityPoolNext	= IntensityPoolBuffer;
 			ClipInfoPoolNext	= ClipInfoPoolBuffer;
 			LODBiasInv			= 1.0f;
-			SetTextureState( TRUE );
-			SetFog( 0.0f, NULL );
+			SetTextureState( true );
+			SetFog( 0.0f, null );
 		}
 
 		//public ~StateStackClass()	{ Debug.Assert(stackDepth == 0); };
@@ -697,7 +697,7 @@ namespace FalconNet.Graphics
 				else // JB 010220 CTD
 				if (objInst.id < 0 || objInst.id >= TheObjectListLength || objInst.TextureSet < 0) // JB 010705 CTD second try
 				{
-					Debug.Assert(FALSE);
+					Debug.Assert(false);
 					CurrentLOD = 0;
 				}
 				else 

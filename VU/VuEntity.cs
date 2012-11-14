@@ -3,10 +3,38 @@ using System;
 using BIG_SCALAR=System.Single;
 //typedef float BIG_SCALAR;
 using SM_SCALAR=System.Single;
+using VU_DAMAGE= System.UInt64;
+using VU_BYTE=System.Byte;
+
 using System.IO;//typedef float SM_SCALAR;
 
 namespace FalconNet.VU
 {  
+	public struct VuEntityType 
+	{
+	  public ushort id_;
+	  public ushort collisionType_;
+	  public SM_SCALAR collisionRadius_;
+	  public VU_BYTE[] classInfo_; //[CLASS_NUM_BYTES];
+	  public VU_TIME updateRate_;
+	  public VU_TIME updateTolerance_;
+	  public SM_SCALAR fineUpdateRange_;	// max distance to send position updates
+	  public SM_SCALAR fineUpdateForceRange_; // distance to force position updates
+	  public SM_SCALAR fineUpdateMultiplier_; // multiplier for noticing position updates
+	  public VU_DAMAGE damageSeed_;
+	  public int hitpoints_;
+	  public ushort majorRevisionNumber_;
+	  public ushort minorRevisionNumber_;
+	  public ushort createPriority_;
+	  public byte managementDomain_;
+	  public bool transferable_;
+	  public bool private_;
+	  public bool tangible_;
+	  public bool collidable_;
+	  public bool global_;
+	  public bool persistent_;
+	}
+	
 	//typedef SM_SCALAR VU_QUAT[4];
 	//typedef SM_SCALAR VU_VECT[3];
 	
@@ -46,6 +74,18 @@ namespace FalconNet.VU
 	
 	public class VuEntity
 	{
+		public const int VU_UNKNOWN_ENTITY_TYPE			=0;
+		public const int  VU_SESSION_ENTITY_TYPE			=1;
+		public const int  VU_GROUP_ENTITY_TYPE			=2;
+		public const int  VU_GLOBAL_GROUP_ENTITY_TYPE	        =3;
+		public const int  VU_GAME_ENTITY_TYPE             	=4;
+		public const int  VU_PLAYER_POOL_GROUP_ENTITY_TYPE	=5;
+		public const int  VU_LAST_ENTITY_TYPE			=100;
+		
+		public const int  VU_CREATE_PRIORITY_BASE		=100;
+		
+		public VuEntity() {}
+		
 		public VuEntity (int t)
 		{
 		}
@@ -87,9 +127,28 @@ namespace FalconNet.VU
 		{
 			return pos_.z_;
 		}
+		
+		public void SetAssociation(VU_ID assoc) { 
+			share_.assoc_ = assoc; 
+		}
+		
+		public VU_ID Id()		
+		{
+			return share_.id_; 
+		}
+		public VuEntityType EntityType()
+		{
+			return entityTypePtr_; 
+		}
+		public bool  IsLocal()	
+		{ 
+			//TODO return (bool)((vuLocalSession == OwnerId()) ? true : false);
+			throw new NotImplementedException();
+		}
 
 		protected ShareData share_;
 		protected PositionData pos_;
 		protected OrientationData orient_;
+		protected VuEntityType entityTypePtr_;
 	}
 }

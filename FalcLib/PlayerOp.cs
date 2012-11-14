@@ -281,7 +281,7 @@ namespace FalconNet.FalcLib
 			
 			_stprintf(path,_T("%s\\config\\%s.pop"),FalconDataDirectory,filename);
 				
-			if((fp = _tfopen(path,"wb")) == NULL)
+			if((fp = _tfopen(path,"wb")) == null)
 			{
 				MonoPrint(_T("Couldn't save player options"));
 				return false;

@@ -154,7 +154,7 @@ namespace FalconNet.UI
 		public void RemoveControl(long ControlID);
 		public CONTROLLIST *RemoveControl(CONTROLLIST *ctrl);
 		public void RemoveAllControls();
-		public bool SetFont(long ID) { Font_=ID; return(TRUE); }
+		public bool SetFont(long ID) { Font_=ID; return(true); }
 		public void SetHandler(C_Handler *handler) {Handler_=handler;}
 		public void SetKBCallback(bool (*cb)(unsigned char DKScanCode,unsigned char Ascii,unsigned char ShiftStates,long RepeatCount)) { KBCallback_=cb; }
 		public CONTROLLIST *GetControlList() { return(Controls_); }
@@ -163,7 +163,7 @@ namespace FalconNet.UI
 
 		// Keyboard Support Routines
 		public bool CheckKeyboard(unsigned char DKScanCode,unsigned char Ascii,unsigned char ShiftStates,long RepeatCount); // Called whenever a key is pressed
-		public bool CheckHotKeys(unsigned char DKScanCode,unsigned char Ascii,unsigned char ShiftStates,long RepeatCount); // Called whenever a key is pressed & CheckKeyboard returned FALSE
+		public bool CheckHotKeys(unsigned char DKScanCode,unsigned char Ascii,unsigned char ShiftStates,long RepeatCount); // Called whenever a key is pressed & CheckKeyboard returned false
 		public void SetControl(long ID); // Called when mouse is used over this control
 		public void SetPrevControl(); // Called when SHIFT & TAB are pressed
 		public void SetNextControl(); // Called when TAB is pressed
@@ -192,7 +192,7 @@ namespace FalconNet.UI
 		public long GetGroup( ) { return(Group_);}
 		public long GetCluster( ) { return(Cluster_);}
 		public UI95_RECT GetClientArea(long ID) { if(ID < WIN_MAX_CLIENTS) return ClientArea_[ID]; return(ClientArea_[0]); }
-		public bool Minimized() { if(w_ == MinW_ && h_ == MinH_) return(TRUE); return(FALSE); }
+		public bool Minimized() { if(w_ == MinW_ && h_ == MinH_) return(true); return(false); }
 		public void Minimize();
 		public void Maximize();
 		public C_Handler *GetHandler( ) { return(Handler_);}

@@ -60,17 +60,17 @@ namespace FalconNet.FalcLib
 
 	public class ObjClassDataType
 	{
-		short		Index;						// descriptionIndex pointing here
-		string		Name;
-		short		DataRate;					// Sorte Rate and other cool data
-		short		DeagDistance;				// Distance to deaggregate at.
-		short		PtDataIndex;				// Index into pt header data table
-		byte[]		Detection = new byte[(int) MoveType.MOVEMENT_TYPES];	// Detection ranges
-		byte[]		DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
-		short		IconIndex;					// Index to this objective's icon type
-		byte		Features;					// Number of features in this objective
-		byte		RadarFeature;				// ID of the radar feature for this objective
-		short		FirstFeature;				// Index of first feature entry
+		public short		Index;						// descriptionIndex pointing here
+		public string		Name;
+		public short		DataRate;					// Sorte Rate and other cool data
+		public short		DeagDistance;				// Distance to deaggregate at.
+		public short		PtDataIndex;				// Index into pt header data table
+		public byte[]		Detection = new byte[(int) MoveType.MOVEMENT_TYPES];	// Detection ranges
+		public byte[]		DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
+		public short		IconIndex;					// Index to this objective's icon type
+		public byte		Features;					// Number of features in this objective
+		public byte		RadarFeature;				// ID of the radar feature for this objective
+		public short		FirstFeature;				// Index of first feature entry
 	};
 
 	public class WeaponClassDataType
@@ -148,8 +148,8 @@ namespace FalconNet.FalcLib
 		short		MaxSpeed;					// Maximum vehicle speed, in kph
 		short		RadarType;					// Index into RadarDataTable
 		short		NumberOfPilots;				// # of pilots (for eject)
-		ushort		RackFlags;					//0x01 means hardpoint 0 needs a rack, 0x02 -> hdpt 1, etc
-		ushort		VisibleFlags;				//0x01 means hardpoint 0 is visible, 0x02 -> hdpt 1, etc
+		ushort		RackFlags;					//0x01 means hardpoint 0 needs a rack, 0x02 . hdpt 1, etc
+		ushort		VisibleFlags;				//0x01 means hardpoint 0 is visible, 0x02 . hdpt 1, etc
 		byte		CallsignIndex;
 		byte		CallsignSlots;
 		byte[]		HitChance = new byte[(int) MoveType.MOVEMENT_TYPES];	// Vehicle hit chances (best hitchance & bonus)

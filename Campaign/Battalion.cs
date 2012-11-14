@@ -1,7 +1,11 @@
 using System;
 using FalconNet.Common;
 using FalconNet.VU;
+using VU_BYTE=System.Byte;
+using Percentage=System.Int32;
 using FalconNet.FalcLib;
+using System.Diagnostics;
+using Unit=FalconNet.Campaign.UnitClass;
 
 namespace FalconNet.Campaign
 {
@@ -14,7 +18,7 @@ namespace FalconNet.Campaign
 #if USE_SH_POOLS
    
       public // Overload new/delete to use a SmartHeap fixed size pool
-      public void *operator new(size_t size) { ShiAssert( size == sizeof(BattalionClass) ); return MemAllocFS(pool);	};
+      public void *operator new(size_t size) { Debug.Assert( size == sizeof(BattalionClass) ); return MemAllocFS(pool);	};
       public void operator delete(void *mem) { if (mem) MemFreeFS(mem); };
       public static void InitializeStorage()	{ pool = MemPoolInitFS( sizeof(BattalionClass), 200, 0 ); };
       public static void ReleaseStorage()	{ MemPoolFree( pool ); };
@@ -29,7 +33,7 @@ namespace FalconNet.Campaign
 		private byte			final_heading;			// Unit facing, at destination
 		private byte			heading;				// Formation heading
 		private byte			fullstrength;			// Number of vehicles at fullstrength
-		private byte			radar_mode;				// Radar mode
+		private FEC_RADAR			radar_mode;				// Radar mode
 		private byte			position;
 		private byte			search_mode;			// Radar Search mode
 		private byte			missiles_flying;		// Number of missiles being guided
@@ -56,25 +60,25 @@ namespace FalconNet.Campaign
 
 	
 		// constructors and serial functions
-		public BattalionClass (int type, Unit parent)
+		public BattalionClass (int type, Unit parent):base(type)
 		{throw new NotImplementedException();}
 
-		public BattalionClass (VU_BYTE[] stream)
+		public BattalionClass (VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~BattalionClass();
-		public virtual int SaveSize ()
+		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
-		public virtual int Save (VU_BYTE[] stream)
+		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
 
 		// event Handlers
-		public virtual VU_ERRCODE Handle (VuFullUpdateEvent evnt)
+		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int IsBattalion ()
+		public override bool IsBattalion ()
 		{
-			return TRUE;
+			return true;
 		}
 
 		// Access Functions
@@ -101,69 +105,69 @@ namespace FalconNet.Campaign
 		public override int DoCombat ()
 		{throw new NotImplementedException();}
 
-		public virtual UnitDeaggregationData GetUnitDeaggregationData ()
+		public override UnitDeaggregationData GetUnitDeaggregationData ()
 		{throw new NotImplementedException();}
 
-		public virtual void ClearDeaggregationData ()
+		public override void ClearDeaggregationData ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetDeaggregationPoint (int slot, CampEntity ent)
+		public override int GetDeaggregationPoint (int slot, CampEntity ent)
 		{throw new NotImplementedException();}
 
-		public virtual int Reaction (CampEntity what, int zone, float range)
+		public override int Reaction (CampEntity what, int zone, float range)
 		{throw new NotImplementedException();}
 
-		public virtual int ChooseTactic ()
+		public override int ChooseTactic ()
 		{throw new NotImplementedException();}
 
-		public virtual int CheckTactic (int tid)
+		public override int CheckTactic (int tid)
 		{throw new NotImplementedException();}
 
-		public virtual int Real ()
+		public override int Real ()
 		{
 			return 1;
 		}
 
-		public virtual void SetUnitOrders (int o, VU_ID oid)
+		public override void SetUnitOrders (int o, VU_ID oid)
 		{throw new NotImplementedException();}
 
 		public void PickFinalLocation ()
 		{throw new NotImplementedException();}
 //		virtual void SetUnitAction ();
-		public virtual int GetCruiseSpeed ()
+		public override int GetCruiseSpeed ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetCombatSpeed ()
+		public override int GetCombatSpeed ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetMaxSpeed ()
+		public override int GetMaxSpeed ()
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitSpeed ()
+		public override int GetUnitSpeed ()
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime UpdateTime ()
+		public override CampaignTime UpdateTime ()
 		{throw new NotImplementedException();}
 
-		public virtual CampaignTime CombatTime ()
+		public override CampaignTime CombatTime ()
 		{
-			return GROUND_COMBAT_CHECK_INTERVAL * CampaignSeconds;
+			return new CampaignTime((ulong)AIInput.GROUND_COMBAT_CHECK_INTERVAL * CampaignTime.CampaignSeconds);
 		}
 
-		public virtual int GetUnitSupplyNeed (int total)
+		public override int GetUnitSupplyNeed (int total)
 		{throw new NotImplementedException();}
 
-		public virtual int GetUnitFuelNeed (int total)
+		public override int GetUnitFuelNeed (int total)
 		{throw new NotImplementedException();}
 
-		public virtual void SupplyUnit (int supply, int fuel)
+		public override void SupplyUnit (int supply, int fuel)
 		{throw new NotImplementedException();}
 
-		public virtual int GetDetectionRange (int mt)
+		public override int GetDetectionRange (int mt)
 		{throw new NotImplementedException();}				// Takes into account emitter status
-		public virtual int GetElectronicDetectionRange (int mt)
+		public override int GetElectronicDetectionRange (int mt)
 		{throw new NotImplementedException();}	// Max Electronic detection range, even if turned off
-		public virtual int GetRadarMode ()
+		public override FEC_RADAR GetRadarMode ()
 		{
 			return radar_mode;
 		}
@@ -174,25 +178,25 @@ namespace FalconNet.Campaign
 		}
 // 2001-06-27 MODIFIED BY S.G. DIFFERENT DECLARATION THEN FROM FalcEnt.h RESULTS IN IT NOT BEING CALLED!
 //		virtual void SetRadarMode (byte mode)				{ radar_mode = mode; }
-		public virtual void SetRadarMode (int mode)
+		public override void SetRadarMode (FEC_RADAR mode)
 		{
 			radar_mode = mode;
 		}
 
-		public virtual void ReturnToSearch ()
+		public override void ReturnToSearch ()
 		{throw new NotImplementedException();}
 // 2001-06-27 MODIFIED BY S.G. DIFFERENT DECLARATION THEN FROM FalcEnt.h RESULTS IN IT NOT BEING CALLED!
 //		virtual void SetSearchMode (byte mode)				{ search_mode = mode; }
-		public virtual void SetSearchMode (int mode)
+		public virtual void SetSearchMode (byte mode)
 		{
 			step_search_mode = search_mode = mode;
 		} // 2002-03-22 MODIFIED BY S.G. Init our step_search_mode as well
-		public virtual int CanShootWeapon (int wid)
+		public override bool CanShootWeapon (int wid)
 		{throw new NotImplementedException();}
 
-		public virtual int StepRadar (int t, int d, float range)
+		public override FEC_RADAR StepRadar (int t, int d, float range)
 		{throw new NotImplementedException();} //me123 modifyed to take tracking/detection range parameter
-		public virtual int GetVehicleDeagData (SimInitDataClass simdata, int remote)
+		public override int GetVehicleDeagData (SimInitDataClass simdata, int remote)
 		{throw new NotImplementedException();}
 
 		public virtual int GetMissilesFlying ()
@@ -201,28 +205,28 @@ namespace FalconNet.Campaign
 		}//me123
 		
 		// core functions
-		public virtual void SetUnitLastMove (CampaignTime t)
+		public override void SetUnitLastMove (CampaignTime t)
 		{
 			last_move = t;
 		}
 
-		public virtual void SetCombatTime (CampaignTime t)
+		public override void SetCombatTime (CampaignTime t)
 		{
 			last_combat = t;
 		}
 
-		public virtual void SetUnitParent (Unit p)
+		public override void SetUnitParent (Unit p)
 		{
 			parent_id = p.Id ();
 		}
 
-		public virtual void SetUnitSupply (int s)
+		public override void SetUnitSupply (int s)
 		{throw new NotImplementedException();}
 
-		public virtual void SetUnitFatigue (int f)
+		public override void SetUnitFatigue (int f)
 		{throw new NotImplementedException();}
 
-		public virtual void SetUnitMorale (int m)
+		public override void SetUnitMorale (int m)
 		{throw new NotImplementedException();}
 
 		public virtual void SetUnitHeading (byte h)
@@ -230,17 +234,17 @@ namespace FalconNet.Campaign
 			heading = h;
 		}
 
-		public virtual void SetUnitNextMove ()
+		public override void SetUnitNextMove ()
 		{
 			path.StepPath ();
 		}
 
-		public virtual void ClearUnitPath ()
+		public override void ClearUnitPath ()
 		{
 			path.ClearPath ();
 		}
 
-		public virtual void SetLastResupplyTime (CampaignTime t)
+		public override void SetLastResupplyTime (CampaignTime t)
 		{
 			last_resupply_time = t;
 		}
@@ -264,12 +268,13 @@ namespace FalconNet.Campaign
 
 		public override CampaignTime GetCombatTime ()
 		{
-			return (TheCampaign.CurrentTime > last_combat) ? TheCampaign.CurrentTime - last_combat : 0;
+			return new CampaignTime((CampaignClass.TheCampaign.CurrentTime.time > last_combat.time) ? 
+				CampaignClass.TheCampaign.CurrentTime.time - last_combat.time : 0);
 		}
 
 		public override UnitClass GetUnitParent ()
 		{
-			return (UnitClass)vuDatabase.Find (parent_id);
+			return (UnitClass)VuDatabase.vuDatabase.Find (parent_id);
 		}
 
 		public override VU_ID GetUnitParentID ()
@@ -284,7 +289,7 @@ namespace FalconNet.Campaign
 
 		public override FalconEntity GetAirTarget ()
 		{
-			return (FalconEntity)vuDatabase.Find (air_target);
+			return (FalconEntity)VuDatabase.vuDatabase.Find (air_target);
 		}
 
 		public virtual void SetAirTarget (FalconEntity t)
@@ -292,13 +297,13 @@ namespace FalconNet.Campaign
 			if (t != null)
 				air_target = t.Id ();
 			else
-				air_target = FalconNullId;
+				air_target = VU_ID.FalconNullId;
 		}
 
 		public void IncrementMissileCount ()
 		{
 			missiles_flying++;
-			SetRadarMode (FEC_RADAR_GUIDE);
+			SetRadarMode (FEC_RADAR.FEC_RADAR_GUIDE);
 		}
 
 		public void DecrementMissileCount ()
@@ -306,7 +311,7 @@ namespace FalconNet.Campaign
 			missiles_flying--;
 			if (missiles_flying == 0)
 				ReturnToSearch ();
-			ShiAssert (missiles_flying >= 0);
+			Debug.Assert (missiles_flying >= 0);
 		}
 #if USE_FLANKS
 		virtual void GetLeftFlank (GridIndex *x, GridIndex *y)	{ *x = lfx; *y = lfy; }
@@ -369,33 +374,34 @@ namespace FalconNet.Campaign
 		public void MakeBattalionDirty (Dirty_Battalion bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte[] stream)
+		public override void WriteDirty (byte[] stream)
 		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte[] stream)
+		public override void ReadDirty (byte[] stream)
 		{throw new NotImplementedException();}
 		// 2002-03-22 ADDED BY S.G. Needs them outside of battalion class
-		public virtual void SetAQUIREtimer (VU_TIME newTime)
+		public override void SetAQUIREtimer (VU_TIME newTime)
 		{
 			AQUIREtimer = newTime;
 		}
 
-		public virtual void SetSEARCHtimer (VU_TIME newTime)
+		public override void SetSEARCHtimer (VU_TIME newTime)
 		{
 			SEARCHtimer = newTime;
 		}
 
-		public virtual void SetStepSearchMode (int mode)
+		public override void SetStepSearchMode (int mode)
 		{
-			step_search_mode = mode;
+			// TODO	step_search_mode = mode;
+			throw new NotImplementedException();
 		}
 
-		public virtual VU_TIME GetAQUIREtimer ()
+		public override VU_TIME GetAQUIREtimer ()
 		{
 			return AQUIREtimer;
 		}
 
-		public virtual VU_TIME GetSEARCHtimer ()
+		public override VU_TIME GetSEARCHtimer ()
 		{
 			return SEARCHtimer;
 		}

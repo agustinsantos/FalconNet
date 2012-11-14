@@ -1,5 +1,6 @@
 ﻿using System;
 using FalconNet.FalcLib;
+using FalconNet.Common;
 
 
 namespace FalconNet.Campaign
@@ -84,7 +85,7 @@ namespace FalconNet.Campaign
         // Type Definitions
         // ----------------
 
-        public const float GRID_SIZE_FT = FEET_PER_KM;		// Grid size, in feet (standard sim unit)
+        public const float GRID_SIZE_FT = Constants.FEET_PER_KM;		// Grid size, in feet (standard sim unit)
         public const float GRID_SIZE_KM = 1.0F;			// Grid size, in km (standard campaign unit)
 
         public const float DEG_TO_RADIANS = 0.017453F;		// PI / 180
@@ -109,7 +110,7 @@ namespace FalconNet.Campaign
         public const int DETECTED_VISUAL = 1;
         public const int DETECTED_RADAR = 2;
 
-        public static CampaignTime[] ReconLossTime = new CampaignTime[MOVEMENT_TYPES];
+        public static CampaignTime[] ReconLossTime = new CampaignTime[(int)MoveType.MOVEMENT_TYPES];
 
 
         public const int ALT_LEVELS = 5;

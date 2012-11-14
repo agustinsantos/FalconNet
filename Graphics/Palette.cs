@@ -14,7 +14,7 @@ namespace FalconNet.Graphics
 		public static MEM_POOL	pool;
 		#endif
 		
-		public Palette()	{ refCount = 0; palHandle = NULL; memset(paletteData, 0, sizeof(paletteData)); }
+		public Palette()	{ refCount = 0; palHandle = null; memset(paletteData, 0, sizeof(paletteData)); }
 		// public ~Palette()	{ Debug.Assert( refCount == 0); };
 	
 		 
@@ -22,7 +22,7 @@ namespace FalconNet.Graphics
 		public PaletteHandle *palHandle;
 	
 		protected int		refCount;
-		protected static DXContext	*rc = NULL; 	
+		protected static DXContext	*rc = null; 	
 
 
 		/***************************************************************************\
@@ -41,7 +41,7 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public static void CleanupForDevice( DXContext *texRC )
 		{
-			rc = NULL;
+			rc = null;
 		}
 		
 		
@@ -55,7 +55,7 @@ namespace FalconNet.Graphics
 			DWORD	*to;
 			BYTE	*stop;
 			
-			Debug.Assert( palHandle == NULL );
+			Debug.Assert( palHandle == null );
 			Debug.Assert( data24 );
 		
 			// Start our reference count at 1
@@ -81,7 +81,7 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public void Setup32( DWORD *data32 )
 		{
-			Debug.Assert( palHandle == NULL );
+			Debug.Assert( palHandle == null );
 			Debug.Assert( data32 );
 		
 			// Start our reference count at 1
@@ -114,10 +114,10 @@ namespace FalconNet.Graphics
 		
 			if (refCount == 0) {
 				if (palHandle) {
-					Debug.Assert( rc != NULL);
+					Debug.Assert( rc != null);
 		
 					delete palHandle;
-					palHandle = NULL;
+					palHandle = null;
 				}
 			}
 		
@@ -131,18 +131,18 @@ namespace FalconNet.Graphics
 		\***************************************************************************/
 		public void UpdateMPR( DWORD *pal )
 		{
-			Debug.Assert( rc != NULL );
+			Debug.Assert( rc != null );
 			Debug.Assert( pal );
 		
 			if (!rc) // JB 010615 CTD
 				return;
 		
 			// OW FIXME Error checking
-			if(palHandle == NULL)
-				palHandle = new PaletteHandle(rc->m_pDD, 32, 256);
+			if(palHandle == null)
+				palHandle = new PaletteHandle(rc.m_pDD, 32, 256);
 		
 			Debug.Assert(palHandle);
-			palHandle->Load(MPR_TI_PALETTE,	32, 0, 256, (BYTE*)pal );
+			palHandle.Load(MPR_TI_PALETTE,	32, 0, 256, (BYTE*)pal );
 		}
 
 		public void UpdateMPR() { UpdateMPR( paletteData ); }
@@ -158,9 +158,9 @@ namespace FalconNet.Graphics
 			BYTE	*from;
 			float	r, g, b;
 		
-			r = light->r;
-			g = light->g;
-			b = light->b;
+			r = light.r;
+			g = light.g;
+			b = light.b;
 		
 			// Set up the loop control
 			to = pal+1;
@@ -198,9 +198,9 @@ namespace FalconNet.Graphics
 			BYTE	*from;
 			float	r, g, b;
 		
-			r = light->r;
-			g = light->g;
-			b = light->b;
+			r = light.r;
+			g = light.g;
+			b = light.b;
 		
 			// Set up the loop control
 			to = pal;
@@ -247,9 +247,9 @@ namespace FalconNet.Graphics
 			BYTE	*from;
 			float	r, g, b;
 		
-			r = light->r;
-			g = light->g;
-			b = light->b;
+			r = light.r;
+			g = light.g;
+			b = light.b;
 		
 			// Special case for NVG mode
 			if (TheTimeOfDay.GetNVGmode()) {
@@ -277,7 +277,7 @@ namespace FalconNet.Graphics
 			}
 		
 			// Only turn on the lights if it is dark enough
-			if (light->g > 0.5f) {
+			if (light.g > 0.5f) {
 				stop = pal + 256;
 				while (to < stop) {
 					*to  =    (FloatToInt32(*(from)   * r))			// Red
@@ -326,9 +326,9 @@ namespace FalconNet.Graphics
 			BYTE	*from;
 			float	r, g, b;
 		
-			r = light->r;
-			g = light->g;
-			b = light->b;
+			r = light.r;
+			g = light.g;
+			b = light.b;
 		
 			// Special case for NVG mode
 			if (TheTimeOfDay.GetNVGmode()) {

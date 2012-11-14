@@ -30,7 +30,6 @@ namespace FalconNet.Common
 	public struct F4THREADHANDLE {}
 	public struct HCURSOR {}
 
-	public struct Unit {}
 	public struct C_Handler {}
 	public class DeviceManager {}
 	public class DXContext {}
@@ -51,15 +50,16 @@ namespace FalconNet.Common
 	public struct CampUIEventElement {}
 	public struct SquadUIInfoClass {}
 	public struct EventElement {}
-	public struct Team {}
 	public struct DrawableTrail {}
 	public class SimVehicleClass {}
-	public struct CampEntity {}
-	public struct Control {}
-	public struct TailInsertList {}
+	public class CampEntity {}
+	public struct Control {
+		public static Control nullCONTROL = new Control();
+	}
+	public class TailInsertList {}
 	public struct FalconCampWeaponsFire {}
 	public struct FalconDeathMessage {}
-	public struct F4PFList {}
+	public class F4PFList {}
 	public struct UnitType {}
 	public class Package {}
 	public class PackageClass {}
@@ -79,12 +79,24 @@ namespace FalconNet.Common
 	public struct CampaignHeading {}
 	public struct Path {}
 	public struct AircraftClass {}
-	public struct Percentage {}
-	public struct CAMP_MISS_STRUCT {}
 	public struct VehicleID {}
-	public struct SmallPathClass {}
-	public struct PilotClass {}
-	public struct PilotInfoClass {}
+	public struct SmallPathClass {
+		public void ClearPath ()
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public void StepPath ()
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public int GetNextDirection () { 
+		throw new NotImplementedException();
+		}
+	}
+	public struct SquadronClass {}
+	public struct FlightClass {}
 	public struct NTM {}
 	
 	public struct AirframeClass {}

@@ -179,6 +179,63 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
         public WayPointClass(FileStream fp)
 		{throw new NotImplementedException();}
+		public WayPointClass(byte[] bytes, ref int offset, int version)
+        {
+#if TODO
+            haves = bytes[offset];
+            offset++;
+            GridX = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            GridY = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            GridZ = BitConverter.ToInt16(bytes, offset);
+            offset += 2;
+            Arrive = BitConverter.ToUInt32(bytes, offset);
+            offset += 4;
+            Action = bytes[offset];
+            offset++;
+            RouteAction = bytes[offset];
+            offset++;
+            Formation = bytes[offset];
+            offset++;
+
+            if (version < FLAGS_WIDENED_AT_VERSION)
+            {
+                Flags = BitConverter.ToUInt16(bytes, offset);
+                offset += 2;
+            }
+            else
+            {
+                Flags = BitConverter.ToUInt32(bytes, offset);
+                //TODO: SOME NEW FIELD, 2 BYTES LONG, COMES HERE, OR ELSE FLAGS IS EXPANDED IN AT LATEST V73 (PROBABLY EARLIER?) TO BE 4 BYTES LONG INSTEAD OF 2 BYTES LONG
+                offset += 4;
+            }
+            if ((haves & WP_HAVE_TARGET) != 0)
+            {
+                TargetID = new VU_ID();
+                TargetID.num_ = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                TargetID.creator_ = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                TargetBuilding = bytes[offset];
+                offset++;
+            }
+            else
+            {
+                TargetID = new VU_ID();
+                TargetBuilding = 255;
+            }
+            if ((haves & WP_HAVE_DEPTIME) != 0)
+            {
+                Depart = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+            }
+            else
+            {
+                Depart = Arrive;
+            }
+#endif
+        }
         public int SaveSize()
 		{throw new NotImplementedException();}
         public int Save(ref VU_BYTE[] stream)

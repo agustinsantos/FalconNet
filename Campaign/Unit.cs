@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Unit=FalconNet.Campaign.UnitClass;
 using Objective=FalconNet.Campaign.ObjectiveClass;
+using Path=FalconNet.Campaign.BasePathClass;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using FalconNet.FalcLib;
@@ -93,8 +94,8 @@ namespace FalconNet.Campaign
 	{
  	
 		private CampaignTime		last_check;		// Last time we checked this unit
-		private Int32			roster;			// 4 byte bitwise roster
-		private TrasmittableFlags			unit_flags;		// Various user flags
+		private Int32				roster;			// 4 byte bitwise roster
+		private TrasmittableFlags	unit_flags;		// Various user flags
 		private GridIndex			dest_x;			// Destination
 		private GridIndex			dest_y;
 		private VU_ID				cargo_id;		// id of our cargo, or our carrier unit
@@ -109,7 +110,7 @@ namespace FalconNet.Campaign
 		private int					dirty_unit;
 		public UnitClassDataType	class_data;
 		public DrawablePoint		draw_pointer;	// inserted into draw list when unit aggregated
-		public WayPoint			wp_list;
+		public WayPoint				wp_list;
 
 	
 		// access functions

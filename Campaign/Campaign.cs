@@ -3,6 +3,7 @@ using System.IO;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 using Objective=FalconNet.Campaign.ObjectiveClass;
+using Path=FalconNet.Campaign.BasePathClass;
 
 namespace FalconNet.Campaign
 {
@@ -54,7 +55,7 @@ namespace FalconNet.Campaign
         public static int SaveTheater(string filename)
 		{throw new NotImplementedException();}
 
-        public static int LinkCampaignObjectives(FalconNet.Common.Path p, Objective O1, Objective O2)
+        public static int LinkCampaignObjectives(Path p, Objective O1, Objective O2)
 		{throw new NotImplementedException();}
 
         public static int UnLinkCampaignObjectives(Objective O1, Objective O2)

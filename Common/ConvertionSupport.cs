@@ -77,7 +77,6 @@ namespace FalconNet.Common
 	public struct WayPoint {}
 	public struct LoadoutStruct {}
 	public struct CampaignHeading {}
-	public struct Path {}
 	public struct AircraftClass {}
 	public struct VehicleID {}
 	public struct SmallPathClass {

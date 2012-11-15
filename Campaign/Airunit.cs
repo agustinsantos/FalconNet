@@ -27,6 +27,10 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 		public AirUnitClass(VU_BYTE[] stream):base(stream)
 		{throw new NotImplementedException();}
+		public AirUnitClass(byte[] bytes, ref int offset, int version)
+            : base(bytes, ref offset, version)
+        {
+        }
 		//TODO public virtual ~AirUnitClass();
 		public override int SaveSize ()
 		{throw new NotImplementedException();}

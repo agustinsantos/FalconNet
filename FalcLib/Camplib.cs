@@ -31,6 +31,8 @@ namespace FalconNet.FalcLib
         {
             return new CampaignTime(c1.time - c2.time);
         }
+        public static implicit operator ulong(CampaignTime t)
+        { return t.time; }
 	}
 	
 

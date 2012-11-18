@@ -1,1 +1,17 @@
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\obj\Debug\Campaign.csprojResolveAssemblyReference.cache
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Campaign.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Campaign.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Common.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\FalcLib.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Sim.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\UI.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\VU.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Graphics.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\FalcLib.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Common.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\VU.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\UI.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Sim.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\bin\Debug\Graphics.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\obj\Debug\Campaign.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Campaign\obj\Debug\Campaign.pdb

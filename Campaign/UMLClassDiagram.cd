@@ -1,0 +1,1019 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FalconNet.Campaign.ACSelect" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACgAAAAAAAAAAAAAAAAAAAACAAQEAAAAAIAAAAAg=</HashCode>
+      <FileName>ACSelect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.AIInput" Collapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>pjCIxlMM4ktQ5rTg1tAxogRgAMGQUqWCSZxaogQlCCY=</HashCode>
+      <FileName>AIInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.AirUnitClass" Collapsed="true">
+    <Position X="8.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIIAAAAgAAUACAAAAQAAAAAEAAQIAAEAAAAAAgAA=</HashCode>
+      <FileName>Airunit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.BasePathClass" Collapsed="true">
+    <Position X="9.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAIKAAAAgoAAAABlgCABAAAAAQABIAAKCAAgAQAAA=</HashCode>
+      <FileName>Asearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PathClass" Collapsed="true">
+    <Position X="8.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Asearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.SmallPathClass" Collapsed="true">
+    <Position X="10.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Asearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ASNode" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAQAAAgAQAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Asearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ASData" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAEQAACAIgBBgIAJAAAACIACgAAAAGBAIkAAIBAA=</HashCode>
+      <FileName>Asearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ATMAirbaseClass" Collapsed="true">
+    <Position X="21.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAgAAAAAQAAAAAAAAAAABAAAAAAAIAAgA=</HashCode>
+      <FileName>Atm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.AirTaskingManagerClass" Collapsed="true">
+    <Position X="2.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BZSAIIQEBCAwSEABiDAAgAAAAoIgAAJAAGAEQAAFAAQ=</HashCode>
+      <FileName>Atm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.AtmStatic" Collapsed="true">
+    <Position X="23.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAQAEAAAAACAAADCAQAAAAAAAAAQAAAAAgABAAA=</HashCode>
+      <FileName>Atm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.BattalionClass" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KYJ8IKghwQiAiQOAAswC4PW0CkksKENhEhecOIiKUCg=</HashCode>
+      <FileName>Battalion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.BrigadeClass" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIKgQkAAQBNSQAB0AROAIAFIFAEMBEAAVIAAIEAA=</HashCode>
+      <FileName>Brigade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampaignStatic" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAgAEAQAAABAACAEAIAFiEAQBQQAAAgEQBQKBBDMA=</HashCode>
+      <FileName>Campaign.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampbaseStatic" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAABAAAEAAAEAAAAAQCQAAAAAAIAACAAAAAAAIAA=</HashCode>
+      <FileName>Campbase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampBaseClass" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QABgINSLh6As4eEikinYBlkwO0cDiAM8eoxIkAHgJTk=</HashCode>
+      <FileName>Campbase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampCell" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAgAEACAAAQAAAAAAAAAAAAAQAEAA=</HashCode>
+      <FileName>CampCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampGlobal" Collapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCCABAhcAAACABBQAIAAAAAEAABEAoyAABCCACDAA4=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitFilter" Collapsed="true">
+    <Position X="23.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAIAIAAAAAAgAAAAAAAAhACAAAAAg=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.AirUnitFilter" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAIAIAAAAAAgAAAAAAAAhACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GroundUnitFilter" Collapsed="true">
+    <Position X="25.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAIAIAAAAAAgAAAAAAAAhACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.NavalUnitFilter" Collapsed="true">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAIAIAAAAAAgAAAAAAAAhACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitProxFilter" Collapsed="true">
+    <Position X="25.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAYAoAAAAAAgAAAgBAAAQACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ObjFilter" Collapsed="true">
+    <Position X="16.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAgAAAAAAAAhACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ObjProxFilter" Collapsed="true">
+    <Position X="18.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAoAAAAAAgAAAgBAAAQACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampBaseFilter" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAgAAAAAAAABACAAAAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampListStatic" Collapsed="true">
+    <Position X="21.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EALAAAAQUAaKAAIRAAwAAAIFJAigEIAQA+AIAIhwAAA=</HashCode>
+      <FileName>camplist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.RadarRangeClass" Collapsed="true">
+    <Position X="18.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAACUAgAAFAAAAACAAAAAAAAAQAAIBA=</HashCode>
+      <FileName>CampRadar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampTerrStatic" Collapsed="true">
+    <Position X="25.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAgACQAEAAAACxEAAMoAAABACAAKACACACAAAAAAI=</HashCode>
+      <FileName>Campterr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampwpStatic" Collapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>NBCQAmA0kAAAKQhgUIDhSQMAAkBAAIDQ0GS0YB0dTAg=</HashCode>
+      <FileName>Campwp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.WayPointClass" Collapsed="true">
+    <Position X="16.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wiQAJIAWAEoACSCARGBIAQZBImVAEQagIEAUJgkSQBQ=</HashCode>
+      <FileName>Campwp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampaignClass" Collapsed="true">
+    <Position X="25.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>WZymtcPQFq9czwUrImIRdUdT8u2ACW1kZAS28ip0hwY=</HashCode>
+      <FileName>Cmpclass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.TimeAdjustClass" Collapsed="true">
+    <Position X="18.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAEAAAAACA=</HashCode>
+      <FileName>Cmpclass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.DogfightStatic" Collapsed="true">
+    <Position X="14.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>dogfight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.FeatureStatic" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQgAAAIAAAAAAAAAAAUAAAARBgAAAEAABQAAAA=</HashCode>
+      <FileName>Feature.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.FindStatic" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEQA1ElIBQfwABAVABAIDCIAAgAIAJgAIICACAUQAI=</HashCode>
+      <FileName>Find.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.FlightClass" Collapsed="true">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BH7vorixjCzEld/0huoTc2E0Y/G2CtYIDEyOqB5qrPk=</HashCode>
+      <FileName>Flight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GroundUnitClass" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UABBYZIBjCkAIUQ2ySAGEAQAEgOUUkIAYsESAAWpEHA=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GroundDoctrineType" Collapsed="true">
+    <Position X="23.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAQAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Gtm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GroundTaskingManagerClass" Collapsed="true">
+    <Position X="0.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEICKIAACAIAAQEAQRAAgAAAQACAQAYQAEACAECBBAQ=</HashCode>
+      <FileName>Gtm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GtmStatic" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAABAAIAACAAAAAAAAAAAAAQEAAAAA=</HashCode>
+      <FileName>Gtm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PrimaryObjectiveData" Collapsed="true">
+    <Position X="16.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAQEAAAAAAAAAAAIAAAEAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Gtmobj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitScoreNode" Collapsed="true">
+    <Position X="13" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAgAAAAAAAYBAAAAEAgAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Gtmobj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GndObjDataType" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAoAAIIAAQBACAAQAiACAAAAAAAAIAAAA=</HashCode>
+      <FileName>Gtmobj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.GtmobjStatic" Collapsed="true">
+    <Position X="13" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABwCAAAAAAAAAEACDAACAAAAAIQAAAAAAAAAgAA=</HashCode>
+      <FileName>Gtmobj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampManagerClass" Collapsed="true">
+    <Position X="2.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIIAAAQAAgAAAACAIgAAAAAAAGAIYBEAAAAgAAAA=</HashCode>
+      <FileName>Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.MissEvakStatic" Collapsed="true">
+    <Position X="16.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgIAAJAAAAAAAARAAAAAAAIAAAAAAI=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.WeaponDataClass" Collapsed="true">
+    <Position X="18.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAQAAAAAgAgAAEAAAAAAAAAAAgAIAAAAAAAAAACA=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PilotDataClass" Collapsed="true">
+    <Position X="23.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAFgAAAAIAAAEAAAAAIgCAFAaCAAABAUAAAIEAAAAg=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.FlightDataClass" Collapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAEACCAIAgAIAwEAAAQBggCQAIMgAIAAAQEgAACgAk=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.MissionEvaluationClass" Collapsed="true">
+    <Position X="20" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBHkI0jMgoHqgGAIGKGuUgABAEyeEAgRiOQWiKIRDEY=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PilotSortClass" Collapsed="true">
+    <Position X="13" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.MissEval" Collapsed="true">
+    <Position X="18.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.MissionRequestClass" Collapsed="true">
+    <Position X="21.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEAKgQAgAgQAAgAQCoAAAJgAgAQAgQiAEAAAgAAACAw=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.MissionStatic" Collapsed="true">
+    <Position X="23.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QiBIAAAAAAgBAAAAAAAAAAAAABAAAAACAAAAAACQAAE=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.Name" Collapsed="true">
+    <Position X="25.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAACAAQAACAAACAAAAAAAAACAAQEACAAA=</HashCode>
+      <FileName>Name.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.NavalTaskingManagerClass" Collapsed="true">
+    <Position X="5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIIAAQAIAAAAAAABAgAgAAAAAAAIAAEAQAAAAAAQ=</HashCode>
+      <FileName>Ntm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.CampObjectiveLinkDataType" Collapsed="true">
+    <Position X="23.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ObjectiveClass" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQBgMM6Ku3+pw9Ky0C50pNlQomZA6jd9cxBTHYWg5BU=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.ObjectivStatic" Collapsed="true">
+    <Position X="14.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAABCACAgAAACAQAAIAAAAAQBEBAAAQAMAAAAAAgI=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.Options" Collapsed="true">
+    <Position X="20" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAQAAAAAAAAAAAAAgAAAAAAEAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Options.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PilotStatic" Collapsed="true">
+    <Position X="14.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QFAAAAAAAAAGACSZAAAAAgAEwAAABQCAgAAAQEAwgAQ=</HashCode>
+      <FileName>Pilot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PilotClass" Collapsed="true">
+    <Position X="21.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAMAEEAAEAAAAgAABAACAAAAAQAAAAQAAAAg=</HashCode>
+      <FileName>Pilot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.PilotInfoClass" Collapsed="true">
+    <Position X="25.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAABEAAAAAAQAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Pilot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.SimBaseSpecialData" Collapsed="true">
+    <Position X="23.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAACIAAAAAAQICACQAAAAAAAAAgAECgAAAAAgAAAQ=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.SimBaseNonLocalData" Collapsed="true">
+    <Position X="21.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAAAAAAAAAAAAAAAIAAAAAAAAAAAQAAAAAAAABAQ=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.SimBaseClass" Collapsed="true">
+    <Position X="20" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wUBQNI8n3cgqP8gB4/XZGDOwSkNkSFeJ52KCCUChS1s=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.SquadronClass" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CjFxoboAkKQQCVCAhAGARCYJVzimUoZBAQ9WoQBcYQo=</HashCode>
+      <FileName>Squadron.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.Supply" Collapsed="true">
+    <Position X="25.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAACAAAAAAAAAEAA=</HashCode>
+      <FileName>Supply.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.TeamDoctrine" Collapsed="true">
+    <Position X="14.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAABAAAAAAAAAAEAAAAIAAAACAAAABgAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.TeamClass" Collapsed="true">
+    <Position X="13" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DAlAJYgQlSnF/RAAoTQSkHxhhwMmDAqMrStVQ7DAhBY=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.TeamStatic" Collapsed="true">
+    <Position X="16.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiAIDgAAADBAAIAAAAESACEhAAAMAAAhAEgIAIBCAAQ=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitClass" Collapsed="true">
+    <Position X="6.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>M897+7+mr/qhvd22N/v7/f/XR3v939/tS9fdeIv/7z8=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitDriver" Collapsed="true">
+    <Position X="21.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitDeaggregationData" Collapsed="true">
+    <Position X="20" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAIAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FalconNet.Campaign.UnitStatic" Collapsed="true">
+    <Position X="14.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAQABAAAAAAACGAQAAAgAAgAAAEEAAgAAAggAgA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="FalconNet.Campaign.CellData" Collapsed="true">
+    <Position X="16.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CampCell.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.LatLong" Collapsed="true">
+    <Position X="21.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEABAAAAAAAAAEAAACAAAAAAgAAAIABAAAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.GridIndex" Collapsed="true">
+    <Position X="18.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Campterr.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.GridLocation" Collapsed="true">
+    <Position X="20" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Campterr.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.MissionDataType" Collapsed="true">
+    <Position X="23.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAQBEAIAAAAiIgIBBCAAAAABABAKAAAAAAAQAIBAQ=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.CampObjectiveTransmitDataType" Collapsed="true">
+    <Position X="14.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQEAAAAAAQAAAAAIAAAAABAAAACAAAAAIAAACAAAAA=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.CampObjectiveStaticDataType" Collapsed="true">
+    <Position X="13" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAIgAAAAABAAAAAAAAAAAAIAAAAAAAAAEAAAgA=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.TeamStatusType" Collapsed="true">
+    <Position X="14.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABEAABgAAAQAAAAAAEAAgAAAAACAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.TeamGndActionType" Collapsed="true">
+    <Position X="13" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIAAAAAAAQAAAAAAAAARAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.TeamAirActionType" Collapsed="true">
+    <Position X="25.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAIAAAACAAAAAAAAAABAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FalconNet.Campaign.UnitPosition" Collapsed="true">
+    <Position X="16.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="FalconNet.Campaign.RequIntHint" Collapsed="true">
+    <Position X="16.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Atm.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.Transmittable" Collapsed="true">
+    <Position X="13" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Campbase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.CBC_ENUM" Collapsed="true">
+    <Position X="25.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAgAAAAAACAAgAAAAAAAQAAEQAEBAAAAAA=</HashCode>
+      <FileName>Campbase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.CoverType" Collapsed="true">
+    <Position X="14.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAABAAAIAAAAAAAAAAAIgAAAAAgAAAAQgAAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.DistanceUnitType" Collapsed="true">
+    <Position X="16.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAABCAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.AltitudeLevelType" Collapsed="true">
+    <Position X="16.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAEAAAAAAAAAAACIABA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.RelType" Collapsed="true">
+    <Position X="14.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAABAAAAAAAAgAAAAAAAAIIAAAAAAAAAAQAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.ObjectiveStatus" Collapsed="true">
+    <Position X="20" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAABAIA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.AltitudeType" Collapsed="true">
+    <Position X="18.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAgAAAAAEAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.ReliefType" Collapsed="true">
+    <Position X="13" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAASAAAAAAAAEAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Campglobl.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.CAMP_ENUM" Collapsed="true">
+    <Position X="23.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EJAAABEEoAJAIAEAAAAEgBBAAAAAgoAGAAAhEABqAQQ=</HashCode>
+      <FileName>Cmpclass.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.DogfightFlags" Collapsed="true">
+    <Position X="18.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dogfight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.DogfightLocalFlags" Collapsed="true">
+    <Position X="20" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>dogfight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.DogfightType" Collapsed="true">
+    <Position X="23.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAABAAAAAAAAAAQAAA=</HashCode>
+      <FileName>dogfight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.DogfightStatus" Collapsed="true">
+    <Position X="21.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAgAAGAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dogfight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.FEAT" Collapsed="true">
+    <Position X="25.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAQAAAAAAQAAgCAAIAQAAgRACQACAABAQAACAg=</HashCode>
+      <FileName>Feature.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.FIND" Collapsed="true">
+    <Position X="16.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAQAAAAIJACAAAAAAIAAAAUAAAAAAEAABAAAAA=</HashCode>
+      <FileName>Find.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.FEVAL" Collapsed="true">
+    <Position X="13" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAAAAAAAAgAAAAAAAAAAAAAIIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Flight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.PlaneStats" Collapsed="true">
+    <Position X="21.75" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAACQAAAAAAAAACAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Flight.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.GORD" Collapsed="true">
+    <Position X="21.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAYAIgAIAAEAAEAEACAAAAAAAAAIAAAAAAAAAAg=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.GRO" Collapsed="true">
+    <Position X="25.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iAAQAAAIAAAAAAAAAAQAAAIAAgCAAAAAAAgBAAAAAAA=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.GFORM" Collapsed="true">
+    <Position X="20" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAABAAAAAAAAAAAAAAAAQAAAAAAAAgIAQAAAA=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.FF" Collapsed="true">
+    <Position X="14.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.GPOS" Collapsed="true">
+    <Position X="23.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAQAMAABAAAATAAQAEAAAAAIA=</HashCode>
+      <FileName>GndUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.FlightStatus" Collapsed="true">
+    <Position X="18.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQGgkwAEAAAAAwAgAAwgAEAAAAAAQAACQAwABAAoAE=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.SuccessType" Collapsed="true">
+    <Position X="13" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAgAAQAAAAAgAAAgAAABAAAAAAAAA=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.RatingType" Collapsed="true">
+    <Position X="23.5" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAIAAAAAAAAE=</HashCode>
+      <FileName>MissEval.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionTypeEnum" Collapsed="true">
+    <Position X="16.5" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UIoAAMAMAQAAQmCAAAAgiAWJYAAABIADAwYYEIAUAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionRollEnum" Collapsed="true">
+    <Position X="13" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EGgAIAAAQAAAAAJAAgAAAAAAAQAAAAIIAAAAIGAAAAQ=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionTargetTypeEnum" Collapsed="true">
+    <Position X="14.75" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEEAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionEscortConditionEnum" Collapsed="true">
+    <Position X="21.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TankerConditionalModeEnum" Collapsed="true">
+    <Position X="16.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAACAAAAAAAAAAAAAAAAABAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionDataFlagEnum" Collapsed="true">
+    <Position X="20" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYCBAAABAkAQACQUERAKAAABAAAFCAAAACAASEALAwA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionRequestFlagEnum" Collapsed="true">
+    <Position X="25.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEgAAAAAKAABAAAAIAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TargetThreatReturnFlagEnum" Collapsed="true">
+    <Position X="21.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAEAAABAAAACAAAAAAAAgAAAAAgAE=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionProfileEnum" Collapsed="true">
+    <Position X="23.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TargetAreaProfileEnum" Collapsed="true">
+    <Position X="18.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAQAAAQAAAAAAAAAAAQAACAAAEAAACQAAACBAAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TargetDescriptionType" Collapsed="true">
+    <Position X="20" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAQAAAAAAAAAAAAAAAAAAAAIAAAAAAEAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.SpecialTOTTypeEnum" Collapsed="true">
+    <Position X="23.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MissionContext" Collapsed="true">
+    <Position X="18.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAUlAghAImGAAiYQgCgABQTAouAAINyAcIDYCsgMCQ=</HashCode>
+      <FileName>Mission.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.O_FLAGS" Collapsed="true">
+    <Position X="18.25" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gABAAAAGAABoACQAAAQEAgBAABAAgAgIAAQFAAAECAA=</HashCode>
+      <FileName>Objectiv.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.SpecialFlags" Collapsed="true">
+    <Position X="21.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAEEAihAQAABAAAAAADEAAAAAAAIEAAAAAAA=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.LocalFlags" Collapsed="true">
+    <Position X="14.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAgAAAAAAAAAAAAIAAAAAAEAAA=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.STATUS_ENUM" Collapsed="true">
+    <Position X="25.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAACEBAAAAAAAEAAAAAAAQAAAAIAAAAA=</HashCode>
+      <FileName>Simbase.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.ASTAT" Collapsed="true">
+    <Position X="20" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAACAAAAQAAAAABAAAAEAAAEAAAAA=</HashCode>
+      <FileName>Squadron.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.CountryListEnum" Collapsed="true">
+    <Position X="13" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAEAAgCAABAEAAAAAAAABAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TeamDataEnum" Collapsed="true">
+    <Position X="23.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TeamFlagEnum" Collapsed="true">
+    <Position X="25.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.ROEEngagementQueryTypeEnum" Collapsed="true">
+    <Position X="20" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAgAAQAAAAAQIAAIAAAAAAACAAIAAAAAAAhBAgA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.ROEAllowedEnum" Collapsed="true">
+    <Position X="18.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.GroundActionTypeEnum" Collapsed="true">
+    <Position X="13" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAEAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.AirActionTypeEnum" Collapsed="true">
+    <Position X="13" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAAAAAAAAAAAAAEAAAABAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.AirTacticTypeEnum" Collapsed="true">
+    <Position X="14.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwQAAACAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.table_of_equipment_manufacturers" Collapsed="true">
+    <Position X="14.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAACgAAAAAAAQAAAAIAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Team.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.TrasmittableFlags" Collapsed="true">
+    <Position X="14.75" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAgABBAAgAAACAAOACAAEARAACggQABDMAABAAAACgg=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.RCLASS" Collapsed="true">
+    <Position X="25.25" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAAAAQAIAAAA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.CALC" Collapsed="true">
+    <Position X="21.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAIAAAAIAAAAAAAAAAAAAAAAAAABAAAEAAAAgA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FalconNet.Campaign.MISCFLAGS" Collapsed="true">
+    <Position X="16.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAABEAAAAAAAAAAA=</HashCode>
+      <FileName>Unit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

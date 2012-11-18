@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -36,18 +36,23 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Campbase.cs" />
     <Compile Include="Campglobl.cs" />
+    <Compile Include="camplist.cs" />
     <Compile Include="Campterr.cs" />
     <Compile Include="Campwp.cs" />
+    <Compile Include="Feature.cs" />
     <Compile Include="Gtmobj.cs" />
     <Compile Include="Mission.cs" />
     <Compile Include="Campaign.cs" />
     <Compile Include="CampCell.cs" />
+    <Compile Include="Ntm.cs" />
     <Compile Include="Objectiv.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Cmpclass.cs" />
     <Compile Include="MissEval.cs" />
+    <Compile Include="persist.cs" />
     <Compile Include="Simbase.cs" />
+    <Compile Include="Supply.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="Atm.cs" />
     <Compile Include="Manager.cs" />
@@ -67,6 +72,7 @@
     <Compile Include="Brief.cs" />
     <Compile Include="Asearch.cs" />
     <Compile Include="CampRadar.cs" />
+    <Compile Include="vehicle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -90,5 +96,8 @@
       <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
       <Name>Sim</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UMLClassDiagram.cd" />
   </ItemGroup>
 </Project>

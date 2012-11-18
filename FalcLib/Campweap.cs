@@ -1,4 +1,5 @@
 using System;
+using FalconNet.FalcLib;
 
 namespace FalconNet.Campaign
 {	
@@ -84,32 +85,32 @@ namespace FalconNet.Campaign
 		
 		public static int GetWeaponStrength (int w)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponRange (int w, int mt)
+
+        public static int GetWeaponRange(int w, MoveType mt)
 		{ throw new NotImplementedException(); }
 			
 		public static int GetWeaponFireRate (int w)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponHitChance (int w, int mt)
+
+        public static int GetWeaponHitChance(int w, MoveType mt)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponHitChance (int w, int mt, int range)
+
+        public static int GetWeaponHitChance(int w, MoveType mt, int range)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponHitChance (int w, int mt, int range, int wrange)
+
+        public static int GetWeaponHitChance(int w, MoveType mt, int range, int wrange)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponScore (int w, int mt, int range)
+
+        public static int GetWeaponScore(int w, MoveType mt, int range)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponScore (int w, int mt, int range, int wrange)
+
+        public static int GetWeaponScore(int w, MoveType mt, int range, int wrange)
 		{ throw new NotImplementedException(); }
 		
 		public static int GetWeaponScore (int w, byte[] dam, int m, int range)
 		{ throw new NotImplementedException(); }
-		
-		public static int GetWeaponScore (int w, byte[] dam, int mt, int range, int wrange)
+
+        public static int GetWeaponScore(int w, byte[] dam, MoveType mt, int range, int wrange)
 		{ throw new NotImplementedException(); }
 		
 		public static int GetWeaponDamageType (int w)

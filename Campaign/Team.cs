@@ -5,6 +5,8 @@ using VU_BYTE=System.Byte;
 using GTM=FalconNet.Campaign.GroundTaskingManagerClass;
 using ATM=FalconNet.Campaign.AirTaskingManagerClass;
 using Team=System.Byte;
+using GridIndex = System.Int16;
+using Control = System.Byte;
 using FalconNet.Common;
 using System.IO;
 
@@ -114,9 +116,9 @@ namespace FalconNet.Campaign
 	// Priority tables
 	// =======================================
 #if TODO	
-	extern byte	DefaultObjtypePriority[TAT_CAS][MAX_TGTTYPE];		// AI's suggested settings
-	extern byte	DefaultUnittypePriority[TAT_CAS][MAX_UNITTYPE];		// 
-	extern byte	DefaultMissionPriority[TAT_CAS][(int)MissionTypeEnum.AMIS_OTHER];		// 
+	public static  byte	DefaultObjtypePriority[TAT_CAS][MAX_TGTTYPE];		// AI's suggested settings
+	public static  byte	DefaultUnittypePriority[TAT_CAS][MAX_UNITTYPE];		// 
+	public static  byte	DefaultMissionPriority[TAT_CAS][(int)MissionTypeEnum.AMIS_OTHER];		// 
 	
 	// =======================================
 	// Local classes
@@ -762,9 +764,9 @@ namespace FalconNet.Campaign
 			// Dirty Data
 		public void MakeTeamDirty (Dirty_Team bits, Dirtyness score)
 		{throw new NotImplementedException();}
-		public void WriteDirty (ref byte [] stream)
+        public virtual void WriteDirty(ref byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
-		public void ReadDirty (ref byte [] stream)
+        public virtual void ReadDirty(ref byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 	
 	};

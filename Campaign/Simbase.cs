@@ -5,6 +5,7 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using System.IO;
 using VU_BYTE=System.Byte;
+using Control = System.Byte;
 namespace FalconNet.Campaign
 {
 // Flags used to convey special data
@@ -201,7 +202,7 @@ namespace FalconNet.Campaign
 			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_CLASS];
 		}
 
-		public byte GetType ()
+        public byte GetFalconType()
 		{
 			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_TYPE];
 		}
@@ -630,10 +631,10 @@ namespace FalconNet.Campaign
 		public void MakeSimBaseDirty (Dirty_Sim_Base bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public void WriteDirty (byte[] stream)
+        public virtual void WriteDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public void ReadDirty (byte[] stream)
+        public virtual void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 	}
 

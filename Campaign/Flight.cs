@@ -6,6 +6,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
+using GridIndex = System.Int16;
 
 namespace FalconNet.Campaign
 {
@@ -196,10 +197,10 @@ namespace FalconNet.Campaign
 		public void MakeFlightDirty (Dirty_Flight bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public override void WriteDirty (byte[] stream)
+		public override void WriteDirty (byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public override void ReadDirty (byte[] stream)
+        public override void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
 		// Other Functions

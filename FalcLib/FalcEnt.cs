@@ -3,7 +3,7 @@ using FalconNet.Common;
 using System.IO;
 using System.Diagnostics;
 using FalconNet.VU;
-
+using Control = System.Byte;
 namespace FalconNet.FalcLib
 {
 	public enum MoveType
@@ -93,8 +93,8 @@ namespace FalconNet.FalcLib
 				falconFlags = (FEC_FLAGS)(stream [pos]);
 				pos += sizeof(FEC_FLAGS);
 			}
-#endif 
-			throw new NotImplementedException();
+#endif
+            throw new NotImplementedException();
 		}
 
 		public FalconEntity (FileStream filePtr) 
@@ -111,8 +111,9 @@ namespace FalconNet.FalcLib
 			throw new NotImplementedException();
 		}
 		public FalconEntity(byte[] bytes, ref int offset, int version)
+            : base(bytes, ref offset)
 		{
-			throw new NotImplementedException();
+            throw new NotImplementedException();
 		}
 		
 		public virtual int Save (byte[] stream, ref int pos)
@@ -228,7 +229,7 @@ namespace FalconNet.FalcLib
 
 		public virtual byte GetDomain ()
 		{
-			//TODO  return Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_DOMAIN];
+            //TODO return EntityDB.[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_DOMAIN];
 			throw new NotImplementedException ();
 		}
 
@@ -438,7 +439,7 @@ namespace FalconNet.FalcLib
 			throw new NotImplementedException();
 		}
 
-		public void GetLocation (ref short x, ref short y)
+		public void GetLocation (out short x, out short y)
 		{
 			vector v;
 			

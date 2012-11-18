@@ -421,10 +421,10 @@ namespace FalconNet.Campaign
 		public void MakeBattalionDirty (Dirty_Battalion bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public override void WriteDirty (byte[] stream)
+        public override void WriteDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public override void ReadDirty (byte[] stream)
+		public override void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 		// 2002-03-22 ADDED BY S.G. Needs them outside of battalion class
 		public override void SetAQUIREtimer (VU_TIME newTime)

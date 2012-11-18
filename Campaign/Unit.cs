@@ -5,6 +5,8 @@ using Objective=FalconNet.Campaign.ObjectiveClass;
 using Path=FalconNet.Campaign.BasePathClass;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
+using GridIndex = System.Int16;
+using Control = System.Byte;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 
@@ -238,10 +240,10 @@ namespace FalconNet.Campaign
 		public void MakeUnitDirty (Dirty_Unit bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public override void WriteDirty (byte[] stream)
+        public override void WriteDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public override void ReadDirty (byte[] stream)
+        public override void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
 		// constructors and serial functions
@@ -359,7 +361,7 @@ namespace FalconNet.Campaign
 		public override int ApplyDamage (FalconCampWeaponsFire cwfm, byte p)
 		{throw new NotImplementedException();}
 
-		public override int ApplyDamage (DamType d, ref int  str, int where, short flags)
+        public override int ApplyDamage(DamageDataType d, ref int str, int where, short flags)
 		{throw new NotImplementedException();}
 
 		public virtual int DecodeDamageData (byte[] data, Unit shooter, FalconDeathMessage dtm)
@@ -812,11 +814,8 @@ namespace FalconNet.Campaign
 
 		public void SetUnitAltitude (int alt)
 		{
-#if TODO
 			SetPosition (XPos (), YPos (), -1.0F * (float)alt);
-			MakeCampBaseDirty (DIRTY_ALTITUDE, DDP [181].priority);
-#endif
-			throw new NotImplementedException();
+            MakeCampBaseDirty(Dirty_Campaign_Base.DIRTY_ALTITUDE, EntityDB.DDP[181].priority);
 		}
 		//void SetUnitAltitude (int alt)					{ SetPosition(XPos(),YPos(),-1.0F * (float)alt); MakeCampBaseDirty (DIRTY_ALTITUDE, SEND_SOON); }
 		public int GetUnitAltitude ()
@@ -826,12 +825,9 @@ namespace FalconNet.Campaign
 
 		public virtual void SimSetLocation (float x, float y, float z)
 		{
-	#if TODO
 			SetPosition (x, y, z);
-			MakeCampBaseDirty (DIRTY_POSITION, DDP [182].priority);
-			MakeCampBaseDirty (DIRTY_ALTITUDE, DDP [183].priority);
-	#endif
-			throw new NotImplementedException();	
+			MakeCampBaseDirty (Dirty_Campaign_Base.DIRTY_POSITION, EntityDB.DDP [182].priority);
+			MakeCampBaseDirty (Dirty_Campaign_Base.DIRTY_ALTITUDE, EntityDB.DDP [183].priority);
 		}
 		//virtual void SimSetLocation (float x, float y, float z)	{ SetPosition(x,y,z); MakeCampBaseDirty (DIRTY_POSITION, SEND_SOON); MakeCampBaseDirty (DIRTY_ALTITUDE, SEND_SOON); }
 		public virtual void SimSetOrientation (float f1, float f2, float f3)
@@ -876,7 +872,7 @@ namespace FalconNet.Campaign
 
 		public void SetTarget (FalconEntity e)
 		{
-			target_id = (e != null) ? e.Id () : VU_ID.FalconNullId;
+            target_id = (e != null) ? e.Id() : VU_ID.FalconNullId;
 		}
 
 		public void SetUnitMoved (byte m)
@@ -1184,7 +1180,7 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetAirTargetID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual FalconEntity  GetAirTarget ()
@@ -1224,7 +1220,7 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetUnitMissionTargetID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual int GetUnitMissionID ()
@@ -1244,7 +1240,7 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetUnitSquadronID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual CampEntity GetUnitAirbase ()
@@ -1254,7 +1250,7 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetUnitAirbaseID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual int LoadWeapons (object p, byte[] buf, MoveType m, int a, int b, int c)
@@ -1430,12 +1426,12 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetUnitPrimaryObjID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual VU_ID GetUnitSecondaryObjID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual VU_ID GetUnitObjectiveID ()
@@ -1527,7 +1523,7 @@ namespace FalconNet.Campaign
 
 		public virtual VU_ID GetUnitParentID ()
 		{
-			return VU_ID.FalconNullId;
+            return VU_ID.FalconNullId;
 		}
 
 		public virtual void SetUnitParent (Unit u)

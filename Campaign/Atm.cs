@@ -7,7 +7,7 @@ using VU_BYTE=System.Byte;
 using Flight=FalconNet.Campaign.FlightClass;
 using Squadron=FalconNet.Campaign.SquadronClass;
 using Team=System.Int32;
-
+using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
 
@@ -337,7 +337,7 @@ typedef AirTaskingManagerClass *ATM;
         public static int TargetAllSites(ObjectiveClass po, int action, int team, CampaignTime startTime)
 		{throw new NotImplementedException();}
 
-        //extern void TargetAdditionalSites (void);
+        //public static  void TargetAdditionalSites ();
     }
 }
 

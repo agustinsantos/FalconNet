@@ -57,7 +57,7 @@ namespace FalconNet.Campaign
     }
     public enum ObjectiveStatus
     {
-        NullStatus,
+        nullStatus,
         Operational,
         Damaged,
         Destroyed
@@ -117,15 +117,15 @@ namespace FalconNet.Campaign
 
 #if TODO
         typedef char CampaignSaveKey;
-        typedef uchar Percentage;
-        typedef uchar Control;
-        typedef uchar Team;
-        typedef uchar Value;
-        typedef uchar UnitType;
-        typedef uchar UnitSize;
-        typedef uchar ObjectiveType;
-        typedef uchar CampaignOrders;
-        typedef uchar CampaignHeading;
+        typedef byte Percentage;
+        typedef byte Control;
+        typedef byte Team;
+        typedef byte Value;
+        typedef byte UnitType;
+        typedef byte UnitSize;
+        typedef byte ObjectiveType;
+        typedef byte CampaignOrders;
+        typedef byte CampaignHeading;
               
         typedef char PriorityLevel;
 #endif

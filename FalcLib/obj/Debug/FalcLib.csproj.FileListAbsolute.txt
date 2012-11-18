@@ -7,3 +7,5 @@ C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\bin\Deb
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\obj\Debug\FalcLib.csprojResolveAssemblyReference.cache
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\obj\Debug\FalcLib.dll
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\obj\Debug\FalcLib.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\bin\Debug\VU.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\bin\Debug\VU.pdb

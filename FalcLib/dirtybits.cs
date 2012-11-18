@@ -43,7 +43,7 @@ namespace FalconNet.FalcLib
 	};
 	
 	[Flags]
-	public enum Dirty_Campaign_Base
+	public enum Dirty_Campaign_Base : int
 	{
 		DIRTY_POSITION			= 0x00000001,
 		DIRTY_ALTITUDE			= 0x00000002,

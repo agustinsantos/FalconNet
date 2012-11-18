@@ -12,3 +12,5 @@ C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.csprojResolveAssemblyReference.cache
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.exe
 C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\obj\Debug\Main.pdb
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\VU.dll
+C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Main\bin\Debug\VU.pdb

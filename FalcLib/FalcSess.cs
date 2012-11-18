@@ -26,7 +26,7 @@ namespace FalconNet.FalcLib
 		public const int FS_MAXBLK = 320;	// Maximum number of data blocks
 		
 		// ==========================================
-		// Externs
+		// public static s
 		// ==========================================
 		
 		public static byte GetTeam (byte country)
@@ -432,13 +432,16 @@ namespace FalconNet.FalcLib
 			throw new NotImplementedException ();
 		}
 
-		public static FalconSessionEntity FalconLocalGame ()
+		public static FalconSessionEntity FalconLocalGame
 		{
-			#if TODO
+            // #define FalconLocalGame (((FalconSessionEntity*)vuLocalSessionEntity).GetGame())
+            get
+            {
+#if TODO
 			return (((FalconSessionEntity)vuLocalSessionEntity).GetGame());
-			#endif
-			throw new NotImplementedException ();
-			
+#endif
+                throw new NotImplementedException();
+            }
 		}
 
 		public static object VuLocalGame ()

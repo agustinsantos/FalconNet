@@ -4,7 +4,7 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using Flight=FalconNet.Campaign.FlightClass;
 using Team=System.Int32;
-
+using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
 	// ===================================================

@@ -4,14 +4,14 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
-
+using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
     public static class CampwpStatic
     {
         public static void ConvertSimToGrid(vector pos, ref GridIndex x, ref GridIndex y)
 		{throw new NotImplementedException();}
-        public static void ConvertGridToSim(GridIndex x, GridIndex y, ref vector pos)
+        public static void ConvertGridToSim(GridIndex x, GridIndex y, out vector pos)
 		{throw new NotImplementedException();}
         public static float GridToSim(GridIndex x)
 		{throw new NotImplementedException();}

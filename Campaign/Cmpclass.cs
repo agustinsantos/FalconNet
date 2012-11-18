@@ -4,7 +4,7 @@ using FalconNet.Common;
 using System.IO;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
-
+using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
 	// Campaign flags

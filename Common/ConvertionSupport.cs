@@ -36,7 +36,6 @@ namespace FalconNet.Common
 	public class HWND {}
 	public struct HANDLE {}
 	public class IDirectDraw7 {}
-	public struct DamType {}
 	public struct C_ScrollBar {}
 	public class C_Hash {}
 	public class O_Output {}
@@ -53,13 +52,10 @@ namespace FalconNet.Common
 	public struct DrawableTrail {}
 	public class SimVehicleClass {}
 	public class CampEntity {}
-	public struct Control {
-		public static Control nullCONTROL = new Control();
-	}
 	public class TailInsertList {}
-	public struct FalconCampWeaponsFire {}
 	public struct FalconDeathMessage {}
 	public class F4PFList {}
+    public class F4POList{}
 	public struct UnitType {}
 	public class Package {}
 	public class PackageClass {}

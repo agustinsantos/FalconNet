@@ -25,23 +25,14 @@ namespace FalconNet.Campaign
 		public CampManagerClass(byte[] bytes, ref int offset, int version)
 			: base(bytes, ref offset, version)
         {
-#if TODO
-            id = new VU_ID();
-            id.num_ = BitConverter.ToUInt32(bytes, offset);
-            offset += 4;
-            id.creator_ = BitConverter.ToUInt32(bytes, offset);
-            offset += 4;
-
-            entityType = BitConverter.ToUInt16(bytes, offset);
-            offset += 2;
-
             managerFlags = BitConverter.ToInt16(bytes, offset);
             offset += 2;
 
             owner = bytes[offset];
             offset++;
-#endif        
 		}
+
+
         //TODO public ~CampManagerClass (void);
         public override int SaveSize()
 		{throw new NotImplementedException();}

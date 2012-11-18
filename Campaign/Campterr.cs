@@ -1,17 +1,13 @@
 ﻿using System;
 using CellDataType=System.Byte;
 using System.Diagnostics;
+using GridIndex = System.Int16;
 
 namespace FalconNet.Campaign
 {
     // ====================
     // Campaign Terrain ADT
     // ====================
-
-    public struct GridIndex
-    {
-        public Int16 val;
-    }
 
 
     public struct GridLocation
@@ -74,34 +70,34 @@ namespace FalconNet.Campaign
 
         public static CellData GetCell(GridIndex x, GridIndex y)
 		{
-		    //TODO Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return new CellData(TheaterCells[x.val*Map_Max_Y + y.val]);
+		    Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return new CellData(TheaterCells[x*Map_Max_Y + y]);
 		}
 
         public static ReliefType GetRelief(GridIndex x, GridIndex y)
 		{
-		    //TODO Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (ReliefType)((TheaterCells[x.val*Map_Max_Y + y.val] & ReliefMask) >> ReliefShift);
+		    Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (ReliefType)((TheaterCells[x*Map_Max_Y + y] & ReliefMask) >> ReliefShift);
 		}
 
         public static CoverType GetCover(GridIndex x, GridIndex y)
 		{
-			if ((x.val < 0) || (x.val >= Map_Max_X) || (y.val < 0) || (y.val >= Map_Max_Y))
+			if ((x < 0) || (x >= Map_Max_X) || (y < 0) || (y >= Map_Max_Y))
 				return (CoverType) CoverType.Water;
 			else
-				return (CoverType)((TheaterCells[x.val*Map_Max_Y + y.val] & GroundCoverMask) >> GroundCoverShift);
+				return (CoverType)((TheaterCells[x*Map_Max_Y + y] & GroundCoverMask) >> GroundCoverShift);
 		}
 
         public static char GetRoad(GridIndex x, GridIndex y)
 		{
-			//TODO Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells[x.val*Map_Max_Y + y.val] & RoadMask) >> RoadShift);
+			Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (char)((TheaterCells[x*Map_Max_Y + y] & RoadMask) >> RoadShift);
 		}
 
         public static char GetRail(GridIndex x, GridIndex y)
 		{
-			//TODO Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells[x.val*Map_Max_Y + y.val] & RailMask) >> RailShift);
+            Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (char)((TheaterCells[x*Map_Max_Y + y] & RailMask) >> RailShift);
 		}
     }
 

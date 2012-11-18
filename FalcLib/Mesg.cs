@@ -5,7 +5,8 @@ namespace FalconNet.FalcLib
 	/*
 	 * Message Types
 	 */
-	public enum FalconMsgID {
+	public enum FalconMsgID :byte 
+    {
 	   DamageMsg = 21, //TODO VU_LAST_EVENT + 1,      // 21
 	   WeaponFireMsg,                      // 22
 	   CampWeaponFireMsg,                  // 23

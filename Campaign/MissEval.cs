@@ -8,6 +8,7 @@ using FalconNet.VU;
 using Flight = FalconNet.Campaign.FlightClass;
 using Objective = FalconNet.Campaign.ObjectiveClass;
 using Team=System.Int32;
+using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
 	// Flight specific status flags
@@ -208,8 +209,8 @@ namespace FalconNet.Campaign
 		public FlightDataClass ()
 		{
 			camp_id = 0;
-			flight_id = target_id = VU_ID.FalconNullId;
-			requester_id = VU_ID.FalconNullId;
+            flight_id = target_id = VU_ID.FalconNullId;
+            requester_id = VU_ID.FalconNullId;
 			start_aircraft = finish_aircraft = 0;
 			flight_team = 0;
 			mission = 0;
@@ -369,16 +370,16 @@ namespace FalconNet.Campaign
 				package_mission = MissionTypeEnum.AMIS_SWEEP;
 				package_context = 0;
 				responses = 0;
-				requesting_ent = VU_ID.FalconNullId;
-				intercepting_ent = VU_ID.FalconNullId;
-				awacs_id = VU_ID.FalconNullId;
-				jstar_id = VU_ID.FalconNullId;
-				ecm_id = VU_ID.FalconNullId;
-				tanker_id = VU_ID.FalconNullId;
+				requesting_ent = VU_ID.FalconnullId;
+				intercepting_ent = VU_ID.FalconnullId;
+				awacs_id = VU_ID.FalconnullId;
+				jstar_id = VU_ID.FalconnullId;
+				ecm_id = VU_ID.FalconnullId;
+				tanker_id = VU_ID.FalconnullId;
 				action_type = 0;
 				flags = 0;
 				team = 0;
-				alternate_strip_id = VU_ID.FalconNullId;
+				alternate_strip_id = VU_ID.FalconnullId;
 				abx = aby = -1;
 				player_start_time = vuxGameTime;
 				player_pilot = null;
@@ -474,12 +475,12 @@ namespace FalconNet.Campaign
 				package_mission = MissionTypeEnum.AMIS_SWEEP;
 				package_context = 0;
 				responses = 0;
-				requesting_ent = VU_ID.FalconNullId;
-				intercepting_ent = VU_ID.FalconNullId;
-				awacs_id = VU_ID.FalconNullId;
-				jstar_id = VU_ID.FalconNullId;
-				ecm_id = VU_ID.FalconNullId;
-				tanker_id = VU_ID.FalconNullId;
+				requesting_ent = VU_ID.FalconnullId;
+				intercepting_ent = VU_ID.FalconnullId;
+				awacs_id = VU_ID.FalconnullId;
+				jstar_id = VU_ID.FalconnullId;
+				ecm_id = VU_ID.FalconnullId;
+				tanker_id = VU_ID.FalconnullId;
 				flight.GetLocation(ref tx, ref ty);
 				action_type = 0;
 				}
@@ -493,7 +494,7 @@ namespace FalconNet.Campaign
 				}
 			else
 				{
-				alternate_strip_id = VU_ID.FalconNullId;
+				alternate_strip_id = VU_ID.FalconnullId;
 				abx = aby = -1;
 				}
 			player_start_time = vuxGameTime;
@@ -596,7 +597,7 @@ namespace FalconNet.Campaign
 					}
 				else
 					{
-					flight_ptr.target_id = FalconNullId;
+					flight_ptr.target_id = FalconnullId;
 					flight_ptr.target_building = 255; 
 					}
 				if (flight_ptr.mission == MissionTypeEnum.AMIS_INTERCEPT || flight_ptr.mission == MissionTypeEnum.AMIS_CAS)
@@ -646,7 +647,7 @@ namespace FalconNet.Campaign
 					}
 				flight_ptr.failure_code = 0;
 				flight_ptr.failure_data = 0;
-				flight_ptr.failure_id = FalconNullId;
+				flight_ptr.failure_id = FalconnullId;
 				flight_ptr.mission_success = 0;
 				flight_ptr.num_pilots = 0;
 				// Add to end of list.
@@ -1397,7 +1398,7 @@ namespace FalconNet.Campaign
 		public void ClearPotentialTargets ()
 		{
 			for (int i=0; i<MissEvakStatic.MAX_POTENTIAL_TARGETS; i++)
-				potential_targets [i] = VU_ID.FalconNullId;
+                potential_targets[i] = VU_ID.FalconNullId;
 		}
 
 		public void FindPotentialTargets ()
@@ -1423,7 +1424,7 @@ namespace FalconNet.Campaign
 				o = (Objective) myit.GetFirst();
 				while (o)
 					{
-					if (o.GetTeam() == team && o.GetObjectiveStatus() > 30 && (o.GetType() == TYPE_BRIDGE || o.GetType() == TYPE_AIRBASE || o.GetType() == TYPE_DEPOT || o.GetType() == TYPE_ARMYBASE || o.GetType() == TYPE_FACTORY || o.GetType() == TYPE_RADAR || o.GetType() == TYPE_PORT || o.GetType() == TYPE_REFINERY || o.GetType() == TYPE_POWERPLANT))
+					if (o.GetTeam() == team && o.GetObjectiveStatus() > 30 && (o.GetFalconType() == TYPE_BRIDGE || o.GetType() == Classtable_Types.TYPE_AIRBASE || o.GetType() == TYPE_DEPOT || o.GetType() == TYPE_ARMYBASE || o.GetType() == TYPE_FACTORY || o.GetType() == TYPE_RADAR || o.GetType() == TYPE_PORT || o.GetType() == TYPE_REFINERY || o.GetType() == TYPE_POWERPLANT))
 						{
 						o.GetLocation(&x,&y);
 						d = Distance(x,y,tx,ty);
@@ -1445,8 +1446,8 @@ namespace FalconNet.Campaign
 					o = (Objective) myit.GetNext();
 					}
 				}
-				#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -1523,7 +1524,7 @@ namespace FalconNet.Campaign
 		mt = LowAir;
 	
 	// Set up roe checks
-	for (d=0; d<(int)TeamDataEnum.NUM_TEAMS && TeamInfo[d]; d++)
+	for (d=0; d<(int)TeamDataEnum.NUM_TEAMS && TeamStatic.TeamInfo[d]; d++)
 		tteam[d] = GetRoE(d,team,ROE_AIR_ENGAGE);
 
 	// Tranverse our list
@@ -1558,7 +1559,7 @@ namespace FalconNet.Campaign
 					for (i=0; i<Camplib.VEHICLES_PER_UNIT && j<0; i++)
 						{
 						wid = e.GetBestVehicleWeapon(i, DefaultDamageMods, mt, d, &k);
-						if (wid && GetWeaponHitChance (wid, mt) > MINIMUM_VIABLE_THREAT)
+						if (wid && CampWeapons.GetWeaponHitChance (wid, mt) > MINIMUM_VIABLE_THREAT)
 							{
 							// find the best distance to replace
 							for (k=0,wd=0; k<MAX_COLLECTED_THREATS; k++)
@@ -1583,8 +1584,8 @@ namespace FalconNet.Campaign
 			}
 		e = (Unit) myit.GetNext();
 		}
-					#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -1922,15 +1923,15 @@ else
 						// In case of camera "shots", evaluate hit immediately
 						if (wfm.dataBlock.weaponType == FalconWeaponsFire.Recon)
 							{
-							FalconEntity	*entity = (FalconEntity*) VuDatabase.vuDatabase.Find(wfm.dataBlock.targetId);
+							FalconEntity	entity = (FalconEntity) VuDatabase.vuDatabase.Find(wfm.dataBlock.targetId);
 							if (entity && entity.IsSim())
 								{
 								if (((SimBaseClass*)entity).GetCampaignObject().Id() == flight_ptr.target_id)
 									flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
-								if (Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
+								if (EntityDB.Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
 									_stprintf(target_name,GetVehicleClassData(entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE).Name);
-								else if (Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
-									_stprintf(target_name,GetFeatureClassData(entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE).Name);
+								else if (EntityDB.Falcon4ClassTable[entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+									_stprintf(target_name,FeatureStatic.GetFeatureClassData(entity.Type() - VuEntity.VU_LAST_ENTITY_TYPE).Name);
 								pilot_data.weapon_data[wn].hit++;
 								GetFormatString(FET_PHOTO_TAKEN_HIT,format);
 								}
@@ -1943,7 +1944,7 @@ else
 						else
 							{
 							pilot_data.weapon_data[wn].missed++;
-							if (Falcon4ClassTable[wfm.dataBlock.fWeaponID-VuEntity.VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_TYPE] == TYPE_GUN)
+							if (EntityDB.Falcon4ClassTable[wfm.dataBlock.fWeaponID-VuEntity.VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[VU_TYPE] == TYPE_GUN)
 								GetFormatString(FET_FIRED_MISSED,format);
 							else
 								GetFormatString(FET_RELEASED_MISSED,format);
@@ -1962,8 +1963,8 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-					#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -1979,10 +1980,10 @@ else
 	EventElement			tmpevent,baseevent=null;
 
 // 2002-02-08 MN don't evaluate if FEAT_NO_HITEVAL (like trees...)
-	if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+	if (EntityDB.Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
 	{
 		// get classtbl entry for feature
-		fc = GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
+		fc = FeatureStatic.GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 		if (fc && (fc.Flags & FEAT_NO_HITEVAL))
 			return;
 	}
@@ -2076,7 +2077,7 @@ else
 								}
 							tmpevent.vuIdData2 = dmm.dataBlock.dEntityID;
 							ParseTime(CampaignClass.TheCampaign.CurrentTime,time_str);
-							if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
+							if (EntityDB.Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_VEHICLE)
 								{
 								vc = GetVehicleClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 								if (vc) // JB 010113
@@ -2084,9 +2085,9 @@ else
 								else
 									_stprintf(tmp,"");
 								}
-							else if (Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
+							else if (EntityDB.Falcon4ClassTable[dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE].dataType == DTYPE_FEATURE)
 								{
-								fc = GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
+								fc = FeatureStatic.GetFeatureClassData (dmm.dataBlock.dIndex-VuEntity.VU_LAST_ENTITY_TYPE);
 								if (fc) // JB 010113
 									_stprintf(tmp,fc.Name);
 								else
@@ -2113,8 +2114,8 @@ else
 				if (dmm.dataBlock.dPilotID == pilot_data.pilot_slot)
 					{
 					// Just mark us as damaged
-					if (pilot_data.aircraft_status != VIS_DESTROYED)
-						pilot_data.aircraft_status = VIS_DAMAGED;
+					if (pilot_data.aircraft_status != VIS_TYPES.VIS_DESTROYED)
+						pilot_data.aircraft_status = VIS_TYPES.VIS_DAMAGED;
 					}				
 				pilot_data = pilot_data.next_pilot;
 				}
@@ -2122,8 +2123,8 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-			#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -2170,9 +2171,9 @@ else
 					UI_SendChatMessage
 						*chat;
 
-					chat = new UI_SendChatMessage (FalconNullId, FalconLocalSession);
+					chat = new UI_SendChatMessage (FalconnullId, FalconLocalSession);
 
-					chat.dataBlock.from = FalconNullId;
+					chat.dataBlock.from = FalconnullId;
 					chat.dataBlock.size = (strlen (theEvent.eventString) + 1) * sizeof (char);
 					chat.dataBlock.message = new char [strlen (theEvent.eventString) + 1];
 					memcpy (chat.dataBlock.message, theEvent.eventString, chat.dataBlock.size);
@@ -2219,7 +2220,7 @@ else
 				// Only record pilot status in non-dogfight games
 				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
 					pilot_data.pilot_status = pilot_status;
-				pilot_data.aircraft_status = VIS_DESTROYED;
+				pilot_data.aircraft_status = VIS_TYPES.VIS_DESTROYED;
 				if (em.dataBlock.hadLastShooter)	// Ejected after taking damage
 					{
 					pilot_data.score += CalcScore (SCORE_VEHICLE_KILL, 0);			// Score vehicle death
@@ -2243,8 +2244,8 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-			#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -2274,7 +2275,7 @@ else
 				GetFormatString(FET_PILOT_LANDED,format);
 				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
 					pilot_data.pilot_status = pilot_status;
-//				pilot_data.aircraft_status = VIS_DESTROYED;
+//				pilot_data.aircraft_status = VIS_TYPES.VIS_DESTROYED;
 				pilot_data.score += CalcScore (SCORE_PILOT_LANDED, 0);
 				if (pilot_data == player_pilot)
 					logbook_data.Flags |= LANDED_AIRCRAFT;
@@ -2289,8 +2290,8 @@ else
 		flight_ptr = flight_ptr.next_flight;
 		}
 	CampLeaveCriticalSection();
-			#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -2398,17 +2399,17 @@ else
 				flight_ptr = FindFlightData ((FlightClass)campShooter);
 
 				if (flight_ptr) {
-					if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_AIR_FIRE))
+					if (EntityDB.Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_AIR_FIRE))
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_AKILL;
-					else if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_GROUND_FIRE)) {
-						if (Falcon4ClassTable [tid].dataType == DTYPE_OBJECTIVE || Falcon4ClassTable [tid].dataType == DTYPE_FEATURE) {
+					else if (EntityDB.Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_GROUND_FIRE)) {
+						if (EntityDB.Falcon4ClassTable [tid].dataType == DTYPE_OBJECTIVE || Falcon4ClassTable [tid].dataType == DTYPE_FEATURE) {
 							flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_SKILL;
 							// High value for hitting target feature
 							for (i=0; i<MAX_TARGET_FEATURES; i++) {
 								if (flight_ptr.target_features [i] < 255 && flight_ptr.target_features [i] == targetEl)
 									flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_HIGH_VAL;
 							}
-						} else if (Falcon4ClassTable [tid].dataType == DTYPE_UNIT || Falcon4ClassTable [tid].dataType == DTYPE_VEHICLE) {
+						} else if (EntityDB.Falcon4ClassTable [tid].dataType == DTYPE_UNIT || Falcon4ClassTable [tid].dataType == DTYPE_VEHICLE) {
 							flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_GKILL;
 							// High value for killing radar vehicle
 							if (targetEl == ((UnitClass*)campTarget).GetUnitClassData ().RadarVehicle)
@@ -2417,7 +2418,7 @@ else
 							if (flight_ptr.target_id && (flight_ptr.target_id == ((UnitClass*)campTarget).GetUnitParentID () || flight_ptr.target_id == campTarget.Id ()))
 								flight_ptr.status_flags |= MISEVAL_FLIGHT_TARGET_HIT;
 						}
-					} else if (Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_NAVAL_FIRE)) {
+					} else if (EntityDB.Falcon4ClassTable [tid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA && GetRoE (campShooter.GetTeam (), campTarget.GetTeam (), ROE_NAVAL_FIRE)) {
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_GOT_NKILL;
 						// High value for hitting capital ship
 						if (!targetEl)
@@ -2439,11 +2440,11 @@ else
 					flight_ptr.status_flags |= MISEVAL_FLIGHT_LOSSES;
 					if (campTarget.IsUnit () && ((UnitClass*)campTarget).Dead ())
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_DESTROYED;
-					if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR)
+					if (EntityDB.Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_AIR)
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_AIR;
-					else if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND)
+					else if (EntityDB.Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_LAND)
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_GROUND;
-					else if (Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA)
+					else if (EntityDB.Falcon4ClassTable [sid].vuClassData.classInfo_ [(int)VU_CLASS.VU_DOMAIN] == DOMAIN_SEA)
 						flight_ptr.status_flags |= MISEVAL_FLIGHT_HIT_BY_NAVAL;
 
 					if (package_element && campTarget.Id () == package_element.flight_id) {
@@ -2483,8 +2484,8 @@ else
 			}
 
 			CampLeaveCriticalSection ();
-				#endif
-			throw 
+#endif
+            throw 
 				new NotImplementedException ();
 		}
 
@@ -2648,7 +2649,7 @@ else
 					flight_ptr.requester_id = flight.GetRequesterID ();
 					flight_ptr.target_id = flight.GetUnitMissionTargetID ();
 					Debug.Assert (flight_ptr.target_id == mis.targetID);
-					if (flight_ptr.target_id != FalconNullId)
+					if (flight_ptr.target_id != FalconnullId)
 						target = (CampEntity)VuDatabase.vuDatabase.Find (flight_ptr.target_id);
 					RecordTargetStatus (flight_ptr, target);
 				}

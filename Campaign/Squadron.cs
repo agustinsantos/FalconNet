@@ -236,10 +236,10 @@ namespace FalconNet.Campaign
 		public void MakeSquadronDirty (Dirty_Squadron bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public override void WriteDirty (byte[] stream)
+        public override void WriteDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public override void ReadDirty (byte[] stream)
+        public override void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
 		// Core functions

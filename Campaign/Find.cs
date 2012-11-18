@@ -4,6 +4,7 @@ using FalconNet.Common;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Flight=FalconNet.Campaign.FlightClass;
 using Team=System.Int32;
+using GridIndex = System.Int16;
 using FalconNet.VU;
 
 namespace FalconNet.Campaign
@@ -39,7 +40,7 @@ namespace FalconNet.Campaign
 		// Globals
 		// ==========================================
 		
-		// extern byte ThreatSearch[MAX_CAMP_ENTITIES];			// Search data
+		// public static  byte ThreatSearch[MAX_CAMP_ENTITIES];			// Search data
 		
 		// =============================
 		// Global function headers
@@ -196,8 +197,8 @@ namespace FalconNet.Campaign
 		public static GridIndex SimToGrid (float x)
 		{throw new NotImplementedException();}
 
-		public static void ConvertGridToSim(GridIndex x, GridIndex y, ref vector pos)
-		{throw new NotImplementedException();}
+		// TODO It's duplicate see Campwp public static void ConvertGridToSim(GridIndex x, GridIndex y, ref vector pos)
+		//{throw new NotImplementedException();}
 
 		public static void ConvertSimToGrid(vector pos, ref GridIndex x, ref GridIndex y)
 		{throw new NotImplementedException();}

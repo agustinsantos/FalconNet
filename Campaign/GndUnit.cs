@@ -3,6 +3,7 @@ using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Team=System.Int32;
+using GridIndex = System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 
@@ -286,10 +287,10 @@ namespace FalconNet.Campaign
 		public void MakeGndUnitDirty (Dirty_Ground_Unit bits, Dirtyness score)
 		{throw new NotImplementedException();}
 
-		public override void WriteDirty (byte[] stream)
+        public override void WriteDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 
-		public override void ReadDirty (byte[] stream)
+        public override void ReadDirty(byte[] stream, ref int pos)
 		{throw new NotImplementedException();}
 		
 		// ============================

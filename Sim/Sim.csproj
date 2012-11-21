@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,6 +50,10 @@
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>
       <Name>VU</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
+      <Name>Graphics</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

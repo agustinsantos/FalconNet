@@ -345,7 +345,7 @@ namespace FalconNet.Campaign
 			CampEnterCriticalSection();
 			
 			#if FUNKY_KEVIN_DEBUG_STUFF
-				Debug.Assert(!inMission || FalconLocalGame.GetGameType() == game_Dogfight);
+				Debug.Assert(!inMission || FalconSessionEntity.FalconLocalGame.GetGameType() == game_Dogfight);
 			#endif
 			
 				CleanupFlightData();
@@ -737,7 +737,7 @@ namespace FalconNet.Campaign
 					flight_ptr.finish_aircraft = flight_ptr.start_aircraft;		
 					while (pilot_data != null)
 						{
-						if (FalconLocalGame.GetGameType () != game_Dogfight)
+						if (FalconSessionEntity.FalconLocalGame.GetGameType () != game_Dogfight)
 							{
 							pilot_data.score += ScoreAdjustment[flight_ptr.mission_success];
 							pilot_data.score += ScoreAdjustment[pack_success]/2;
@@ -834,9 +834,9 @@ namespace FalconNet.Campaign
 				logbook_data.NavalUnitsKilled = player_pilot.an_kills;
 				logbook_data.WingmenLost = friendly_losses;
 		
-				switch(FalconLocalGame.GetGameType())
+				switch(FalconSessionEntity.FalconLocalGame.GetGameType())
 					{
-					case game_Dogfight:
+					case FalconGameType.game_Dogfight:
 						{
 						int won = 0,vsHuman = 0;
 						if (flags & MISEVAL_GAME_COMPLETED)
@@ -852,7 +852,7 @@ namespace FalconNet.Campaign
 						LogBook.UpdateDogfight(won, logbook_data.FlightHours, vsHuman, player_pilot.aa_kills, player_pilot.deaths[MissEvakStatic.VS_AI]+player_pilot.deaths[MissEvakStatic.VS_HUMAN], player_pilot.player_kills, player_pilot.deaths[MissEvakStatic.VS_HUMAN] );
 						}
 						break;
-					case game_Campaign:
+					case FalconGameType.game_Campaign:
 						LogBook.SetAceFactor(FalconLocalSession.GetAceFactor());
 		// 2002-02-13 MN added AWACSAbort condition for "don't score mission"
 						if (!logbook_data.Killed && (player_element.mission_success == Incomplete || player_element.mission_success == AWACSAbort))
@@ -883,7 +883,7 @@ namespace FalconNet.Campaign
 						FalconLocalSession.SetKill(FalconSessionEntity._NAVAL_KILLS_,FalconLocalSession.GetKill(FalconSessionEntity._NAVAL_KILLS_)+logbook_data.NavalUnitsKilled);
 						FalconLocalSession.SetKill(FalconSessionEntity._STATIC_KILLS_,FalconLocalSession.GetKill(FalconSessionEntity._STATIC_KILLS_)+logbook_data.FeaturesDestroyed);
 						break;
-					case game_TacticalEngagement:
+					case FalconGameType.game_TacticalEngagement:
 		// 2002-02-13 MN added AWACSAbort condition
 						if (logbook_data.Killed || (player_element.mission_success != Incomplete) && (player_element.mission_success != AWACSAbort))
 						{
@@ -909,7 +909,7 @@ namespace FalconNet.Campaign
 						FalconLocalSession.SetKill(FalconSessionEntity._NAVAL_KILLS_,FalconLocalSession.GetKill(FalconSessionEntity._NAVAL_KILLS_)+logbook_data.NavalUnitsKilled);
 						FalconLocalSession.SetKill(FalconSessionEntity._STATIC_KILLS_,FalconLocalSession.GetKill(FalconSessionEntity._STATIC_KILLS_)+logbook_data.FeaturesDestroyed);
 						break;
-					case game_InstantAction:
+					case FalconGameType.game_InstantAction:
 						LogBook.UpdateFlightHours(logbook_data.FlightHours);
 						LogBook.SaveData();
 						break;
@@ -2177,7 +2177,7 @@ else
 					chat.dataBlock.size = (strlen (theEvent.eventString) + 1) * sizeof (char);
 					chat.dataBlock.message = new char [strlen (theEvent.eventString) + 1];
 					memcpy (chat.dataBlock.message, theEvent.eventString, chat.dataBlock.size);
-					FalconSendMessage (chat, true);
+					FalcMesgStatic.FalconSendMessage (chat, true);
 				}
 
 				CampLeaveCriticalSection();
@@ -2218,7 +2218,7 @@ else
 				ParseTime(CampaignClass.TheCampaign.CurrentTime, time_str);
 				GetFormatString(FET_PILOT_EJECTED,format);
 				// Only record pilot status in non-dogfight games
-				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
+				if (pilot_data.pilot_status == PILOT_IN_USE && FalconSessionEntity.FalconLocalGame.GetGameType() != game_Dogfight)
 					pilot_data.pilot_status = pilot_status;
 				pilot_data.aircraft_status = VIS_TYPES.VIS_DESTROYED;
 				if (em.dataBlock.hadLastShooter)	// Ejected after taking damage
@@ -2273,7 +2273,7 @@ else
 				theEvent = new EventElement();
 				ParseTime(CampaignClass.TheCampaign.CurrentTime, time_str);
 				GetFormatString(FET_PILOT_LANDED,format);
-				if (pilot_data.pilot_status == PILOT_IN_USE && FalconLocalGame.GetGameType() != game_Dogfight)
+				if (pilot_data.pilot_status == PILOT_IN_USE && FalconSessionEntity.FalconLocalGame.GetGameType() != game_Dogfight)
 					pilot_data.pilot_status = pilot_status;
 //				pilot_data.aircraft_status = VIS_TYPES.VIS_DESTROYED;
 				pilot_data.score += CalcScore (SCORE_PILOT_LANDED, 0);
@@ -3074,7 +3074,7 @@ else
 
 			CampEnterCriticalSection ();
 
-			if (FalconLocalGame.GetGameType () == game_Dogfight) {
+			if (FalconSessionEntity.FalconLocalGame.GetGameType () == game_Dogfight) {
 				// Add all pilots
 				for (i=0; i<PilotStatic.PILOTS_PER_FLIGHT; i++) {
 					if (flight.plane_stats [i] == AIRCRAFT_AVAILABLE) {
@@ -3151,7 +3151,7 @@ else
 			// we don't need anymore and adding any new ones which have popped up
 
 			// NOTE: Dogfight only
-			if (!FalconLocalGame || FalconLocalGame.GetGameType () != game_Dogfight)
+			if (FalconSessionEntity.FalconLocalGame == null || FalconSessionEntity.FalconLocalGame.GetGameType () != game_Dogfight)
 				return;
 			else {
 				VuListIterator flit = new VuListIterator (AllAirList);

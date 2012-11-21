@@ -478,7 +478,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 	CampBaseClass  tmp_ent = (CampBaseClass)(evnt.expandedData_);
 
 	// Make sure the host owns this
-	share_.ownerId_ = FalconLocalGame.OwnerId();
+	share_.ownerId_ = FalconSessionEntity.FalconLocalGame.OwnerId();
 
 	// In the case of force on force TE, this is actually ok -
 	// The host will receive the full update and MAKE this entity
@@ -728,7 +728,7 @@ public static  VU_ID_NUMBER lastVolitileId;
             cm.dataBlock.data2 = d2;
             cm.dataBlock.data3 = d3;
             cm.dataBlock.data4 = d4;
-            FalconSendMessage(cm, true);
+            FalcMesgStatic.FalconSendMessage(cm, true);
 #endif
             throw new NotImplementedException();
         }
@@ -842,7 +842,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 
         public Classtable_Types GetFalconType()
         {
-            return (EntityType()).classInfo_[(int)VU_CLASS.VU_TYPE];
+            return (Classtable_Types)(EntityType()).classInfo_[(int)VU_CLASS.VU_TYPE];
         }
 
         public byte GetSType()

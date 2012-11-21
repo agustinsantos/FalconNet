@@ -26,39 +26,39 @@ namespace FalconNet.FalcLib
     public class UnitClassDataType
     {
 
-        short Index;						// descriptionIndex pointing here
-        int[] NumElements = new int[Camplib.VEHICLES_PER_UNIT];
-        short[] VehicleType = new short[Camplib.VEHICLES_PER_UNIT];			// Class table description index
-        byte[,] VehicleClass = new byte[Camplib.VEHICLES_PER_UNIT, 8];		// 9 byte class description array
-        int Flags;						// Unit capibility flags (see VEH_ flags in vehicle.h)
-        string Name;					// Unit name 'Infantry', 'Armor'
-        MoveType MovementType;
-        short MovementSpeed;
-        short MaxRange;					// Movement/flight range with full supply
-        long Fuel;						// Fuel (internal)
-        short Rate;						// Fuel usage- in lbs per minute (cruise speed)
-        short PtDataIndex;				// Index into pt header data table
-        byte[] Scores = new byte[Camplib.MAXIMUM_ROLES];		// Score for each type of mission or role
-        byte Role;						// What sort of mission role is standard
-        byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];	// Unit hit chances (best hitchance)
-        byte[] Strength = new byte[(int)MoveType.MOVEMENT_TYPES];	// Unit strengths (full strength only)
-        byte[] Range = new byte[(int)MoveType.MOVEMENT_TYPES];		// Firing ranges (maximum range)
-        byte[] Detection = new byte[(int)MoveType.MOVEMENT_TYPES];	// Electronic detection ranges at full strength
-        byte[] DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
-        byte RadarVehicle;				// ID of the radar vehicle for this unit
-        short SpecialIndex;				// Index into yet another table (max stores for squadrons)
-        short IconIndex;					// Index to this unit's icon type
-    };
+        public short Index;						// descriptionIndex pointing here
+        public int[] NumElements = new int[Camplib.VEHICLES_PER_UNIT];
+        public short[] VehicleType = new short[Camplib.VEHICLES_PER_UNIT];			// Class table description index
+        public byte[,] VehicleClass = new byte[Camplib.VEHICLES_PER_UNIT, 8];		// 9 byte class description array
+        public int Flags;						// Unit capibility flags (see VEH_ flags in vehicle.h)
+        public string Name;					// Unit name 'Infantry', 'Armor'
+        public MoveType MovementType;
+        public short MovementSpeed;
+        public short MaxRange;					// Movement/flight range with full supply
+        public long Fuel;						// Fuel (internal)
+        public short Rate;						// Fuel usage- in lbs per minute (cruise speed)
+        public short PtDataIndex;				// Index into pt header data table
+        public byte[] Scores = new byte[Camplib.MAXIMUM_ROLES];		// Score for each type of mission or role
+        public byte Role;						// What sort of mission role is standard
+        public byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];	// Unit hit chances (best hitchance)
+        public byte[] Strength = new byte[(int)MoveType.MOVEMENT_TYPES];	// Unit strengths (full strength only)
+        public byte[] Range = new byte[(int)MoveType.MOVEMENT_TYPES];		// Firing ranges (maximum range)
+        public byte[] Detection = new byte[(int)MoveType.MOVEMENT_TYPES];	// Electronic detection ranges at full strength
+        public byte[] DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
+        public byte RadarVehicle;				// ID of the radar vehicle for this unit
+        public short SpecialIndex;				// Index into yet another table (max stores for squadrons)
+        public short IconIndex;					// Index to this unit's icon type
+    }
 
     public class FeatureEntry
     {
-        short Index;						// Entity class index of feature
-        ushort Flags;
-        byte[] eClass = new byte[8];					// Entity class array of feature
-        byte Value;						// % loss in operational status for destruction
-        vector Offset;
-        Int16 Facing;
-    };
+        public short Index;						// Entity class index of feature
+        public ushort Flags;
+        public byte[] eClass = new byte[8];					// Entity class array of feature
+        public byte Value;						// % loss in operational status for destruction
+        public vector Offset;
+        public Int16 Facing;
+    }
 
     public class ObjClassDataType
     {
@@ -236,13 +236,13 @@ namespace FalconNet.FalcLib
     // ===============================================
     public static class EntityDB
     {
-        public static UnitClassDataType UnitDataTable;
-        public static ObjClassDataType ObjDataTable;
-        public static FeatureEntry FeatureEntryDataTable;
-        public static WeaponClassDataType WeaponDataTable;
-        public static FeatureClassDataType FeatureDataTable;
-        public static VehicleClassDataType VehicleDataTable;
-        public static SquadronStoresDataType SquadronStoresDataTable;
+        public static UnitClassDataType[] UnitDataTable;
+        public static ObjClassDataType[] ObjDataTable;
+        public static FeatureEntry[] FeatureEntryDataTable;
+        public static WeaponClassDataType[] WeaponDataTable;
+        public static FeatureClassDataType[] FeatureDataTable;
+        public static VehicleClassDataType[] VehicleDataTable;
+        public static SquadronStoresDataType[] SquadronStoresDataTable;
         public static PtHeaderDataType PtHeaderDataTable;
         public static PtDataType PtDataTable;
         public static SimWeaponDataType SimWeaponDataTable;
@@ -554,11 +554,11 @@ namespace FalconNet.FalcLib
                     fid = ObjDataTable[i].FirstFeature;
                     for (j=0; j<ObjDataTable[i].Features; j++)
                         {
-                        FeatureEntryDataTable[fid].Index = GetClassID(FeatureEntryDataTable[fid].eClass[0],
-                          FeatureEntryDataTable[fid].eClass[1],FeatureEntryDataTable[fid].eClass[2],
-                          FeatureEntryDataTable[fid].eClass[3],FeatureEntryDataTable[fid].eClass[4],
-                          FeatureEntryDataTable[fid].eClass[5],FeatureEntryDataTable[fid].eClass[6],
-                          FeatureEntryDataTable[fid].eClass[7]);
+                          EntityDB.FeatureEntryDataTable[fid].Index = GetClassID(FeatureEntryDataTable[fid].eClass[0],
+                          EntityDB.FeatureEntryDataTable[fid].eClass[1],FeatureEntryDataTable[fid].eClass[2],
+                          EntityDB.FeatureEntryDataTable[fid].eClass[3],FeatureEntryDataTable[fid].eClass[4],
+                          EntityDB.FeatureEntryDataTable[fid].eClass[5],FeatureEntryDataTable[fid].eClass[6],
+                          EntityDB.FeatureEntryDataTable[fid].eClass[7]);
                         fid++;
                         }
                     }
@@ -785,7 +785,7 @@ namespace FalconNet.FalcLib
                 return 0;
             if (size != sizeof(FeatureEntry) * NumObjFeatEntries + 2)
                 return 0;
-            FeatureEntryDataTable = new FeatureEntry[NumObjFeatEntries];
+            EntityDB.FeatureEntryDataTable = new FeatureEntry[NumObjFeatEntries];
             fread(FeatureEntryDataTable, sizeof(FeatureEntry), NumObjFeatEntries, fp);
             fclose(fp);
             return 1;

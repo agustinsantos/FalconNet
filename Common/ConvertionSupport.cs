@@ -45,6 +45,9 @@ namespace FalconNet.Common
 	public class ObjectGeometry {}
 	public class DrawablePoint {}
 	
+	public struct OTWDriver {
+		public static bool IsActive(){throw new NotImplementedException();}
+	}
 	public struct List {}
 	public struct CampUIEventElement {}
 	public struct SquadUIInfoClass {}
@@ -56,12 +59,16 @@ namespace FalconNet.Common
 	public struct FalconDeathMessage {}
 	public class F4PFList {}
     public class F4POList{}
+	public class FalconPrivateOrderedList {}
+	public class FalconPrivateList {}
+	public class VuLinkedList {}
 	public struct UnitType {}
 	public class Package {}
 	public class PackageClass {}
 	public class MissionRequest{}
-	public struct RadarRangeClass {}
-	public struct ATCBrain {}
+	public class ATCBrain {
+		public ATCBrain(Object o){}
+	}
 	public struct PriorityLevel {}
 	public struct ObjectiveType {}
 	public struct FalconDivertMessage {}
@@ -70,10 +77,12 @@ namespace FalconNet.Common
 	public struct FalconDamageMessage {}
 	public struct FalconEjectMessage {}
 	public struct FalconLandingMessage {}
-	public struct WayPoint {}
+	public struct WayPoint {
+		public void GetWPTargetID () {throw new NotImplementedException();}
+		public byte GetWPTargetBuilding () {throw new NotImplementedException();}
+	}
 	public struct LoadoutStruct {}
 	public struct CampaignHeading {}
-	public struct AircraftClass {}
 	public struct VehicleID {}
 	public struct SmallPathClass {
 		public void ClearPath ()

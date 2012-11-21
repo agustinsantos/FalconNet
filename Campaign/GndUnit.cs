@@ -6,6 +6,7 @@ using Team=System.Int32;
 using GridIndex = System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
+using FalconNet.Sim;
 
 namespace FalconNet.Campaign
 {

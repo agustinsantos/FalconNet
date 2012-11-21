@@ -459,6 +459,12 @@ namespace FalconNet.FalcLib
 			#endif
 			throw new NotImplementedException ();
 		}
+		
+		//TODO THis function is not declared in the .h file ??
+		public FalconGameType GetGameType()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 }

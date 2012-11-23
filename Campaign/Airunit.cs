@@ -25,7 +25,7 @@ namespace FalconNet.Campaign
 		// constructors and serial functions
 		public AirUnitClass(int type):base(type)
 		{throw new NotImplementedException();}
-		public AirUnitClass(VU_BYTE[] stream):base(stream)
+		public AirUnitClass(byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		public AirUnitClass(byte[] bytes, ref int offset, int version)
             : base(bytes, ref offset, version)

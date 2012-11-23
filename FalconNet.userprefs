@@ -1,34 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/SimBaseClass.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Campaign.cs">
     <Files>
-      <File FileName="Campaign/Objectiv.cs" Line="870" Column="72" />
-      <File FileName="FalcLib/ObjectiveMsg.cs" Line="41" Column="40" />
-      <File FileName="FalcLib/Falcmesg.cs" Line="28" Column="31" />
-      <File FileName="FalcLib/Mesg.cs" Line="8" Column="25" />
-      <File FileName="FalcLib/entity.cs" Line="789" Column="19" />
-      <File FileName="VU/VuEntity.cs" Line="30" Column="26" />
-      <File FileName="Campaign/SimBaseClass.cs" Line="88" Column="73" />
-      <File FileName="Common/ConvertionSupport.cs" Line="85" Column="34" />
-      <File FileName="Campaign/GndUnit.cs" Line="205" Column="30" />
-      <File FileName="Campaign/Flight.cs" Line="591" Column="47" />
-      <File FileName="Campaign/Campbase.cs" Line="481" Column="20" />
-      <File FileName="Campaign/MissEval.cs" Line="839" Column="26" />
-      <File FileName="FalcLib/FalcSess.cs" Line="463" Column="57" />
-      <File FileName="Campaign/dogfight.cs" Line="83" Column="23" />
-      <File FileName="FalcLib/FalcGame.cs" Line="11" Column="28" />
+      <File FileName="Common/ConvertionSupport.cs" Line="95" Column="29" />
+      <File FileName="Campaign/Campaign.cs" Line="617" Column="39" />
+      <File FileName="Campaign/camplist.cs" Line="389" Column="39" />
+      <File FileName="Campaign/Campterr.cs" Line="64" Column="47" />
+      <File FileName="Campaign/Name.cs" Line="12" Column="26" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Campaign" expanded="True">
-            <Node name="SimBaseClass.cs" selected="True" />
+            <Node name="Campaign.cs" selected="True" />
           </Node>
           <Node name="Common" expanded="True" />
           <Node name="FalcLib" expanded="True" />
-          <Node name="Sim" expanded="True" />
-          <Node name="UI" expanded="True" />
-          <Node name="VU" expanded="True" />
         </State>
       </Pad>
     </Pads>

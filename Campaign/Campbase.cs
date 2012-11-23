@@ -346,7 +346,7 @@ public static  VU_ID_NUMBER lastVolitileId;
             spotTime = new CampaignTime(0); // JB 010719
         }
 
-        public CampBaseClass(VU_BYTE[] stream)
+        public CampBaseClass(byte[] stream, ref int offset)
             : base(VuEntity.VU_LAST_ENTITY_TYPE)
         { throw new NotImplementedException(); }
         public CampBaseClass(byte[] bytes, ref int offset, int version)

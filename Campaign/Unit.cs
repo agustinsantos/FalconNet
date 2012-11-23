@@ -3,10 +3,12 @@ using System.Diagnostics;
 using Unit=FalconNet.Campaign.UnitClass;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Path=FalconNet.Campaign.BasePathClass;
+using WayPoint=FalconNet.Campaign.WayPointClass;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using GridIndex = System.Int16;
 using Control = System.Byte;
+using VehicleID=System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 
@@ -249,7 +251,7 @@ namespace FalconNet.Campaign
 		// constructors and serial functions
 		public UnitClass (int type):base(type)
 		{throw new NotImplementedException();}
-		public UnitClass (VU_BYTE[] stream):base(stream)
+		public UnitClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		public UnitClass(byte[] bytes, ref int offset, int version)
             : base(bytes, ref offset, version)

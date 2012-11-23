@@ -74,6 +74,7 @@
     <Compile Include="CampRadar.cs" />
     <Compile Include="vehicle.cs" />
     <Compile Include="SimBaseClass.cs" />
+    <Compile Include="Package.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

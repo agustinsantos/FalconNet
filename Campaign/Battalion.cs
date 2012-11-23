@@ -63,7 +63,7 @@ namespace FalconNet.Campaign
 		public BattalionClass (int type, Unit parent):base(type)
 		{throw new NotImplementedException();}
 
-		public BattalionClass (VU_BYTE[] stream):base(stream)
+		public BattalionClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		
 		public BattalionClass(byte[] bytes, ref int offset, int version)

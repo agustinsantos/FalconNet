@@ -6,6 +6,8 @@ using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using Flight=FalconNet.Campaign.FlightClass;
 using Squadron=FalconNet.Campaign.SquadronClass;
+using WayPoint=FalconNet.Campaign.WayPointClass;
+using Package=FalconNet.Campaign.PackageClass;
 using Team=System.Int32;
 using GridIndex = System.Int16;
 namespace FalconNet.Campaign

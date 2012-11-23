@@ -63,27 +63,20 @@ namespace FalconNet.Common
 	public class FalconPrivateList {}
 	public class VuLinkedList {}
 	public struct UnitType {}
-	public class Package {}
 	public class PackageClass {}
 	public class MissionRequest{}
 	public class ATCBrain {
 		public ATCBrain(Object o){}
 	}
-	public struct PriorityLevel {}
-	public struct ObjectiveType {}
 	public struct FalconDivertMessage {}
 	public struct FalconPlayerStatusMessage {}
 	public struct FalconWeaponsFire {}
 	public struct FalconDamageMessage {}
 	public struct FalconEjectMessage {}
 	public struct FalconLandingMessage {}
-	public struct WayPoint {
-		public void GetWPTargetID () {throw new NotImplementedException();}
-		public byte GetWPTargetBuilding () {throw new NotImplementedException();}
-	}
 	public struct LoadoutStruct {}
 	public struct CampaignHeading {}
-	public struct VehicleID {}
+	
 	public struct SmallPathClass {
 		public void ClearPath ()
 		{
@@ -101,7 +94,6 @@ namespace FalconNet.Common
 	}
 	public struct SquadronClass {}
 	public struct FlightClass {}
-	public struct NTM {}
 	
 	public struct AirframeClass {}
 	public struct FackClass {}

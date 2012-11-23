@@ -112,7 +112,7 @@ namespace FalconNet.Campaign
 		// constructors and serial functions
 		public GroundUnitClass (int type) : base(type)
 		{throw new NotImplementedException();}
-		public GroundUnitClass (VU_BYTE[] stream) :base(stream)
+		public GroundUnitClass (byte[] stream, ref int offset) :base(stream, ref offset)
 		{throw new NotImplementedException();}
 		
 		public GroundUnitClass(byte[] bytes, ref int offset, int version)

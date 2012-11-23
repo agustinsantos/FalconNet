@@ -2,6 +2,7 @@ using System;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Flight=FalconNet.Campaign.FlightClass;
 using Unit=FalconNet.Campaign.UnitClass;
+using WayPoint=FalconNet.Campaign.WayPointClass;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
@@ -208,7 +209,7 @@ namespace FalconNet.Campaign
 		public FlightClass (int type, Unit parent, Unit squadron):base(type)
 		{throw new NotImplementedException();}
 		
-		public FlightClass (VU_BYTE[] stream):base(stream)
+		public FlightClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~FlightClass();
 		public override int SaveSize ()

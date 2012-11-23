@@ -181,7 +181,7 @@ namespace FalconNet.Campaign
 		public SquadronClass (int type):base(type)
 		{throw new NotImplementedException();}
 		
-		public SquadronClass (VU_BYTE[] stream):base(stream)
+		public SquadronClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~SquadronClass();
 		public override int SaveSize ()

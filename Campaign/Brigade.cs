@@ -31,7 +31,7 @@ namespace FalconNet.Campaign
 		// constructors and serial functions
 		public BrigadeClass (int type) : base(type)
 		{throw new NotImplementedException();}
-		public BrigadeClass (VU_BYTE[] stream) : base(stream)
+		public BrigadeClass (byte[] stream, ref int offset) : base(stream, ref offset)
 		{throw new NotImplementedException();}
 		public BrigadeClass(byte[] bytes, ref int offset, int version)
             : base(bytes, ref offset, version)

@@ -3,8 +3,11 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Objective = FalconNet.Campaign.ObjectiveClass;
+using ObjectiveType=System.Byte;
+using PriorityLevel=System.Byte;
 using Unit = FalconNet.Campaign.UnitClass;
 using Flight = FalconNet.Campaign.FlightClass;
+using WayPoint=FalconNet.Campaign.WayPointClass;
 using Team = System.Int32;
 using GridIndex = System.Int16;
 using VU_BYTE = System.Byte;
@@ -131,8 +134,8 @@ namespace FalconNet.Campaign
 #endif
 		}
 
-		public ObjectiveClass (VU_BYTE[] stream)
-            : base(stream)
+		public ObjectiveClass (byte[] stream, ref int offset)
+            : base(stream, ref offset)
 		{
 			throw new NotImplementedException ();
 		}

@@ -5,33 +5,30 @@ using GridIndex = System.Int16;
 
 namespace FalconNet.Campaign
 {
-    // ====================
-    // Campaign Terrain ADT
-    // ====================
+	// ====================
+	// Campaign Terrain ADT
+	// ====================
+	public struct GridLocation
+	{
+		public GridIndex x;
+		public GridIndex y;
+	} ;
 
-
-    public struct GridLocation
-    {
-        public GridIndex x;
-        public GridIndex y;
-    } ;
-
-    // ---------------------------------------
-    // Type and public static al Function Declarations
-    // ---------------------------------------
-    public static class CampTerrStatic
-    {
-        public const int GroundCoverMask = 0x0F; // 0xF0
-        public const int GroundCoverShift = 0;
-        public const int ReliefMask = 0x30; // 0xCF
-        public const int ReliefShift = 4;
-        public const int RoadMask = 0x40; // 0xBF
-        public const int RoadShift = 6;
-        public const int RailMask = 0x80; // 0x7F
-        public const int RailShift = 7;
-
-        public static short Map_Max_X = 0;							// World Size, in grid coordinates
-        public static short Map_Max_Y = 0;
+	// ---------------------------------------
+	// Type and public static al Function Declarations
+	// ---------------------------------------
+	public static class CampTerrStatic
+	{
+		public const int GroundCoverMask = 0x0F; // 0xF0
+		public const int GroundCoverShift = 0;
+		public const int ReliefMask = 0x30; // 0xCF
+		public const int ReliefShift = 4;
+		public const int RoadMask = 0x40; // 0xBF
+		public const int RoadShift = 6;
+		public const int RailMask = 0x80; // 0x7F
+		public const int RailShift = 7;
+		public static short Map_Max_X = 0;							// World Size, in grid coordinates
+		public static short Map_Max_Y = 0;
 		
 		
 		// =============================================
@@ -45,60 +42,93 @@ namespace FalconNet.Campaign
 		private static float    Longitude;
 		private static float    CellSizeInKilometers;
 		
-        public static void InitTheaterTerrain()
+		public static void InitTheaterTerrain ()
 		{
 			if (TheaterCells != null)
-				FreeTheaterTerrain();
-			TheaterCells = new CellDataType[Map_Max_X*Map_Max_Y];
+				FreeTheaterTerrain ();
+			TheaterCells = new CellDataType[Map_Max_X * Map_Max_Y];
 			//TODO memset(TheaterCells,0,sizeof(CellDataType)*Map_Max_X*Map_Max_Y);
 		}
 
-
-        public static void FreeTheaterTerrain()
+		public static void FreeTheaterTerrain ()
 		{
 			TheaterCells = null;
 		}
 
-        public static int LoadTheaterTerrain(string FileName)
-		{throw new NotImplementedException();}
-
-        public static int LoadTheaterTerrainLight(string name)
-		{throw new NotImplementedException();}
-
-        public static int SaveTheaterTerrain(string FileName)
-		{throw new NotImplementedException();}
-
-        public static CellData GetCell(GridIndex x, GridIndex y)
+		public static bool LoadTheaterTerrain (string name)
 		{
-		    Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return new CellData(TheaterCells[x*Map_Max_Y + y]);
+			byte[] data;
+			int data_ptr;
+	
+			FreeTheaterTerrain ();
+			data = CampaignStatic.ReadCampFile (name, "thr");
+			if (data == null)
+				return false;
+
+			data_ptr = 0;
+	
+			Map_Max_X = BitConverter.ToInt16 (data, data_ptr);
+			data_ptr += sizeof(short);
+			Map_Max_Y = BitConverter.ToInt16 (data, data_ptr);
+			data_ptr += sizeof(short);
+
+#if DEBUG
+			Debug.Assert(Map_Max_X == CampaignClass.TheCampaign.TheaterSizeX);
+			Debug.Assert(Map_Max_Y == CampaignClass.TheCampaign.TheaterSizeY);
+#endif
+
+			InitTheaterTerrain ();
+	
+			TheaterCells = new CellDataType[sizeof(CellDataType) * Map_Max_X * Map_Max_Y];
+			//TODO copy data to TheaterCells
+			//memcpy (TheaterCells, data_ptr, sizeof (CellDataType) * Map_Max_X * Map_Max_Y);
+			throw new NotImplementedException(); 
+			
+			data = null;
+			return true;
 		}
 
-        public static ReliefType GetRelief(GridIndex x, GridIndex y)
+		public static int LoadTheaterTerrainLight (string name)
 		{
-		    Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (ReliefType)((TheaterCells[x*Map_Max_Y + y] & ReliefMask) >> ReliefShift);
+			throw new NotImplementedException ();
 		}
 
-        public static CoverType GetCover(GridIndex x, GridIndex y)
+		public static int SaveTheaterTerrain (string FileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static CellData GetCell (GridIndex x, GridIndex y)
+		{
+			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return new CellData (TheaterCells [x * Map_Max_Y + y]);
+		}
+
+		public static ReliefType GetRelief (GridIndex x, GridIndex y)
+		{
+			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (ReliefType)((TheaterCells [x * Map_Max_Y + y] & ReliefMask) >> ReliefShift);
+		}
+
+		public static CoverType GetCover (GridIndex x, GridIndex y)
 		{
 			if ((x < 0) || (x >= Map_Max_X) || (y < 0) || (y >= Map_Max_Y))
-				return (CoverType) CoverType.Water;
+				return (CoverType)CoverType.Water;
 			else
-				return (CoverType)((TheaterCells[x*Map_Max_Y + y] & GroundCoverMask) >> GroundCoverShift);
+				return (CoverType)((TheaterCells [x * Map_Max_Y + y] & GroundCoverMask) >> GroundCoverShift);
 		}
 
-        public static char GetRoad(GridIndex x, GridIndex y)
+		public static char GetRoad (GridIndex x, GridIndex y)
 		{
-			Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells[x*Map_Max_Y + y] & RoadMask) >> RoadShift);
+			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (char)((TheaterCells [x * Map_Max_Y + y] & RoadMask) >> RoadShift);
 		}
 
-        public static char GetRail(GridIndex x, GridIndex y)
+		public static char GetRail (GridIndex x, GridIndex y)
 		{
-            Debug.Assert(x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells[x*Map_Max_Y + y] & RailMask) >> RailShift);
+			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
+			return (char)((TheaterCells [x * Map_Max_Y + y] & RailMask) >> RailShift);
 		}
-    }
+	}
 
 }

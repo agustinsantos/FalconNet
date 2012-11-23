@@ -4,6 +4,7 @@ using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using GTM=FalconNet.Campaign.GroundTaskingManagerClass;
 using ATM=FalconNet.Campaign.AirTaskingManagerClass;
+using NTM=FalconNet.Campaign.NavalTaskingManagerClass;
 using Team=System.Byte;
 using GridIndex = System.Int16;
 using Control = System.Byte;

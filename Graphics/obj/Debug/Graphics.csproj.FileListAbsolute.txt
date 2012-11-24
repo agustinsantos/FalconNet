@@ -1,7 +1,0 @@
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\bin\Debug\Graphics.dll
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\bin\Debug\Graphics.pdb
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\bin\Debug\Common.dll
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\bin\Debug\Common.pdb
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\obj\Debug\Graphics.csprojResolveAssemblyReference.cache
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\obj\Debug\Graphics.dll
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\Graphics\obj\Debug\Graphics.pdb

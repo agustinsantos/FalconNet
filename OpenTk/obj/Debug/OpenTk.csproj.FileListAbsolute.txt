@@ -1,5 +1,0 @@
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\OpenTk\bin\Debug\OpenTk.exe
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\OpenTk\bin\Debug\OpenTk.pdb
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\OpenTk\bin\Debug\OpenTK.dll
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\OpenTk\obj\Debug\OpenTk.exe
-C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\OpenTk\obj\Debug\OpenTk.pdb

@@ -1,27 +1,38 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Campaign/Campaign.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/ui95defs.cs">
     <Files>
-      <File FileName="Common/ConvertionSupport.cs" Line="95" Column="29" />
       <File FileName="Campaign/Campaign.cs" Line="617" Column="39" />
       <File FileName="Campaign/camplist.cs" Line="389" Column="39" />
       <File FileName="Campaign/Campterr.cs" Line="64" Column="47" />
       <File FileName="Campaign/Name.cs" Line="12" Column="26" />
+      <File FileName="Ui95/cparser.cs" Line="1136" Column="1" />
+      <File FileName="Ui95/ui95defs.cs" Line="248" Column="14" />
+      <File FileName="Main/UI_Main.cs" Line="172" Column="1" />
+      <File FileName="Main/Main.cs" Line="64" Column="18" />
+      <File FileName="FalcLib/dispcfg.cs" Line="222" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Campaign" expanded="True">
-            <Node name="Campaign.cs" selected="True" />
-          </Node>
           <Node name="Common" expanded="True" />
           <Node name="FalcLib" expanded="True" />
+          <Node name="Main" expanded="True">
+            <Node name="References" expanded="True" />
+          </Node>
+          <Node name="UI" expanded="True" />
+          <Node name="Ui95" expanded="True">
+            <Node name="ui95defs.cs" selected="True" />
+          </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="239" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="171" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

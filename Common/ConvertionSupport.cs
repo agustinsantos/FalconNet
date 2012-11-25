@@ -30,14 +30,14 @@ namespace FalconNet.Common
 	public struct F4THREADHANDLE {}
 	public struct HCURSOR {}
 
-	public struct C_Handler {}
+
+	
 	public class DeviceManager {}
 	public class DXContext {}
 	public class HWND {}
 	public struct HANDLE {}
 	public class IDirectDraw7 {}
-	public struct C_ScrollBar {}
-	public class C_Hash {}
+
 	public class O_Output {}
 	public class TransformMatrix {}
 	public class DrawableObject {}

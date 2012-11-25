@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace FalconNet.Ui95
 {
@@ -209,6 +210,64 @@ typedef unsigned char uchar;
 		UI_SOUND_POOL,
 		UI_MAX_POOLS,
 	}
+	
+	// TODO 
+	public class C_Handler {}
+	public class C_Font {}
+	public class C_Image {}
+	public class C_Animation {}
+	public class C_ScrollBar : C_Base{}
+	public class C_Hash 
+	{
+		private long flags_;
+		private Dictionary<long, string> Table_;
+		private long Check_;
+		
+		public delegate void Callback_(object rec);
+		
+		public void Setup(int Size){
+			Table_ = new Dictionary<long, string>(Size);
+		}
+		public void Cleanup(){
+			Table_ = null;
+		}
 
+		public void SetFlags(long flags) { flags_=flags; }
+		public long GetFlags() { return(flags_); }
+		public void Add(long ID, object rec)
+		{
+			throw new NotImplementedException();
+		}
+		public long AddText(string str)
+		{
+			throw new NotImplementedException();
+		}
+		public long AddTextID(long ID,string str)
+		{
+			Table_.Add(ID, str);
+			return ID;
+		}
+	}
+	public class C_PopupMgr {}
+	public class C_String {}
+	public class C_Sound {}
+	public class C_Movie {}
+	public class C_SoundBite {}
+	public class C_Text : C_Base {}
+	public class C_EditBox : C_Base {}
+	public class C_ListBox : C_Base {}
+	public class C_Slider : C_Base {}
+	public class C_Panner : C_Base {}
+	public class C_TreeList : C_Base {}
+	public class C_Bitmap : C_Base {}
+	public class C_Tile : C_Base {}
+	public class C_Anim : C_Base {}
+	public class C_Cursor : C_Base {}
+	public class C_Marque : C_Base {}
+	public class C_Box : C_Base {}
+	public class C_Line : C_Base {}
+	public class C_Clock : C_Base {}
+	public class C_Fill : C_Base {}
+	public class C_PopupList : C_Base {}
 }
 

@@ -39,6 +39,8 @@
     <Compile Include="ui95defs.cs" />
     <Compile Include="ccontrol.cs" />
     <Compile Include="cbuttons.cs" />
+    <Compile Include="cparser.cs" />
+    <Compile Include="chandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

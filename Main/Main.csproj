@@ -55,6 +55,10 @@
       <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ui95\Ui95.csproj">
+      <Project>{81D5A611-9192-40CC-AB58-4309BB9CFF68}</Project>
+      <Name>Ui95</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="F4os.cfg">

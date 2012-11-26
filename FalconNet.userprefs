@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/ui95defs.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/cparser.cs">
     <Files>
       <File FileName="Campaign/Campaign.cs" Line="617" Column="39" />
       <File FileName="Campaign/camplist.cs" Line="389" Column="39" />
@@ -15,14 +15,8 @@
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Common" expanded="True" />
-          <Node name="FalcLib" expanded="True" />
-          <Node name="Main" expanded="True">
-            <Node name="References" expanded="True" />
-          </Node>
-          <Node name="UI" expanded="True" />
           <Node name="Ui95" expanded="True">
-            <Node name="ui95defs.cs" selected="True" />
+            <Node name="cparser.cs" selected="True" />
           </Node>
         </State>
       </Pad>

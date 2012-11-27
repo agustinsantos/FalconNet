@@ -124,7 +124,7 @@ namespace FalconNet.Ui95
 	};
 
 	[Flags]
-	public enum UI95_BITTABLE :uint // Bit table
+	public enum UI95_BITTABLE : uint // Bit table
 	{
 		C_BIT_NOTHING           = 0x00000000, // Place holder... don't do jack
 		C_BIT_FIXEDSIZE			= 0x00000001, // Used EXCLUSIVELY for marking that the text has a fixed with buffer
@@ -213,20 +213,23 @@ typedef unsigned char uchar;
 	
 	// TODO 
 	public class C_Handler {}
-	public class C_Font {}
+	public class C_Font {
+		public void Setup(C_Handler h)
+		{}
+	}
 	public class C_Image {}
 	public class C_Animation {}
 	public class C_ScrollBar : C_Base{}
 	public class C_Hash 
 	{
 		private long flags_;
-		private Dictionary<long, string> Table_;
+		private Dictionary<string, long> Table_;
 		private long Check_;
 		
 		public delegate void Callback_(object rec);
 		
 		public void Setup(int Size){
-			Table_ = new Dictionary<long, string>(Size);
+			Table_ = new Dictionary<string, long>(Size);
 		}
 		public void Cleanup(){
 			Table_ = null;
@@ -244,8 +247,12 @@ typedef unsigned char uchar;
 		}
 		public long AddTextID(long ID,string str)
 		{
-			Table_.Add(ID, str);
+			Table_.Add(str, ID);
 			return ID;
+		}
+		public void SetCheck(long id)
+		{
+			Check_ = id;
 		}
 	}
 	public class C_PopupMgr {}

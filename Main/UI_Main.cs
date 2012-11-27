@@ -4,6 +4,7 @@ using FalconNet.UI;
 using FalconNet.Common;
 using FalconNet.Graphics;
 using FalconNet.Ui95;
+using System.IO;
 
 namespace FalconNet.Main
 {
@@ -37,7 +38,7 @@ namespace FalconNet.Main
 
 			if(gScreenShotEnabled)
 				{
-					if (g_bHiResUI)
+					if (F4Config.g_bHiResUI)
 						gScreenShotBuffer=new WORD[1024l*768l];
 					else
 						gScreenShotBuffer=new WORD[800l*600l];
@@ -179,11 +180,11 @@ namespace FalconNet.Main
 			gMainParser.LoadIDList("soundids.lst");
 			gMainParser.LoadIDList("textids.lst");
 			gMainParser.LoadIDList("movieids.lst");
-#if TODO		
+		
 			gMainParser.SetCheck(1); // Used to find which IDs are NOT used
 		
-			gMainParser.ParseFont("art\\fonts\\fontrc.irc");
-		
+			gMainParser.ParseFont("art"+Path.DirectorySeparatorChar+"fonts"+Path.DirectorySeparatorChar+"fontrc.irc");
+#if TODO		
 		#if DEBUG
 			if(gMainParser.FindID("TXT_LAST_TEXT_ID") > TXT_LAST_TEXT_ID)
 		        MessageBox( NULL, "String database Out of Date", "Update Art Directory - May crash in C_Hash", MB_OK );

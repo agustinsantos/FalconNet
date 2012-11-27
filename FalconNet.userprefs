@@ -6,15 +6,16 @@
       <File FileName="Campaign/camplist.cs" Line="389" Column="39" />
       <File FileName="Campaign/Campterr.cs" Line="64" Column="47" />
       <File FileName="Campaign/Name.cs" Line="12" Column="26" />
-      <File FileName="Ui95/cparser.cs" Line="1136" Column="1" />
-      <File FileName="Ui95/ui95defs.cs" Line="248" Column="14" />
-      <File FileName="Main/UI_Main.cs" Line="172" Column="1" />
-      <File FileName="Main/Main.cs" Line="64" Column="18" />
-      <File FileName="FalcLib/dispcfg.cs" Line="222" Column="1" />
+      <File FileName="Ui95/cparser.cs" Line="3551" Column="1" />
+      <File FileName="Common/StringSupport.cs" Line="25" Column="108" />
+      <File FileName="Main/UI_Main.cs" Line="186" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="Common" expanded="True" />
+          <Node name="Main" expanded="True" />
+          <Node name="UI" expanded="True" />
           <Node name="Ui95" expanded="True">
             <Node name="cparser.cs" selected="True" />
           </Node>
@@ -26,6 +27,10 @@
     <BreakpointStore>
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="239" />
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="171" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1293" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1231" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Main/UI_Main.cs" line="186" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1557" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

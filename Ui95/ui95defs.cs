@@ -213,10 +213,7 @@ typedef unsigned char uchar;
 	
 	// TODO 
 	public class C_Handler {}
-	public class C_Font {
-		public void Setup(C_Handler h)
-		{}
-	}
+
 	public class C_Image {}
 	public class C_Animation {}
 	public class C_ScrollBar : C_Base{}

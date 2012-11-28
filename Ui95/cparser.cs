@@ -3548,7 +3548,9 @@ namespace FalconNet.Ui95
 							strLine = strLine.Trim ();
 							if (!strLine.StartsWith ("#")) {
 								List<string> tokens = strLine.SplitWords();
-								Console.WriteLine("para");
+								Console.WriteLine("Para");
+								//TokenID = Font_.FontFind (tokeks[1]);
+								//P_ [P_Idx_++] = atol (&script_ [Idx_]);
 							}
 						}
 					}
@@ -3764,7 +3766,7 @@ namespace FalconNet.Ui95
 			}
 			return(Font_);
 #endif
-			throw new NotImplementedException ();
+			return Font_;
 		}
 
 		public C_Base ParsePopupMenu (string filename)

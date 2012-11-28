@@ -1,14 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/cparser.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/cfonts.cs">
     <Files>
       <File FileName="Campaign/Campaign.cs" Line="617" Column="39" />
       <File FileName="Campaign/camplist.cs" Line="389" Column="39" />
       <File FileName="Campaign/Campterr.cs" Line="64" Column="47" />
       <File FileName="Campaign/Name.cs" Line="12" Column="26" />
-      <File FileName="Ui95/cparser.cs" Line="3551" Column="1" />
+      <File FileName="Ui95/cparser.cs" Line="38" Column="16" />
       <File FileName="Common/StringSupport.cs" Line="25" Column="108" />
       <File FileName="Main/UI_Main.cs" Line="186" Column="1" />
+      <File FileName="Ui95/ui95defs.cs" Line="216" Column="1" />
+      <File FileName="Ui95/cfonts.cs" Line="237" Column="15" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,7 +19,7 @@
           <Node name="Main" expanded="True" />
           <Node name="UI" expanded="True" />
           <Node name="Ui95" expanded="True">
-            <Node name="cparser.cs" selected="True" />
+            <Node name="cfonts.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -25,12 +27,13 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="239" />
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="171" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1293" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1231" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Main/UI_Main.cs" line="186" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1557" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="3551" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="239" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

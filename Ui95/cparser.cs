@@ -1276,8 +1276,17 @@ namespace FalconNet.Ui95
 			idfile = null;
 #endif
 		}
-
-		private FileStream OpenArtFile (string filename, string thrdir, string maindir, bool hirescapable = true)
+		public static FileStream OpenArtFile (string filename)
+		{
+			string path;
+			if (filename.StartsWith("art\\"))
+				path = filename.Substring(4);
+			else
+				path = filename;
+			return OpenArtFile(path.Replace('\\', Path.DirectorySeparatorChar), FalconUIArtThrDirectory, FalconUIArtDirectory);
+		}
+		
+		public static FileStream OpenArtFile (string filename, string thrdir, string maindir, bool hirescapable = true)
 		{
 			FileStream ifp;
 	
@@ -1350,11 +1359,11 @@ namespace FalconNet.Ui95
 
 			TokenOrder_ = new C_Hash ();
 			TokenOrder_.Setup (PARSE_HASH_SIZE);
-			TokenOrder_.SetFlags ((long)UI95_BITTABLE.C_BIT_REMOVE);
+			TokenOrder_.SetFlags (UI95_BITTABLE.C_BIT_REMOVE);
 
 			TokenErrorList = new C_Hash ();
 			TokenErrorList.Setup (512);
-			TokenErrorList.SetFlags ((long)UI95_BITTABLE.C_BIT_REMOVE);
+			TokenErrorList.SetFlags (UI95_BITTABLE.C_BIT_REMOVE);
 
 			AddInternalIDs (UI95_BitTable);
 			AddInternalIDs (UI95_Table);
@@ -1412,10 +1421,8 @@ namespace FalconNet.Ui95
 
 		public long FindID (string token)
 		{
-#if TODO			
+		
 			return(TokenOrder_.FindTextID (token));
-#endif
-			throw new NotImplementedException ();
 		}
 
 		private int FindToken (string token, int pos)
@@ -1547,7 +1554,6 @@ namespace FalconNet.Ui95
 
 			return ifp;
 		}
-			
 
 		public bool LoadScript (string filename)
 		{
@@ -3525,7 +3531,7 @@ namespace FalconNet.Ui95
 			
 			long TokenID = 0, Section = 0, TokenType = 0;
 			long FontID = 0, NewID = 0;
-			//TODO LOGFONT logfont = {0};
+			LOGFONT logfont = new LOGFONT();
 
 			Idx_ = 0;
 			P_Idx_ = 0;
@@ -3538,7 +3544,7 @@ namespace FalconNet.Ui95
 
 			//if (LoadScript (filename) == false)
 			//	return(null);
-			FileStream script = OpenScript(filename);
+			FileStream script = OpenScript (filename);
 			try {
 				using (StreamReader sr = new StreamReader (script)) {
 					string strLine = sr.ReadLine ();
@@ -3547,9 +3553,15 @@ namespace FalconNet.Ui95
 						if (!string.IsNullOrWhiteSpace (strLine)) {
 							strLine = strLine.Trim ();
 							if (!strLine.StartsWith ("#")) {
-								List<string> tokens = strLine.SplitWords();
-								Console.WriteLine("Para");
-								//TokenID = Font_.FontFind (tokeks[1]);
+								List<string> tokens = strLine.SplitWords ();
+								Console.WriteLine ("Para");
+								TokenID = Font_.FontFind (tokens [0]);
+								FontID = FindID (tokens [1]);
+								if (FontID == -1) {
+									FontID = AddNewID (tokens [1], 1);
+								}
+								P_ [0] = FontID;
+								Font_.FontFunction ((C_Font.CFNT)TokenID, P_, tokens [2], ref logfont, ref NewID);
 								//P_ [P_Idx_++] = atol (&script_ [Idx_]);
 							}
 						}

@@ -1,6 +1,7 @@
 using System;
 using FalconNet.Common;
 using System.IO;
+using WORD=System.UInt16;
 
 namespace FalconNet.Ui95
 {

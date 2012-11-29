@@ -42,6 +42,7 @@
     <Compile Include="cparser.cs" />
     <Compile Include="chandler.cs" />
     <Compile Include="cfonts.cs" />
+    <Compile Include="cfontres.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

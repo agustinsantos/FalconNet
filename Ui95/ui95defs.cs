@@ -219,12 +219,13 @@ typedef unsigned char uchar;
 	public class C_ScrollBar : C_Base{}
 	public class C_Hash 
 	{
-		private long flags_;
+		private UI95_BITTABLE flags_;
 		private Dictionary<string, long> Table_;
 		private long Check_;
 		
 		public delegate void Callback_(object rec);
-		
+		public void SetCallback(Callback_ cb)
+		{}
 		public void Setup(int Size){
 			Table_ = new Dictionary<string, long>(Size);
 		}
@@ -232,8 +233,8 @@ typedef unsigned char uchar;
 			Table_ = null;
 		}
 
-		public void SetFlags(long flags) { flags_=flags; }
-		public long GetFlags() { return(flags_); }
+		public void SetFlags(UI95_BITTABLE flags) { flags_=flags; }
+		public UI95_BITTABLE GetFlags() { return(flags_); }
 		public void Add(long ID, object rec)
 		{
 			throw new NotImplementedException();
@@ -250,6 +251,20 @@ typedef unsigned char uchar;
 		public void SetCheck(long id)
 		{
 			Check_ = id;
+		}
+		public object Find(long ID)
+		{
+			if (Table_.ContainsValue(ID))
+				return "TODO";
+			else
+				return null;
+		}
+		public long FindTextID(string str)
+		{
+			if (Table_.ContainsKey(str))
+				return Table_[str];
+			else
+				return -1;
 		}
 	}
 	public class C_PopupMgr {}

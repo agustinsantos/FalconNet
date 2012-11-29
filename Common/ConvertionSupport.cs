@@ -12,14 +12,6 @@ namespace FalconNet.Common
 		public UInt32 val;
 	}
 	
-	public struct WORD
-	{
-		public WORD(ushort v)
-		{
-			val = v;
-		}
-		public UInt16 val;
-	}
 	
 	public struct COLORREF {}
 	public class SOUND_RES {}

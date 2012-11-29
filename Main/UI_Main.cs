@@ -5,6 +5,7 @@ using FalconNet.Common;
 using FalconNet.Graphics;
 using FalconNet.Ui95;
 using System.IO;
+using WORD=System.UInt16;
 
 namespace FalconNet.Main
 {
@@ -187,16 +188,15 @@ namespace FalconNet.Main
 #if TODO		
 		#if DEBUG
 			if(gMainParser.FindID("TXT_LAST_TEXT_ID") > TXT_LAST_TEXT_ID)
-		        MessageBox( NULL, "String database Out of Date", "Update Art Directory - May crash in C_Hash", MB_OK );
+		        Debug.WriteLine( "String database Out of Date");
 		#endif
 		
-			gUBuffer=&gTrackBuffer[0];
-		
+			gUBuffer=gTrackBuffer[0];
+
 			// This function goes through the class table searching for VIS IDs,
 			// and returns the array index of the Vis ID... only needs to happen ONCE per execute
 			ValidateRackData();
-#endif			
-			throw new NotImplementedException ();
+#endif	
 		}
 		
 		void SetStartupFlags ()

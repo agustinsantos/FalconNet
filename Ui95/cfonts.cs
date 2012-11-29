@@ -4,10 +4,52 @@ using System.Collections.Generic;
 
 namespace FalconNet.Ui95
 {
-	public class FONTLIST
+	// TODO: LOGFONT is defined in windows
+	public class LOGFONT
 	{
-//TODO 
-	};
+		  public long  lfHeight;
+		  public long  lfWidth;
+		  public long  lfEscapement;
+		  public long  lfOrientation;
+		  public long  lfWeight;
+		  public byte  lfItalic;
+		  public byte  lfUnderline;
+		  public byte  lfStrikeOut;
+		  public byte  lfCharSet;
+		  public byte  lfOutPrecision;
+		  public byte  lfClipPrecision;
+		  public byte  lfQuality;
+		  public byte  lfPitchAndFamily;
+		  public string lfFaceName;
+	}
+	
+	// TODO: HFONT is defined in windows
+	public struct HFONT
+	{
+	}
+	
+	public struct TEXTMETRIC
+	{
+	}
+	
+	public class FONTINFO
+	{
+	#if USE_SH_POOLS
+		public:
+			// Overload new/delete to use a SmartHeap pool
+			void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,FALSE);	};
+			void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
+	#endif
+		 
+		public long ID_;
+		public HFONT Font_;
+		public long Spacing_;
+		public TEXTMETRIC Metrics_;
+		public int[] Widths_;
+	#if _UI95_PARSER_
+			LOGFONT logfont;
+	#endif
+	}
 
 	public class C_Font
 	{
@@ -23,7 +65,7 @@ namespace FalconNet.Ui95
 
 		// Don't save from here
 		private C_Handler Handler_;
-		//TODO private FONTLIST *Root_;
+		private List<FONTINFO> Root_;
 		private C_Hash Fonts_; // Font Resource List (Actual ones used)
 
 	
@@ -47,10 +89,21 @@ namespace FalconNet.Ui95
 			Handler_ = handler;
 			Fonts_ = new C_Hash ();
 			Fonts_.Setup (5);
-			Fonts_.SetFlags (C_BIT_REMOVE);
+			Fonts_.SetFlags (UI95_BITTABLE.C_BIT_REMOVE);
 			Fonts_.SetCallback (HashDelCB);
 		}
-
+		
+		private static void HashDelCB (object me)
+		{
+			C_Fontmgr fnt;
+		
+			fnt = (C_Fontmgr)me;
+			if (fnt != null) {
+				fnt.Cleanup ();
+				fnt = null;
+			}
+		}
+		
 		public bool AddFont (long i, LOGFONT id)
 		{
 
@@ -112,25 +165,21 @@ namespace FalconNet.Ui95
 			;
 		}
 
-		public List<C_Font> FindID (long ID)
+		public FONTINFO FindID (long ID)
 		{
-			List<C_Font> cur;
-
-			cur = Root_;
-			while (cur) {
+			foreach (FONTINFO cur in Root_) {
 				if (cur.ID_ == ID)
 					return(cur);
-				cur = cur.Next;
 			}
-			return(Root_);
+			return null;
 		}
 		// Query Functions
-		public HFONT GetFont (long ID)
+		public HFONT? GetFont (long ID)
 		{
-			List<C_Font> cur;
+			FONTINFO cur;
 
 			cur = FindID (ID);
-			if (cur)
+			if (cur != null)
 				return(cur.Font_);
 			return(null);
 		}
@@ -148,10 +197,10 @@ namespace FalconNet.Ui95
 			C_Fontmgr found;
 
 			found = Find (ID);
-			if (found)
+			if (found != null)
 				return(found.Height ());
 			found = Find (1);
-			if (found)
+			if (found != null)
 				return(found.Height ());
 #endif
 			return(0);
@@ -184,7 +233,7 @@ namespace FalconNet.Ui95
 			C_Fontmgr found;
 
 			found = Find (fontID);
-			if (found)
+			if (found != null)
 				return(found.Width (Str));
 			return(0);
 #endif
@@ -216,7 +265,7 @@ namespace FalconNet.Ui95
 			C_Fontmgr found;
 
 			found = Find (fontID);
-			if (found)
+			if (found != null)
 				return(found.Width (Str, len));
 			return(0);
 #endif
@@ -225,10 +274,10 @@ namespace FalconNet.Ui95
 		public C_Fontmgr Find (long ID)
 		{
 			C_Fontmgr cur;
-			if (Fonts_) {
-				cur = (C_Fontmgr*)Fonts_.Find (ID);
-				if (!cur)
-					cur = (C_Fontmgr*)Fonts_.Find (1);
+			if (Fonts_ != null) {
+				cur = (C_Fontmgr)Fonts_.Find (ID);
+				if (cur == null)
+					cur = (C_Fontmgr)Fonts_.Find (1);
 				return(cur);
 			}
 			return(null);
@@ -236,15 +285,15 @@ namespace FalconNet.Ui95
 
 		public void LoadFont (long ID, string filename)
 		{
-			C_Fontmgr * newfont;
+			C_Fontmgr newfont;
 
-			if (Fonts_.Find (ID)) // Check to see if ID used
+			if (Fonts_.Find (ID) != null) // Check to see if ID used
 				return;
 
 			newfont = new C_Fontmgr ();
 			newfont.Setup (ID, filename);
 
-			if (!newfont.Height ()) {
+			if (newfont.Height () == 0) {
 				newfont = null;
 				return;
 			}
@@ -259,120 +308,108 @@ namespace FalconNet.Ui95
 		// Cleanup Functions
 		public void Cleanup ()
 		{
-			FONTLIST cur, last;
-
-			cur = Root_;
-			while (cur) {
-				last = cur;
-				cur = cur.Next;
-				DeleteObject (last.Font_);
-				last.Widths_ = null;
-				last = null;
-			}
 			Root_ = null;
-			if (Fonts_) {
+			if (Fonts_ != null) {
 				Fonts_.Cleanup ();
-				delete Fonts_;
 				Fonts_ = null;
 			}
 		}
 
-#if _UI95_PARSER_
+#if !_UI95_PARSER_
 
-		public short FontFind(string token)
-			{
-	short i=0;
+		public short FontFind (string token)
+		{
+			short i = 0;
 
-	while(C_Fnt_Tokens[i])
-	{
-		if(strnicmp(token,C_Fnt_Tokens[i],strlen(C_Fnt_Tokens[i])) == 0)
-			return(i);
-		i++;
-	}
-	return(0);
-}
-		public void FontFunction(short ID,long P[],_TCHAR *str,LOGFONT *lgfnt,long *NewID)
-			{
-	switch(ID)
-	{
-		case CFNT_ID:
-			*NewID=P[0];
-			break;
-		case CFNT_lfHeight:
-			if(lgfnt)
-				lgfnt.lfHeight|=P[0];
-			break;
-		case CFNT_lfWidth:
-			if(lgfnt)
-				lgfnt.lfWidth|=P[0];
-			break;
-		case CFNT_lfEscapement:
-			if(lgfnt)
-				lgfnt.lfEscapement|=P[0];
-			break;
-		case CFNT_lfOrientation:
-			if(lgfnt)
-				lgfnt.lfOrientation|=P[0];
-			break;
-		case CFNT_lfWeight:
-			if(lgfnt)
-				lgfnt.lfWeight|=P[0];
-			break;
-		case CFNT_lfItalic:
-			if(lgfnt)
-				lgfnt.lfItalic|=(BYTE)P[0];
-			break;
-		case CFNT_lfUnderline:
-			if(lgfnt)
-				lgfnt.lfUnderline|=(BYTE)P[0];
-			break;
-		case CFNT_lfStrikeOut:
-			if(lgfnt)
-				lgfnt.lfStrikeOut|=(BYTE)P[0];
-			break;
-		case CFNT_lfCharSet:
-			if(lgfnt)
-				lgfnt.lfCharSet|=(BYTE)P[0];
-			break;
-		case CFNT_lfOutPrecision:
-			if(lgfnt)
-				lgfnt.lfOutPrecision|=(BYTE)P[0];
-			break;
-		case CFNT_lfClipPrecision:
-			if(lgfnt)
-				lgfnt.lfClipPrecision|=(BYTE)P[0];
-			break;
-		case CFNT_lfQuality:
-			if(lgfnt)
-				lgfnt.lfQuality|=(BYTE)P[0];
-			break;
-		case CFNT_lfPitchAndFamily:
-			if(lgfnt)
-				lgfnt.lfPitchAndFamily|=(BYTE)P[0];
-			break;
-		case CFNT_lfFaceName:
-			if(lgfnt)
-				_tcsncpy(lgfnt.lfFaceName,str,LF_FACESIZE);
-			break;
-		case CFNT_SPACING:
-			Spacing_=P[0];
-			break;
-		case CFNT_ADDFONT:
-			AddFont(*NewID,lgfnt);
-			Spacing_=0;
-			memset(lgfnt,0,sizeof(LOGFONT));
-			break;
-		case CFNT_LOAD:
-			LoadFont(P[0],str);
-			break;
-	}
-}
-		public void SaveText(HANDLE,C_Parser *) { ; }
+			while (i < C_Fnt_Tokens.Length) {
+				if (token == C_Fnt_Tokens [i])
+					return(i);
+				i++;
+			}
+			return(0);
+		}
+
+		public void FontFunction (CFNT ID, long[] P, string str, ref LOGFONT lgfnt, ref long NewID)
+		{
+			switch (ID) {
+			case CFNT.CFNT_ID:
+				NewID = P [0];
+				break;
+			case CFNT.CFNT_lfHeight:
+				if (lgfnt != null)
+					lgfnt.lfHeight |= P [0];
+				break;
+			case CFNT.CFNT_lfWidth:
+				if (lgfnt!= null)
+					lgfnt.lfWidth |= P [0];
+				break;
+			case CFNT.CFNT_lfEscapement:
+				if (lgfnt!= null)
+					lgfnt.lfEscapement |= P [0];
+				break;
+			case CFNT.CFNT_lfOrientation:
+				if (lgfnt!= null)
+					lgfnt.lfOrientation |= P [0];
+				break;
+			case CFNT.CFNT_lfWeight:
+				if (lgfnt!= null)
+					lgfnt.lfWeight |= P [0];
+				break;
+			case CFNT.CFNT_lfItalic:
+				if (lgfnt!= null)
+					lgfnt.lfItalic |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfUnderline:
+				if (lgfnt!= null)
+					lgfnt.lfUnderline |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfStrikeOut:
+				if (lgfnt!= null)
+					lgfnt.lfStrikeOut |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfCharSet:
+				if (lgfnt!= null)
+					lgfnt.lfCharSet |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfOutPrecision:
+				if (lgfnt!= null)
+					lgfnt.lfOutPrecision |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfClipPrecision:
+				if (lgfnt!= null)
+					lgfnt.lfClipPrecision |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfQuality:
+				if (lgfnt!= null)
+					lgfnt.lfQuality |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfPitchAndFamily:
+				if (lgfnt!= null)
+					lgfnt.lfPitchAndFamily |= (byte)P [0];
+				break;
+			case CFNT.CFNT_lfFaceName:
+				if (lgfnt!= null)
+					lgfnt.lfFaceName = str;
+				break;
+			case CFNT.CFNT_SPACING:
+				Spacing_ = P [0];
+				break;
+			case CFNT.CFNT_ADDFONT:
+				AddFont (NewID, lgfnt);
+				Spacing_ = 0;
+				lgfnt = null;//TODO memset (lgfnt, 0, sizeof(LOGFONT));
+				break;
+			case CFNT.CFNT_LOAD:
+				LoadFont (P [0], str);
+				break;
+			}
+		}
+		//TODO public void SaveText(HANDLE h,C_Parser parser) { ; }
 
 #endif
 		public static List<C_Font> gFontList;
 		
-		private enum CFNT
+		public enum CFNT
 		{
 			CFNT_NOTHING=0,
 			CFNT_ID,
@@ -417,8 +454,7 @@ namespace FalconNet.Ui95
 			"[SPACING]",
 			"[ADDFONT]",
 			"[FONT]", // nothing done here
-			"[LOADFONT]",
-			0,
+			"[LOADFONT]"
 		};
 	}
 }

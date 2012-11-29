@@ -1819,12 +1819,9 @@ namespace FalconNet.Ui95
 
 		public bool  LoadSoundList (string filename)
 		{
-#if TODO
-			UI_HANDLE ifp;
+			FileStream ifp;
 			long size;
-			string listfile, lfp;
-			long i;
-
+			try {
 #if NOTHING
 	strcpy(filebuf,FalconUIArtDirectory); // Falcon root
 	if (F4Config.g_bHiResUI)
@@ -1835,25 +1832,42 @@ namespace FalconNet.Ui95
 	strcat(filebuf,filename);
 	ifp=UI_OPEN(filebuf,"rb");
 #endif
-			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
-			if (ifp == null) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadSoundList open failed (%s)\n", filename);
-				}
-				return(false);
-			}
-	
-			size = UI_FILESIZE (ifp);
+				ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
 
-			if (!size) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadSoundList seek start failed (%s)\n", filename);
+				if (ifp == null) {
+					throw new ArgumentException ("LoadSoundList read failed (" + filename + ")");
 				}
-				UI_CLOSE (ifp);
-				return(false);
+
+			
+				size = ifp.Length;
+
+				if (size == 0) {
+					ifp.Close ();
+					return false;
+				}
+			
+				using (StreamReader sr = new StreamReader (ifp)) {
+					string strLine = sr.ReadLine ();
+					while (strLine != null) {
+						strLine = sr.ReadLine ();
+						if (!string.IsNullOrWhiteSpace (strLine)) {
+							strLine = strLine.Trim ();
+							if (!strLine.StartsWith ("#")) {
+								ParseSound (strLine.Replace ('\\', Path.DirectorySeparatorChar));
+							}
+						}
+					}
+					sr.Close ();
+				}
+			} catch (IOException e) {
+				Debug.WriteLine ("An IO exception has been thrown!");
+				Debug.WriteLine (e.ToString ());
+				return false;
 			}
+
+
+
+#if TODO
 	
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
@@ -1893,9 +1907,8 @@ namespace FalconNet.Ui95
 				}
 			}
 			listfile = null;
-			return(true);
 #endif
-			throw new NotImplementedException ();
+			return(true);
 		}
 
 		public bool  LoadStringList (string filename)
@@ -2058,11 +2071,10 @@ namespace FalconNet.Ui95
 
 		public bool  LoadImageList (string filename)
 		{
-#if TODO
-			UI_HANDLE ifp;
+
+			FileStream ifp;
 			long size;
-			string listfile, lfp;
-			long i;
+			try {
 
 #if NOTHING
 	strcpy(filebuf,FalconUIArtDirectory); // Falcon root
@@ -2074,26 +2086,39 @@ namespace FalconNet.Ui95
 	strcat(filebuf,filename);
 	ifp=UI_OPEN(filebuf,"rb");
 #endif
-			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
-			if (ifp == null) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadImageList open failed (%s)\n", filename);
-				}
-				return(false);
-			}
-	
-			size = UI_FILESIZE (ifp);
+				ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
 
-			if (!size) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadImageList seek start failed (%s)\n", filename);
+				if (ifp == null) {
+					throw new ArgumentException ("LoadImageList read failed (" + filename + ")");
 				}
-				UI_CLOSE (ifp);
-				return(false);
-			}
 
+			
+				size = ifp.Length;
+
+				if (size == 0) {
+					ifp.Close ();
+					return false;
+				}
+			
+				using (StreamReader sr = new StreamReader (ifp)) {
+					string strLine = sr.ReadLine ();
+					while (strLine != null) {
+						strLine = sr.ReadLine ();
+						if (!string.IsNullOrWhiteSpace (strLine)) {
+							strLine = strLine.Trim ();
+							if (!strLine.StartsWith ("#")) {
+								ParseImage (strLine.Replace ('\\', Path.DirectorySeparatorChar));
+							}
+						}
+					}
+					sr.Close ();
+				}
+			} catch (IOException e) {
+				Debug.WriteLine ("An IO exception has been thrown!");
+				Debug.WriteLine (e.ToString ());
+				return false;
+			}
+#if TODO	
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
 				if (g_bLogUiErrors) {
@@ -2131,9 +2156,9 @@ namespace FalconNet.Ui95
 				}
 			}
 			listfile = null;
-			return(true);
+			
 #endif
-			throw new NotImplementedException ();
+			return(true);
 		}
 
 		public bool  LoadPopupMenuList (string filename)
@@ -2605,6 +2630,53 @@ namespace FalconNet.Ui95
 
 		public C_Image ParseImage (string filename)
 		{
+			bool Done = false, Comment = false, Found = false, InString = false, Finished = false;
+			
+			long TokenID = 0, Section = 0, TokenType = 0;
+			long FontID = 0, NewID = 0;
+			LOGFONT logfont = new LOGFONT();
+
+			Idx_ = 0;
+			P_Idx_ = 0;
+			tokenlen_ = 0;
+
+			if (Image_ == null) {
+				Image_ = new C_Image ();
+				Image_.Setup ();
+			}
+			if (Anim_ == null) {
+				Anim_ = new C_Animation ();
+				Anim_.Setup ();
+			}
+			FileStream script = OpenScript (filename);
+			try {
+				using (StreamReader sr = new StreamReader (script)) {
+					string strLine = sr.ReadLine ();
+					while (strLine != null) {
+						strLine = sr.ReadLine ();
+						if (!string.IsNullOrWhiteSpace (strLine)) {
+							strLine = strLine.Trim ();
+							if (!strLine.StartsWith ("#")) {
+								List<string> tokens = strLine.SplitWords ();
+								TokenID = Image_.LocalFind (tokens [0]);
+								if (TokenID == 0)
+								TokenID = Anim_.LocalFind (tokens [0]);
+								if(TokenID == 0)
+									throw new ApplicationException();
+								if (TokenType == 1)
+									Image_.LocalFunction ((short) (TokenID), P_, str_, Handler_);
+								else if (TokenType == 2)
+									Anim_.LocalFunction ((short)  (TokenID), P_, str_, Handler_);
+							}
+						}
+					}
+					sr.Close ();
+				}
+			} catch (IOException e) {
+				Debug.WriteLine ("An IO exception has been thrown!");
+				Debug.WriteLine (e.ToString ());
+				return null;
+			}
 #if TODO
 			long Done = 0, Comment = 0, Found = 0, InString = 0, Finished = false;
 			
@@ -2839,9 +2911,8 @@ namespace FalconNet.Ui95
 					break;
 				}
 			}
-			return(Image_);
 #endif
-			throw new NotImplementedException ();
+			return Image_;
 		}
 
 		public C_Sound ParseSound (string filename)

@@ -433,7 +433,7 @@ namespace FalconNet.Ui95
 			CFNT_LOAD
 		}
 		
-		private static string[] C_Fnt_Tokens =
+		private static readonly string[] C_Fnt_Tokens =
 		{
 			"[NOTHING]",
 			"[ID]",

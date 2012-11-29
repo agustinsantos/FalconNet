@@ -240,10 +240,10 @@ namespace FalconNet.Main
 				gMainParser.LoadImageList ("main_res.lst");
 			else
 				gMainParser.LoadImageList ("main_art.lst");	// these aren't loaded anymore
-#if TODO	
+
 			gMainParser.LoadSoundList("main_snd.lst");
 			gMainParser.LoadWindowList("main_scf.lst"); // Modified by M.N. - add art/art1024 by LoadWindowList
-		
+#if TODO			
 			ID=gMainParser.GetFirstWindowLoaded();
 			while(ID)
 			{

@@ -213,9 +213,6 @@ typedef unsigned char uchar;
 	
 	// TODO 
 	public class C_Handler {}
-
-	public class C_Image {}
-	public class C_Animation {}
 	public class C_ScrollBar : C_Base{}
 	public class C_Hash 
 	{
@@ -237,7 +234,7 @@ typedef unsigned char uchar;
 		public UI95_BITTABLE GetFlags() { return(flags_); }
 		public void Add(long ID, object rec)
 		{
-			throw new NotImplementedException();
+			//TODO throw new NotImplementedException();
 		}
 		public long AddText(string str)
 		{

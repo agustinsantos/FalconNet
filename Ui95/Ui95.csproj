@@ -43,6 +43,9 @@
     <Compile Include="chandler.cs" />
     <Compile Include="cfonts.cs" />
     <Compile Include="cfontres.cs" />
+    <Compile Include="cimagerc.cs" />
+    <Compile Include="cresmgr.cs" />
+    <Compile Include="canimrc.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

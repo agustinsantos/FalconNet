@@ -106,6 +106,7 @@ namespace FalconNet.Ui95
 				kNumKerns_ = BitConverter.ToInt64(buff,0);
 				fp.Read(buff, 0, sizeof(long));
 				dSize_ = BitConverter.ToInt64(buff,0);
+#if TODO
 				if (fNumChars_ != 0)
 				{
 					fontTable_=new CharStr[fNumChars_];
@@ -123,6 +124,7 @@ namespace FalconNet.Ui95
 					fontData_=new byte[dSize_];
 					fp.Read(fontData_, 0, (int)dSize_);
 				}
+#endif	
 				fp.Close ();
 			} catch (IOException e) {
 				Debug.WriteLine ("Error opening font file" + fontfile);

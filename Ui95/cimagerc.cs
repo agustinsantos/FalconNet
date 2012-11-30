@@ -4,20 +4,20 @@ using WORD=System.UInt16;
 namespace FalconNet.Ui95
 {
 	public struct IMAGE_RSC
-	{}
-	
-	public enum CIMG
 	{
-		CIMG_NOTHING=0,
-		CIMG_LOADIMAGE,
-		CIMG_LOADFILE,
-		CIMG_ADDIMAGE,
-		CIMG_LOADRES,
-		CIMG_LOADPRIVATERES,
-	};
-
+	}
+	
 	public class C_Image
 	{
+		public enum CIMG
+		{
+			CIMG_NOTHING=0,
+			CIMG_LOADIMAGE,
+			CIMG_LOADFILE,
+			CIMG_ADDIMAGE,
+			CIMG_LOADRES,
+			CIMG_LOADPRIVATERES,
+		};
 		private static readonly string[] C_Img_Tokens =
 		{
 			"[NOTHING]",
@@ -265,9 +265,13 @@ namespace FalconNet.Ui95
 	Finder_.Add(ID,newentry);
 
 	return(newres);
-}
-		public C_Resmgr AddImage(long ID,long LastID,short x,short y,short w,short h,short cx,short cy)
+#endif 
+			throw new NotImplementedException ();
+		}
+
+		public C_Resmgr AddImage (long ID, long LastID, short x, short y, short w, short h, short cx, short cy)
 		{
+#if TODO			
 	C_Resmgr *newres=null;
 	IMAGE_RSC *newentry=null;
 	IMAGE_RSC *prior=null;
@@ -393,20 +397,28 @@ namespace FalconNet.Ui95
 
 	return(newres);
 #endif	
-			throw new NotImplementedException();
+			throw new NotImplementedException ();
 		}
 
 		public C_Resmgr LoadImage (long ID, string file, short x, short y)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public C_Resmgr LoadFile (long ID, string file, short x, short y)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public C_Resmgr LoadRes (long ID, string file)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public C_Resmgr LoadPrivateRes (long ID, string file)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public void SetColorKey (WORD colorkey)
 		{
@@ -414,19 +426,49 @@ namespace FalconNet.Ui95
 		}
 
 		public IMAGE_RSC GetImage (long ID)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public C_Resmgr GetImageRes (long ID)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 
 		public bool RemoveImage (long ID)
-		{throw new NotImplementedException();}
+		{
+			throw new NotImplementedException ();
+		}
 #if ! _UI95_PARSER_
 		public short LocalFind (string  token)
-		{throw new NotImplementedException();}
+		{
+			for (short i = 0; i < C_Img_Tokens.Length; i++) {
+				if (token == C_Img_Tokens [i])
+					return(i);
+			}
+			return(0);
+		}
 
-		public void LocalFunction (short ID, long[] P, string str, C_Handler h)
-		{throw new NotImplementedException();}
+		public void LocalFunction (CIMG ID, long[] P, string str, C_Handler h)
+		{
+			switch (ID) {
+			case CIMG.CIMG_LOADIMAGE:
+				LoadImage (P [0], str, (short)P [1], (short)P [2]);
+				break;
+			case CIMG.CIMG_LOADFILE:
+				LoadFile (P [0], str, (short)P [1], (short)P [2]);
+				break;
+			case CIMG.CIMG_ADDIMAGE:
+				AddImage (P [0], LastID_, (short)P [1], (short)P [2], (short)P [3], (short)P [4], (short)P [5], (short)P [6]);
+				break;
+			case CIMG.CIMG_LOADRES:
+				LoadRes (P [0], str);
+				break;
+			case CIMG.CIMG_LOADPRIVATERES:
+				LoadPrivateRes (P [0], str);
+				break;
+			}
+		}
 
 		//TODO  void SaveText (HANDLE h, C_Parser p) {throw new NotImplementedException();}
 #endif // PARSER

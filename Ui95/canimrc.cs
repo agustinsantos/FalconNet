@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using WORD=System.UInt16;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace FalconNet.Ui95
 {
@@ -8,7 +11,7 @@ namespace FalconNet.Ui95
 #if USE_SH_POOLS
 	public:
 		// Overload new/delete to use a SmartHeap pool
-		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,FALSE);	};
+		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,false);	};
 		void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 #endif
 	
@@ -34,7 +37,7 @@ namespace FalconNet.Ui95
 #if USE_SH_POOLS
 	public:
 		// Overload new/delete to use a SmartHeap pool
-		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,FALSE);	};
+		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,false);	};
 		void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 #endif
 	
@@ -46,6 +49,18 @@ namespace FalconNet.Ui95
 
 	public class C_Animation
 	{
+		
+		public enum CANM
+		{
+			CANM_NOTHING=0,
+			CANM_LOADANIM,
+		};
+
+		public string[] C_Anim_Tokens =
+		{
+			"[NOTHING]",
+			"[LOADANIM]"
+		};
 		public const int  RLE_END = 0x8000;
 		public const int  RLE_SKIPROW = 0x4000;
 		public const int  RLE_SKIPCOL = 0x2000;
@@ -59,15 +74,29 @@ namespace FalconNet.Ui95
 #if USE_SH_POOLS
 	public:
 		// Overload new/delete to use a SmartHeap pool
-		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,FALSE);	};
+		void *operator new(size_t size) { return MemAllocPtr(UI_Pools[UI_CONTROL_POOL],size,false);	};
 		void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 #endif
 	
-		private ANIM_RES Root_;
+		private List<ANIM_RES> Root_;
 
 		private void ConvertAnim (ANIMATION Data)
 		{
-			throw new NotImplementedException ();
+			switch (Data.BytesPerPixel) {
+			case 2:
+				switch (Data.Compression) {
+				case 0:
+					Convert16Bit (Data);
+					break;
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					Convert16BitRLE (Data);
+					break;
+				}
+				break;
+			}
 		}
 
 		private void Convert16BitRLE (ANIMATION Data)
@@ -77,12 +106,32 @@ namespace FalconNet.Ui95
 
 		private void Convert16Bit (ANIMATION Data)
 		{
+			#if TODO			
+				ANIM_FRAME AnimPtr;
+				long i,j;
+				WORD dptr;
+			
+			
+				AnimPtr=(ANIM_FRAME *)&Data.Start[0];
+			
+				for(i=0;i<Data.Frames;i++)
+				{
+					dptr=(WORD *)&AnimPtr.Data[0];
+					
+					for(j=0;j<Data.Height * Data.Width;j++)
+					{
+							*dptr=UI95_RGB15Bit(*dptr);
+							dptr++;
+					}
+					AnimPtr=(ANIM_FRAME *)&AnimPtr.Data[AnimPtr.Size];
+				}
+			#endif 
 			throw new NotImplementedException ();
 		}
 	
 		public C_Animation ()
 		{
-			throw new NotImplementedException ();
+			Root_ = null;
 		}
 
 		public C_Animation (byte[] stream, ref int pos)
@@ -112,47 +161,157 @@ namespace FalconNet.Ui95
 
 		public void Setup ()
 		{
-			throw new NotImplementedException ();
+			if (Root_ != null)
+				Cleanup ();
+		
+			Root_ = null;
 		}
 
 		public void Cleanup ()
 		{
-			throw new NotImplementedException ();
+			Root_ = null;
 		}
 
-		public ANIM_RES LoadAnim (long ID, string file)
+		public ANIM_RES LoadAnim (long ID, string filename)
 		{
-			throw new NotImplementedException ();
+			ANIM_RES cur, NewAnim = new ANIM_RES ();;
+			FileStream ifp;
+			long size;
+		
+			if (GetAnim (ID) != null)
+				return(null);
+			try {
+
+				ifp = C_Parser.OpenArtFile (filename);
+				if (ifp == null) {
+					Debug.WriteLine ("C_Animation error: " + filename + " not opened\n");
+					return NewAnim;
+				}
+		
+				size = ifp.Length;
+
+				if (size == 0) {
+					ifp.Close ();
+					Debug.WriteLine ("C_Animation seek end failed (" + filename + ")");
+					return NewAnim;
+				}
+
+				
+				NewAnim.ID = ID;
+				NewAnim.Anim = new ANIMATION(); //TODO (ANIMATION *)((void*)new char [size + 1]);
+				NewAnim.flags = 0;
+				NewAnim.Next = null;
+		
+				if (NewAnim.Anim == null) {
+					NewAnim = null;
+					ifp.Close ();
+					return(null);
+				}
+#if TODO				
+				if (UI_READ (NewAnim.Anim, size, 1, ifp) != 1) {
+					NewAnim.Anim = null;
+					NewAnim = null;
+					ifp.Close ();
+					return(null);
+				}
+				ifp.Close ();
+		
+				ConvertAnim (NewAnim.Anim);
+				cur = Root_;
+				if (cur == null) {
+					Root_ = NewAnim;
+				} else {
+					while (cur.Next)
+						cur = cur.Next;
+					cur.Next = NewAnim;
+				}		
+#endif
+				throw new NotImplementedException();
+			} catch (Exception e) {
+			}
+			return(NewAnim);
+				
 		}
 
 		public ANIM_RES GetAnim (long ID)
 		{
-			throw new NotImplementedException ();
+			foreach (ANIM_RES cur in Root_) {
+				if (cur.ID == ID)
+					return(cur);
+			}
+			return(null);
 		}
 
 		public void SetFlags (long ID, long flags)
 		{
-			throw new NotImplementedException ();
+			ANIM_RES anim;
+		
+			anim = GetAnim (ID);
+			if (anim != null)
+				anim.flags = flags;
 		}
 
 		public long GetFlags (long ID)
 		{
-			throw new NotImplementedException ();
+			ANIM_RES anim;
+		
+			anim = GetAnim (ID);
+			if (anim != null)
+				return(anim.flags);
+			return(0);
 		}
 
 		public bool RemoveAnim (long ID)
-				{throw new NotImplementedException();}
+		{
+#if TODO			
+			ANIM_RES cur, prev;
+
+			if (Root_ == null)
+				return(false);
+			
+			if (Root_.ID == ID) {
+				cur = Root_;
+				Root_ = Root_.Next;
+				cur.Anim = null;
+				cur = null;
+				return(true);
+			} else {
+				cur = Root_;
+
+				while (cur.Next) {
+					if (cur.Next.ID == ID) {
+						prev = cur.Next;
+						cur.Next = prev.Next;
+						prev.Anim = null;
+						prev = null;
+					}
+					cur = cur.Next;
+				}
+				return(true);
+			}		
+			return(false);
+#endif
+			throw new NotImplementedException();
+		}
 
 #if ! _UI95_PARSER_
 
 		public short LocalFind (string token)
 		{
-			throw new NotImplementedException ();
+			for (short i = 0; i <C_Anim_Tokens.Length ; i++) {
+				if (token == C_Anim_Tokens [i])
+					return(i);
+			}
+			return(0);
 		}
 
-		public void LocalFunction (short ID, long[] P, string str, C_Handler h)
+		public void LocalFunction (CANM ID, long[] P, string str, C_Handler h)
 		{
-			throw new NotImplementedException ();
+			switch (ID) {
+			case CANM.CANM_LOADANIM:
+				LoadAnim (P [0], str);
+				break;
+			}
 		}
 		//TODO public void SaveText(HANDLE h, C_Parser p) { ; }
 

@@ -238,7 +238,9 @@ typedef unsigned char uchar;
 		}
 		public long AddText(string str)
 		{
-			throw new NotImplementedException();
+			long ID = str.GetHashCode() * Table_.Count;
+			Table_.Add(str, ID);
+			return ID;
 		}
 		public long AddTextID(long ID,string str)
 		{

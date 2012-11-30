@@ -54,7 +54,7 @@ namespace FalconNet.Ui95
 			//TODO ~C_Resmgr();
 	
 			public long GetID()	{ return(ID_); }
-			public long GetType()	{ return(Type_); }
+			public long GetType_()	{ return(Type_); }
 	
 	// User callable functions
 			public void Setup(long ID,string filename,C_Hash IDList)

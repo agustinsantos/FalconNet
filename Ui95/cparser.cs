@@ -1276,14 +1276,15 @@ namespace FalconNet.Ui95
 			idfile = null;
 #endif
 		}
+
 		public static FileStream OpenArtFile (string filename)
 		{
 			string path;
-			if (filename.StartsWith("art\\"))
-				path = filename.Substring(4);
+			if (filename.StartsWith ("art\\"))
+				path = filename.Substring (4);
 			else
 				path = filename;
-			return OpenArtFile(path.Replace('\\', Path.DirectorySeparatorChar), FalconUIArtThrDirectory, FalconUIArtDirectory);
+			return OpenArtFile (path.Replace ('\\', Path.DirectorySeparatorChar), FalconUIArtThrDirectory, FalconUIArtDirectory);
 		}
 		
 		public static FileStream OpenArtFile (string filename, string thrdir, string maindir, bool hirescapable = true)
@@ -2634,7 +2635,7 @@ namespace FalconNet.Ui95
 			
 			long TokenID = 0, Section = 0, TokenType = 0;
 			long FontID = 0, NewID = 0;
-			LOGFONT logfont = new LOGFONT();
+			LOGFONT logfont = new LOGFONT ();
 
 			Idx_ = 0;
 			P_Idx_ = 0;
@@ -2659,14 +2660,19 @@ namespace FalconNet.Ui95
 							if (!strLine.StartsWith ("#")) {
 								List<string> tokens = strLine.SplitWords ();
 								TokenID = Image_.LocalFind (tokens [0]);
-								if (TokenID == 0)
-								TokenID = Anim_.LocalFind (tokens [0]);
-								if(TokenID == 0)
-									throw new ApplicationException();
-								if (TokenType == 1)
-									Image_.LocalFunction ((short) (TokenID), P_, str_, Handler_);
-								else if (TokenType == 2)
-									Anim_.LocalFunction ((short)  (TokenID), P_, str_, Handler_);
+								long ImageID = FindID (tokens [1]);
+								if (ImageID == -1)
+									ImageID = AddNewID (tokens [1]);
+								P_ [0] = ImageID;
+								if (TokenID != 0) {
+									Image_.LocalFunction ((C_Image.CIMG)(TokenID), P_, tokens [2], Handler_);
+								} else {
+									TokenID = Anim_.LocalFind (tokens [0]);
+									if (TokenID != 0)	
+										Anim_.LocalFunction ((C_Animation.CANM)(TokenID), P_, tokens [2], Handler_);
+									else
+										throw new ApplicationException ();
+								}
 							}
 						}
 					}
@@ -3602,7 +3608,7 @@ namespace FalconNet.Ui95
 			
 			long TokenID = 0, Section = 0, TokenType = 0;
 			long FontID = 0, NewID = 0;
-			LOGFONT logfont = new LOGFONT();
+			LOGFONT logfont = new LOGFONT ();
 
 			Idx_ = 0;
 			P_Idx_ = 0;
@@ -3978,6 +3984,12 @@ namespace FalconNet.Ui95
 				return(0);
 		}
 
+		public long AddNewID (string label)
+		{			
+			return(TokenOrder_.AddText (label));
+
+		}
+		
 		public long AddNewID (string label, long id)
 		{
 #if TODO			

@@ -1,22 +1,26 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/cparser.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/NewParser.cs">
     <Files>
-      <File FileName="Ui95/canimrc.cs" Line="301" Column="45" />
-      <File FileName="Ui95/cparser.cs" Line="2667" Column="28" />
-      <File FileName="Ui95/cimagerc.cs" Line="415" Column="1" />
-      <File FileName="Ui95/ui95defs.cs" Line="248" Column="6" />
+      <File FileName="Ui95/canimrc.cs" Line="238" Column="1" />
+      <File FileName="Ui95/cparser.cs" Line="2702" Column="9" />
+      <File FileName="Ui95/cimagerc.cs" Line="454" Column="1" />
+      <File FileName="Ui95/ui95defs.cs" Line="280" Column="33" />
+      <File FileName="Main/UI_Main.cs" Line="83" Column="1" />
+      <File FileName="Ui95/cresmgr.cs" Line="377" Column="1" />
+      <File FileName="UI/F4Config.cs" Line="22" Column="30" />
+      <File FileName="Main/Main.cs" Line="65" Column="18" />
+      <File FileName="Ui95/NewParser.cs" Line="66" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Common" expanded="True" />
           <Node name="FalcLib" expanded="True" />
-          <Node name="Graphics" expanded="True" />
           <Node name="Main" expanded="True" />
           <Node name="UI" expanded="True" />
           <Node name="Ui95" expanded="True">
-            <Node name="cparser.cs" selected="True" />
+            <Node name="NewParser.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -24,14 +28,29 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="171" />
-      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="3551" />
-      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="239" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cfontres.cs" line="130" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1233" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="1836" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/cparser.cs" line="2670" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cimagerc.cs" line="454" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cresmgr.cs" line="361" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cresmgr.cs" line="377" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/canimrc.cs" line="238" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cresmgr.cs" line="177" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="1773" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="2563" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="1757" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="2567" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="3592" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="3676" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/cparser.cs" line="1489" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="255" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="83" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/NewParser.cs" line="94" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/NewParser.cs" line="66" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Ui95/cparser.cs" line="2663" offsetX="614" offsetY="45254" expression="tokens" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>

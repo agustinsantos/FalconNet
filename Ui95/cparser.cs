@@ -1200,7 +1200,7 @@ namespace FalconNet.Ui95
 			long size;
 			try {
 				//	ifp=UI_OPEN(filename,"rb");
-				ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory, false);
+				ifp = OpenArtFile (filename, C_Parser.FalconUIArtThrDirectory, C_Parser.FalconUIArtDirectory, false);
 
 				if (ifp == null) {
 					LogError ("LoadIDTable load failed (" + filename + ")");
@@ -1217,13 +1217,13 @@ namespace FalconNet.Ui95
 				using (StreamReader sr = new StreamReader (ifp)) {
 					string strLine = sr.ReadLine ();
 					while (strLine != null) {
-						strLine = sr.ReadLine ();
 						if (!string.IsNullOrWhiteSpace (strLine)) {
 							List<string> words = strLine.SplitWords ();
 							int ID = int.Parse (words [1]);
 							string token = words [0];
 							TokenOrder_.AddTextID (ID, token);
 						}
+						strLine = sr.ReadLine ();
 					}
 					sr.Close ();
 				}
@@ -1235,7 +1235,7 @@ namespace FalconNet.Ui95
 #if TODO	
 			idfile = new char [size + 5]; // just in case :)
 			if (UI_READ (idfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadIDTable read failed (%s)\n", filename);
 				}
@@ -1277,14 +1277,14 @@ namespace FalconNet.Ui95
 #endif
 		}
 
-		public static FileStream OpenArtFile (string filename)
+		public static FileStream OpenArtFile (string filename, bool  hirescapable = true)
 		{
 			string path;
-			if (filename.StartsWith ("art\\"))
+			if (filename.StartsWith ("art\\") || filename.StartsWith (@"art/") )
 				path = filename.Substring (4);
 			else
 				path = filename;
-			return OpenArtFile (path.Replace ('\\', Path.DirectorySeparatorChar), FalconUIArtThrDirectory, FalconUIArtDirectory);
+			return OpenArtFile (path.Replace ('\\', Path.DirectorySeparatorChar), FalconUIArtThrDirectory, FalconUIArtDirectory, hirescapable);
 		}
 		
 		public static FileStream OpenArtFile (string filename, string thrdir, string maindir, bool hirescapable = true)
@@ -1295,12 +1295,10 @@ namespace FalconNet.Ui95
 				return File.Open (filename, FileMode.Open, FileAccess.Read);
 
 			filebuf = thrdir; // Falcon thr root dir
-			if (hirescapable) {
-				if (false) // TODO F4Config.g_bHiResUI)
-					filebuf += Path.DirectorySeparatorChar + "art1024";		// HiResUI
-				else
-					filebuf += Path.DirectorySeparatorChar + "art";			// LoResUI
-			}
+			if (hirescapable && false) // TODO F4Config.g_bHiResUI)
+				filebuf += Path.DirectorySeparatorChar + "art1024";		// HiResUI
+			else
+				filebuf += Path.DirectorySeparatorChar + "art";			// LoResUI
 			filebuf += Path.DirectorySeparatorChar + filename;
 			ifp = File.Open (filebuf, FileMode.Open, FileAccess.Read);
 			if (ifp != null)
@@ -1373,7 +1371,7 @@ namespace FalconNet.Ui95
 
 			Sound_.SetIDTable (TokenOrder_);
 	
-			if (g_bLogUiErrors) {
+			if (F4Config.g_bLogUiErrors) {
 				Perror_ = UI_OPEN ("ui95err.log", "a");
 				if (Perror_)
 					fprintf (Perror_, "Setup Parser\n");
@@ -1385,7 +1383,7 @@ namespace FalconNet.Ui95
 		public void Cleanup ()
 		{
 #if TODO
-			if (g_bLogUiErrors) {
+			if (F4Config.g_bLogUiErrors) {
 	
 				if (Perror_)
 					fprintf (Perror_, "Cleanup Parser\n");
@@ -1430,7 +1428,7 @@ namespace FalconNet.Ui95
 		{
 			int i = 0;
 			foreach (String str in C_All_Tokens) {
-				if (str.Equals (token.Substring (pos, str.Length).ToUpperInvariant ()))
+				if (str.Equals (token.Substring (pos).ToUpperInvariant ()))
 					return i;
 				i++;
 			}
@@ -1483,13 +1481,13 @@ namespace FalconNet.Ui95
 				using (StreamReader sr = new StreamReader (ifp)) {
 					string strLine = sr.ReadLine ();
 					while (strLine != null) {
-						strLine = sr.ReadLine ();
 						if (!string.IsNullOrWhiteSpace (strLine)) {
 							strLine = strLine.Trim ();
 							if (!strLine.StartsWith ("#")) {
 								LoadIDTable (strLine.Replace ('\\', Path.DirectorySeparatorChar));
 							}
 						}
+						strLine = sr.ReadLine ();
 					}
 					sr.Close ();
 				}
@@ -1539,7 +1537,7 @@ namespace FalconNet.Ui95
 		
 		public FileStream OpenScript (string filename)
 		{
-			FileStream ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory, false);
+			FileStream ifp = OpenArtFile (filename, true);
 
 			//	ifp=UI_OPEN(filename,"rb");
 			if (ifp == null) {
@@ -1589,7 +1587,7 @@ namespace FalconNet.Ui95
 				if (script_)
 				memset (script_, 0, size + 5);	// OW
 			if (UI_READ (script_, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadScript read failed (%s)\n", filename);
 				}
@@ -1715,107 +1713,129 @@ namespace FalconNet.Ui95
 
 		public bool  LoadWindowList (string filename)
 		{
-#if TODO
-			UI_HANDLE ifp;
+
+			FileStream ifp;
 			long size;
 			string listfile, lfp;
 			long i;
 			C_Window win;
 
-			memset (&WindowList_ [0], 0, sizeof(long) * MAX_WINDOWS_IN_LIST);
+			WindowList_ = new long[ MAX_WINDOWS_IN_LIST];
 			WinIndex_ = 0;
 			WinLoaded_ = 0;
-	
-			if (g_bLogUiErrors) {
+#if TODO
+			if (F4Config.g_bLogUiErrors) {
 				if (Perror_)
 					fprintf (Perror_, "LoadWindowList processing (%s)\n", filename);
 			}
-			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
+#endif
+			try {
+				ifp = OpenArtFile (filename);
+#if TODO
 			if (ifp == null) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadWindowList open failed (%s)\n", filename);
 				}
 				return(false);
 			}
-			if (g_bLogUiErrors) {
+			if (F4Config.g_bLogUiErrors) {
 				if (Perror_)
 					fprintf (Perror_, "Open Art file found as %s\n", filebuf);
 			}
+#endif
+				size = ifp.Length;
 
-
-			size = UI_FILESIZE (ifp);
-	
-			if (!size) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadWindowList seek start failed (%s)\n", filename);
+				if (size == 0) {
+					ifp.Close ();
+					return false;
 				}
-				UI_CLOSE (ifp);
-				return(false);
-			}
-	
-			listfile = new char [size + 5]; // just in case :)
-			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
-					if (Perror_)
-						fprintf (Perror_, "LoadWindowList read failed (%s)\n", filename);
-				}
-				listfile = null;
-				UI_CLOSE (ifp);
-				return(false);
-			}
-			listfile [size] = 0;
+			
+				using (StreamReader sr = new StreamReader (ifp)) {
+					string strLine = sr.ReadLine ();
+					while (strLine != null) {
+						if (!string.IsNullOrWhiteSpace (strLine) && !strLine.StartsWith("#")) {
+							win = ParseWindow (strLine);
 
-			UI_CLOSE (ifp);
-
-			for (i=0; i<size; i++)
-				if (listfile [i] < 32)
-					listfile [i] = 0;
-
-			lfp = listfile;
-			i = 0;
-			while (i < size) {
-				while (!(*lfp) && i < size) {
-					lfp++;
-					i++;
-				}
-				if (*lfp) {
-					if (g_bLogUiErrors) {
-						if (Perror_)
-							fprintf (Perror_, "LoadWindowList Parsing Window (%s)\n", lfp);
+							//if (win) {
+							//	WindowList_ [WinLoaded_ ++] = win.GetID ();
+							//	Handler_.AddWindow (win, win.GetFlags ());
+							//	win.ScanClientAreas ();
+							//} else {
+							//throw new ApplicationException("TODO");
+						}
+						strLine = sr.ReadLine ();
 					}
-					if (*lfp != '#') {
-						//strcpy(filebuf,FalconUIArtDirectory);
-						//strcat(filebuf,"\\");
-						//strcat(filebuf,lfp);
-						win = ParseWindow (lfp);
+				
+					sr.Close ();
+				}
+			} catch (IOException e) {
+				Debug.WriteLine ("An IO exception has been thrown!");
+				Debug.WriteLine (e.ToString ());
+				return false;
+			}
+#if TODO
+					listfile = new char [size + 5]; // just in case :)
+					if (UI_READ (listfile, size, 1, ifp) != 1) {
+						if (F4Config.g_bLogUiErrors) {
+							if (Perror_)
+								fprintf (Perror_, "LoadWindowList read failed (%s)\n", filename);
+						}
+						listfile = null;
+						UI_CLOSE (ifp);
+						return(false);
+					}
+					listfile [size] = 0;
 
-						if (win) {
-							WindowList_ [WinLoaded_ ++] = win.GetID ();
-							Handler_.AddWindow (win, win.GetFlags ());
-							win.ScanClientAreas ();
-						} else {
+					UI_CLOSE (ifp);
+
+					for (i=0; i<size; i++)
+						if (listfile [i] < 32)
+							listfile [i] = 0;
+
+					lfp = listfile;
+					i = 0;
+					while (i < size) {
+						while (!(*lfp) && i < size) {
+							lfp++;
+							i++;
+						}
+						if (*lfp) {
+							if (F4Config.g_bLogUiErrors) {
+								if (Perror_)
+									fprintf (Perror_, "LoadWindowList Parsing Window (%s)\n", lfp);
+							}
+							if (*lfp != '#') {
+								//strcpy(filebuf,FalconUIArtDirectory);
+								//strcat(filebuf,"\\");
+								//strcat(filebuf,lfp);
+								win = ParseWindow (lfp);
+
+								if (win) {
+									WindowList_ [WinLoaded_ ++] = win.GetID ();
+									Handler_.AddWindow (win, win.GetFlags ());
+									win.ScanClientAreas ();
+								} else {
 				    
-							if (g_bLogUiErrors) {
+									if (F4Config.g_bLogUiErrors) {
 					
-								if (Perror_) {
-									fprintf (Perror_, "LoadWindowList NO Window returned (%s)\n", lfp);
+										if (Perror_) {
+											fprintf (Perror_, "LoadWindowList NO Window returned (%s)\n", lfp);
+										}
+									}
 								}
+							}
+
+							while ((*lfp) && i < size) {
+								lfp++;
+								i++;
 							}
 						}
 					}
-
-					while ((*lfp) && i < size) {
-						lfp++;
-						i++;
-					}
 				}
-			}
+#endif
 			listfile = null;
 			return(true);
-#endif
-			throw new NotImplementedException ();
 		}
 
 		public bool  LoadSoundList (string filename)
@@ -1850,13 +1870,13 @@ namespace FalconNet.Ui95
 				using (StreamReader sr = new StreamReader (ifp)) {
 					string strLine = sr.ReadLine ();
 					while (strLine != null) {
-						strLine = sr.ReadLine ();
 						if (!string.IsNullOrWhiteSpace (strLine)) {
 							strLine = strLine.Trim ();
 							if (!strLine.StartsWith ("#")) {
 								ParseSound (strLine.Replace ('\\', Path.DirectorySeparatorChar));
 							}
 						}
+						strLine = sr.ReadLine ();
 					}
 					sr.Close ();
 				}
@@ -1872,7 +1892,7 @@ namespace FalconNet.Ui95
 	
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadSoundList read failed (%s)\n", filename);
 				}
@@ -1932,7 +1952,7 @@ namespace FalconNet.Ui95
 #endif
 			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
 			if (ifp == null) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadStringList open failed (%s)\n", filename);
 				}
@@ -1942,7 +1962,7 @@ namespace FalconNet.Ui95
 			size = UI_FILESIZE (ifp);
 	
 			if (!size) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadStringList seek start failed (%s)\n", filename);
 				}
@@ -1952,7 +1972,7 @@ namespace FalconNet.Ui95
 
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadStringList read failed (%s)\n", filename);
 				}
@@ -2013,7 +2033,7 @@ namespace FalconNet.Ui95
 			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory);
 
 			if (ifp == null) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadMovieList open failed (%s)\n", filename);
 				}
@@ -2023,7 +2043,7 @@ namespace FalconNet.Ui95
 			size = UI_FILESIZE (ifp);
 	
 			if (!size) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadMovieList seek start failed (%s)\n", filename);
 				}
@@ -2033,7 +2053,7 @@ namespace FalconNet.Ui95
 	
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadMovieList read failed (%s)\n", filename);
 				}
@@ -2104,13 +2124,13 @@ namespace FalconNet.Ui95
 				using (StreamReader sr = new StreamReader (ifp)) {
 					string strLine = sr.ReadLine ();
 					while (strLine != null) {
-						strLine = sr.ReadLine ();
 						if (!string.IsNullOrWhiteSpace (strLine)) {
 							strLine = strLine.Trim ();
 							if (!strLine.StartsWith ("#")) {
 								ParseImage (strLine.Replace ('\\', Path.DirectorySeparatorChar));
 							}
 						}
+						strLine = sr.ReadLine ();
 					}
 					sr.Close ();
 				}
@@ -2122,7 +2142,7 @@ namespace FalconNet.Ui95
 #if TODO	
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadImageList read failed (%s)\n", filename);
 				}
@@ -2171,7 +2191,7 @@ namespace FalconNet.Ui95
 			long i;
 			C_PopupList Menu;
 
-			if (g_bLogUiErrors) {
+			if (F4Config.g_bLogUiErrors) {
 				if (Perror_)
 					fprintf (Perror_, "LoadPopupMenuList processing (%s)\n", filename);
 			}
@@ -2183,7 +2203,7 @@ namespace FalconNet.Ui95
 #endif
 			ifp = OpenArtFile (filename, FalconUIArtThrDirectory, FalconUIArtDirectory, 0);
 			if (ifp == null) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadPopupMenuList open failed (%s)\n", filename);
 				}
@@ -2193,7 +2213,7 @@ namespace FalconNet.Ui95
 			size = UI_FILESIZE (ifp);
 
 			if (!size) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadPopupMenuList seek start failed (%s)\n", filename);
 				}
@@ -2204,7 +2224,7 @@ namespace FalconNet.Ui95
 
 			listfile = new char [size + 5]; // just in case :)
 			if (UI_READ (listfile, size, 1, ifp) != 1) {
-				if (g_bLogUiErrors) {
+				if (F4Config.g_bLogUiErrors) {
 					if (Perror_)
 						fprintf (Perror_, "LoadPopupMenuList read failed (%s)\n", filename);
 				}
@@ -2228,7 +2248,7 @@ namespace FalconNet.Ui95
 					i++;
 				}
 				if (*lfp) {
-					if (g_bLogUiErrors) {
+					if (F4Config.g_bLogUiErrors) {
 						if (Perror_)
 							fprintf (Perror_, "LoadPopupMenuList Parsing PopMenu (%s)\n", lfp);
 					}
@@ -2240,7 +2260,7 @@ namespace FalconNet.Ui95
 					if (Menu)
 						Popup_.AddMenu (Menu);
 					else {
-						if (g_bLogUiErrors) {
+						if (F4Config.g_bLogUiErrors) {
 							if (Perror_)
 								fprintf (Perror_, "LoadPopupMenuList NO Popup Menu returned (%s)\n", lfp);
 						}
@@ -2537,6 +2557,27 @@ namespace FalconNet.Ui95
 
 		public C_Window ParseWindow (string filename)
 		{
+			FileStream script = OpenScript (filename);
+			try {
+				using (StreamReader sr = new StreamReader (script)) {
+					string strLine = sr.ReadLine ();
+					while (strLine != null) {
+						if (!string.IsNullOrWhiteSpace (strLine) && !strLine.StartsWith ("#")) {
+							strLine = strLine.Trim ();
+							long TokenID = FindToken (strLine,0);
+							if ((CPARSE)TokenID == CPARSE.CPARSE_WINDOW) {
+									return(WindowParser ());
+							}
+						}
+						strLine = sr.ReadLine ();
+					}
+					sr.Close ();
+				}
+			} catch (IOException e) {
+				Debug.WriteLine ("An IO exception has been thrown!");
+				Debug.WriteLine (e.ToString ());
+				return null;
+			}
 #if TODO
 			bool Done = false, Comment = false, Found = false, InString = false;//!,Finished=0;;
 			long TokenID = 0;
@@ -4001,7 +4042,7 @@ namespace FalconNet.Ui95
 		public void LogError (string str)
 		{
 #if TODO
-			if (g_bLogUiErrors) {
+			if (F4Config.g_bLogUiErrors) {
 				if (Perror_ != null)
 					fprintf (Perror_, "%s\n", str);
 			}

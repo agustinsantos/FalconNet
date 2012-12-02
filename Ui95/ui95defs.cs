@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FalconNet.Ui95
 {
@@ -244,6 +245,11 @@ typedef unsigned char uchar;
 		}
 		public long AddTextID(long ID,string str)
 		{
+			if (Table_.ContainsKey(str))
+			{
+				Debug.WriteLine("Key already exists.");
+				return Table_[str];
+			}
 			Table_.Add(str, ID);
 			return ID;
 		}

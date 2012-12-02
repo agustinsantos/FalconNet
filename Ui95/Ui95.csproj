@@ -46,6 +46,7 @@
     <Compile Include="cimagerc.cs" />
     <Compile Include="cresmgr.cs" />
     <Compile Include="canimrc.cs" />
+    <Compile Include="NewParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

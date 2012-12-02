@@ -3,7 +3,7 @@ using WORD=System.UInt16;
 
 namespace FalconNet.Ui95
 {
-	public struct IMAGE_RSC
+	public class IMAGE_RSC
 	{
 	}
 	
@@ -410,14 +410,54 @@ namespace FalconNet.Ui95
 			throw new NotImplementedException ();
 		}
 
-		public C_Resmgr LoadRes (long ID, string file)
+		public C_Resmgr LoadRes (long ID, string filename)
 		{
-			throw new NotImplementedException ();
+			//TODO C_HASHNODE current;
+			long curidx;
+			C_Resmgr res;
+			C_Hash   resIDs;
+			IMAGE_RSC rec;
+		
+			res=LoadPrivateRes(ID,filename);
+#if TODO			
+			if(res != null)
+			{
+				resIDs=res.GetIDList();
+				if(resIDs)
+				{
+					rec=(IMAGE_RSC)resIDs.GetFirst(ref current, ref curidx);
+					while(rec)
+					{
+						Finder_.Add(rec.ID,rec);
+						rec=(IMAGE_RSC)resIDs.GetNext(ref current,ref curidx);
+					}
+					return(res);
+				}
+			}
+#endif
+			return(null);
 		}
 
-		public C_Resmgr LoadPrivateRes (long ID, string file)
+
+		public C_Resmgr LoadPrivateRes (long ID, string filename)
 		{
-			throw new NotImplementedException ();
+			C_Resmgr res;
+		
+			if(ID == 0 || string.IsNullOrWhiteSpace(filename) || Root_ == null)
+				return(null);
+		
+			if(Root_.Find(ID) != null)
+				return(null);
+		
+			res=new C_Resmgr();
+		
+			res.Setup(ID,filename,null);//TOODO UI_Main.gMainParser.GetTokenHash());
+			res.SetScreenFormat(red_shift_, green_shift_, blue_shift_);
+			res.SetColorKey(ColorKey_);
+			res.LoadData();
+		
+			Root_.Add(ID,res);
+			return(res);
 		}
 
 		public void SetColorKey (WORD colorkey)

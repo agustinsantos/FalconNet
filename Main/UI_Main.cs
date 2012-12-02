@@ -72,6 +72,16 @@ namespace FalconNet.Main
 		
 		public void GlobalSetup ()
 		{
+			NewParser parser = new NewParser();
+			parser.ParserFile("userids.lst");
+			parser.ParserFile("fontids.lst");
+			parser.ParserFile("imageids.lst");
+			parser.ParserFile("soundids.lst");
+			parser.ParserFile("textids.lst");
+			parser.ParserFile("movieids.lst");
+			parser.ParserFile("fonts"+Path.DirectorySeparatorChar+"fontrc.irc");
+			parser.ParserFile("main_scf.lst");
+			return;
 			WORD r_mask;
 			WORD r_shift;
 			WORD g_mask;
@@ -183,9 +193,8 @@ namespace FalconNet.Main
 			gMainParser.LoadIDList("movieids.lst");
 		
 			gMainParser.SetCheck(1); // Used to find which IDs are NOT used
-		
+#if TODO				
 			gMainParser.ParseFont("art"+Path.DirectorySeparatorChar+"fonts"+Path.DirectorySeparatorChar+"fontrc.irc");
-#if TODO		
 		#if DEBUG
 			if(gMainParser.FindID("TXT_LAST_TEXT_ID") > TXT_LAST_TEXT_ID)
 		        Debug.WriteLine( "String database Out of Date");
@@ -235,13 +244,14 @@ namespace FalconNet.Main
 		
 			if (MainLoaded)
 				return;
-		
+#if TODO		
 			if (CHandlerStatic._LOAD_ART_RESOURCES_)
 				gMainParser.LoadImageList ("main_res.lst");
 			else
 				gMainParser.LoadImageList ("main_art.lst");	// these aren't loaded anymore
 
 			gMainParser.LoadSoundList("main_snd.lst");
+#endif			
 			gMainParser.LoadWindowList("main_scf.lst"); // Modified by M.N. - add art/art1024 by LoadWindowList
 #if TODO			
 			ID=gMainParser.GetFirstWindowLoaded();
@@ -321,7 +331,7 @@ namespace FalconNet.Main
 			throw new NotImplementedException ();
 		}
 		
-		static C_Parser gMainParser;
+		public static C_Parser gMainParser;
 		static bool IALoaded = false;
 		static bool ACMILoaded = false;
 		static bool DFLoaded = false;

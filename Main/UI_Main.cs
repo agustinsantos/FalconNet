@@ -55,9 +55,9 @@ namespace FalconNet.Main
 				LoadStringFiles();
 				LoadMovieFiles();
 				SetStartupFlags();
-#endif			
+			
 				LoadMainWindow();
-#if TODO			
+			
 				LoadCommsWindows();
 				LoadHelpGuideWindows();
 				RealLoadLogbook(); // without daves extra garbage
@@ -70,7 +70,7 @@ namespace FalconNet.Main
 			throw new NotImplementedException ();
 		}
 		
-		public void GlobalSetup ()
+		public GuiConfiguration GlobalSetup ()
 		{
 			NewParser parser = new NewParser();
 			parser.ParserFile("userids.lst");
@@ -81,7 +81,7 @@ namespace FalconNet.Main
 			parser.ParserFile("movieids.lst");
 			parser.ParserFile("fonts"+Path.DirectorySeparatorChar+"fontrc.irc");
 			parser.ParserFile("main_scf.lst");
-			return;
+			return parser.guiConf;
 			WORD r_mask;
 			WORD r_shift;
 			WORD g_mask;
@@ -251,9 +251,9 @@ namespace FalconNet.Main
 				gMainParser.LoadImageList ("main_art.lst");	// these aren't loaded anymore
 
 			gMainParser.LoadSoundList("main_snd.lst");
-#endif			
+			
 			gMainParser.LoadWindowList("main_scf.lst"); // Modified by M.N. - add art/art1024 by LoadWindowList
-#if TODO			
+			
 			ID=gMainParser.GetFirstWindowLoaded();
 			while(ID)
 			{

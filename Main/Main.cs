@@ -1,12 +1,18 @@
+// TODO delete this define, for the moment is just for testing purposes
+#define USE_GWEN
+
 using System;
 using FalconNet.UI;
 using FalconNet.FalcLib;
 using System.IO;
+using OpenTK;
+using FalconNet.Ui95;
+using System.Diagnostics;
 
 
 namespace FalconNet.Main
 {
-	class MainClass
+	public class MainClass
 	{
 		private static void ParseCommandLine(string[] args)
 		{
@@ -58,14 +64,29 @@ namespace FalconNet.Main
 		}
 		static UI_Main ui_main = new UI_Main();
 		
+		[STAThread]
 		public static void Main (string[] args)
-		{
-			Console.WriteLine ("FalconNet started...!");
-			ui_main.GlobalSetup ();
+		{	
+
+			TextWriterTraceListener tr1 = new TextWriterTraceListener(System.Console.Out);
+			Debug.Listeners.Add(tr1);
+			Debug.WriteLine ("FalconNet started...!");
+
+			GuiConfiguration guiConf = ui_main.GlobalSetup ();
+#if USE_GWEN				
+			using (MainGwenGui example = new MainGwenGui(guiConf))
+            {
+                example.Title = "FalconNet Gwen GUI test";
+                example.VSync = VSyncMode.Off; // to measure performance
+                example.Run(0.0, 0.0);
+                //example.TargetRenderFrequency = 60;
+            }
+#else			
 			ui_main.UI_Startup();
 			HandleWinMain(args);
 			Console.WriteLine ("Press any key to finish");
 			Console.ReadLine();
+#endif	
 		}
 	}
 }

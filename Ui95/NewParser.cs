@@ -6,6 +6,21 @@ using FalconNet.Common;
 
 namespace FalconNet.Ui95
 {
+	public class ScfNode
+	{
+		public List<ScfNode> children = new List<ScfNode>();
+		public List<string> properties = new List<string>();
+		public string id;
+		public string winType;
+	}
+	
+	public class GuiConfiguration
+	{
+		public Dictionary<string, long> tableID = new Dictionary<string, long> ();
+		public Dictionary<string, string> tableFont = new Dictionary<string, string> ();
+		public Dictionary<string, ScfNode> tableWins = new Dictionary<string, ScfNode> ();
+	}
+	
 	public class NewParser
 	{
 		//TODO Defined somewhere
@@ -13,8 +28,7 @@ namespace FalconNet.Ui95
 		public static string FalconUIArtThrDirectory = @"../../../data";
 		public static string FalconUISoundDirectory = @"../../../data";
 		
-		private Dictionary<string, long> tableID = new Dictionary<string, long> ();
-		private Dictionary<string, string> tableFont = new Dictionary<string, string> ();
+		public GuiConfiguration guiConf = new GuiConfiguration();
 		
 		public void ParserFile (String filename)
 		{
@@ -57,17 +71,33 @@ namespace FalconNet.Ui95
 		{
 			try {
 				FileStream ifp = OpenArtFile (filename);
-
+				ScfNode parent = null;
+				ScfNode child = null;
 				using (StreamReader sr = new StreamReader (ifp)) {
 					string strLine = sr.ReadLine ();
 					while (strLine != null) {
 						if (!string.IsNullOrWhiteSpace (strLine) && !strLine.StartsWith ("#")) {
 							strLine = strLine.Trim ();
-							Debug.WriteLine ("Some SCF found:" + strLine);
+							if (strLine.IsToken())
+							{
+								child = new ScfNode();
+								child.winType = strLine;
+								// the first one is the parent window 
+								// TODO review this assumption
+								if (parent == null)
+									parent = child;
+								else
+									parent.children.Add(child);
+								//Debug.WriteLine ("Some SCF found:" + strLine);
+							}else {
+								child.properties.Add(strLine);
+								//Debug.WriteLine ("Some SCF found:" + strLine);
+							}
 						}
 						strLine = sr.ReadLine ();
 					}
 					sr.Close ();
+					guiConf.tableWins.Add(filename, parent);
 				}
 			} catch (IOException e) {
 				Debug.WriteLine ("An IO exception has been thrown!");
@@ -164,29 +194,71 @@ namespace FalconNet.Ui95
 		
 		public void AddTableID (String str, long id)
 		{
-			if (tableID.ContainsKey (str)) {
+			if (guiConf.tableID.ContainsKey (str)) {
 				Debug.WriteLine ("Table ID already contains key =" + str);
 				return;
 			}
-			tableID.Add (str, id);
+			guiConf.tableID.Add (str, id);
 		}
 		
 		public void AddTableFont (String name, string file)
 		{
-			if (tableFont.ContainsKey (name)) {
+			if (guiConf.tableFont.ContainsKey (name)) {
 				Debug.WriteLine ("Table font already contains key =" + name);
 				return;
 			}
-			tableFont.Add (name, file);
+			guiConf.tableFont.Add (name, file);
 		}
 		
 		public void AddTableID (String str)
 		{
-			if (tableID.ContainsKey (str)) {
+			if (guiConf.tableID.ContainsKey (str)) {
 				Debug.WriteLine ("Table ID already contains key =" + str);
 				return;
 			}
-			tableID.Add (str, str.GetHashCode ());
+			guiConf.tableID.Add (str, str.GetHashCode ());
+		}
+	}
+	
+	internal static class TokenExtension
+	{
+		private static string[] C_All_Tokens =
+		{
+			"[NOTHING]",
+			"[WINDOW]",
+			"[BUTTON]",
+			"[TEXT]",
+			"[EDITBOX]",
+			"[LISTBOX]",
+			"[SCROLLBAR]",
+			"[TREELIST]",
+			"[MAKEFONT]",
+			"[IMAGE]",
+			"[BITMAP]",
+			"[LINE]",
+			"[BOX]",
+			"[MARQUE]",
+			"[ANIMATION]",
+			"[LOCATOR]",
+			"[SOUND]",
+			"[SLIDER]",
+			"[POPUPMENU]",
+			"[PANNER]",
+			"[ANIM]",
+			"[STRINGLIST]",
+			"[MOVIE]",
+			"[FILL]",
+			"[TREELIST]",
+			"[CLOCK]",
+			"[TILE]"
+		};
+		public static bool IsToken (this string input)
+		{
+			string str = input.ToUpperInvariant();
+		    foreach(string token in C_All_Tokens)
+				if(str == token)
+					return true;
+			return false;
 		}
 	}
 }

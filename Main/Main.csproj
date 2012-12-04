@@ -31,11 +31,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Gwen.Renderer.OpenTK">
+      <HintPath>..\ExternalLibs\Gwen.Renderer.OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Gwen">
+      <HintPath>..\ExternalLibs\Gwen.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.Compatibility">
+      <HintPath>..\ExternalLibs\OpenTK.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\ExternalLibs\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\ExternalLibs\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="UI_Main.cs" />
+    <Compile Include="MainGwenGui.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -58,6 +75,10 @@
     <ProjectReference Include="..\Ui95\Ui95.csproj">
       <Project>{81D5A611-9192-40CC-AB58-4309BB9CFF68}</Project>
       <Name>Ui95</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GwenUI\GwenUI.csproj">
+      <Project>{3C27CC82-ABE9-4713-A137-6AB251D19093}</Project>
+      <Name>GwenUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,27 +1,31 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Ui95/NewParser.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Main/MainGwenGui.cs">
     <Files>
       <File FileName="Ui95/canimrc.cs" Line="238" Column="1" />
-      <File FileName="Ui95/cparser.cs" Line="2702" Column="9" />
+      <File FileName="Ui95/cparser.cs" Line="4061" Column="1" />
       <File FileName="Ui95/cimagerc.cs" Line="454" Column="1" />
       <File FileName="Ui95/ui95defs.cs" Line="280" Column="33" />
-      <File FileName="Main/UI_Main.cs" Line="83" Column="1" />
+      <File FileName="Main/UI_Main.cs" Line="73" Column="26" />
       <File FileName="Ui95/cresmgr.cs" Line="377" Column="1" />
       <File FileName="UI/F4Config.cs" Line="22" Column="30" />
-      <File FileName="Main/Main.cs" Line="65" Column="18" />
-      <File FileName="Ui95/NewParser.cs" Line="66" Column="1" />
+      <File FileName="Main/Main.cs" Line="71" Column="19" />
+      <File FileName="Ui95/NewParser.cs" Line="64" Column="10" />
+      <File FileName="Common/StringSupport.cs" Line="26" Column="1" />
+      <File FileName="Main/MainGwenGui.cs" Line="207" Column="20" />
+      <File FileName="GwenUI/GuiWindow.cs" Line="6" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Common" expanded="True" />
-          <Node name="FalcLib" expanded="True" />
-          <Node name="Main" expanded="True" />
-          <Node name="UI" expanded="True" />
-          <Node name="Ui95" expanded="True">
-            <Node name="NewParser.cs" selected="True" />
+          <Node name="GwenUI" expanded="True">
+            <Node name="References" expanded="True" />
           </Node>
+          <Node name="Main" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="MainGwenGui.cs" selected="True" />
+          </Node>
+          <Node name="Ui95" expanded="True" />
         </State>
       </Pad>
     </Pads>
@@ -48,9 +52,13 @@
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Main/UI_Main.cs" line="83" />
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/NewParser.cs" line="94" />
       <Breakpoint file="/home/santos/FalconSP/FalconNet/Ui95/NewParser.cs" line="66" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Ui95/NewParser.cs" line="124" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Main/MainGwenGui.cs" line="198" />
+      <Breakpoint file="/home/agustin/Projects/FalconNet/Main/MainGwenGui.cs" line="194" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="Ui95/cparser.cs" line="2663" offsetX="614" offsetY="45254" expression="tokens" liveUpdate="False" />
+    <Watch file="Main/MainGwenGui.cs" line="191" offsetX="646" offsetY="3230" expression="properties" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>

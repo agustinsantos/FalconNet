@@ -7,8 +7,10 @@ using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using Gwen.Control;
+using Gwen;
 using FalconNet.Ui95;
 using GwenUI;
+
 using FalconNet.Common;
 
 namespace FalconNet.Main
@@ -19,13 +21,11 @@ namespace FalconNet.Main
 		private Gwen.Renderer.OpenTK renderer;
 		private Gwen.Skin.Base skin;
 		private Gwen.Control.Canvas canvas;
-		
 		const int fps_frames = 50;
 		private readonly List<long> ftime;
 		private readonly Stopwatch stopwatch;
 		private long lastTime;
 		private bool altDown = false;
-		
 		private GuiConfiguration conf;
 		
 		public MainGwenGui (GuiConfiguration guiConf)
@@ -119,7 +119,7 @@ namespace FalconNet.Main
 			canvas.BackgroundColor = Color.FromArgb (255, 150, 170, 170);
 			//canvas.KeyboardInputEnabled = true;
 			
-			ProcessConfiguration();
+			ProcessConfiguration ();
 			
 			stopwatch.Restart ();
 			lastTime = 0;
@@ -176,39 +176,65 @@ namespace FalconNet.Main
 			SwapBuffers ();
 		}
 		
-		List<GuiWindow> wins = new List<GuiWindow>();
-		private void ProcessConfiguration()
+		List<GuiWindow> wins = new List<GuiWindow> ();
+
+		private void ProcessConfiguration ()
 		{
 			if (conf == null)
 				return;
-			foreach (ScfNode node in conf.tableWins.Values)
-			{
-				Debug.WriteLine("GUI Node: " + node.winType);
-				if (node.winType == "[WINDOW]")
-				{
-					GuiWindow win = new GuiWindow(canvas);
-
-					foreach(string prop in node.properties)
-					{
-						Debug.WriteLine("GUI property: " + prop);
-						List<string> tokens = prop.SplitWords ();
-						switch(tokens[0])
-						{
-						case "[SETUP]":
-							Debug.WriteLine("Win setup found");
-							node.id = tokens[1];
-							win.SetSize(int.Parse(tokens[3]), int.Parse(tokens[4]));
-							break;
-						default:
-							break;
-						}
-					
-					}
-					wins.Add(win);
-				} else
-					Debug.WriteLine("GUI is not a window: " + node.winType);
+			foreach (ScfNode node in conf.tableWins.Values) {
+				Debug.WriteLine ("GUI Node: " + node.winType);
+				switch (node.winType) {
+				case "[WINDOW]":
+					ProcessWindowConf (node);
+					break;
+				default:
+					Debug.WriteLine ("Unknown GUI type: " + node.winType);
+					break;
+				}
 				
 			}
+		}
+		
+		private void ProcessWindowConf (ScfNode node)
+		{
+			GuiWindow win = new GuiWindow (canvas);
+
+			foreach (string prop in node.properties) {
+				Debug.WriteLine ("GUI property: " + prop);
+				List<string> tokens = prop.SplitWords ();
+				switch (tokens [0]) {
+				case "[SETUP]":
+					Debug.WriteLine ("Win setup found");
+					node.id = tokens [1];
+					win.SetSize (int.Parse (tokens [3]), int.Parse (tokens [4]));
+					break;
+				case "[XY]":
+					win.Position (Pos.Top | Pos.Left, int.Parse (tokens [1]), int.Parse (tokens [2]));
+					break;
+				case "[RANGES]":
+					Point pt1 = new Point (int.Parse (tokens [1]), int.Parse (tokens [2]));
+					Point pt2 = new Point (int.Parse (tokens [3]), int.Parse (tokens [4]));
+					Size sz = new Size (int.Parse (tokens [5]), int.Parse (tokens [6]));
+							//win.RenderBounds = new Rectangle(pt,sz);
+					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
+					break;
+				case "[GROUP]":
+					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
+					break;
+				case "[FLAGBITON]":
+					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
+					break;
+				case "[DEPTH]":
+					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
+					break;
+				default:
+					Debug.WriteLine ("Unknown GUI parameter: " + tokens [0]);
+					break;
+				}
+					
+			}
+			wins.Add (win);
 		}
 	}
 }

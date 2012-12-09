@@ -27,6 +27,7 @@ namespace FalconNet.Main
 		private long lastTime;
 		private bool altDown = false;
 		private GuiConfiguration conf;
+		private const string skinsPath = "data/skins/";
 		
 		public MainGwenGui (GuiConfiguration guiConf)
             : base(1024, 768)
@@ -108,7 +109,7 @@ namespace FalconNet.Main
 			GL.ClearColor (Color.MidnightBlue);
 
 			renderer = new Gwen.Renderer.OpenTK ();
-			skin = new Gwen.Skin.TexturedBase (renderer, "DefaultSkin.png");
+			skin = new Gwen.Skin.TexturedBase (renderer, skinsPath+"DefaultSkin.png");
 			canvas = new Canvas (skin);
 
 			input = new Gwen.Input.OpenTK (this);
@@ -186,7 +187,35 @@ namespace FalconNet.Main
 				Debug.WriteLine ("GUI Node: " + node.winType);
 				switch (node.winType) {
 				case "[WINDOW]":
-					ProcessWindowConf (node);
+					GuiWindow win = new GuiWindow (canvas);
+					WindowParser.ProcessConf (node, win);
+					wins.Add (win);
+					break;
+				case "[BUTTON]":
+				case "[TEXT]":
+				case "[EDITBOX]":
+				case "[LISTBOX]":
+				case "[SCROLLBAR]":
+				case "[TREELIST]":
+				case "[MAKEFONT]":
+				case "[IMAGE]":
+				case "[BITMAP]":
+				case "[LINE]":
+				case "[BOX]":
+				case "[MARQUE]":
+				case "[ANIMATION]":
+				case "[LOCATOR]":
+				case "[SOUND]":
+				case "[SLIDER]":
+				case "[POPUPMENU]":
+				case "[PANNER]":
+				case "[ANIM]":
+				case "[STRINGLIST]":
+				case "[MOVIE]":
+				case "[FILL]":
+				case "[CLOCK]":
+				case "[TILE]":
+					throw new NotImplementedException();
 					break;
 				default:
 					Debug.WriteLine ("Unknown GUI type: " + node.winType);
@@ -196,10 +225,12 @@ namespace FalconNet.Main
 			}
 		}
 		
-		private void ProcessWindowConf (ScfNode node)
+	}
+		
+	public class WindowParser
+	{
+		public static void ProcessConf (ScfNode node, GuiWindow win)
 		{
-			GuiWindow win = new GuiWindow (canvas);
-
 			foreach (string prop in node.properties) {
 				Debug.WriteLine ("GUI property: " + prop);
 				List<string> tokens = prop.SplitWords ();
@@ -209,23 +240,40 @@ namespace FalconNet.Main
 					node.id = tokens [1];
 					win.SetSize (int.Parse (tokens [3]), int.Parse (tokens [4]));
 					break;
+				case "[X]":
+					win.X = int.Parse (tokens [1]);
+					break;
+				case "[Y]":
+					win.Y = int.Parse (tokens [1]);
+					break;
+				case "[W]":
+					win.Width = int.Parse (tokens [1]);
+					break;
+				case "[H]":
+					win.Height = int.Parse (tokens [1]);
+					break;
 				case "[XY]":
 					win.Position (Pos.Top | Pos.Left, int.Parse (tokens [1]), int.Parse (tokens [2]));
 					break;
 				case "[RANGES]":
-					Point pt1 = new Point (int.Parse (tokens [1]), int.Parse (tokens [2]));
-					Point pt2 = new Point (int.Parse (tokens [3]), int.Parse (tokens [4]));
-					Size sz = new Size (int.Parse (tokens [5]), int.Parse (tokens [6]));
-							//win.RenderBounds = new Rectangle(pt,sz);
-					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
+					//Point pt1 = new Point (int.Parse (tokens [1]), int.Parse (tokens [2]));
+					//Point pt2 = new Point (int.Parse (tokens [3]), int.Parse (tokens [4]));
+					Point sz = new Point (int.Parse (tokens [5]), int.Parse (tokens [6]));
+					win.MinimumSize = sz;
+					// Min Pos = pt1
+					// Max Pos = pt2
 					break;
+				case "[CLIENTAREA]":
+				case "[FONT]":
 				case "[GROUP]":
-					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
-					break;
 				case "[FLAGBITON]":
-					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
-					break;
+				case "[FLAGBITOFF]":
 				case "[DEPTH]":
+				case "[OPENMENU]":
+				case "[OPENCLIENTMENU]":
+				case "[CURSOR]":	
+				case "[DRAGH]":
+				case "[CLIENTFLAG]":	
 					Debug.WriteLine ("GUI parameter not applyed to Gwen: " + prop);
 					break;
 				default:
@@ -234,7 +282,7 @@ namespace FalconNet.Main
 				}
 					
 			}
-			wins.Add (win);
 		}
 	}
+	
 }

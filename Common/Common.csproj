@@ -40,6 +40,8 @@
     <Compile Include="MultiplataformIni.cs" />
     <Compile Include="SizeUtils.cs" />
     <Compile Include="StringSupport.cs" />
+    <Compile Include="StreamReaderExtensions.cs" />
+    <Compile Include="Lzss.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

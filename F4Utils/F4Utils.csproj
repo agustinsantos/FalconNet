@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A757CB09-3B30-481F-9F54-C4A69E768335}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>F4Resources</RootNamespace>
+    <AssemblyName>F4Resources</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="Campaign\AirTaskingManager.cs" />
+    <Compile Include="Campaign\AirUnit.cs" />
+    <Compile Include="Campaign\ATMAirbase.cs" />
+    <Compile Include="Campaign\Battalion.cs" />
+    <Compile Include="Campaign\Brigade.cs" />
+    <Compile Include="Campaign\Campaign.cs" />
+    <Compile Include="Campaign\CampaignBase.cs" />
+    <Compile Include="Campaign\CampaignManager.cs" />
+    <Compile Include="Campaign\ClassTable.cs" />
+    <Compile Include="Campaign\CmpFile.cs" />
+    <Compile Include="Campaign\EvtFile.cs" />
+    <Compile Include="Campaign\F4CampaignFileBundleReader.cs" />
+    <Compile Include="Campaign\F4Structs.cs" />
+    <Compile Include="Campaign\Flight.cs" />
+    <Compile Include="Campaign\GroundTaskingManager.cs" />
+    <Compile Include="Campaign\GroundUnit.cs" />
+    <Compile Include="Campaign\NavalTaskingManager.cs" />
+    <Compile Include="Campaign\ObdFile.cs" />
+    <Compile Include="Campaign\Objective.cs" />
+    <Compile Include="Campaign\ObjFile.cs" />
+    <Compile Include="Campaign\Package.cs" />
+    <Compile Include="Campaign\Pilot.cs" />
+    <Compile Include="Campaign\PltFile.cs" />
+    <Compile Include="Campaign\PolFile.cs" />
+    <Compile Include="Campaign\PstFile.cs" />
+    <Compile Include="Campaign\Squadron.cs" />
+    <Compile Include="Campaign\TaskForce.cs" />
+    <Compile Include="Campaign\TeaFile.cs" />
+    <Compile Include="Campaign\Team.cs" />
+    <Compile Include="Campaign\UniFile.cs" />
+    <Compile Include="Campaign\Unit.cs" />
+    <Compile Include="Campaign\Waypoint.cs" />
+    <Compile Include="Campaign\WthFile.cs" />
+    <Compile Include="PlayerOp\AutoPilotModeType.cs" />
+    <Compile Include="PlayerOp\AvionicsType.cs" />
+    <Compile Include="PlayerOp\FlightModelType.cs" />
+    <Compile Include="PlayerOp\PadlockModeType.cs" />
+    <Compile Include="PlayerOp\Pit3DPanMode.cs" />
+    <Compile Include="PlayerOp\PlayerOp.cs" />
+    <Compile Include="PlayerOp\PoDispFlags.cs" />
+    <Compile Include="PlayerOp\PoGenFlags.cs" />
+    <Compile Include="PlayerOp\PoObjFlags.cs" />
+    <Compile Include="PlayerOp\PoSimFlags.cs" />
+    <Compile Include="PlayerOp\RefuelModeType.cs" />
+    <Compile Include="PlayerOp\SimStartFlags.cs" />
+    <Compile Include="PlayerOp\SoundGroup.cs" />
+    <Compile Include="PlayerOp\TrackIRVector.cs" />
+    <Compile Include="PlayerOp\VisualCueType.cs" />
+    <Compile Include="PlayerOp\WeaponEffectType.cs" />
+    <Compile Include="Terrain\Constants.cs" />
+    <Compile Include="Terrain\Util.cs" />
+    <Compile Include="Terrain\Structs\FarTilesDotPalFileInfo.cs" />
+    <Compile Include="Terrain\Structs\TextureBinAreaRecord.cs" />
+    <Compile Include="Terrain\Structs\TextureBinPathRecord.cs" />
+    <Compile Include="Terrain\Structs\TextureBinSetRecord.cs" />
+    <Compile Include="Terrain\Structs\TextureBinTileRecord.cs" />
+    <Compile Include="Terrain\Structs\TextureDotBinFileInfo.cs" />
+    <Compile Include="Terrain\Structs\TheaterDotLxFileInfo.cs" />
+    <Compile Include="Terrain\Structs\TheaterDotLxFileRecord.cs" />
+    <Compile Include="Terrain\Structs\TheaterDotMapFileInfo.cs" />
+    <Compile Include="Terrain\Structs\TheaterDotOxFlieRecord.cs" />
+    <Compile Include="Terrain\Structs\TheaterDotTdfFileInfo.cs" />
+    <Compile Include="Resources\F4ResourceBundleReader.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

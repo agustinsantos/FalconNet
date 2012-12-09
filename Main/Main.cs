@@ -72,8 +72,11 @@ namespace FalconNet.Main
 			Debug.Listeners.Add(tr1);
 			Debug.WriteLine ("FalconNet started...!");
 
-			GuiConfiguration guiConf = ui_main.GlobalSetup ();
-#if USE_GWEN				
+			//GuiConfiguration guiConf = ui_main.GlobalSetup ();
+#if USE_GWEN	
+			NewParser parser = new NewParser();
+			parser.ParserFile(@"art\main\main_win.scf");
+			GuiConfiguration guiConf = parser.guiConf; 
 			using (MainGwenGui example = new MainGwenGui(guiConf))
             {
                 example.Title = "FalconNet Gwen GUI test";

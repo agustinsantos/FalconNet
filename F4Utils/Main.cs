@@ -6,6 +6,7 @@ using F4Utils.Resources;
 using F4Utils.Campaign;
 using System.Text;
 using System.Diagnostics;
+using F4Utils.Terrain;
 
 namespace F4Resources
 {
@@ -15,18 +16,34 @@ namespace F4Resources
 
 		public static void Main (string[] args)
 		{
-			TextWriterTraceListener tr1 = new TextWriterTraceListener(System.Console.Out);
-			Debug.Listeners.Add(tr1);
+			TextWriterTraceListener tr1 = new TextWriterTraceListener (System.Console.Out);
+			Debug.Listeners.Add (tr1);
 			Debug.WriteLine ("FalconNet Converter started...!");
+			ReadTerrain ();
 			//ConvertResources(FalconDirectory+"/art/resource/music.idx");
-			ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
-			ReadCampaign (FalconDirectory + "/campaign/save/Save-Day 1 13 19 39.cam", 71);
+			//ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
+			//ReadCampaign (FalconDirectory + "/campaign/save/Save-Day 1 13 19 39.cam", 71);
 			Debug.WriteLine ("FalconNet Converter has finished...!");
 		}
 		
-		public static void ReadClassData(string filename)
+		public static void ReadTerrain ()
 		{
-			Falcon4EntityClassType[] entities = ClassTable.ReadClassTable(filename); 
+			TerrainBrowser terrain = new TerrainBrowser (true);
+			terrain.LoadCurrentTheaterTerrainDatabase ();
+			terrain.LoadFarTilesAsync ();
+			var mapinfo = terrain.CurrentTheaterDotMapFileInfo;
+			Bitmap bitmap = new Bitmap(500, 500);
+			for (int x = 0; x < 500; x++)
+				for (int y = 0; y < 500; y++) {
+					float h = terrain.GetTerrainHeight (x, y);
+					bitmap.SetPixel(x, y, mapinfo.Pallete[(int)h]);
+				}
+			bitmap.Save("Bitmap.bmp");
+		}
+		
+		public static void ReadClassData (string filename)
+		{
+			Falcon4EntityClassType[] entities = ClassTable.ReadClassTable (filename); 
 			int i = 0;
 			Debug.WriteLine ("Class file has " + entities.Length + " entities classes");
 			if (entities.Length > 0)
@@ -44,7 +61,7 @@ namespace F4Resources
 			EmbeddedFileInfo[] files = reader.GetEmbeddedFileDirectory ();
 			Debug.WriteLine ("Campaign file has " + files.Length + " files");
 			foreach (EmbeddedFileInfo embfile in files) {
-				Debug.WriteLine (string.Format("Extracting file {0} ", embfile.FileName));
+				Debug.WriteLine (string.Format ("Extracting file {0} ", embfile.FileName));
 				byte[] fileData = reader.GetEmbeddedFileContents (embfile.FileName);
 				using (FileStream fs = new FileStream(embfile.FileName, FileMode.Create)) {
 					fs.Write (fileData, 0, fileData.Length);

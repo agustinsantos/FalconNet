@@ -8,20 +8,18 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-using Common.Imaging;
-using Common.Win32;
-using F4SharedMem;
+//using System.Windows.Forms;
 using F4Utils.Terrain.Structs;
+using FalconNet.Common;
 using ICSharpCode.SharpZipLib.Zip;
-using log4net;
 using Microsoft.Win32;
+//using log4net;
 
 namespace F4Utils.Terrain
 {
     public class TerrainBrowser : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (TerrainBrowser));
+        //private static readonly ILog Log = LogManager.GetLogger(typeof (TerrainBrowser));
         private readonly bool _loadAllLods;
 
         #region Instance Variables
@@ -59,19 +57,25 @@ namespace F4Utils.Terrain
         public void LoadCurrentTheaterTerrainDatabase()
         {
             if (_terrainLoaded || _disposing || _isDisposed) return;
+			var falconFormat = FalconDataFormats.AlliedForce;
+#if TODO 
             var falconFormat = Process.Util.DetectFalconFormat();
             if (!falconFormat.HasValue) return;
             //TODO: check these against other theaters, for correct way to read theater installation locations
-            var exePath = Process.Util.GetFalconExePath();
+			var exePath = Process.Util.GetFalconExePath();
+       
+
             if (exePath == null) return;
             var f4BasePathFI = new FileInfo(exePath);
             exePath = f4BasePathFI.DirectoryName + Path.DirectorySeparatorChar;
-            var currentTheaterTdf = GetCurrentTheaterDotTdf(exePath, falconFormat.Value);
+#endif  
+            var exePath =  @"../../../data"; //Process.Util.GetFalconExePath();
+			var currentTheaterTdf = GetCurrentTheaterDotTdf(exePath, falconFormat);
             if (currentTheaterTdf == null) return;
             //string theaterName = currentTheaterTdf.theaterName//DetectCurrentTheaterName();
             //if (theaterName == null) return;
             var dataPath = exePath;
-            if (falconFormat.Value == FalconDataFormats.BMS4)
+            if (falconFormat == FalconDataFormats.BMS4)
             {
                 dataPath = exePath + "..\\..\\data";
             }
@@ -165,7 +169,7 @@ namespace F4Utils.Terrain
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Debug.WriteLine(ex.Message, ex);
                 if (ex is SystemException) throw;
             }
         }
@@ -217,11 +221,12 @@ namespace F4Utils.Terrain
                 }
 
 
-                Bitmap bitmap;
+                Bitmap bitmap = null;
                 if (useDDS)
                 {
                     using (var stream = File.OpenRead(_farTilesDotDdsFilePath))
                     {
+#if TODO						
                         var headerSize = Marshal.SizeOf(typeof (NativeMethods.DDSURFACEDESC2));
                         var header = new byte[headerSize];
                         stream.Seek(0, SeekOrigin.Begin);
@@ -252,7 +257,9 @@ namespace F4Utils.Terrain
                             _farTileTextures.Add(textureId, bitmap);
                         }
                         stream.Close();
-                    }
+#endif        
+						throw new NotImplementedException();
+					}
                 }
                 else
                 {
@@ -290,6 +297,7 @@ namespace F4Utils.Terrain
 
         public Bitmap LoadNearTileTexture(string textureBaseFolderPath, string tileName)
         {
+#if TODO
             Bitmap toReturn;
             var tileFullPath = Path.Combine(textureBaseFolderPath, tileName);
 
@@ -302,8 +310,10 @@ namespace F4Utils.Terrain
             }
             if (tileInfo.Exists)
             {
-                try
+
+				try
                 {
+
                     toReturn = DDS.Load(tileFullPath);
                     return toReturn;
                 }
@@ -311,7 +321,8 @@ namespace F4Utils.Terrain
                 {
                     Log.Debug(e.Message, e);
                 }
-            }
+
+			}
 
 
             if (_textureZipFile == null)
@@ -331,15 +342,17 @@ namespace F4Utils.Terrain
                 toReturn = PCX.LoadFromBytes(rawBytes);
             }
             return toReturn;
+#endif 
+			throw new NotImplementedException();
         }
 
         public Bitmap GetDetailTextureForElevationPost(int postCol, int postRow, uint lod)
         {
+			
             if (!_terrainLoaded)
             {
                 LoadCurrentTheaterTerrainDatabase();
             }
-
             if (!_terrainLoaded || _disposing || _isDisposed)
             {
                 return null;
@@ -388,7 +401,7 @@ namespace F4Utils.Terrain
 
                     var sourceRect = new Rectangle(leftX, topY, (rightX - leftX) + 1, (bottomY - topY) + 1);
 
-                    toReturn = (Bitmap) Common.Imaging.Util.CropBitmap(bigTexture, sourceRect);
+                    toReturn = (Bitmap) CropBitmap(bigTexture, sourceRect);
                     _elevationPostTextures.Add(key, toReturn);
                 }
             }
@@ -397,7 +410,7 @@ namespace F4Utils.Terrain
                 toReturn = bigTexture;
             }
             return toReturn;
-        }
+		}
 
         public Bitmap GetTerrainTextureByTextureId(uint textureId, uint lod)
         {
@@ -507,12 +520,16 @@ namespace F4Utils.Terrain
         public string DetectCurrentTheaterName()
         {
             string theaterName = null;
-            var currentDataFormat = Process.Util.DetectFalconFormat();
+			var currentDataFormat = FalconDataFormats.AlliedForce;
             FileVersionInfo verInfo = null;
+#if TODO
+			var currentDataFormat = Process.Util.DetectFalconFormat();
             var exePath = Process.Util.GetFalconExePath();
+			
             if (exePath != null) verInfo = FileVersionInfo.GetVersionInfo(exePath);
-
-            if (currentDataFormat.HasValue && currentDataFormat.Value == FalconDataFormats.AlliedForce)
+#endif         
+			var exePath =  @"../../../data/";
+            if (currentDataFormat == FalconDataFormats.AlliedForce)
             {
                 try
                 {
@@ -545,11 +562,11 @@ namespace F4Utils.Terrain
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.Message, ex);
+                    Debug.WriteLine(ex.Message, ex);
                     theaterName = null;
                 }
             }
-            else if (currentDataFormat.HasValue && currentDataFormat.Value == FalconDataFormats.BMS4 && verInfo != null &&
+            else if (currentDataFormat == FalconDataFormats.BMS4 && verInfo != null &&
                      ((verInfo.ProductMajorPart == 4 && verInfo.ProductMinorPart >= 6826) ||
                       (verInfo.ProductMajorPart > 4)))
             {
@@ -581,7 +598,7 @@ namespace F4Utils.Terrain
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.Message, ex);
+                    Debug.WriteLine(ex.Message, ex);
                     theaterName = null;
                 }
             }
@@ -595,7 +612,7 @@ namespace F4Utils.Terrain
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.Message, ex);
+                    Debug.WriteLine(ex.Message, ex);
                     theaterName = null;
                 }
             }
@@ -650,7 +667,10 @@ namespace F4Utils.Terrain
                         }
                     }
                 }
-            }
+            } else {
+				var tdfDetailsThisLine = ReadTheaterDotTdf(exePath + Path.DirectorySeparatorChar + "terrdata" + Path.DirectorySeparatorChar + currentTheaterName + ".tdf");
+				return tdfDetailsThisLine;
+			}
             return null;
         }
 
@@ -668,7 +688,7 @@ namespace F4Utils.Terrain
                 while (!sw.EndOfStream)
                 {
                     var thisLine = sw.ReadLine();
-                    var thisLineTokens = Common.Strings.Util.Tokenize(thisLine);
+                    var thisLineTokens = thisLine.Tokenize();
                     if (thisLineTokens.Count > 0)
                     {
                         if (thisLineTokens[0].ToLower() == "name")
@@ -952,7 +972,13 @@ namespace F4Utils.Terrain
         {
             Dispose();
         }
-
+		
+		private static Image CropBitmap(Image img, Rectangle cropArea)
+        {
+            Image bmpCrop = ((Bitmap) img).Clone(cropArea, img.PixelFormat);
+            return bmpCrop;
+        }
+		
         /// <summary>
         ///   Private implementation of Dispose()
         /// </summary>
@@ -972,8 +998,10 @@ namespace F4Utils.Terrain
                     while (_farTileReadingBackgroundWorker != null && _farTileReadingBackgroundWorker.IsBusy &&
                            waitCount < 1000)
                     {
+#if TODO						
                         Application.DoEvents();
                         Thread.Sleep(5);
+#endif
                         waitCount++;
                     }
                     _farTileReadingBackgroundWorker = null;
@@ -987,7 +1015,7 @@ namespace F4Utils.Terrain
                         }
                         catch (Exception e)
                         {
-                            Log.Debug(e.Message, e);
+                            Debug.WriteLine(e.Message);
                         }
                     }
                     _textureZipFile = null;
@@ -1022,17 +1050,17 @@ namespace F4Utils.Terrain
                         }
                         catch (Exception e)
                         {
-                            Log.Debug(e.Message, e);
+                            Debug.WriteLine(e.Message);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Debug(e.Message, e);
+                    Debug.WriteLine(e.Message);
                 }
                 foreach (var obj in toDispose)
                 {
-                    Common.Util.DisposeObject(obj);
+                    // TODO??? Common.Util.DisposeObject(obj);
                 }
             }
             _farTileTextures = null;
@@ -1056,17 +1084,17 @@ namespace F4Utils.Terrain
                         }
                         catch (Exception e)
                         {
-                            Log.Debug(e.Message, e);
+                            Debug.WriteLine(e.Message);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Debug(e.Message, e);
+                    Debug.WriteLine(e.Message);
                 }
                 foreach (var obj in toDispose)
                 {
-                    Common.Util.DisposeObject(obj);
+                    //TODO ?? Common.Util.DisposeObject(obj);
                 }
             }
             _nearTileTextures = null;
@@ -1090,17 +1118,17 @@ namespace F4Utils.Terrain
                         }
                         catch (Exception e)
                         {
-                            Log.Debug(e.Message, e);
+                            Debug.WriteLine(e.Message);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Debug(e.Message, e);
+                    Debug.WriteLine(e.Message);
                 }
                 foreach (var obj in toDispose)
                 {
-                    Common.Util.DisposeObject(obj);
+                    //TODO ??? Common.Util.DisposeObject(obj);
                 }
             }
 
@@ -1127,7 +1155,7 @@ namespace F4Utils.Terrain
             /// <returns>a String containing a textual representation of this object.</returns>
             public override string ToString()
             {
-                return (Common.Serialization.Util.ToRawBytes(this));
+                return chunkXIndex + ", " + chunkYIndex ;//TODO ?? (Common.Serialization.Util.ToRawBytes(this));
             }
 
             /// <summary>

@@ -12,6 +12,7 @@ namespace F4Utils.Terrain
         public static TheaterDotMapFileInfo ReadTheaterDotMapFile(string theaterDotMapFilePath)
         {
             if (String.IsNullOrEmpty(theaterDotMapFilePath)) throw new ArgumentNullException("theaterMapFilePath");
+			theaterDotMapFilePath = theaterDotMapFilePath.Replace('\\', Path.DirectorySeparatorChar);
             var fileInfo = new FileInfo(theaterDotMapFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(theaterDotMapFilePath);
 
@@ -64,15 +65,15 @@ namespace F4Utils.Terrain
             mapInfo.flags = 0;
             mapInfo.baseLong = 119.1148778F;
             mapInfo.baseLat = 33.775918333F;
-            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 4))
+            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 4)+4)
             {
                 mapInfo.flags = BitConverter.ToUInt32(bytesRead, (int) (1056 + ((mapInfo.NumLODs - 1)*8) + 4));
             }
-            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 8))
+            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 8)+4)
             {
                 mapInfo.baseLong = BitConverter.ToSingle(bytesRead, (int) (1056 + ((mapInfo.NumLODs - 1)*8) + 8));
             }
-            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 12))
+            if (bytesRead.Length >= (1056 + ((mapInfo.NumLODs - 1)*8) + 12)+4)
             {
                 mapInfo.baseLat = BitConverter.ToSingle(bytesRead, (int) (1056 + ((mapInfo.NumLODs - 1)*8) + 12));
             }
@@ -82,6 +83,7 @@ namespace F4Utils.Terrain
         public static TextureDotBinFileInfo ReadTextureDotBinFile(string textureDotBinFilePath)
         {
             if (String.IsNullOrEmpty(textureDotBinFilePath)) throw new ArgumentNullException("textureBinFilePath");
+			textureDotBinFilePath = textureDotBinFilePath.Replace('\\', Path.DirectorySeparatorChar);
             var fileInfo = new FileInfo(textureDotBinFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(textureDotBinFilePath);
 
@@ -168,6 +170,7 @@ namespace F4Utils.Terrain
         public static FarTilesDotPalFileInfo ReadFarTilesDotPalFile(string farTilesDotPalFilePath)
         {
             if (String.IsNullOrEmpty(farTilesDotPalFilePath)) throw new ArgumentNullException("farTilesPalletePath");
+			farTilesDotPalFilePath = farTilesDotPalFilePath.Replace('\\', Path.DirectorySeparatorChar);
             var fileInfo = new FileInfo(farTilesDotPalFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(farTilesDotPalFilePath);
 
@@ -211,11 +214,12 @@ namespace F4Utils.Terrain
         public static TheaterDotLxFileInfo LoadTheaterDotLxFile(uint lodLevel, string theaterDotMapFilePath)
         {
             if (String.IsNullOrEmpty(theaterDotMapFilePath)) throw new ArgumentNullException("theaterMapFilePath");
-            var lFileInfo =
-                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "theater.L" +
+            theaterDotMapFilePath = theaterDotMapFilePath.Replace('\\', Path.DirectorySeparatorChar);
+			var lFileInfo =
+                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "THEATER.L" +
                              lodLevel);
             var oFileInfo =
-                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "theater.O" +
+                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "THEATER.O" +
                              lodLevel);
 
             var toReturn = new TheaterDotLxFileInfo

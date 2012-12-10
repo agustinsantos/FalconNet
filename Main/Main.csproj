@@ -81,26 +81,4 @@
       <Name>GwenUI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="data\skins\DefaultSkin.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\skins\OpenSans.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\skins\gwen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\skins\test16.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\config\F4os.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="data\" />
-    <Folder Include="data\skins\" />
-    <Folder Include="data\config\" />
-  </ItemGroup>
 </Project>

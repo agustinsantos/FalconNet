@@ -34,6 +34,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\ExternalLibs\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -100,6 +104,8 @@
     <Compile Include="Terrain\Structs\TheaterDotOxFlieRecord.cs" />
     <Compile Include="Terrain\Structs\TheaterDotTdfFileInfo.cs" />
     <Compile Include="Resources\F4ResourceBundleReader.cs" />
+    <Compile Include="Terrain\TerrainBrowser.cs" />
+    <Compile Include="Terrain\DataFormats.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -27,7 +27,8 @@ namespace FalconNet.Main
 		private long lastTime;
 		private bool altDown = false;
 		private GuiConfiguration conf;
-		private const string skinsPath = "data/skins/";
+		public static string FalconDirectory = @"../../../data/";
+		private readonly string skinsPath = FalconDirectory + "skins/";
 		
 		public MainGwenGui (GuiConfiguration guiConf)
             : base(1024, 768)

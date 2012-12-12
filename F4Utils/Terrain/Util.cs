@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using F4Utils.Terrain.Structs;
+using FalconNet.Common;
 
 namespace F4Utils.Terrain
 {
@@ -12,7 +13,7 @@ namespace F4Utils.Terrain
         public static TheaterDotMapFileInfo ReadTheaterDotMapFile(string theaterDotMapFilePath)
         {
             if (String.IsNullOrEmpty(theaterDotMapFilePath)) throw new ArgumentNullException("theaterMapFilePath");
-			theaterDotMapFilePath = theaterDotMapFilePath.Replace('\\', Path.DirectorySeparatorChar);
+			theaterDotMapFilePath = theaterDotMapFilePath.GetOSPath().ToLowerInvariant();
             var fileInfo = new FileInfo(theaterDotMapFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(theaterDotMapFilePath);
 
@@ -83,7 +84,7 @@ namespace F4Utils.Terrain
         public static TextureDotBinFileInfo ReadTextureDotBinFile(string textureDotBinFilePath)
         {
             if (String.IsNullOrEmpty(textureDotBinFilePath)) throw new ArgumentNullException("textureBinFilePath");
-			textureDotBinFilePath = textureDotBinFilePath.Replace('\\', Path.DirectorySeparatorChar);
+			textureDotBinFilePath = textureDotBinFilePath.GetOSPath().ToLowerInvariant();
             var fileInfo = new FileInfo(textureDotBinFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(textureDotBinFilePath);
 
@@ -170,7 +171,7 @@ namespace F4Utils.Terrain
         public static FarTilesDotPalFileInfo ReadFarTilesDotPalFile(string farTilesDotPalFilePath)
         {
             if (String.IsNullOrEmpty(farTilesDotPalFilePath)) throw new ArgumentNullException("farTilesPalletePath");
-			farTilesDotPalFilePath = farTilesDotPalFilePath.Replace('\\', Path.DirectorySeparatorChar);
+			farTilesDotPalFilePath = farTilesDotPalFilePath.GetOSPath().ToLowerInvariant();
             var fileInfo = new FileInfo(farTilesDotPalFilePath);
             if (!fileInfo.Exists) throw new FileNotFoundException(farTilesDotPalFilePath);
 
@@ -214,12 +215,12 @@ namespace F4Utils.Terrain
         public static TheaterDotLxFileInfo LoadTheaterDotLxFile(uint lodLevel, string theaterDotMapFilePath)
         {
             if (String.IsNullOrEmpty(theaterDotMapFilePath)) throw new ArgumentNullException("theaterMapFilePath");
-            theaterDotMapFilePath = theaterDotMapFilePath.Replace('\\', Path.DirectorySeparatorChar);
+            theaterDotMapFilePath = theaterDotMapFilePath.GetOSPath().ToLowerInvariant();
 			var lFileInfo =
-                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "THEATER.L" +
+                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "theater.l" +
                              lodLevel);
             var oFileInfo =
-                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "THEATER.O" +
+                new FileInfo(Path.GetDirectoryName(theaterDotMapFilePath) + Path.DirectorySeparatorChar + "theater.o" +
                              lodLevel);
 
             var toReturn = new TheaterDotLxFileInfo

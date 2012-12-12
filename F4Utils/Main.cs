@@ -32,11 +32,11 @@ namespace F4Resources
 			terrain.LoadCurrentTheaterTerrainDatabase ();
 			terrain.LoadFarTilesAsync ();
 			var mapinfo = terrain.CurrentTheaterDotMapFileInfo;
-			Bitmap bitmap = new Bitmap(500, 500);
-			for (int x = 0; x < 500; x++)
-				for (int y = 0; y < 500; y++) {
-					float h = terrain.GetTerrainHeight (x, y);
-					bitmap.SetPixel(x, y, mapinfo.Pallete[(int)h]);
+			Bitmap bitmap = new Bitmap(4000, 4000);
+			for (int x = 0; x < bitmap.Width; x++)
+				for (int y = 0; y < bitmap.Height; y++) {
+					float h = terrain.GetTerrainHeight ((x)*820, (y)*820);
+					bitmap.SetPixel(y, x, mapinfo.GreenPallete[(int)h/255]);
 				}
 			bitmap.Save("Bitmap.bmp");
 		}

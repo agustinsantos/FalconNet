@@ -1,23 +1,24 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="F4Utils/Terrain/TerrainBrowser.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Common/StringSupport.cs">
     <Files>
-      <File FileName="F4Utils/Terrain/TerrainBrowser.cs" Line="807" Column="1" />
-      <File FileName="F4Utils/Terrain/Util.cs" Line="211" Column="1" />
-      <File FileName="F4Utils/Main.cs" Line="38" Column="36" />
-      <File FileName="F4Utils/Terrain/Structs/TheaterDotMapFileInfo.cs" Line="7" Column="19" />
+      <File FileName="F4Utils/Terrain/TerrainBrowser.cs" Line="788" Column="4" />
+      <File FileName="F4Utils/Main.cs" Line="38" Column="35" />
+      <File FileName="F4Utils/Terrain/DataFormats.cs" Line="12" Column="24" />
+      <File FileName="F4Utils/Terrain/Util.cs" Line="220" Column="40" />
+      <File FileName="Common/StringSupport.cs" Line="94" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Common" expanded="True" />
+          <Node name="Common" expanded="True">
+            <Node name="StringSupport.cs" selected="True" />
+          </Node>
           <Node name="F4Utils" expanded="True">
             <Node name="Terrain" expanded="True">
               <Node name="Structs" expanded="True" />
-              <Node name="TerrainBrowser.cs" selected="True" />
             </Node>
           </Node>
-          <Node name="Main" expanded="True" />
         </State>
       </Pad>
     </Pads>
@@ -51,6 +52,24 @@
       <Breakpoint file="/home/agustin/Projects/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="261" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="346" />
       <Breakpoint file="/home/agustin/Projects/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="781" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="578" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="578" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="578" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="578" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="578" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="349" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="394" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="264" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="438" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="568" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="604" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1036" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1071" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1077" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1105" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1111" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1139" />
+      <Breakpoint file="/home/santos/FalconSP/FalconNet/F4Utils/Terrain/TerrainBrowser.cs" line="1145" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>

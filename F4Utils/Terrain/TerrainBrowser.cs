@@ -57,7 +57,7 @@ namespace F4Utils.Terrain
         public void LoadCurrentTheaterTerrainDatabase()
         {
             if (_terrainLoaded || _disposing || _isDisposed) return;
-			var falconFormat = FalconDataFormats.AlliedForce;
+			var falconFormat = DetectFalconFormat();
 #if TODO 
             var falconFormat = Process.Util.DetectFalconFormat();
             if (!falconFormat.HasValue) return;
@@ -69,7 +69,7 @@ namespace F4Utils.Terrain
             var f4BasePathFI = new FileInfo(exePath);
             exePath = f4BasePathFI.DirectoryName + Path.DirectorySeparatorChar;
 #endif  
-            var exePath =  @"../../../data"; //Process.Util.GetFalconExePath();
+            var exePath = GetFalconExePath();
 			var currentTheaterTdf = GetCurrentTheaterDotTdf(exePath, falconFormat);
             if (currentTheaterTdf == null) return;
             //string theaterName = currentTheaterTdf.theaterName//DetectCurrentTheaterName();
@@ -77,7 +77,10 @@ namespace F4Utils.Terrain
             var dataPath = exePath;
             if (falconFormat == FalconDataFormats.BMS4)
             {
-                dataPath = exePath + "..\\..\\data";
+				if (new DirectoryInfo(exePath + "..\\..\\data").Exists)
+                	dataPath = exePath + "..\\..\\data";
+				else
+					dataPath = "..\\..\\..\\data";
             }
             var terrainBasePath = dataPath + Path.DirectorySeparatorChar + currentTheaterTdf.terrainDir;
             _currentTheaterTextureBaseFolderPath = terrainBasePath + Path.DirectorySeparatorChar + "texture";
@@ -520,7 +523,7 @@ namespace F4Utils.Terrain
         public string DetectCurrentTheaterName()
         {
             string theaterName = null;
-			var currentDataFormat = FalconDataFormats.AlliedForce;
+			var currentDataFormat = DetectFalconFormat();
             FileVersionInfo verInfo = null;
 #if TODO
 			var currentDataFormat = Process.Util.DetectFalconFormat();
@@ -528,7 +531,7 @@ namespace F4Utils.Terrain
 			
             if (exePath != null) verInfo = FileVersionInfo.GetVersionInfo(exePath);
 #endif         
-			var exePath =  @"../../../data/";
+			var exePath =  GetFalconExePath();
             if (currentDataFormat == FalconDataFormats.AlliedForce)
             {
                 try
@@ -616,6 +619,8 @@ namespace F4Utils.Terrain
                     theaterName = null;
                 }
             }
+			if (theaterName == null) 
+				theaterName = "korea";
             return theaterName;
         }
 
@@ -627,18 +632,17 @@ namespace F4Utils.Terrain
             var f4BaseDir = new FileInfo(exePath).DirectoryName;
             FileInfo theaterDotLstFI;
             
-            theaterDotLstFI = new FileInfo(f4BaseDir + Path.DirectorySeparatorChar + "theater.lst");
-            if (!theaterDotLstFI.Exists)
+            theaterDotLstFI = new FileInfo((f4BaseDir + Path.DirectorySeparatorChar + "theater.lst").GetOSPath());
+			if (!theaterDotLstFI.Exists)
             {
-                theaterDotLstFI =
-                    new FileInfo(f4BaseDir + Path.DirectorySeparatorChar +
-                                    "terrdata\\theaterdefinition\\theater.lst");
+				string file = f4BaseDir + Path.DirectorySeparatorChar + "terrdata\\theaterdefinition\\theater.lst";
+                theaterDotLstFI = new FileInfo(file.GetOSPath());
             }
             if (!theaterDotLstFI.Exists)
             {
-                theaterDotLstFI =
-                    new FileInfo(new DirectoryInfo(f4BaseDir).Parent.Parent.FullName + Path.DirectorySeparatorChar +
-                                    "data\\terrdata\\theaterdefinition\\theater.lst");
+				string file = new DirectoryInfo(f4BaseDir).Parent.Parent.FullName + Path.DirectorySeparatorChar +
+                                    "data\\terrdata\\theaterdefinition\\theater.lst";
+                theaterDotLstFI = new FileInfo(file.GetOSPath());
             }
 
             if (theaterDotLstFI.Exists)
@@ -649,6 +653,8 @@ namespace F4Utils.Terrain
                     while (!sw.EndOfStream)
                     {
                         var thisLine = sw.ReadLine();
+						if (thisLine.StartsWith("#"))
+							continue;
                         var tdfDetailsThisLine =
                             ReadTheaterDotTdf(f4BaseDir + Path.DirectorySeparatorChar + thisLine);
 
@@ -677,7 +683,7 @@ namespace F4Utils.Terrain
         private static TheaterDotTdfFileInfo ReadTheaterDotTdf(string path)
         {
             if (String.IsNullOrEmpty(path)) return null;
-
+			path = path.GetOSPath();
             var basePathFI = new FileInfo(path);
             if (!basePathFI.Exists) return null;
 
@@ -688,6 +694,8 @@ namespace F4Utils.Terrain
                 while (!sw.EndOfStream)
                 {
                     var thisLine = sw.ReadLine();
+					if(thisLine.StartsWith("#"))
+					   continue;
                     var thisLineTokens = thisLine.Tokenize();
                     if (thisLineTokens.Count > 0)
                     {
@@ -776,7 +784,8 @@ namespace F4Utils.Terrain
             return toReturn;
         }
 
-        public float GetTerrainHeight(float feetNorth, float feetEast)
+        public float 
+			GetTerrainHeight(float feetNorth, float feetEast)
         {
             if (!_terrainLoaded)
             {
@@ -979,6 +988,15 @@ namespace F4Utils.Terrain
             return bmpCrop;
         }
 		
+		private FalconDataFormats DetectFalconFormat()
+		{
+			return FalconDataFormats.BMS4;
+		}
+		
+		private string GetFalconExePath()
+		{
+			return @"../../../data/"; 
+		}
         /// <summary>
         ///   Private implementation of Dispose()
         /// </summary>

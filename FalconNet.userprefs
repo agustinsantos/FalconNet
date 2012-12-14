@@ -1,5 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Graphics/DrawableObj.cs">
     <Files>
       <File FileName="F4Utils/Terrain/TerrainBrowser.cs" Line="635" Column="13" />
@@ -10,11 +11,51 @@
       <File FileName="Campaign/Campaign.cs" Line="557" Column="1" />
       <File FileName="Graphics/draw2d.cs" Line="124" Column="29" />
       <File FileName="Graphics/DrawableObj.cs" Line="5" Column="1" />
+=======
+<<<<<<< HEAD
+  <MonoDevelop.Ide.Workbench ActiveDocument="Graphics/RenderOW.cs">
+    <Files>
+      <File FileName="F4Utils/Terrain/TerrainBrowser.cs" Line="807" Column="1" />
+      <File FileName="F4Utils/Terrain/Util.cs" Line="211" Column="1" />
+      <File FileName="F4Utils/Main.cs" Line="38" Column="36" />
+      <File FileName="F4Utils/Terrain/Structs/TheaterDotMapFileInfo.cs" Line="7" Column="19" />
+      <File FileName="Graphics/Edge.cs" Line="113" Column="10" />
+      <File FileName="Graphics/RenderOW.cs" Line="3311" Column="48" />
+      <File FileName="Graphics/Render2D.cs" Line="4" Column="1" />
+      <File FileName="Graphics/Render3D.cs" Line="3" Column="1" />
+      <File FileName="Graphics/Tpost.cs" Line="39" Column="1" />
+      <File FileName="Graphics/Rviewpnt.cs" Line="35" Column="53" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Common/StringSupport.cs">
+    <Files>
+      <File FileName="F4Utils/Terrain/TerrainBrowser.cs" Line="788" Column="4" />
+      <File FileName="F4Utils/Main.cs" Line="38" Column="35" />
+      <File FileName="F4Utils/Terrain/DataFormats.cs" Line="12" Column="24" />
+      <File FileName="F4Utils/Terrain/Util.cs" Line="220" Column="40" />
+      <File FileName="Common/StringSupport.cs" Line="94" Column="1" />
+>>>>>>> d4413acaaeaa66c8fe2d5c0ea03acfb576cd3872
+>>>>>>> db1bbd07e5b2091c064e264748a0cf3d89af1e27
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+<<<<<<< HEAD
           <Node name="Graphics" expanded="True" selected="True" />
+=======
+<<<<<<< HEAD
+          <Node name="Graphics" expanded="True">
+            <Node name="RenderOW.cs" selected="True" />
+=======
+          <Node name="Common" expanded="True">
+            <Node name="StringSupport.cs" selected="True" />
+          </Node>
+          <Node name="F4Utils" expanded="True">
+            <Node name="Terrain" expanded="True">
+              <Node name="Structs" expanded="True" />
+            </Node>
+>>>>>>> d4413acaaeaa66c8fe2d5c0ea03acfb576cd3872
+          </Node>
+>>>>>>> db1bbd07e5b2091c064e264748a0cf3d89af1e27
         </State>
       </Pad>
     </Pads>

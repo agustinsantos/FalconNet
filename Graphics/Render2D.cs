@@ -1,20 +1,18 @@
 using System;
 using FalconNet.Common;
+using DWORD = System.Int16;
 
 namespace FalconNet.Graphics
 {
-#if TODO
-public class TwoDVertex:  MPRVtxTexClr_t {
-/* MPRVtxTexClr_t provides:
+
+public class TwoDVertex {
 	float	x, y;
 	float	r, g, b, a;	
 	float	u, v, q; 
 
-   Then I add:
-*/
 	DWORD	clipFlag;
-} ;
-#endif
+} 
+
 #if TODO
 	public class Render2D : VirtualDisplay
 	{

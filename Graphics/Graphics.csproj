@@ -50,6 +50,10 @@
     <Compile Include="StateStack.cs" />
     <Compile Include="WxCell.cs" />
     <Compile Include="Device.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="RenderOW.cs" />
+    <Compile Include="Tpost.cs" />
+    <Compile Include="Rviewpnt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

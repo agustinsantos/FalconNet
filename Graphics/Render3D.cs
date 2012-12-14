@@ -1,21 +1,19 @@
 using System;
+using DWORD = System.Int16;
 
 namespace FalconNet.Graphics
 {
-#if TODO
+
 	public class ThreeDVertex: TwoDVertex
 	{
-		/* TwoDVertex provides:
 		float	x, y;
 		float	r, g, b, a;	
 		float	u, v, q; 
 		DWORD	clipFlag;
-	
-	   Then I add:
-	*/
+
 		float	csX, csY, csZ;		// Camera space coordinates
 	};
-
+	#if TODO
 	public class Render3D : Render2D
 	{
 

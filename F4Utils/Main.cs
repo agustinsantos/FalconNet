@@ -7,6 +7,7 @@ using F4Utils.Campaign;
 using System.Text;
 using System.Diagnostics;
 using F4Utils.Terrain;
+using FalconNet.Campaign;
 
 namespace F4Resources
 {
@@ -19,26 +20,60 @@ namespace F4Resources
 			TextWriterTraceListener tr1 = new TextWriterTraceListener (System.Console.Out);
 			Debug.Listeners.Add (tr1);
 			Debug.WriteLine ("FalconNet Converter started...!");
-			ReadTerrain ();
-			//ConvertResources(FalconDirectory+"/art/resource/music.idx");
+			ReadTHR (FalconDirectory + "/campaign/save/korea.thr");
+			//ReadTerrain ();
+			//ConvertResources(FalconDirectory+"/art/resource/campbg.idx");
 			//ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
 			//ReadCampaign (FalconDirectory + "/campaign/save/Save-Day 1 13 19 39.cam", 71);
 			Debug.WriteLine ("FalconNet Converter has finished...!");
 		}
-		
+
+		public static void ReadTHR (string filename)
+		{
+			CampTerrStatic.LoadTheaterTerrain (filename);
+			Bitmap bitmap = new Bitmap (CampTerrStatic.Map_Max_X, CampTerrStatic.Map_Max_Y);
+			for (short x = 0; x < bitmap.Width; x++)
+				for (short y = 0; y < bitmap.Height; y++) {
+					CoverType c = CampTerrStatic.GetCover ((short) x, (short)(bitmap.Height- y));
+				
+					switch (c) {
+					case CoverType.Water:
+						bitmap.SetPixel (x, y, Color.Aquamarine);
+						break;
+					case CoverType.Bog:
+					case CoverType.Barren:
+					case CoverType.Plain:
+						bitmap.SetPixel (x, y, Color.DarkOliveGreen);
+						break;
+					case CoverType.Brush:
+					case CoverType.LightForest:
+						bitmap.SetPixel (x, y, Color.Peru);
+						break;
+					case CoverType.HeavyForest:
+						bitmap.SetPixel (x, y, Color.ForestGreen);
+						break;
+					case CoverType.Urban:
+					default:
+						bitmap.SetPixel (x, y, Color.DarkKhaki);
+						break;
+					}
+				}
+			bitmap.Save ("Bitmap.bmp");
+		}
+
 		public static void ReadTerrain ()
 		{
 			TerrainBrowser terrain = new TerrainBrowser (true);
 			terrain.LoadCurrentTheaterTerrainDatabase ();
 			terrain.LoadFarTilesAsync ();
 			var mapinfo = terrain.CurrentTheaterDotMapFileInfo;
-			Bitmap bitmap = new Bitmap(4000, 4000);
+			Bitmap bitmap = new Bitmap (4000, 4000);
 			for (int x = 0; x < bitmap.Width; x++)
 				for (int y = 0; y < bitmap.Height; y++) {
-					float h = terrain.GetTerrainHeight ((x)*820, (y)*820);
-					bitmap.SetPixel(y, x, mapinfo.GreenPallete[(int)h/255]);
+					float h = terrain.GetTerrainHeight ((x) * 820, (y) * 820);
+					bitmap.SetPixel (y, x, mapinfo.GreenPallete [(int)h / 255]);
 				}
-			bitmap.Save("Bitmap.bmp");
+			bitmap.Save ("Bitmap.bmp");
 		}
 		
 		public static void ReadClassData (string filename)
@@ -139,7 +174,7 @@ namespace F4Resources
 					Debug.WriteLine ("PLT data:");
 					Debug.WriteLine ("\tNum Pilots  {0}", plt.NumPilots);
 					if (plt.NumPilots > 0)
-						foreach (PilotInfoClass pilot in plt.PilotInfo)
+						foreach (F4Utils.Campaign.PilotInfoClass pilot in plt.PilotInfo)
 							if (pilot.photo_id != 0 || pilot.voice_id != 0 || pilot.usage != 0)
 								Debug.WriteLine (string.Format ("\t\tPilot  {0}, {1}, {2}", pilot.usage, pilot.photo_id, pilot.voice_id));
 					break;

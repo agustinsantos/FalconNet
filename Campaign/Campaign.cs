@@ -553,6 +553,17 @@ namespace FalconNet.Campaign
 
 		public static byte[] ReadCampFile (string filename, string ext)
 		{
+			FileInfo fileInfo = new FileInfo(filename.GetOSPath());
+			var bytesToRead = (int) fileInfo.Length;
+            var bytesRead = new byte[bytesToRead];
+
+            using (var stream = fileInfo.OpenRead())
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Read(bytesRead, 0, bytesToRead);
+                stream.Close();
+            }
+			return bytesRead;
 #if TODO
 			int 		size,		index;
 
@@ -614,7 +625,6 @@ namespace FalconNet.Campaign
 
 			return null;
 #endif
-		throw new NotImplementedException();
 		}
 
 		public static void EndReadCampFile ()

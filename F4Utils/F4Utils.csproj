@@ -113,5 +113,9 @@
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Campaign\Campaign.csproj">
+      <Project>{B822ED47-038A-4E04-8BA8-5742C69ADF6E}</Project>
+      <Name>Campaign</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

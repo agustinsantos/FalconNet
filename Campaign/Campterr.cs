@@ -2,6 +2,7 @@
 using CellDataType=System.Byte;
 using System.Diagnostics;
 using GridIndex = System.Int16;
+using CellData=System.UInt16;
 
 namespace FalconNet.Campaign
 {
@@ -38,9 +39,9 @@ namespace FalconNet.Campaign
 		private static CellDataType[] 	TheaterCells = null;
 		private static byte	EastLongitude;
 		private static byte	SouthLatitude;
-		private static float   Latitude;
-		private static float    Longitude;
-		private static float    CellSizeInKilometers;
+		private static float Latitude;
+		private static float Longitude;
+		private static float CellSizeInKilometers;
 		
 		public static void InitTheaterTerrain ()
 		{
@@ -73,8 +74,8 @@ namespace FalconNet.Campaign
 			data_ptr += sizeof(short);
 
 #if DEBUG
-			Debug.Assert(Map_Max_X == CampaignClass.TheCampaign.TheaterSizeX);
-			Debug.Assert(Map_Max_Y == CampaignClass.TheCampaign.TheaterSizeY);
+			//TODO Debug.Assert(Map_Max_X == CampaignClass.TheCampaign.TheaterSizeX);
+			//TODO Debug.Assert(Map_Max_Y == CampaignClass.TheCampaign.TheaterSizeY);
 #endif
 
 			InitTheaterTerrain ();
@@ -82,8 +83,7 @@ namespace FalconNet.Campaign
 			TheaterCells = new CellDataType[sizeof(CellDataType) * Map_Max_X * Map_Max_Y];
 			//TODO copy data to TheaterCells
 			//memcpy (TheaterCells, data_ptr, sizeof (CellDataType) * Map_Max_X * Map_Max_Y);
-			throw new NotImplementedException(); 
-			
+			Array.Copy(data,data_ptr, TheaterCells, 0,Map_Max_X * Map_Max_Y);
 			data = null;
 			return true;
 		}
@@ -101,13 +101,13 @@ namespace FalconNet.Campaign
 		public static CellData GetCell (GridIndex x, GridIndex y)
 		{
 			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return new CellData (TheaterCells [x * Map_Max_Y + y]);
+			return (CellData)(TheaterCells [x * Map_Max_Y + y]);
 		}
 
 		public static ReliefType GetRelief (GridIndex x, GridIndex y)
 		{
 			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (ReliefType)((TheaterCells [x * Map_Max_Y + y] & ReliefMask) >> ReliefShift);
+			return (ReliefType)((TheaterCells [x * Map_Max_Y + y] & CampTerrStatic.ReliefMask) >> CampTerrStatic.ReliefShift);
 		}
 
 		public static CoverType GetCover (GridIndex x, GridIndex y)
@@ -130,5 +130,4 @@ namespace FalconNet.Campaign
 			return (char)((TheaterCells [x * Map_Max_Y + y] & RailMask) >> RailShift);
 		}
 	}
-
 }

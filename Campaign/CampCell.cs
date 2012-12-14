@@ -1,44 +1,65 @@
 using System;
+using CellData=System.UInt16;
 
 namespace FalconNet.Campaign
 {
-	public struct CellData
-	{
-		public byte val;
-		public CellData(byte v)
-		{
-			val = v;
-		}
-	}
-	
 	public static class CampCell
 	{
-		public static void SetReliefType (CellData TheCell, ReliefType NewReliefType)
-		{throw new NotImplementedException();}
+		public static void SetReliefType (ref CellData TheCell, ReliefType NewReliefType)
+		{
+			CellData Temp = (CellData)NewReliefType;
+		
+			TheCell = (CellData)((TheCell & ~CampTerrStatic.ReliefMask) |
+			                     ((Temp << CampTerrStatic.ReliefShift) & CampTerrStatic.ReliefMask));
+		}
 
-        public static void SetGroundCover(CellData TheCell, CoverType NewGroundCover)
-		{throw new NotImplementedException();}
+		public static void SetGroundCover (ref CellData TheCell, CoverType NewGroundCover)
+		{
+			CellData Temp = (CellData)NewGroundCover;
 
-        public static void SetRoadCell(CellData TheCell, sbyte Road)
-		{throw new NotImplementedException();}
+			TheCell = (CellData)((TheCell & ~CampTerrStatic.GroundCoverMask) | 
+			                         ((Temp << CampTerrStatic.GroundCoverShift) & CampTerrStatic.GroundCoverMask));
+		}
 
-        public static void SetRailCell(CellData TheCell, sbyte Rail)
-		{throw new NotImplementedException();}
+		public static void SetRoadCell (ref CellData TheCell, byte Road)
+		{
+			CellData Temp = (CellData)Road;
+		
+			TheCell = (CellData)((TheCell & ~CampTerrStatic.RoadMask) | 
+			                     ((Temp << CampTerrStatic.RoadShift) & CampTerrStatic.RoadMask));
+		}
 
-        public static char GetAltitudeCode(CellData TheCell)
-		{throw new NotImplementedException();}
+		public static void SetRailCell (CellData TheCell, byte Rail)
+		{
+			CellData Temp = (CellData)Rail;
+	
+			TheCell = (CellData)((TheCell & ~CampTerrStatic.RailMask) | ((Temp << CampTerrStatic.RailShift) & CampTerrStatic.RailMask));
+		}
 
-        public static ReliefType GetReliefType(CellData TheCell)
-		{throw new NotImplementedException();}
+		public static char GetAltitudeCode (CellData TheCell)
+		{
+			throw new NotImplementedException ();
+		}
 
-        public static CoverType GetGroundCover(CellData TheCell)
-		{throw new NotImplementedException();}
+		public static ReliefType GetReliefType (CellData TheCell)
+	   {
+	   		return (ReliefType)((TheCell & CampTerrStatic.ReliefMask) >> CampTerrStatic.ReliefShift);
+	   }
 
-        public static sbyte GetRoadCell(CellData TheCell)
-		{throw new NotImplementedException();}
+		public static CoverType GetGroundCover (CellData TheCell)
+		{
+			return (CoverType)((TheCell & CampTerrStatic.GroundCoverMask) >> CampTerrStatic.GroundCoverShift);
+		}
 
-        public static sbyte GetRailCell(CellData TheCell)
-		{throw new NotImplementedException();}
+		public static byte GetRoadCell (CellData TheCell)
+		{
+			return (byte)((TheCell & CampTerrStatic.RoadMask) >> CampTerrStatic.RoadShift);
+		}
+
+		public static byte GetRailCell (CellData TheCell)
+		{
+			return (byte)((TheCell & CampTerrStatic.RailMask) >> CampTerrStatic.RailShift);
+		}
 	}
 }
 

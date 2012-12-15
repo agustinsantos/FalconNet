@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using FalconNet.Common;
-
+using DWORD = System.Int16;
 namespace FalconNet.Graphics
 {
     public struct FontDataType
@@ -988,9 +988,9 @@ int width = 0;
 
 
         // Functions which must be provided by all derived classes
-        protected abstract void Render2DPoint(float x1, float y1);
+        public abstract void Render2DPoint(float x1, float y1);
 
-        protected abstract void Render2DLine(float x1, float y1, float x2, float y2);
+        public abstract void Render2DLine(float x1, float y1, float x2, float y2);
 
         // Functions which should be provided by all derived classes
         protected virtual void Render2DTri(float x1, float y1, float x2, float y2, float x3, float y3)

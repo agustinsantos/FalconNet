@@ -108,7 +108,7 @@ namespace FalconNet.Graphics
 		protected DrawClass				drawClassID;
 
 		// NOTE:  Each instance can be managed by only ONE OBJECT LIST
-		protected  ObjectDisplayList	parentList;
+		protected ObjectDisplayList	parentList;
 		protected DrawableObject		prev;
 		protected DrawableObject		next;
 

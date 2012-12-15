@@ -3,15 +3,6 @@ using System.IO;
 
 namespace FalconNet.Common
 {
-	public struct DWORD
-	{
-		public DWORD(uint v)
-		{
-			val = v;
-		}
-		public UInt32 val;
-	}
-	
 	
 	public struct COLORREF {}
 	public class SOUND_RES {}

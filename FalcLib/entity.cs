@@ -4,7 +4,8 @@ using FalconNet.Campaign;
 using FalconNet.VU;
 using System.IO;
 using System.Diagnostics;
-
+using DWORD = System.Int16;
+ 
 namespace FalconNet.FalcLib
 {
     // ==================================
@@ -430,10 +431,10 @@ namespace FalconNet.FalcLib
 
             Falcon4ClassTable[F4GroupType].vuClassData.managementDomain_ = VU_GLOBAL_DOMAIN;
             Falcon4ClassTable[F4GroupType].vuClassData.global_ = TRUE;
-            Falcon4ClassTable[F4GroupType].vuClassData.persistent_ = FALSE;
+            Falcon4ClassTable[F4GroupType].vuClassData.persistent_ = false;
             Falcon4ClassTable[F4GameType].vuClassData.managementDomain_ = VU_GLOBAL_DOMAIN;
             Falcon4ClassTable[F4GameType].vuClassData.global_ = TRUE;
-            Falcon4ClassTable[F4GameType].vuClassData.persistent_ = FALSE;
+            Falcon4ClassTable[F4GameType].vuClassData.persistent_ = false;
 
             Falcon4ClassTable[F4FlyingEyeType].vuClassData.fineUpdateMultiplier_ = 0.2F;
 #endif

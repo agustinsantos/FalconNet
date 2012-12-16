@@ -1,4 +1,5 @@
 using System;
+using DWORD = System.Int16;
 
 namespace FalconNet.Graphics
 {
@@ -14,12 +15,12 @@ namespace FalconNet.Graphics
 	{
 		public  DrawableObject (float s)
 		{
-			drawClassID = Default;
+            drawClassID = DrawClass.Default;
 			scale = s;
 			parentList = null;
 			prev = next = null;
 		}
-		//TODO public  virtual ~DrawableObject()	{ ShiAssert( parentList == NULL ) };
+		//TODO public  virtual ~DrawableObject()	{ Debug.Assert( parentList == null ) };
 
 		public  enum DrawClass
 		{
@@ -85,7 +86,8 @@ namespace FalconNet.Graphics
 		{
 		}
 
-		public  virtual void Draw (RenderOTW renderer, int LOD);
+        public virtual void Draw(RenderOTW renderer, int LOD)
+        { throw new NotImplementedException(); }
 
 		public  virtual void Draw (Render3D r)
 		{
@@ -109,13 +111,13 @@ namespace FalconNet.Graphics
 
 		// NOTE:  Each instance can be managed by only ONE OBJECT LIST
 		protected ObjectDisplayList	parentList;
-		protected DrawableObject		prev;
-		protected DrawableObject		next;
+        public DrawableObject prev;
+		public DrawableObject		next;
 
 		// NOTE:  This field is set by our parent list during UpdateMetrics
-		protected float					distance;
+        public float distance;
   
-		virtual	void SetParentList (ObjectDisplayList list)
+		protected virtual	void SetParentList (ObjectDisplayList list)
 		{
 			parentList = list;
 		}

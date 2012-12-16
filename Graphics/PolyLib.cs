@@ -2,7 +2,7 @@ using System;
 
 namespace FalconNet.Graphics
 {
-#if TODO
+
 	public enum PpolyType
 	{
 		PointF = 0,
@@ -40,36 +40,36 @@ namespace FalconNet.Graphics
 		PpolyTypeNum
 	};
 
-//typedef Trotation	Pmatrix;
+    //typedef Trotation	Pmatrix;
 
-//typedef Tpoint		Tpoint;
+    //typedef Tpoint		Tpoint;
 
 	public struct	Pcolor
 	{
 		public float	r, g, b, a;
-	};
+	}
 
 	public struct	Pnormal
 	{
 		public float	i, j, k;
-	};
+	}
 
 	public struct	Ptexcoord
 	{
 		public float	u, v;
-	};
+	}
 
 	//typedef float	Pintensity;
 	public struct	Pintensity
 	{
 		public float v;
-	};
+	}
 	
 	public struct	PclipInfo
 	{
 		public UInt32	clipFlag;			// Which edges this point is outside
 		public float	csX, csY, csZ;		// Camera space coordinates of this point
-	};
+	}
 
 
 	/********************************************\
@@ -79,74 +79,74 @@ namespace FalconNet.Graphics
 	{
 		public PpolyType	type;
 		public int			nVerts;
-		public int			*xyz;		// Indexes XformedPosPool
-	};
+		public int[]		xyz;		// Indexes XformedPosPool
+	}
 
 	public  class PrimPointFC: Prim
 	{
 		public int			rgba;		// Indexes ColorPool
-	};
+	}
 
 	public class PrimLineFC: Prim
 	{
 		public int			rgba;		// Indexes ColorPool
-	};
+	}
 
 	public class PrimLtStr: Prim
 	{
 		public int			rgba;			// Indexes ColorPool
 		public int			rgbaBack;		// Indexes ColorPool (-1 means omnidirectional -- could subclass instead)
 		public float		i, j, k;		// Direction vector (negative dot with eyepos means use back color)
-	};
+	}
 
 	public class Poly:   Prim
 	{
 		float		A, B, C, D;	// Polygon plane equation for back face culling
-	}  ;
+	}  
 
 	public class PolyFC:   Poly
 	{
 		int			rgba;		// Indexes ColorPool
-	}  ;
+	}  
 
 	public class PolyVC:   Poly
 	{
-		int			*rgba;		// Indexes ColorPool
-	}  ;
+		int[] rgba;		// Indexes ColorPool
+	}  
 
 	public class PolyFCN:   PolyFC
 	{
-		int			I;			// Indexes IntesityPool
-	}  ;
+		int	I;			// Indexes IntesityPool
+	}  
 
 	public class PolyVCN:   PolyVC
 	{
-		int			*I;			// Indexes IntesityPool
-	}  ;
+		int[]   I;			// Indexes IntesityPool
+	}  
 
 	public class PolyTexFC:   PolyFC
 	{
 		int			texIndex;	// Indexes the local texture id table
-		Ptexcoord	*uv;
-	}  ;
+		Ptexcoord[] uv;
+	} 
 
 	public class PolyTexVC:   PolyVC
 	{
 		int			texIndex;	// Indexes the local texture id table
-		Ptexcoord	*uv;
-	}  ;
+		Ptexcoord[] uv;
+	}  
 
 	public class PolyTexFCN:   PolyFCN
 	{
 		int			texIndex;	// Indexes the local texture id table
-		Ptexcoord	*uv;
-	}  ;
+		Ptexcoord[] uv;
+	}  
 
 	public class PolyTexVCN:   PolyVCN
 	{
 		int			texIndex;	// Indexes the local texture id table
-		Ptexcoord	*uv;
-	}  ;
+		Ptexcoord[] uv;
+	}  
 	
 	internal struct ClipVert
 	{
@@ -154,7 +154,7 @@ namespace FalconNet.Graphics
 		int			rgba;
 		int			I;
 		Ptexcoord	uv;
-	};
+	}
 	
 	public static class PolyLib
 	{
@@ -301,6 +301,5 @@ void	RestorePolyTexFCN( PolyTexFCN *prim, BYTE *baseAddress );
 void	RestorePolyTexVCN( PolyTexVCN *prim, BYTE *baseAddress );
 #endif
 	}
-#endif
 }
 

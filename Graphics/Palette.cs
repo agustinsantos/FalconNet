@@ -252,7 +252,7 @@ namespace FalconNet.Graphics
 			b = light.b;
 		
 			// Special case for NVG mode
-			if (TheTimeOfDay.GetNVGmode()) {
+			if (CTimeOfDay.TheTimeOfDay.GetNVGmode()) {
 				r = 0.0f;
 				g = NVG_LIGHT_LEVEL;
 				b = 0.0f;
@@ -289,7 +289,7 @@ namespace FalconNet.Graphics
 				}
 			} else {
 				// TODO: Blend these in gradually
-				if (TheTimeOfDay.GetNVGmode()) {
+				if (CTimeOfDay.TheTimeOfDay.GetNVGmode()) {
 					*to	= 0xFF00FF00;	to++;
 					*to	= 0xFF00FF00;	to++;
 					*to	= 0xFF00FF00;	to++;
@@ -331,7 +331,7 @@ namespace FalconNet.Graphics
 			b = light.b;
 		
 			// Special case for NVG mode
-			if (TheTimeOfDay.GetNVGmode()) {
+			if (CTimeOfDay.TheTimeOfDay.GetNVGmode()) {
 				r = 0.0f;
 				g = NVG_LIGHT_LEVEL;
 				b = 0.0f;
@@ -359,7 +359,7 @@ namespace FalconNet.Graphics
 			UpdateMPR( pal );
 		}
 #endif
-	};
+    };
 
 }
 

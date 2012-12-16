@@ -3,32 +3,33 @@ using FalconNet.Common;
 
 namespace FalconNet.Graphics
 {
-	public struct CellState {
-		public byte	BaseAltitude;	// hundreds of feet MSL
-		public byte	Type;			// cloud tile number (or thickness for OVC)
-	};
+    public struct CellState
+    {
+        public byte BaseAltitude;	// hundreds of feet MSL
+        public byte Type;			// cloud tile number (or thickness for OVC)
+    };
 
 
-public class WeatherMap 
-	{
-#if TODO
-		// The global weather database used by everyone
-public static WeatherMap  TheWeather = new WeatherMap();
+    public class WeatherMap
+    {
 
-// Some handy constants which bound the weather environment
-public static float				SKY_ROOF_HEIGHT	= 30000.0f;
-public static float				SKY_ROOF_RANGE= 200000.0f;
-public static float				SKY_MAX_HEIGHT= 70000.0f;
-		
-public const int LAST_CLEAR_TYPE	=	2;
-public const int FIRST_OVC_TYPE	=	4;
-public const int  MAX_CLOUD_TYPE	=	80;		// Maximum value of cloud type
-public const float 	CLOUD_CELL_SIZE		= 8.0f;	// How big is a cloud tile (in KM)
+        // The global weather database used by everyone
+        public static WeatherMap TheWeather = new WeatherMap();
 
-// Conversion factor from BYTE base elevation to world space elevation (Z down)
-public const float WxAltScale		= -50.0f;
-public const float WxThickScale		= -250.0f;
-  
+        // Some handy constants which bound the weather environment
+        public const float SKY_ROOF_HEIGHT = 30000.0f;
+        public const float SKY_ROOF_RANGE = 200000.0f;
+        public const float SKY_MAX_HEIGHT = 70000.0f;
+
+        public const int LAST_CLEAR_TYPE = 2;
+        public const int FIRST_OVC_TYPE = 4;
+        public const int MAX_CLOUD_TYPE = 80;		// Maximum value of cloud type
+        public const float CLOUD_CELL_SIZE = 8.0f;	// How big is a cloud tile (in KM)
+
+        // Conversion factor from BYTE base elevation to world space elevation (Z down)
+        public const float WxAltScale = -50.0f;
+        public const float WxThickScale = -250.0f;
+#if TODO 
 	public WeatherMap(   )
 		{
 	w			= h = 0;
@@ -163,7 +164,7 @@ public const float WxThickScale		= -250.0f;
 			{
     float vr  = RainAt(r, c);
     vr = 1 - vr;
-    return max(vr, TheTimeOfDay.GetMinVisibility());
+    return max(vr, CTimeOfDay.TheTimeOfDay.GetMinVisibility());
 }
 		
 	public bool  LightningAt(uint r, uint c){
@@ -193,7 +194,7 @@ public const float WxThickScale		= -250.0f;
 	public float		xOffset;
 	public float		yOffset;
 #endif
-}
+    }
 
 }
 

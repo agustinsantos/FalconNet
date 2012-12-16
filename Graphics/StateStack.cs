@@ -1,10 +1,13 @@
 using System;
+using Pintensity = System.Single;
+using Pmatrix = FalconNet.Graphics.Trotation;
 
 namespace FalconNet.Graphics
 {
+
+    public struct StateStackFrame
+    {
 #if TODO
-	public struct StateStackFrame
-	{
 		public Tpoint						*XformedPosPool;
 		public Pintensity					*IntensityPool;
 		public PclipInfo					*ClipInfoPool;
@@ -17,26 +20,28 @@ namespace FalconNet.Graphics
 		public ObjectLOD		*CurrentLOD;
 		public DrawPrimFp			*DrawPrimJumpTable;
 		public TransformFp					Transform;
-	}
+#endif
+    }
 
-	public class StateStackClass
-	{
-		// The one and only state stack.  This would need to be replaced
-		// by pointers to instances of StateStackClass passed to each call
-		// if more than one stack were to be simultaniously maintained.
-		public static StateStackClass		TheStateStack;
-		public delegate void TransformFp (Tpoint *p,int n);
+    public class StateStackClass
+    {
+        // The one and only state stack.  This would need to be replaced
+        // by pointers to instances of StateStackClass passed to each call
+        // if more than one stack were to be simultaniously maintained.
+        public static StateStackClass TheStateStack;
 
-		public const int MAX_STATE_STACK_DEPTH = 8;	// Arbitrary
-		public const int MAX_SLOT_AND_DYNAMIC_PER_OBJECT = 64;	// Arbitrary
-		public const int MAX_TEXTURES_PER_OBJECT = 128;	// Arbitrary
-		public const int MAX_CLIP_PLANES = 6;	// 5 view volume, plus 1 extra
-		public const int MAX_VERTS_PER_POLYGON = 32;	// Arbitrary
-		public const int MAX_VERT_POOL_SIZE = 4096;	// Arbitrary
-		public const int MAX_VERTS_PER_CLIPPED_POLYGON = MAX_VERTS_PER_POLYGON + MAX_CLIP_PLANES;
-		public const int MAX_CLIP_VERTS = 2 * MAX_CLIP_PLANES;
-		public const int MAX_VERTS_PER_OBJECT_TREE = MAX_VERT_POOL_SIZE - MAX_VERTS_PER_POLYGON - MAX_CLIP_VERTS;
+        public delegate void TransformFp(Tpoint[] p, int n);
 
+        public const int MAX_STATE_STACK_DEPTH = 8;	// Arbitrary
+        public const int MAX_SLOT_AND_DYNAMIC_PER_OBJECT = 64;	// Arbitrary
+        public const int MAX_TEXTURES_PER_OBJECT = 128;	// Arbitrary
+        public const int MAX_CLIP_PLANES = 6;	// 5 view volume, plus 1 extra
+        public const int MAX_VERTS_PER_POLYGON = 32;	// Arbitrary
+        public const int MAX_VERT_POOL_SIZE = 4096;	// Arbitrary
+        public const int MAX_VERTS_PER_CLIPPED_POLYGON = MAX_VERTS_PER_POLYGON + MAX_CLIP_PLANES;
+        public const int MAX_CLIP_VERTS = 2 * MAX_CLIP_PLANES;
+        public const int MAX_VERTS_PER_OBJECT_TREE = MAX_VERT_POOL_SIZE - MAX_VERTS_PER_POLYGON - MAX_CLIP_VERTS;
+#if TODO
 		public StateStackClass ()
 		{
 			stackDepth			= 0;
@@ -223,7 +228,7 @@ namespace FalconNet.Graphics
 		// but it's a little messy to use a context here, and besides,
 		// Falcon can count on the RendererOTW to set it (right?)
 		// Therefore:  this should be normally off (turned on only for testing)
-		#if !NOTHING
+#if !NOTHING
 				if (g_nFogRenderState & 0x02)
 				{
 					UInt32 c;
@@ -232,7 +237,7 @@ namespace FalconNet.Graphics
 					c |= FloatToInt32(color.b * 255.9f) << 16;
 					context.SetState( MPR_STA_FOG_COLOR, c );
 				}
-		#endif
+#endif
 			}
 		}
 
@@ -448,7 +453,7 @@ namespace FalconNet.Graphics
 				ClipInfoPoolNext.clipFlag = ON_SCREEN;
 		
 				if ( scratch_z < NEAR_CLIP_DISTANCE ) {
-					ClipInfoPoolNext.clipFlag |= CLIP_NEAR;
+					ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_NEAR;
 				}
 		
 				if ( fabs(scratch_y) > scratch_z ) {
@@ -515,7 +520,7 @@ namespace FalconNet.Graphics
 			TransformInline( p, n, true );
 		}
 
-		protected static  DWORD	CheckBoundingSphereClipping ()
+		protected static  ClippingFlags	CheckBoundingSphereClipping ()
 		{
 			// Decide if we need clipping, or if the object is totally off screen
 			// REMEMBER:  Xlation is camera oriented, but still X front, Y right, Z down
@@ -533,40 +538,40 @@ namespace FalconNet.Graphics
 			//        (though this should be fairly rare in practice)
 			float	rd;
 			float	rh;
-		//	UInt32	clipFlag = ON_SCREEN;
+		//	UInt32	clipFlag = ClippingFlags.ON_SCREEN;
 		
 			rd = CurrentInstance.Radius() * vAspectDepthCorrection;
 			rh = CurrentInstance.Radius() * vAspectWidthCorrection;
 			if (-(Xlation.z - rh) >= Xlation.x - rd) {
 				if (-(Xlation.z + rh) > Xlation.x + rd) {
-					return OFF_SCREEN;			// Trivial reject top
+					return ClippingFlags.OFF_SCREEN;			// Trivial reject top
 				}
-		//		clipFlag = CLIP_TOP;
-				return CLIP_TOP;
+		//		clipFlag = ClippingFlags.CLIP_TOP;
+				return ClippingFlags.CLIP_TOP;
 			}
 			if (Xlation.z + rh >= Xlation.x - rd) {
 				if (Xlation.z - rh > Xlation.x + rd) {
-					return OFF_SCREEN;			// Trivial reject bottom
+					return ClippingFlags.OFF_SCREEN;			// Trivial reject bottom
 				}
-		//		clipFlag |= CLIP_BOTTOM;
-				return CLIP_BOTTOM;
+		//		clipFlag |= ClippingFlags.CLIP_BOTTOM;
+				return ClippingFlags.CLIP_BOTTOM;
 			}
 		
 			rd = CurrentInstance.Radius() * hAspectDepthCorrection;
 			rh = CurrentInstance.Radius() * hAspectWidthCorrection;
 			if (-(Xlation.y - rh) >= Xlation.x - rd) {
 				if (-(Xlation.x + rh) > Xlation.x + rd) {
-					return OFF_SCREEN;			// Trivial reject left
+					return ClippingFlags.OFF_SCREEN;			// Trivial reject left
 				}
-		//		clipFlag |= CLIP_LEFT;
-				return CLIP_LEFT;
+		//		clipFlag |= ClippingFlags.CLIP_LEFT;
+				return ClippingFlags.CLIP_LEFT;
 			}
 			if (Xlation.y + rh >= Xlation.x - rd) {
 				if (Xlation.y - rh > Xlation.x + rd) {
-					return OFF_SCREEN;			// Trivial reject right
+					return ClippingFlags.OFF_SCREEN;			// Trivial reject right
 				}
-		//		clipFlag |= CLIP_RIGHT;
-				return CLIP_RIGHT;
+		//		clipFlag |= ClippingFlags.CLIP_RIGHT;
+				return ClippingFlags.CLIP_RIGHT;
 			}
 		
 			rh = CurrentInstance.Radius();
@@ -574,8 +579,8 @@ namespace FalconNet.Graphics
 				if (Xlation.x + rh < NEAR_CLIP_DISTANCE) {
 					return OFF_SCREEN;			// Trivial reject near
 				}
-		//		clipFlag |= CLIP_NEAR;
-				return CLIP_NEAR;
+		//		clipFlag |= ClippingFlags.CLIP_NEAR;
+				return ClippingFlags.CLIP_NEAR;
 			}
 		
 		//	return clipFlag;
@@ -596,25 +601,25 @@ namespace FalconNet.Graphics
 		
 		
 				if (clip) {
-					ClipInfoPoolNext.clipFlag = ON_SCREEN;
+					ClipInfoPoolNext.clipFlag = ClippingFlags.ON_SCREEN;
 		
 					if ( scratch_z < NEAR_CLIP_DISTANCE ) {
-						ClipInfoPoolNext.clipFlag |= CLIP_NEAR;
+						ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_NEAR;
 					}
 		
 					if ( fabs(scratch_y) > scratch_z ) {
 						if ( scratch_y > scratch_z ) {
-							ClipInfoPoolNext.clipFlag |= CLIP_BOTTOM;
+							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_BOTTOM;
 						} else {
-							ClipInfoPoolNext.clipFlag |= CLIP_TOP;
+							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_TOP;
 						}
 					}
 		
 					if ( fabs(scratch_x) > scratch_z ) {
 						if ( scratch_x > scratch_z ) {
-							ClipInfoPoolNext.clipFlag |= CLIP_RIGHT;
+							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_RIGHT;
 						} else {
-							ClipInfoPoolNext.clipFlag |= CLIP_LEFT;
+							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_LEFT;
 						}
 					}
 		
@@ -759,75 +764,76 @@ namespace FalconNet.Graphics
 		
 			PopAll();
 		}
-
+#endif
 		// Active transformation function (selects between with or without clipping)
 		public static TransformFp	Transform;
 
-		// Computed data pools
-		public static Tpoint		*XformedPosPool;	// These point into global storage.  They will point
-		public static Pintensity	*IntensityPool;		// to the computed tables for each sub-object.
-		public static PclipInfo	*ClipInfoPool;
-		public static Tpoint		*XformedPosPoolNext;// These point into global storage.  They will point
-		public static Pintensity	*IntensityPoolNext;	// to at least MAX_CLIP_VERTS empty slots beyond 
-		public static PclipInfo	*ClipInfoPoolNext;	// the computed tables in use by the current sub-object.
+        // Computed data pools
+        public static Tpoint[] XformedPosPool;	// These point into global storage.  They will point
+        public static Pintensity[] IntensityPool;		// to the computed tables for each sub-object.
+        public static PclipInfo[] ClipInfoPool;
+        public static Tpoint[] XformedPosPoolNext;// These point into global storage.  They will point
+        public static Pintensity[] IntensityPoolNext;	// to at least MAX_CLIP_VERTS empty slots beyond 
+        public static PclipInfo[] ClipInfoPoolNext;	// the computed tables in use by the current sub-object.
 
-		// Instance of the object we're drawing and its range normalized for resolution and FOV
-		public static ObjectInstance		*CurrentInstance;
-		public static ObjectLOD	*CurrentLOD;
-		public static int				*CurrentTextureTable;
-		public static float					LODRange;
+        // Instance of the object we're drawing and its range normalized for resolution and FOV
+        public static ObjectInstance CurrentInstance;
+        public static ObjectLOD CurrentLOD;
+        public static int[] CurrentTextureTable;
+        public static float LODRange;
 
-		// Fog properties
-		public static float		fogValue;			// fog precent (set by SetFog())
-		public static float		fogValue_inv;		// 1.0f - fog precent (set by SetFog())
-		public static Pcolor		fogColor_premul;	// Fog color times fog percent (set by SetFog())
+        // Fog properties
+        public static float fogValue;			// fog precent (set by SetFog())
+        public static float fogValue_inv;		// 1.0f - fog precent (set by SetFog())
+        public static Pcolor fogColor_premul;	// Fog color times fog percent (set by SetFog())
 
-		// Final transform
-		public static Pmatrix		Rotation;			// These are the final camera transform
-		public static Tpoint		Xlation;			// including contributions from parent objects
+        // Final transform
+        public static Pmatrix Rotation;			// These are the final camera transform
+        public static Tpoint Xlation;			// including contributions from parent objects
 
-		// Fudge factors for drawing
-		public static float		LODBiasInv;			// This times real range is LOD evaluation range
+        // Fudge factors for drawing
+        public static float LODBiasInv;			// This times real range is LOD evaluation range
 
-		// Object space points of interest
-		public static Tpoint		ObjSpaceEye;		// Eye point in object space (for BSP evaluation)
-		public static Tpoint		ObjSpaceLight;		// Light location in object space(for BSP evaluation)
+        // Object space points of interest
+        public static Tpoint ObjSpaceEye;		// Eye point in object space (for BSP evaluation)
+        public static Tpoint ObjSpaceLight;		// Light location in object space(for BSP evaluation)
 
-		// Pointers to our clients billboard and tree matrices in case we need them
-		public static Pmatrix		*Tb;	// Billboard (always faces viewer)
-		public static Pmatrix		*Tt;	// Tree (always stands up straight and faces viewer)
+        // Pointers to our clients billboard and tree matrices in case we need them
+        public static Pmatrix[] Tb;	// Billboard (always faces viewer)
+        public static Pmatrix[] Tt;	// Tree (always stands up straight and faces viewer)
 
-		// Lighting properties for the BSP objects
-		public static float		LightAmbient	= 0.5f;
-		public static float		LightDiffuse	= 0.5f;
-		public static Tpoint		LightVector= new Tpoint { 0.0f, 0.0f, -LightDiffuse }; 
+        // Lighting properties for the BSP objects
+        public static float LightAmbient = 0.5f;
+        public static float LightDiffuse = 0.5f;
+        public static Tpoint LightVector = new Tpoint() { x = 0.0f, y = 0.0f, z = -LightDiffuse };
 
-		// The context on which we'll draw
-		public static ContextMPR	*context;
-		protected static StateStackFrame[]	stack = new StateStackFrame[MAX_STATE_STACK_DEPTH];
-		protected static int				stackDepth;
 
-		// Required for object culling
-		protected static float		hAspectWidthCorrection;
-		protected static float		hAspectDepthCorrection;
-		protected static float		vAspectWidthCorrection;
-		protected static float		vAspectDepthCorrection;
+        // The context on which we'll draw
+        public static IContext context;
+        protected static StateStackFrame[] stack = new StateStackFrame[MAX_STATE_STACK_DEPTH];
+        protected static int stackDepth;
 
-		// The parameters required to get from normalized screen space to pixel space
-		protected static float	scaleX;
-		protected static float	scaleY;
-		protected static float	shiftX;
-		protected static float	shiftY;
-		
-		
-		/********************************************\
-			Reserved storage space for computed values.
-		\********************************************/
-		private static Tpoint[]		XformedPosPoolBuffer = new Tpoint[ MAX_VERT_POOL_SIZE ];
-		private static Pintensity[]	IntensityPoolBuffer = new Pintensity[ MAX_VERT_POOL_SIZE ];
-		private static PclipInfo[]	ClipInfoPoolBuffer = new PclipInfo[ MAX_VERT_POOL_SIZE ];
+        // Required for object culling
+        protected static float hAspectWidthCorrection;
+        protected static float hAspectDepthCorrection;
+        protected static float vAspectWidthCorrection;
+        protected static float vAspectDepthCorrection;
 
-	}
-#endif
+        // The parameters required to get from normalized screen space to pixel space
+        protected static float scaleX;
+        protected static float scaleY;
+        protected static float shiftX;
+        protected static float shiftY;
+
+
+        /********************************************\
+            Reserved storage space for computed values.
+        \********************************************/
+        private static Tpoint[] XformedPosPoolBuffer = new Tpoint[MAX_VERT_POOL_SIZE];
+        private static Pintensity[] IntensityPoolBuffer = new Pintensity[MAX_VERT_POOL_SIZE];
+        private static PclipInfo[] ClipInfoPoolBuffer = new PclipInfo[MAX_VERT_POOL_SIZE];
+
+    }
+
 }
 

@@ -25,7 +25,7 @@ namespace FalconNet.Graphics
 		Billboard,
 		Tree
 	} 
-#if TODO
+
 	
 	/***************************************************************\
 		To improve performance, these classes use several global
@@ -130,7 +130,8 @@ namespace FalconNet.Graphics
 			return BNodeType.tagBNode;
 		}
 	}
-
+	
+#if TODO
 	// Convert from file offsets back to pointers
 	public class BSubTree: BNode
 	{
@@ -163,14 +164,14 @@ namespace FalconNet.Graphics
 		public override void Draw ()
 		{
 			BNode child;
-		
-			TheStateStack.Light( pNormals, nNormals );
+
+            StateStackClass.TheStateStack.Light(pNormals, nNormals);
 		
 			if (nDynamicCoords == 0) {
-				TheStateStack.Transform( pCoords, nCoords );
+                StateStackClass.TheStateStack.Transform(pCoords, nCoords);
 			} else {
-				TheStateStack.Transform( pCoords, nCoords-nDynamicCoords );
-				TheStateStack.Transform( TheStateStack.CurrentInstance.DynamicCoords+DynamicCoordOffset, 
+                StateStackClass.TheStateStack.Transform(pCoords, nCoords - nDynamicCoords);
+                StateStackClass.TheStateStack.Transform(StateStackClass.TheStateStack.CurrentInstance.DynamicCoords + DynamicCoordOffset, 
 										 nDynamicCoords );
 			}
 		
@@ -190,7 +191,6 @@ namespace FalconNet.Graphics
 			return BNodeType.tagBSubTree;
 		}
 	}
-	
 
 	public class BRoot: BSubTree
 	{

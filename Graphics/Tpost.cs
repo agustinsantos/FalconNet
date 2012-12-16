@@ -1,4 +1,5 @@
 using System;
+using TextureID = System.Int16;
 
 namespace FalconNet.Graphics
 {

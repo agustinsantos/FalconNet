@@ -27,7 +27,7 @@ namespace FalconNet.Common
 	public class SimInitDataClass {}
 	public class ObjectGeometry {}
 	public class DrawablePoint {}
-	
+    public class StarData { }
 	public struct OTWDriver {
 		public static bool IsActive(){throw new NotImplementedException();}
 	}

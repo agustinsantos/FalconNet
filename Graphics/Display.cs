@@ -791,9 +791,9 @@ int width = 0;
         {
         }
 
-        public virtual DWORD Color()
+        public virtual int Color()
         {
-            return new DWORD(0x0);
+            return 0x0;
         }
 
         public virtual void SetColor(DWORD c)
@@ -993,7 +993,7 @@ int width = 0;
         public abstract void Render2DLine(float x1, float y1, float x2, float y2);
 
         // Functions which should be provided by all derived classes
-        protected virtual void Render2DTri(float x1, float y1, float x2, float y2, float x3, float y3)
+        public virtual void Render2DTri(float x1, float y1, float x2, float y2, float x3, float y3)
         {
             Render2DLine(x1, y1, x2, y2);
             Render2DLine(x2, y2, x3, y3);

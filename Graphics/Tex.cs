@@ -261,6 +261,7 @@ namespace FalconNet.Graphics
 		private static string TexturePath = "";
 		private static DXContext *rc = null; 
 #endif
-	};
+         public void FreeAll() { throw new NotImplementedException(); }
+	}
 }
 

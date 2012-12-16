@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,10 +30,25 @@
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\ExternalLibs\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\ExternalLibs\OpenTK.GLControl.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="GLContext.cs" />
+    <Compile Include="localwx.cs" />
+    <Compile Include="mpr_light.cs" />
+    <Compile Include="ObjectInstance.cs" />
+    <Compile Include="ObjectLOD.cs" />
+    <Compile Include="ObjectParent.cs" />
+    <Compile Include="Tod.cs" />
+    <Compile Include="Ttypes.cs" />
     <Compile Include="WXMap.cs" />
     <Compile Include="Tex.cs" />
     <Compile Include="Palette.cs" />

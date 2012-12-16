@@ -5,7 +5,8 @@ using FalconNet.Common;
 using FalconNet.Graphics;
 using FalconNet.Ui95;
 using System.IO;
-using WORD=System.UInt16;
+using DWORD=System.Int16;
+using WORD = System.Byte;
 
 namespace FalconNet.Main
 {
@@ -46,7 +47,7 @@ namespace FalconNet.Main
 				}
 			
 				gMainHandler=new C_Handler;
-				gMainHandler.Setup(FalconDisplay.appWin,NULL,Primary);
+				gMainHandler.Setup(FalconDisplay.appWin,null,Primary);
 			//	gMainHandler.SetCallback(UIMainMouse);
 			
 				GlobalSetup();

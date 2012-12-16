@@ -1,149 +1,290 @@
 using System;
 using FalconNet.Common;
 using DWORD = System.Int16;
+using WORD = System.Byte;
 
 namespace FalconNet.Graphics
 {
-	[Flags]
-	public enum PRIM_COLOR_OP
-	{
-		PRIM_COLOP_NONE = 0,
-		PRIM_COLOP_COLOR = 1,
-		PRIM_COLOP_INTENSITY = 2,
-		PRIM_COLOP_TEXTURE = 4,
-		PRIM_COLOP_FOG = 8
-	};
+    [Flags]
+    public enum PRIM_COLOR_OP
+    {
+        PRIM_COLOP_NONE = 0,
+        PRIM_COLOP_COLOR = 1,
+        PRIM_COLOP_INTENSITY = 2,
+        PRIM_COLOP_TEXTURE = 4,
+        PRIM_COLOP_FOG = 8
+    };
 
-//___________________________________________________________________________
+    //___________________________________________________________________________
 
-public enum  MPRState{
-	STATE_SOLID = 0,
-    STATE_GOURAUD,
-    STATE_TEXTURE,
-    STATE_TEXTURE_PERSPECTIVE,
-    STATE_TEXTURE_TRANSPARENCY,
-    STATE_TEXTURE_TRANSPARENCY_PERSPECTIVE,
-	STATE_TEXTURE_LIT,
-    STATE_TEXTURE_LIT_PERSPECTIVE,
-    STATE_TEXTURE_LIT_TRANSPARENCY,
-    STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
-    STATE_TEXTURE_GOURAUD,
-    STATE_TEXTURE_GOURAUD_TRANSPARENCY,
-    STATE_TEXTURE_GOURAUD_PERSPECTIVE,
-    STATE_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
+    public enum MPRState
+    {
+        STATE_SOLID = 0,
+        STATE_GOURAUD,
+        STATE_TEXTURE,
+        STATE_TEXTURE_PERSPECTIVE,
+        STATE_TEXTURE_TRANSPARENCY,
+        STATE_TEXTURE_TRANSPARENCY_PERSPECTIVE,
+        STATE_TEXTURE_LIT,
+        STATE_TEXTURE_LIT_PERSPECTIVE,
+        STATE_TEXTURE_LIT_TRANSPARENCY,
+        STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
+        STATE_TEXTURE_GOURAUD,
+        STATE_TEXTURE_GOURAUD_TRANSPARENCY,
+        STATE_TEXTURE_GOURAUD_PERSPECTIVE,
+        STATE_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
 
-	STATE_ALPHA_SOLID,
-    STATE_ALPHA_GOURAUD,
-    STATE_ALPHA_TEXTURE,
-    STATE_ALPHA_TEXTURE_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_TRANSPARENCY,
-    STATE_ALPHA_TEXTURE_TRANSPARENCY_PERSPECTIVE,
-	STATE_ALPHA_TEXTURE_LIT,
-    STATE_ALPHA_TEXTURE_LIT_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY,
-    STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_SMOOTH,
-    STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY,
-    STATE_ALPHA_TEXTURE_SMOOTH_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_GOURAUD,
-    STATE_ALPHA_TEXTURE_GOURAUD_PERSPECTIVE,
-    STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY,
-    STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
+        STATE_ALPHA_SOLID,
+        STATE_ALPHA_GOURAUD,
+        STATE_ALPHA_TEXTURE,
+        STATE_ALPHA_TEXTURE_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_TRANSPARENCY,
+        STATE_ALPHA_TEXTURE_TRANSPARENCY_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_LIT,
+        STATE_ALPHA_TEXTURE_LIT_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY,
+        STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_SMOOTH,
+        STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY,
+        STATE_ALPHA_TEXTURE_SMOOTH_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_GOURAUD,
+        STATE_ALPHA_TEXTURE_GOURAUD_PERSPECTIVE,
+        STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY,
+        STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
 
-	STATE_FOG_TEXTURE,
-    STATE_FOG_TEXTURE_PERSPECTIVE,
-    STATE_FOG_TEXTURE_TRANSPARENCY,
-    STATE_FOG_TEXTURE_TRANSPARENCY_PERSPECTIVE,
-	STATE_FOG_TEXTURE_LIT,
-    STATE_FOG_TEXTURE_LIT_PERSPECTIVE,
-    STATE_FOG_TEXTURE_LIT_TRANSPARENCY,
-    STATE_FOG_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
-    STATE_FOG_TEXTURE_SMOOTH,
-    STATE_FOG_TEXTURE_SMOOTH_TRANSPARENCY,
-    STATE_FOG_TEXTURE_SMOOTH_PERSPECTIVE,
-    STATE_FOG_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE,
-	STATE_FOG_TEXTURE_GOURAUD,
-    STATE_FOG_TEXTURE_GOURAUD_PERSPECTIVE,
-    STATE_FOG_TEXTURE_GOURAUD_TRANSPARENCY,
-    STATE_FOG_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
+        STATE_FOG_TEXTURE,
+        STATE_FOG_TEXTURE_PERSPECTIVE,
+        STATE_FOG_TEXTURE_TRANSPARENCY,
+        STATE_FOG_TEXTURE_TRANSPARENCY_PERSPECTIVE,
+        STATE_FOG_TEXTURE_LIT,
+        STATE_FOG_TEXTURE_LIT_PERSPECTIVE,
+        STATE_FOG_TEXTURE_LIT_TRANSPARENCY,
+        STATE_FOG_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE,
+        STATE_FOG_TEXTURE_SMOOTH,
+        STATE_FOG_TEXTURE_SMOOTH_TRANSPARENCY,
+        STATE_FOG_TEXTURE_SMOOTH_PERSPECTIVE,
+        STATE_FOG_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE,
+        STATE_FOG_TEXTURE_GOURAUD,
+        STATE_FOG_TEXTURE_GOURAUD_PERSPECTIVE,
+        STATE_FOG_TEXTURE_GOURAUD_TRANSPARENCY,
+        STATE_FOG_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE,
 
-    STATE_TEXTURE_FILTER,
-    STATE_TEXTURE_FILTER_PERSPECTIVE,
+        STATE_TEXTURE_FILTER,
+        STATE_TEXTURE_FILTER_PERSPECTIVE,
 
-	STATE_TEXTURE_POLYBLEND,
-    STATE_TEXTURE_POLYBLEND_GOURAUD,
-    STATE_TEXTURE_FILTER_POLYBLEND,
-    STATE_TEXTURE_FILTER_POLYBLEND_GOURAUD,
+        STATE_TEXTURE_POLYBLEND,
+        STATE_TEXTURE_POLYBLEND_GOURAUD,
+        STATE_TEXTURE_FILTER_POLYBLEND,
+        STATE_TEXTURE_FILTER_POLYBLEND_GOURAUD,
 
-    STATE_APT_TEXTURE_FILTER_PERSPECTIVE,
-    STATE_APT_FOG_TEXTURE_FILTER_PERSPECTIVE,
+        STATE_APT_TEXTURE_FILTER_PERSPECTIVE,
+        STATE_APT_FOG_TEXTURE_FILTER_PERSPECTIVE,
 
-	STATE_APT_FOG_TEXTURE_PERSPECTIVE,
-	STATE_APT_FOG_TEXTURE_SMOOTH_PERSPECTIVE,
+        STATE_APT_FOG_TEXTURE_PERSPECTIVE,
+        STATE_APT_FOG_TEXTURE_SMOOTH_PERSPECTIVE,
 
-	// OW
-	STATE_TEXTURE_LIT_FILTER,
-	STATE_TEXTURE_GOURAUD_FILTER,
-	STATE_TEXTURE_TRANSPARENCY_FILTER,
-	STATE_TEXTURE_LIT_TRANSPARENCY_FILTER,
-	STATE_TEXTURE_GOURAUD_TRANSPARENCY_FILTER,
-	STATE_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_TEXTURE_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_TEXTURE_GOURAUD_PERSPECTIVE_FILTER,
-	STATE_TEXTURE_LIT_PERSPECTIVE_FILTER,
-	STATE_TEXTURE_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_FILTER,
-	STATE_ALPHA_TEXTURE_LIT_FILTER,
-	STATE_ALPHA_TEXTURE_SMOOTH_FILTER,
-	STATE_ALPHA_TEXTURE_GOURAUD_FILTER,
-	STATE_ALPHA_TEXTURE_TRANSPARENCY_FILTER,
-	STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_FILTER,
-	STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_FILTER,
-	STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_FILTER,
-	STATE_ALPHA_TEXTURE_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_LIT_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_SMOOTH_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_GOURAUD_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE_FILTER,
-	STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE_FILTER,
+        // OW
+        STATE_TEXTURE_LIT_FILTER,
+        STATE_TEXTURE_GOURAUD_FILTER,
+        STATE_TEXTURE_TRANSPARENCY_FILTER,
+        STATE_TEXTURE_LIT_TRANSPARENCY_FILTER,
+        STATE_TEXTURE_GOURAUD_TRANSPARENCY_FILTER,
+        STATE_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_TEXTURE_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_TEXTURE_GOURAUD_PERSPECTIVE_FILTER,
+        STATE_TEXTURE_LIT_PERSPECTIVE_FILTER,
+        STATE_TEXTURE_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_FILTER,
+        STATE_ALPHA_TEXTURE_LIT_FILTER,
+        STATE_ALPHA_TEXTURE_SMOOTH_FILTER,
+        STATE_ALPHA_TEXTURE_GOURAUD_FILTER,
+        STATE_ALPHA_TEXTURE_TRANSPARENCY_FILTER,
+        STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_FILTER,
+        STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_FILTER,
+        STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_FILTER,
+        STATE_ALPHA_TEXTURE_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_LIT_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_SMOOTH_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_GOURAUD_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_SMOOTH_TRANSPARENCY_PERSPECTIVE_FILTER,
+        STATE_ALPHA_TEXTURE_GOURAUD_TRANSPARENCY_PERSPECTIVE_FILTER,
 
-	MAXIMUM_MPR_STATE											
-};
+        MAXIMUM_MPR_STATE
+    };
 
 
-//#if (MAXIMUM_MPR_STATE >= 64)
-//#error "Can have at most 64 prestored states (#define'd inside MPR) & we need one free"
-//#endif
+    //#if (MAXIMUM_MPR_STATE >= 64)
+    //#error "Can have at most 64 prestored states (#define'd inside MPR) & we need one free"
+    //#endif
 
-public struct TLVERTEX
-{ 
-	float sx; 
-	float sy; 
-	float sz; 
-	float rhw; 
-	float tu; 
-	float tv; 
-} ; 
+    public struct TLVERTEX
+    {
+        public float sx;
+        public float sy;
+        public float sz;
+        public float rhw;
+        public float tu;
+        public float tv;
+    }
 
-public  struct TTLVERTEX
-{ 
-	float sx; 
-	float sy; 
-	float sz; 
-	float rhw; 
-	DWORD color; 
-	float tu; 
-	float tv; 
-}  ;
+    public struct TTLVERTEX
+    {
+        public float sx;
+        public float sy;
+        public float sz;
+        public float rhw;
+        public DWORD color;
+        public float tu;
+        public float tv;
+    }
 
-//___________________________________________________________________________
+    //___________________________________________________________________________
 
-public class ContextMPR
-{
+    public interface IContext
+    {
+        bool Setup(ImageBuffer pIB, DXContext c);
+
+        void Cleanup();
+
+        void NewImageBuffer(uint lpDDSBack);
+
+        void SetState(MPR_STA State, long Value);
+
+        void SetStateInternal(WORD State, DWORD Value);
+
+        void ClearBuffers(WORD ClearInfo);
+
+        void SwapBuffers(WORD SwapInfo);
+
+        void StartFrame();
+
+        void FinishFrame(object lpFnPtr);
+
+        void SetColorCorrection(DWORD color, float percent);
+
+        void SetupMPRState(int flag = 0);
+
+        void SelectForegroundColor(int color);
+
+        void SelectBackgroundColor(int color);
+
+        void SelectTexture(int texID);
+
+        void RestoreState(MPRState state);
+
+        void InvalidateState();
+
+        int CurrentForegroundColor();
+
+        void Render2DBitmap(int sX, int sY, int dX, int dY, int w, int h, int totalWidth, byte[] source);
+
+        //public void DrawPoly(DWORD opFlag, Poly* poly, int* xyzIdxPtr, int* rgbaIdxPtr, int* IIdxPtr, Ptexcoord* uv, bool bUseFGColor = false);
+        void Draw2DPoint(Tpoint v0);
+
+        void Draw2DPoint(float x, float y);
+
+        void Draw2DLine(Tpoint v0, Tpoint v1);
+
+        void Draw2DLine(float x0, float y0, float x1, float y1);
+
+        void DrawPrimitive2D(int type, int nVerts, int[] xyzIdxPtr);
+
+        void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtx_t[] data, WORD Stride);
+
+        //public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t* data, WORD Stride);
+        //public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t** data);
+        //public void TextOut(short x, short y, DWORD col, LPSTR str);
+        void SetViewportAbs(int nLeft, int nTop, int nRight, int nBottom);
+
+        void LockViewport();
+
+        void UnlockViewport();
+    }
+
+
+    public class ContextMPR
+    {
+
+        public ContextMPR()
+        { throw new NotImplementedException(); }
+        //TODO public virtual ~ContextMPR();
+
+        public bool Setup(ImageBuffer pIB, DXContext c)
+        { throw new NotImplementedException(); }
+        public void Cleanup()
+        { throw new NotImplementedException(); }
+        public void NewImageBuffer(uint lpDDSBack)
+        { throw new NotImplementedException(); }
+        public void SetState(MPR_STA State, long Value)
+        { throw new NotImplementedException(); }
+        public void SetStateInternal(WORD State, DWORD Value)
+        { throw new NotImplementedException(); }
+        public void ClearBuffers(WORD ClearInfo)
+        { throw new NotImplementedException(); }
+        public void SwapBuffers(WORD SwapInfo)
+        { throw new NotImplementedException(); }
+        public void StartFrame()
+        { throw new NotImplementedException(); }
+        public void FinishFrame(object lpFnPtr)
+        { throw new NotImplementedException(); }
+        public void SetColorCorrection(DWORD color, float percent)
+        { throw new NotImplementedException(); }
+        public void SetupMPRState(int flag = 0)
+        { throw new NotImplementedException(); }
+        public void SelectForegroundColor(int color)
+        { throw new NotImplementedException(); }
+        public void SelectBackgroundColor(int color)
+        { throw new NotImplementedException(); }
+        public void SelectTexture(int texID)
+        { throw new NotImplementedException(); }
+        public void RestoreState(MPRState state)
+        { throw new NotImplementedException(); }
+        public void InvalidateState()
+        {
+            throw new NotImplementedException();
+            //TODO currentTexture = -1; m_colFG_Raw = 0x00ffffff; currentState = -1; 
+        } // JPO -1 for FG is white, which happens!
+        public int CurrentForegroundColor()
+        {
+            throw new NotImplementedException();
+            //TODO return m_colFG_Raw;
+        }
+        public void Render2DBitmap(int sX, int sY, int dX, int dY, int w, int h, int totalWidth, byte[] source)
+        { throw new NotImplementedException(); }
+
+
+        //public void DrawPoly(DWORD opFlag, Poly* poly, int* xyzIdxPtr, int* rgbaIdxPtr, int* IIdxPtr, Ptexcoord* uv, bool bUseFGColor = false);
+        public void Draw2DPoint(Tpoint v0)
+        { throw new NotImplementedException(); }
+        public void Draw2DPoint(float x, float y)
+        { throw new NotImplementedException(); }
+        public void Draw2DLine(Tpoint v0, Tpoint v1)
+        { throw new NotImplementedException(); }
+        public void Draw2DLine(float x0, float y0, float x1, float y1)
+        { throw new NotImplementedException(); }
+        public void DrawPrimitive2D(int type, int nVerts, int[] xyzIdxPtr)
+        { throw new NotImplementedException(); }
+        public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtx_t[] data, WORD Stride)
+        { throw new NotImplementedException(); }
+        //public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t* data, WORD Stride);
+        //public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t** data);
+        //public void TextOut(short x, short y, DWORD col, LPSTR str);
+        public void SetViewportAbs(int nLeft, int nTop, int nRight, int nBottom)
+        { throw new NotImplementedException(); }
+        public void LockViewport()
+        { throw new NotImplementedException(); }
+        public void UnlockViewport()
+        { throw new NotImplementedException(); }
+        //public void GetViewport(RECT* prc);
+    }
+
+
+    public class ContextMPR_OLD
+    {
 #if TODO
 	// values for SetupMPRState flag argument
 	public const int CHECK_PREVIOUS_STATE = 0x01;
@@ -151,9 +292,9 @@ public class ContextMPR
 	
 	public ContextMPR ()
 	{ 
-		#if _DEBUG
+#if _DEBUG
 		m_nInstCount++;
-		#endif
+#endif
 	
 		m_pCtxDX = null;
 		m_pDD = null;
@@ -179,9 +320,9 @@ public class ContextMPR
 	
 		m_colFG = m_colBG = 0; // JPO initialise to something
 		m_colFG_Raw = m_colBG_Raw = 0; // and again
-		#if _DEBUG
+#if _DEBUG
 		m_pVtxEnd = null;
-		#endif
+#endif
 	}
 	// public virtual ~ContextMPR();
 
@@ -189,9 +330,9 @@ public class ContextMPR
 	{
 	BOOL bRetval = false;
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Setup(0x%X, 0x%X)\n", pIB, c);
-	#endif
+#endif
 
 	try
 	{
@@ -256,7 +397,7 @@ public class ContextMPR
 		m_pIdx = new WORD[vbdesc.dwNumVertices * 3];	// we intend to sent triangle lists
 		if(!m_pIdx) throw _com_error(E_OUTOFMEMORY);
 
-		#if _DEBUG
+#if _DEBUG
 		D3DVERTEXBUFFERDESC ddsd;
 		ZeroMemory(&ddsd, sizeof(ddsd));
 		ddsd.dwSize = sizeof(ddsd);
@@ -267,7 +408,7 @@ public class ContextMPR
 //			ddsd.dwCaps & D3DVBCAPS_SYSTEMMEMORY ? "SYSTEM" : "VIDEO",
 //			ddsd.dwNumVertices);
 		Debug.Assert(ddsd.dwNumVertices == m_dwVBSize);
-		#endif
+#endif
 
 		bool bCanDoAnisotropic = (m_pCtxDX.m_pD3DHWDeviceDesc.dpcTriCaps.dwTextureFilterCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC) &&
 			(m_pCtxDX.m_pD3DHWDeviceDesc.dpcTriCaps.dwTextureFilterCaps & D3DPTFILTERCAPS_MINFANISOTROPIC);
@@ -315,14 +456,14 @@ public class ContextMPR
 		}
 
 		InvalidateState();
-		RestoreState( STATE_SOLID );
+		RestoreState( MPRState.STATE_SOLID );
 		ZeroMemory(&m_rcVP, sizeof(m_rcVP));
 		m_bViewportLocked = false;
 
-		#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 		m_stats.Init();
 		m_stats.StartBatch();
-		#endif
+#endif
 
 
 		bRetval = true;
@@ -341,15 +482,15 @@ public class ContextMPR
 
 	public void Cleanup(   )
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Cleanup()\n");
-	#endif
+#endif
 
-	#if _DEBUG
-	#if _CONTEXT_ENABLE_STATS
+#if _DEBUG
+#if _CONTEXT_ENABLE_STATS
 	m_stats.Report();
-	#endif
-	#endif
+#endif
+#endif
 
 /*
 	if(m_nFrameDepth && m_pIB)
@@ -429,24 +570,24 @@ public class ContextMPR
 	m_pVtx = null;
 	m_bRenderTargetHasZBuffer = false;
 
-	#if _DEBUG
+#if _DEBUG
 	m_pVtxEnd = null;
-	#endif
+#endif
 
-	#if _CONTEXT_RECORD_USED_STATES
+#if _CONTEXT_RECORD_USED_STATES
 	MonoPrint("ContextMPR::Cleanup - Report of used states follows\n	");
 	std::set<int>::iterator it;
 	for(it = m_setStatesUsed.begin(); it != m_setStatesUsed.end(); it++)
 		MonoPrint("%d, ", *it);
 	m_setStatesUsed.clear();
 	MonoPrint("\nContextMPR::Cleanup - End of report\n	");
-	#endif
+#endif
 }
 	public void NewImageBuffer( UInt lpDDSBack )
 	{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::NewImageBuffer(0x%X)\n", lpDDSBack);
-	#endif
+#endif
 
 	if(m_pRenderTarget)
 	{
@@ -477,9 +618,9 @@ public class ContextMPR
 		return;
 	}
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SetState(%d, 0x%X)\n", State, Value);
-	#endif
+#endif
 	//TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 	Debug.Assert (State != MPR_STA_TEX_ID);
 	Debug.Assert (State != MPR_STA_FG_COLOR);
@@ -567,7 +708,7 @@ public class ContextMPR
 				UpdateViewport();
 			}
 
-			#if _DEBUG
+#if _DEBUG
 			if(Value & MPR_SE_TEXTURING)
 			{
 				// Enabled by selecting a texture into the device
@@ -640,12 +781,12 @@ public class ContextMPR
 			{
 				Debug.Assert(false);
 			}
-			#endif
+#endif
 
 			break;
 		}
 
-		case MPR_STA_DISABLES:              /* use MPR_SE_...   */
+		case MPR_STA.MPR_STA_DISABLES:              /* use MPR_SE_...   */
 		{
 			if(Value & MPR_SE_MODULATION)
 			{
@@ -745,7 +886,7 @@ public class ContextMPR
 				m_pD3DD.SetRenderState(D3DRENDERSTATE_ZENABLE, false);
 			}
 
-			#if _DEBUG
+#if _DEBUG
 			if(Value & MPR_SE_PIXEL_MASKING)
 			{
 				Debug.Assert(false);
@@ -785,12 +926,12 @@ public class ContextMPR
 			{
 				Debug.Assert(false);
 			}
-			#endif
+#endif
 
 			break;
 		}
 
-		case MPR_STA_SRC_BLEND_FUNCTION:    /* use MPR_BF_...   */
+		case MPR_STA.MPR_STA_SRC_BLEND_FUNCTION:    /* use MPR_BF_...   */
 		{
 			FlushVB();
 
@@ -799,7 +940,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_DST_BLEND_FUNCTION:    /* use MPR_BF_...   */
+		case MPR_STA.MPR_STA_DST_BLEND_FUNCTION:    /* use MPR_BF_...   */
 		{
 			FlushVB();
 
@@ -808,7 +949,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_TEX_FILTER:            /* use MPR_TX_...   */
+		case MPR_STA.MPR_STA_TEX_FILTER:            /* use MPR_TX_...   */
 		{
 			FlushVB();
 
@@ -865,7 +1006,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_TEX_FUNCTION:          /* use MPR_TF_...   */
+		case MPR_STA.MPR_STA_TEX_FUNCTION:          /* use MPR_TF_...   */
 		{
 			FlushVB();
 
@@ -896,67 +1037,67 @@ public class ContextMPR
 			break;
 		}
 
-		#if MPR_MASKING_ENABLED
-		case MPR_STA_AREA_MASK:             /* Area pattern bitmask */
+#if MPR_MASKING_ENABLED
+		case MPR_STA.MPR_STA_AREA_MASK:             /* Area pattern bitmask */
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_LINE_MASK:             /* Line pattern bitmask */
+		case MPR_STA.MPR_STA_LINE_MASK:             /* Line pattern bitmask */
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_PIXEL_MASK:            /* RGBA or bitmask  */
+		case MPR_STA.MPR_STA_PIXEL_MASK:            /* RGBA or bitmask  */
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		#endif
-		case MPR_STA_FG_COLOR:              /* long: RGBA or index  */
+#endif
+		case MPR_STA.MPR_STA_FG_COLOR:              /* long: RGBA or index  */
 		{
 			SelectForegroundColor(Value);
 			break;
 		}
 
-		case MPR_STA_BG_COLOR:              /* long: RGBA or index  */
+		case MPR_STA.MPR_STA_BG_COLOR:              /* long: RGBA or index  */
 		{
 			SelectBackgroundColor(Value);
 			break;
 		}
 
 
-		#if  MPR_DEPTH_BUFFER_ENABLED
-		case MPR_STA_Z_FUNCTION:            /* use MPR_ZF_...   */
+#if  MPR_DEPTH_BUFFER_ENABLED
+		case MPR_STA.MPR_STA_Z_FUNCTION:            /* use MPR_ZF_...   */
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_FG_DEPTH:              /* FIXED 16.16 for raster*/
+		case MPR_STA.MPR_STA_FG_DEPTH:              /* FIXED 16.16 for raster*/
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_BG_DEPTH:              /* FIXED 16.16 for zclear*/
+		case MPR_STA.MPR_STA_BG_DEPTH:              /* FIXED 16.16 for zclear*/
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		#endif
+#endif
 
-		case MPR_STA_TEX_ID:                /* Handle for current texture.*/
+		case MPR_STA.MPR_STA_TEX_ID:                /* Handle for current texture.*/
 		{
 			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_FOG_COLOR:             /* long: RGBA       */
+		case MPR_STA.MPR_STA_FOG_COLOR:             /* long: RGBA       */
 		{
 			FlushVB();
 			// OW FIXME: hmm whats the correlation of this state with the fogColor value used in TheStateStack.fogValue ???
@@ -965,28 +1106,28 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_HARDWARE_ON:           /* Read only - set if hardware supports mode */
+		caseMPR_STA. MPR_STA_HARDWARE_ON:           /* Read only - set if hardware supports mode */
 		{
 			Debug.Assert(false);
 			break;
 		}
 
 		//#if !defined(MPR_GAMMA_FAKE)
-		case MPR_STA_GAMMA_RED:             /* Gamma correction term for red (set before blue)  */
+		case MPR_STA.MPR_STA_GAMMA_RED:             /* Gamma correction term for red (set before blue)  */
 		{
 // called for software devices
 //			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_GAMMA_GREEN:           /* Gamma correction term for green (set before blue) */
+		case MPR_STA.MPR_STA_GAMMA_GREEN:           /* Gamma correction term for green (set before blue) */
 		{
 // called for software devices
 //			Debug.Assert(false);
 			break;
 		}
 
-		case MPR_STA_GAMMA_BLUE:            /* Gamma correction term for blue (set last) */
+		case MPR_STA.MPR_STA_GAMMA_BLUE:            /* Gamma correction term for blue (set last) */
 		{
 // called for software devices
 //			Debug.Assert(false);
@@ -994,7 +1135,7 @@ public class ContextMPR
 		}
 
 		//#else
-		case MPR_STA_RAMP_COLOR:           /* Packed color for the ramp table        */
+		case MPR_STA.MPR_STA_RAMP_COLOR:           /* Packed color for the ramp table        */
 		{
 			/*
 			IDirectDrawGammaControlPtr p(m_pDDSP);
@@ -1007,7 +1148,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_RAMP_PERCENT:         /* fractional (0.0=normal: 1.0=saturated) */
+		case MPR_STA.MPR_STA_RAMP_PERCENT:         /* fractional (0.0=normal: 1.0=saturated) */
 		{
 			// OW FIXME: todo
 			break;
@@ -1015,7 +1156,7 @@ public class ContextMPR
 
 		//#endif
 
-		case MPR_STA_SCISSOR_LEFT:  
+		case MPR_STA.MPR_STA_SCISSOR_LEFT:  
 		{
 			if(Value != m_rcVP.left)
 			{
@@ -1027,7 +1168,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_SCISSOR_TOP:  
+		case MPR_STA.MPR_STA_SCISSOR_TOP:  
 		{
 			if(Value != m_rcVP.top)
 			{
@@ -1040,7 +1181,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_SCISSOR_RIGHT:         /* right:bottom: not inclusive*/
+		case MPR_STA.MPR_STA_SCISSOR_RIGHT:         /* right:bottom: not inclusive*/
 		{
 			if(Value != m_rcVP.right)
 			{
@@ -1053,7 +1194,7 @@ public class ContextMPR
 			break;
 		}
 
-		case MPR_STA_SCISSOR_BOTTOM:        /* Validity Check done here.    */
+		case MPR_STA.MPR_STA_SCISSOR_BOTTOM:        /* Validity Check done here.    */
 		{
 			if(Value != m_rcVP.bottom)
 			{
@@ -1157,9 +1298,9 @@ public class ContextMPR
 		
 	public void ClearBuffers( WORD ClearInfo )
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::ClearBuffers(0x%X)\n", ClearInfo);
-	#endif
+#endif
 
 	DWORD dwClearFlags = 0;
 	if(ClearInfo & MPR_CI_DRAW_BUFFER) dwClearFlags |= D3DCLEAR_TARGET;
@@ -1172,9 +1313,9 @@ public class ContextMPR
 	public void SwapBuffers( WORD SwapInfo );
 	public void StartFrame(   )
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::StartFrame()\n");
-	#endif
+#endif
 
 	// OW FIXME: is this ok?
 	if(m_pCtxDX.SetRenderTarget(m_pRenderTarget))	// returns false if render target unchanged
@@ -1211,7 +1352,7 @@ public class ContextMPR
 		}
 	}
 
-	#if _DEBUG &&  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT_REPLACE
+#if _DEBUG &&  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT_REPLACE
 	if(bEnableRenderStateHighlightReplace)
 	{
 		Sleep(1000);
@@ -1219,7 +1360,7 @@ public class ContextMPR
 			DebugBreak();
 		bRenderStateHighlightReplaceTargetState++;
 	}
-	#endif
+#endif
 
 #if NOTHING
 #if _DEBUG
@@ -1232,9 +1373,9 @@ public class ContextMPR
 }
 	public void FinishFrame( void *lpFnPtr )
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::FinishFrame(0x%X)\n", lpFnPtr);
-	#endif
+#endif
 
 	FlushVB();
 
@@ -1262,14 +1403,14 @@ public class ContextMPR
 		}
 	}
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	m_stats.StartFrame();
-	#if NOTHING
+#if NOTHING
 	char buf[20];
 	sprintf(buf, "%.2d FPS", m_stats.dwLastFPS);
 	TextOut(0, 40, RGB(0xff, 0xff, 0xff), (char *) buf);
-	#endif
-	#endif
+#endif
+#endif
 
 //	m_pIB.Unlock();
 
@@ -1296,7 +1437,7 @@ public class ContextMPR
 
 	// Record one stateblock per poly type
 	MonoPrint("ContextMPR - Setting up state table\n");
-	for (currentState=STATE_SOLID; currentState<MAXIMUM_MPR_STATE; currentState++)
+	for (currentState=MPRState.STATE_SOLID; currentState<MAXIMUM_MPR_STATE; currentState++)
 		SetStateTable(currentState, flag );
 
 	InvalidateState ();
@@ -1321,9 +1462,9 @@ public class ContextMPR
 
 	public void SelectTexture(GLint texID)
 		{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SelectTexture(0x%X)\n", texID);
-	#endif
+#endif
 
 	if (g_bSlowButSafe && F4IsBadReadPtr((TextureHandle *) texID, sizeof(TextureHandle))) // JB 010326 CTD (too much CPU)
 		return;
@@ -1335,9 +1476,9 @@ public class ContextMPR
 	{
 		FlushVB();
 
-		#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 		m_stats.PutTexture(false);
-		#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 		currentTexture = texID;
 
@@ -1347,16 +1488,16 @@ public class ContextMPR
 		Debug.Assert(SUCCEEDED(hr));
 	}
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	else m_stats.PutTexture(true);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 }
 	public void RestoreState(GLint state)
 {
 	Debug.Assert(state != -1);		// Use InvalidateState() !
 	Debug.Assert(state >= 0 && state < MAXIMUM_MPR_STATE);
 
-	#if  _DEBUG &&  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT_REPLACE
+#if  _DEBUG &&  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT_REPLACE
 	if(GetKeyState(VK_F4) & ~1)
 	{
 		if(!bEnableRenderStateHighlightReplace)
@@ -1365,21 +1506,21 @@ public class ContextMPR
 	
 	if(bEnableRenderStateHighlightReplace && (state == bRenderStateHighlightReplaceTargetState))
 	{
-		state = STATE_SOLID;
+		state = MPRState.STATE_SOLID;
 		m_colFG = 0xffff0000;
 		currentState = -1;
 	}
-	#endif
+#endif
 
 	if(state != currentState)
 	{
-		#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 		MonoPrint("ContextMPR::RestoreState(%d)\n", state);
-		#endif
+#endif
 
-		#if _CONTEXT_RECORD_USED_STATES
+#if _CONTEXT_RECORD_USED_STATES
 		m_setStatesUsed.insert(state);
-		#endif
+#endif
 
 		FlushVB();
 
@@ -1400,9 +1541,9 @@ public class ContextMPR
 {
 	DWORD *pDst = null;
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Render2DBitmap(%d, %d, %d, %d, %d, %d, %d, 0x%X)\n", sX, sY, dX, dY, w, h, totalWidth, pSrc);
-	#endif
+#endif
 	//TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 	try
 	{
@@ -1536,9 +1677,9 @@ public class ContextMPR
 {
 	UInt32	i = 0;
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SetCurrentState (%d, 0x%X)\n", state, flag);
-	#endif
+#endif
 
 	// TODO Debug.Assert(false == F4IsBadReadPtr(m_pD3DD, sizeof *m_pD3DD));
 
@@ -1548,7 +1689,7 @@ public class ContextMPR
 
 	switch(state)
 	{
-		case STATE_SOLID:
+		case MPRState.STATE_SOLID:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1565,7 +1706,7 @@ public class ContextMPR
 			SetState (MPR_STA_DISABLES, MPR_SE_DITHERING);
 			break;
 
-		case STATE_GOURAUD:
+		case MPRState.STATE_GOURAUD:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1583,7 +1724,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, MPR_SE_SHADING);
 			break;
 
-		case STATE_TEXTURE:
+		case MPRState.STATE_TEXTURE:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1605,7 +1746,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_LIT:
+		case MPRState.STATE_TEXTURE_LIT:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1627,7 +1768,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_LIT_PERSPECTIVE:
+		case MPRState.STATE_TEXTURE_LIT_PERSPECTIVE:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1650,7 +1791,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_GOURAUD:
+		case MPRState.STATE_TEXTURE_GOURAUD:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1671,7 +1812,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_TRANSPARENCY:
+		case MPRState.STATE_TEXTURE_TRANSPARENCY:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1692,7 +1833,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_LIT_TRANSPARENCY:
+		case MPRState.STATE_TEXTURE_LIT_TRANSPARENCY:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1713,7 +1854,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE:
+		case MPRState.STATE_TEXTURE_LIT_TRANSPARENCY_PERSPECTIVE:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -1735,7 +1876,7 @@ public class ContextMPR
 			SetState (MPR_STA_ENABLES, i);
 			break;
 
-		case STATE_TEXTURE_GOURAUD_TRANSPARENCY:
+		case MPRState.STATE_TEXTURE_GOURAUD_TRANSPARENCY:
 			SetState(MPR_STA_DISABLES, 
 				MPR_SE_Z_BUFFERING |
 				MPR_SE_CLIPPING |
@@ -3589,9 +3730,9 @@ public class ContextMPR
 
 	protected void SetPrimitiveType(int nType)
 			{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::SetPrimitiveType(%d)\n", nType);
-	#endif
+#endif
 
 	if(m_nCurPrimType != nType)
 	{
@@ -3628,9 +3769,9 @@ public class ContextMPR
 	protected short m_nCurPrimType;
 	protected WORD m_VtxInfo;		// copy of argument for Primitive() (used during Primitive.StorePrimitiveVertexData phase)
 	protected TTLVERTEX *m_pVtx;	// points to locked VB (only used with Primitive() call)
-	#if _DEBUG
+#if _DEBUG
 	protected BYTE *m_pVtxEnd;	// points to end of locked VB (only used with Primitive() call)
-	#endif
+#endif
 	protected IDirectDrawSurface7 *m_pDDSP;	// pointer to primary surface
 	protected bool m_bNoD3DStatsAvail;	// D3D Texture management stats (dx debug runtime only)
 	protected bool m_bLinear2Anisotropic;		// Set anisotropic filtering when bilinear is requested
@@ -3643,9 +3784,9 @@ public class ContextMPR
 		
 		public Stats()
 				{
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	Init();
-	#endif
+#endif
 }
 
 		// Attributes
@@ -3808,9 +3949,9 @@ public class ContextMPR
 }
 	protected   void UpdateViewport()
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::UpdateViewport()\n");
-	#endif
+#endif
 
 	if(m_bViewportLocked || !m_pD3DD)
 		return;
@@ -3855,9 +3996,9 @@ public class ContextMPR
 
 	protected   bool LockVB(int nVtxCount, void **p)
 			{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::LockVB(%d, 0x%X) (m_dwStartVtx = %d, m_dwNumVtx = %d)\n", nVtxCount, p, m_dwStartVtx, m_dwNumVtx);
-	#endif
+#endif
 
 	HRESULT hr;
 	DWORD dwSize = 0;
@@ -3894,19 +4035,19 @@ public class ContextMPR
 
 	Debug.Assert(SUCCEEDED(hr));
 
-	#if _DEBUG
+#if _DEBUG
 	if(SUCCEEDED(hr)) m_pVtxEnd = (BYTE *) *p + dwSize;
 	else m_pVtxEnd = null;
-	#endif
+#endif
 
 	return SUCCEEDED(hr);
 }
 
 	protected   void UnlockVB()
 			{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::UnlockVB()\n");
-	#endif
+#endif
 
 	// Unlock VB
 	HRESULT hr = m_pVB.Unlock();
@@ -3919,9 +4060,9 @@ public class ContextMPR
 	if(!m_dwNumVtx) return;
 	Debug.Assert(m_nCurPrimType != 0);
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::FlushVB()\n");
-	#endif
+#endif
 
 	int nPrimType = m_nCurPrimType;
 
@@ -3947,15 +4088,15 @@ public class ContextMPR
 	if(!m_pCtxDX.ValidateD3DDevice())
 		MonoPrint("ContextMPR::FlushVB() - Validate Device failed - currentState=%d, currentTexture=0x%\n",
 			currentState, currentTexture);
-	#endif
+#endif
 
-	#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	//if(currentState == STATE_ALPHA_GOURAUD)
 	{
 		hr = m_pD3DD.ApplyStateBlock(StateTable[STATE_SOLID]);
 		Debug.Assert(SUCCEEDED(hr));
 	}
-	#endif
+#endif
 
 	if(m_dwNumIdx) hr = m_pD3DD.DrawIndexedPrimitiveVB((D3DPRIMITIVETYPE) nPrimType,
 		m_pVB, m_dwStartVtx, m_dwNumVtx, m_pIdx, m_dwNumIdx, null);
@@ -3965,9 +4106,9 @@ public class ContextMPR
 
 	Debug.Assert(SUCCEEDED(hr));
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	m_stats.StartBatch();
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	m_dwStartVtx += m_dwNumVtx;
 	m_dwNumVtx = 0;
@@ -4000,16 +4141,16 @@ public class ContextMPR
 	Debug.Assert(xyzIdxPtr);
 	Debug.Assert(!bUseFGColor || (bUseFGColor && rgbaIdxPtr == null));
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPoly(0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, %s)\n",
 		opFlag, poly, xyzIdxPtr, rgbaIdxPtr, IIdxPtr, uv, bUseFGColor ? "true" : "false");
-	#endif
+#endif
 
 	SetPrimitiveType(D3DPT_TRIANGLEFAN);
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, poly.nVerts);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(poly.nVerts, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4121,9 +4262,9 @@ public class ContextMPR
 		if(bUseFGColor)
 			pVtx.color = m_colFG;
 
-		#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 		pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-		#endif
+#endif
 
 		pVtx++;
 	}
@@ -4142,24 +4283,24 @@ public class ContextMPR
 	m_dwNumIdx += pIdx - &m_pIdx[m_dwNumIdx];
 	m_dwNumVtx += poly.nVerts;
 
-	#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void Draw2DPoint(Tpoint *v0)
 			{
 	Debug.Assert(v0);
 
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DPoint(0x%X)\n", v0);
-	#endif
+#endif
 
 	SetPrimitiveType(D3DPT_POINTLIST);
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, 1);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4179,28 +4320,28 @@ public class ContextMPR
 	pVtx.tu = 0;
 	pVtx.tv = 0;
 
-	#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	m_dwNumVtx++;
 
-	#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void Draw2DPoint(float x, float y)
 			{
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DPoint(%f, %f)\n", x, y);
-	#endif
+#endif
 
 	SetPrimitiveType(D3DPT_POINTLIST);
 
-	#if _CONTEXT_ENABLE_STATS
+#if _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, 1);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(1, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4220,30 +4361,30 @@ public class ContextMPR
 	pVtx.tu = 0;
 	pVtx.tv = 0;
 
-	#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	m_dwNumVtx++;
 
-	#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void Draw2DLine(Tpoint *v0, Tpoint *v1)
 			{
 	Debug.Assert(v0 && v1);
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DLine(0x%X, 0x%X)\n", v0, v1);
-	#endif
+#endif
 
 	SetPrimitiveType(D3DPT_LINESTRIP);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, 2);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4268,9 +4409,9 @@ public class ContextMPR
 	pVtx.tv = 0;
 	pVtx++;
 
-	#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	pVtx.sx = v1.x;
 	pVtx.sy = v1.y;
@@ -4280,9 +4421,9 @@ public class ContextMPR
 	pVtx.tu = 0;
 	pVtx.tv = 0;
 
-	#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	WORD *pIdx = &m_pIdx[m_dwNumIdx];
 	*pIdx++ = m_dwNumVtx;
@@ -4291,22 +4432,22 @@ public class ContextMPR
 	m_dwNumIdx += 2;
 	m_dwNumVtx += 2;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void Draw2DLine(float x0, float y0, float x1, float y1)
 			{
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::Draw2DLine(0x%X, 0x%X)\n", v0, v1);
-	#endif
+#endif
 
 	SetPrimitiveType(D3DPT_LINESTRIP);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, 2);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(2, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4330,9 +4471,9 @@ public class ContextMPR
 	/*if (F4IsBadWritePtr(pVtx, sizeof(TTLVERTEX))) // JB 010222 CTD (too much CPU)
 		return; // JB 010222 CTD*/
 
-	#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	pVtx.sx = x1;
 	pVtx.sy = y1;
@@ -4342,9 +4483,9 @@ public class ContextMPR
 	pVtx.tu = 0;
 	pVtx.tv = 0;
 
-	#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 	pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	#endif
+#endif
 
 	WORD *pIdx = &m_pIdx[m_dwNumIdx];
 	*pIdx++ = m_dwNumVtx;
@@ -4353,24 +4494,24 @@ public class ContextMPR
 	m_dwNumIdx += 2;
 	m_dwNumVtx += 2;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 	
 	public void DrawPrimitive2D(int type, int nVerts, int *xyzIdxPtr)
 			{
 	Debug.Assert(xyzIdxPtr);
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive2D(%d, %d, 0x%X)\n", type, nVerts, xyzIdxPtr);
-	#endif
+#endif
 
 	SetPrimitiveType(type == LineF ? D3DPT_LINESTRIP : D3DPT_POINTLIST);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, nVerts);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4404,9 +4545,9 @@ public class ContextMPR
 		pVtx.tu = 0;
 		pVtx.tv = 0;
 
-		#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 		pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-		#endif
+#endif
 
 		pVtx++;
 	}
@@ -4424,9 +4565,9 @@ public class ContextMPR
 
 	m_dwNumVtx += nVerts;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtx_t *data, WORD Stride)
@@ -4434,15 +4575,15 @@ public class ContextMPR
 	Debug.Assert(!(VtxInfo & MPR_VI_COLOR));	// impossible
 	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive(%d, 0x%X, %d, 0x%X, %d)\n", nPrimType, VtxInfo, nVerts, pData, Stride);
-	#endif
+#endif
 
 	SetPrimitiveType(nPrimType);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, nVerts);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4465,9 +4606,9 @@ public class ContextMPR
 		pVtx.tu = 0;
 		pVtx.tv = 0;
 
-		#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 		pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-		#endif
+#endif
 
 		pVtx++;
 		pData = (MPRVtx_t *) ((BYTE *) pData + Stride);
@@ -4501,24 +4642,24 @@ public class ContextMPR
 
 	m_dwNumVtx += nVerts;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t *data, WORD Stride)
 			{
 	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive2(%d, 0x%X, %d, 0x%X, %d)\n", nPrimType, VtxInfo, nVerts, pData, Stride);
-	#endif
+#endif
 
 	SetPrimitiveType(nPrimType);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, nVerts);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4556,9 +4697,9 @@ public class ContextMPR
 				pVtx.tu = pData.u;
 				pVtx.tv = pData.v;
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 				pData = (MPRVtxTexClr_t *) ((BYTE *) pData + Stride);
@@ -4580,9 +4721,9 @@ public class ContextMPR
 				pVtx.rhw = 1.0f;	// OW FIXME: this should be 1.0f / pData.z
 				pVtx.color = D3DRGBA(pData.r, pData.g, pData.b, pData.a);
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 				pData = (MPRVtxTexClr_t *) ((BYTE *) pData + Stride);
@@ -4606,9 +4747,9 @@ public class ContextMPR
 				pVtx.rhw = 1.0f;	// OW FIXME: this should be 1.0f / pData.z
 				pVtx.color = m_colFG;
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 				pData = (MPRVtxTexClr_t *) ((BYTE *) pData + Stride);
@@ -4646,24 +4787,24 @@ public class ContextMPR
 
 	m_dwNumVtx += nVerts;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void DrawPrimitive(int type, WORD VtxInfo, WORD Count, MPRVtxTexClr_t **data)
 			{
 	Debug.Assert((nVerts >=3) || (nPrimType==MPR_PRM_POINTS && nVerts >=1) || (nPrimType<=MPR_PRM_POLYLINE && nVerts >=2));		// Ensure no degenerate nPrimTypeitives
 
-	#if  _CONTEXT_TRACE_ALL
+#if  _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::DrawPrimitive3(%d, 0x%X, %d, 0x%X)\n", nPrimType, VtxInfo, nVerts, pData);
-	#endif
+#endif
 
 	SetPrimitiveType(nPrimType);
 
-	#if  _CONTEXT_ENABLE_STATS
+#if  _CONTEXT_ENABLE_STATS
 	m_stats.Primitive(m_nCurPrimType, nVerts);
-	#endif // _CONTEXT_ENABLE_STATS
+#endif // _CONTEXT_ENABLE_STATS
 
 	TTLVERTEX *pVtx;	// points to locked VB
 	if(!LockVB(nVerts, (void **) &m_pVtx)) return; 	// Lock VB
@@ -4702,9 +4843,9 @@ public class ContextMPR
 				pVtx.tu = pData[i].u;
 				pVtx.tv = pData[i].v;
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 			}
@@ -4725,9 +4866,9 @@ public class ContextMPR
 				pVtx.rhw = pData[i].q > 0.0f ? 1.0f / (pData[i].q / Q_SCALE) : 1.0f;
 				pVtx.color = D3DRGBA(pData[i].r, pData[i].g, pData[i].b, pData[i].a);
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 			}
@@ -4750,9 +4891,9 @@ public class ContextMPR
 				pVtx.rhw = pData[i].q > 0.0f ? 1.0f / (pData[i].q / Q_SCALE) : 1.0f;
 				pVtx.color = m_colFG;
 
-				#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
+#if  _CONTEXT_ENABLE_RENDERSTATE_HIGHLIGHT
 				pVtx.color = currentState != -1 ? RGBA_MAKE((currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50, (currentState << 1) + 50) : D3DRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-				#endif
+#endif
 
 				pVtx++;
 			}
@@ -4789,16 +4930,16 @@ public class ContextMPR
 
 	m_dwNumVtx += nVerts;
 
-	#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
+#if  _CONTEXT_FLUSH_EVERY_PRIMITIVE
 	FlushVB();
-	#endif
+#endif
 }
 
 	public void TextOut(short x, short y, DWORD col, LPSTR str)
 {
-	#if _CONTEXT_TRACE_ALL
+#if _CONTEXT_TRACE_ALL
 	MonoPrint("ContextMPR::TextOut(%d, %d, 0x%X, %s)\n", x, y, col, str);
-	#endif
+#endif
 
 	if(!str) return;
 
@@ -4855,23 +4996,23 @@ public void GetViewport(RECT *prc)
 }
 		public void Stats__TODO()
 {
-	#if _DEBUG
+#if _DEBUG
 	if(m_bNoD3DStatsAvail)
 		return;
 
 	HRESULT hr;
-	#if _CONTEXT_USE_MANAGED_TEXTURES
+#if _CONTEXT_USE_MANAGED_TEXTURES
 	D3DDEVINFO_TEXTUREMANAGER ditexman;
 	hr = m_pD3DD.GetInfo(D3DDEVINFOID_TEXTUREMANAGER, &ditexman, sizeof(ditexman));
 	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_false;
-	#endif
+#endif
 
 	D3DDEVINFO_TEXTURING ditex;
 	hr = m_pD3DD.GetInfo(D3DDEVINFOID_TEXTURING, &ditex, sizeof(ditex));
 	m_bNoD3DStatsAvail = FAILED(hr) || hr == S_false;
-	#endif
+#endif
 }
 #endif
-	}
+    }
 }
 

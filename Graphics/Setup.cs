@@ -73,7 +73,7 @@ namespace FalconNet.Graphics
 			
 			// Setup the time of day manager
 			fullPath = theaterPath + Path.DirectorySeparatorChar + "weather";
-			TheTimeOfDay.Setup ( fullPath );
+			CTimeOfDay.TheTimeOfDay.Setup ( fullPath );
 			
 			// Setup the weather database
 			Debug.Assert( TheWeather );
@@ -167,7 +167,7 @@ namespace FalconNet.Graphics
         {
 #if TODO		
 			TheLoader.Cleanup();
-			TheTimeOfDay.Cleanup();
+			CTimeOfDay.TheTimeOfDay.Cleanup();
 		    TheWeather.Cleanup();
 			ObjectParent.CleanupTable();
 			TheMap.Cleanup();

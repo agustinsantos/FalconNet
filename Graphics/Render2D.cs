@@ -1,6 +1,6 @@
 using System;
 using FalconNet.Common;
-using DWORD = System.Int16;
+using DWORD = System.UInt32;
 using System.Diagnostics;
 
 namespace FalconNet.Graphics

@@ -4,7 +4,7 @@ using FalconNet.Campaign;
 using FalconNet.VU;
 using System.IO;
 using System.Diagnostics;
-using DWORD = System.Int16;
+using DWORD = System.UInt32;
  
 namespace FalconNet.FalcLib
 {

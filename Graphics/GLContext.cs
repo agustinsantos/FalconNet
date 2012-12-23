@@ -3,11 +3,13 @@ using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using DWORD = System.UInt32;
 
 namespace FalconNet.Graphics
 {
     public class GLContext : IContext
     {
+
         public bool Setup(ImageBuffer pIB, Common.DXContext c)
         {
             throw new NotImplementedException();
@@ -28,20 +30,17 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        public void SetStateInternal(byte State, short Value)
+        public void SetStateInternal(ushort State, uint Value)
         {
             throw new NotImplementedException();
         }
 
-        public void ClearBuffers(byte ClearInfo)
+        public void ClearBuffers(ushort ClearInfo)
         {
-            if (ClearInfo == Mpr_light.MPR_CI_DRAW_BUFFER)
-                GL.Clear(ClearBufferMask.ColorBufferBit);
-            else
-                GL.Clear((ClearBufferMask)ClearInfo);
+            throw new NotImplementedException();
         }
 
-        public void SwapBuffers(byte SwapInfo)
+        public void SwapBuffers(ushort SwapInfo)
         {
             throw new NotImplementedException();
         }
@@ -56,7 +55,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        public void SetColorCorrection(short color, float percent)
+        public void SetColorCorrection(uint color, float percent)
         {
             throw new NotImplementedException();
         }
@@ -66,7 +65,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        public void SelectForegroundColor(int color)
+        public void SelectForegroundColor(DWORD color)
         {
             throw new NotImplementedException();
         }
@@ -126,7 +125,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        public void DrawPrimitive(int type, byte VtxInfo, byte Count, MPRVtx_t[] data, byte Stride)
+        public void DrawPrimitive(int type, ushort VtxInfo, ushort Count, MPRVtx_t[] data, ushort Stride)
         {
             throw new NotImplementedException();
         }

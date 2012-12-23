@@ -5,8 +5,8 @@ using FalconNet.Common;
 using FalconNet.Graphics;
 using FalconNet.Ui95;
 using System.IO;
-using DWORD=System.Int16;
-using WORD = System.Byte;
+using DWORD = System.UInt32;
+using WORD = System.UInt16;
 
 namespace FalconNet.Main
 {

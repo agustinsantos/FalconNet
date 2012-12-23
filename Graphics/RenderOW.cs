@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using FalconNet.Common;
-using DWORD = System.Int16;
+using DWORD = System.UInt32;
 
 namespace FalconNet.Graphics
 {

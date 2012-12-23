@@ -1,5 +1,7 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using DWORD = System.UInt32;
+using HRESULT = System.Int64;
 
 namespace FalconNet.Graphics
 {
@@ -176,5 +178,195 @@ namespace FalconNet.Graphics
         public const int MPR_PRM_TRISTRIP = (int)MPRPacketID.MPR_PKT_TRISTRIP;
         public const int MPR_PRM_TRIFAN = (int)MPRPacketID.MPR_PKT_TRIFAN;
 
+    }
+
+    public struct _DDPIXELFORMAT { }
+    public struct IDirectDrawSurface7 { }
+    public struct IDirect3DDevice7 { }
+    public struct _D3DDeviceDesc7 { }
+    public struct IDirectDraw7 {}
+    public struct IDirectDrawPalette { }
+
+    public class TextureHandle
+    {
+
+        public TextureHandle()
+        { throw new NotImplementedException(); }
+        //TODO public ~TextureHandle();
+
+        // Attributes
+        public IDirectDrawSurface7 m_pDDS;
+        public enum _D3DX_SURFACEFORMAT { m_eSurfFmt };
+        public int m_nWidth;
+        public int m_nHeight;
+        public int m_nActualWidth;
+        public int m_nActualHeight;
+        public DWORD m_dwFlags;
+        public DWORD m_dwChromaKey;
+        public PaletteHandle m_pPalAttach;
+        public byte[] m_pImageData;	// Copy if palettized src image data if the device doesnt not support palettized textures
+        public bool m_bImageDataOwned;	// self allocated or not
+        public int m_nImageDataStride;
+
+        public enum _TextureHandleFlags
+        {
+            FLAG_HINT_DYNAMIC = 0x1,
+            FLAG_HINT_STATIC = 0x2,
+            FLAG_NOTMANAGED = 0x4,		// dont use the texture manager
+            FLAG_INLOCALVIDMEM = 0x8,		// put it in videomemory
+            FLAG_RENDERTARGET = 0x10,		// can be used as 3d render target
+            FLAG_MATCHPRIMARY = 0x20,		// use same pixel format as primary surface 
+        };
+
+
+        protected enum _TEX_CAT
+        {
+            TEX_CAT_DEFAULT,
+            TEX_CAT_CHROMA,
+            TEX_CAT_ALPHA,
+            TEX_CAT_CHROMA_ALPHA,
+            TEX_CAT_MAX
+        };
+
+        protected struct TEXTURESEARCHINFO
+        {
+            public DWORD dwDesiredBPP;   // Input for texture format search
+            public DWORD dwDesiredAlphaBPP;
+            public bool bUsePalette;
+            public bool bFoundGoodFormat;
+
+            public _DDPIXELFORMAT pddpf; // Output of texture format search
+        }
+
+        protected static _DDPIXELFORMAT[] m_arrPF = new _DDPIXELFORMAT[(int)_TEX_CAT.TEX_CAT_MAX];
+
+        protected static IDirect3DDevice7 m_pD3DD;		// Warning: Not addref'd
+        protected static _D3DDeviceDesc7 m_pD3DHWDeviceDesc;
+
+#if _DEBUG
+	public:
+	static DWORD m_dwNumHandles;		// Number of instances
+	static DWORD m_dwBitmapBytes;		// Bytes allocated for bitmap copies
+	static DWORD m_dwTotalBytes;			// Total number of bytes allocated (including bitmap copies and object size)
+	protected:
+	std::string m_strName;
+#endif
+
+        // Implementation
+
+        public bool Create(string strName, UInt16 info, UInt16 bits, UInt16 width, UInt16 height, DWORD dwFlags = 0)
+        {
+            throw new NotImplementedException();
+        }
+        public bool Load(UInt16 mip, uint chroma, byte[] TexBuffer, bool bDoNotLoadBits = false, bool bDoNotCopyBits = false, int nImageDataStride = - 1)
+        {
+            throw new NotImplementedException();
+        }
+        public bool Reload()
+        {
+            throw new NotImplementedException();
+        }
+        public IDirectDrawSurface7 GetDDSurface() { return m_pDDS; }
+        public void PaletteAttach(PaletteHandle p)
+        {
+            throw new NotImplementedException();
+        }
+        public void PaletteDetach(PaletteHandle p)
+        {
+            throw new NotImplementedException();
+        }
+        public bool SetPriority(DWORD dwPrio)
+        {
+            throw new NotImplementedException();
+        }
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+        public void PreLoad()
+        {
+            throw new NotImplementedException();
+        }
+        public void RestoreAll()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        protected void ReportTextureLoadError(HRESULT hr, bool bDuringLoad = false)
+        {
+            throw new NotImplementedException();
+        }
+        protected void ReportTextureLoadError(string strReason)
+        {
+            throw new NotImplementedException();
+        }
+        protected static HRESULT TextureSearchCallback(_DDPIXELFORMAT pddpf, object param)
+        {
+            throw new NotImplementedException();
+        }
+
+#if _DEBUG
+	public:
+	static void MemoryUsageReport();
+#endif
+
+
+        public static void StaticInit(IDirect3DDevice7 pD3DD)
+        {
+            throw new NotImplementedException();
+        }
+        public static void StaticCleanup()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class PaletteHandle
+    {
+
+        public PaletteHandle(IDirectDraw7 pDD, UInt16 PalBitsPerEntry, UInt16 PalNumEntries)
+        {
+            throw new NotImplementedException();
+        }
+        //TODO public ~PaletteHandle();
+
+        // Attributes
+        public IDirectDrawPalette m_pIDDP;
+        public List<TextureHandle> m_arrAttachedTextures;
+        public short m_nNumEntries;
+        public DWORD[] m_pPalData;
+
+#if _DEBUG
+	public:
+	static DWORD m_dwNumHandles;		// Number of instances
+	static DWORD m_dwTotalBytes;			// Total number of bytes allocated (including bitmap copies and object size)
+#endif
+
+        // Implementation
+        public void Load(UInt16 info, UInt16 PalBitsPerEntry, UInt16 index, UInt16 entries, byte[] PalBuffer)
+        {
+            throw new NotImplementedException();
+        }
+        public void AttachToTexture(TextureHandle pTex)
+        {
+            throw new NotImplementedException();
+        }
+        public void DetachFromTexture(TextureHandle pTex)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        protected List<TextureHandle> GetAttachedTextureIndex(TextureHandle pTex)
+        {
+            throw new NotImplementedException();
+        }
+
+#if _DEBUG
+	public:
+	static void MemoryUsageReport();
+#endif
     }
 }

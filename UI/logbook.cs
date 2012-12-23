@@ -3,7 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using FalconNet.Common;
 using FalconNet.FalcLib;
-using DWORD = System.Int16;
+using DWORD = System.UInt32;
 
 namespace FalconNet.UI
 {

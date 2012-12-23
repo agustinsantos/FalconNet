@@ -1,5 +1,5 @@
 ﻿using System;
-using DWORD = System.Int16;
+using DWORD = System.UInt32;
 
 namespace FalconNet.Graphics
 {

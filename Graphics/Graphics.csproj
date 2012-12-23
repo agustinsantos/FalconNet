@@ -47,6 +47,9 @@
     <Compile Include="ObjectInstance.cs" />
     <Compile Include="ObjectLOD.cs" />
     <Compile Include="ObjectParent.cs" />
+    <Compile Include="PalBank.cs" />
+    <Compile Include="star.cs" />
+    <Compile Include="TimeMgr.cs" />
     <Compile Include="Tod.cs" />
     <Compile Include="Ttypes.cs" />
     <Compile Include="WXMap.cs" />
@@ -79,6 +82,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gr3DLib\Gr3DLib.csproj">
+      <Project>{7dccebab-0875-4761-aa30-282c6fd4db08}</Project>
+      <Name>Gr3DLib</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

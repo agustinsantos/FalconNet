@@ -1,7 +1,7 @@
 using System;
 using FalconNet.Common;
-using DWORD = System.Int16;
-using WORD = System.Byte;
+using DWORD = System.UInt32;
+using WORD = System.UInt16;
 
 namespace FalconNet.Graphics
 {
@@ -168,7 +168,7 @@ namespace FalconNet.Graphics
 
         void SetupMPRState(int flag = 0);
 
-        void SelectForegroundColor(int color);
+        void SelectForegroundColor(DWORD color);
 
         void SelectBackgroundColor(int color);
 

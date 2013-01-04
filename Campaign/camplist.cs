@@ -368,8 +368,8 @@ namespace FalconNet.Campaign
         public virtual bool Test(VuEntity e)
         {
             if ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] != 0 &&
-                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classtable_Classes.CLASS_UNIT ||
-                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classtable_Classes.CLASS_OBJECTIVE))
+                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
+                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
                 return true;
             return false;
         }
@@ -377,8 +377,8 @@ namespace FalconNet.Campaign
         public virtual bool RemoveTest(VuEntity e)
         {
             if ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] != 0 &&
-                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classtable_Classes.CLASS_UNIT ||
-                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classtable_Classes.CLASS_OBJECTIVE))
+                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
+                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
                 return true;
             return false;
         }

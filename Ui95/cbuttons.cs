@@ -2,6 +2,7 @@ using System;
 using FalconNet.Common;
 using System.IO;
 using WORD=System.UInt16;
+using COLORREF = System.Int32;
 
 namespace FalconNet.Ui95
 {
@@ -48,7 +49,7 @@ namespace FalconNet.Ui95
 			public void SetDefaultFlags() { SetFlags(DefaultFlags_); }
 			public long GetDefaultFlags() { return(DefaultFlags_); }
 			// Setup Functions 
-			public void Setup(long ID,short Type,long x,long y)
+			public void Setup(long ID, UI95_ENUM Type,long x,long y)
 				{ throw new NotImplementedException(); }
 		#if _UI95_PARSER_
 			public void SetHotSpot(UI95_RECT hotspot) { HotSpot_=hotspot; if(hotspot.left == -1 && hotspot.right == -1) UseHotSpot_=0; else UseHotSpot_=1; }
@@ -77,11 +78,11 @@ namespace FalconNet.Ui95
 				{ throw new NotImplementedException(); }
 			public void SetState(short state) { state_=state; }
 			public short GetState() { return(state_); }
-			public void SetImage(short ID,long ImageID)
+			public void SetImage(UI95_ENUM ID,long ImageID)
 				{ throw new NotImplementedException(); }
 			public void ClearImage(short ID,long ImageID)
 				{ throw new NotImplementedException(); }
-			public void SetImage(short ID,IMAGE_RSC img)
+			public void SetImage(UI95_ENUM ID,IMAGE_RSC img)
 				{ throw new NotImplementedException(); }
 			public void SetAnim(short BtnID,long AnimID,short animtype,short dir)
 				{ throw new NotImplementedException(); }

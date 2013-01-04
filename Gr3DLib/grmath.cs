@@ -8,6 +8,83 @@ namespace FalconNet.GrLib
 {
     public static class grmath
     {
+        /*
++---------------------------------------------------------------------------+
+|    glConvertToRadian                                                      |
++---------------------------------------------------------------------------+
+|    Description:  Convert angle to radian representation                   |
+|                                                                           |
+|    Parameters:   angle (16384 = 360 degrees)                              |
+|                                                                           |
+|    Returns:      angle in radian                                          |
++---------------------------------------------------------------------------+
+|    Programmed by Erick Jap                           November 29, 1993    |
++---------------------------------------------------------------------------+
+*/
+        public static GLfloat glConvertToRadian(GLFixed0_14 deg)
+        {
+            return (deg * (GLfloat)0.000383495197f);
+        }	/* glConvertToRadian */
+
+        /*
+        +---------------------------------------------------------------------------+
+        |    glConvertToDegree                                                      |
+        +---------------------------------------------------------------------------+
+        |    Description:  Convert angle (0-16384) to degree (0-360) representation |
+        |                                                                           |
+        |    Parameters:   angle (16384 = 360 degrees)                              |
+        |                                                                           |
+        |    Returns:      angle in degree (0-360)                                  |
+        +---------------------------------------------------------------------------+
+        |    Programmed by Erick Jap                           November 29, 1993    |
+        +---------------------------------------------------------------------------+
+        */
+        public static GLfloat glConvertToDegree(GLFixed0_14 deg)
+        {
+            return (deg * 0.021972656f);
+        }	/* glConvertToDegree */
+
+        /*
+        +---------------------------------------------------------------------------+
+        |    glConvertFromDegree                                                    |
+        +---------------------------------------------------------------------------+
+        |    Description:  Convert degree (0-360) to angle (0-16384) representation |
+        |                                                                           |
+        |    Parameters:   angle in degree (0-360)                                  |
+        |                                                                           |
+        |    Returns:      angle (16384 = 360 degrees)                              |
+        +---------------------------------------------------------------------------+
+        |    Programmed by Erick Jap                           November 29, 1993    |
+        +---------------------------------------------------------------------------+
+        */
+        public static GLFixed0_14 glConvertFromDegree(GLfloat deg)
+        {
+            return ((int)(deg * 45.511111111f + 0.5f));
+        }	/* glConvertFromDegree */
+
+        public static GLfloat glConvertFromDegreef(GLfloat deg)
+        {
+            return (deg * 45.511111111f + 0.5f);
+        }	/* glConvertFromDegreef */
+
+        /*
+        +---------------------------------------------------------------------------+
+        |    glConvertFromRadian                                                    |
+        +---------------------------------------------------------------------------+
+        |    Description:  Convert to angle from radian representation              |
+        |                                                                           |
+        |    Parameters:   angle in radian                                          |
+        |                                                                           |
+        |    Returns:      angle (16384 = 360 degrees)                              |
+        +---------------------------------------------------------------------------+
+        |    Programmed by Erick Jap                           November 29, 1993    |
+        +---------------------------------------------------------------------------+
+        */
+        public static GLFixed0_14 glConvertFromRadian(GLfloat deg)
+        {
+            return ((int)(deg * 2607.594588f + 0.5f));
+        }	/* glConvertFromRadian */
+
 
         public static float degtorad(float d)
         {

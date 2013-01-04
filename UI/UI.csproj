@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,6 +39,7 @@
     <Compile Include="logbook.cs" />
     <Compile Include="campmiss.cs" />
     <Compile Include="dispopts.cs" />
+    <Compile Include="tac_class.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -53,6 +54,14 @@
     <ProjectReference Include="..\FalcLib\FalcLib.csproj">
       <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>
       <Name>FalcLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ui95\Ui95.csproj">
+      <Project>{81d5a611-9192-40cc-ab58-4309bb9cff68}</Project>
+      <Name>Ui95</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VU\VU.csproj">
+      <Project>{eda4023d-884d-4f58-9e25-0f77a34cf43c}</Project>
+      <Name>VU</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

@@ -693,38 +693,43 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
         
-        protected int ReadTODFile(StreamReader @in, TimeOfDayStruct tod, int countflag = 0)
+        protected int ReadTODFile(StreamReader @in, TimeOfDayStruct[] tods, int countflag = 0)
         {
-#if TODO
             float fvar;
             int total;
             string buffer;
+            int cnt = 0;
 
             total = 0;
-            while (1)
+            while (true)
             {
-                fscanf(@in, "%s", buffer);
-                strupr(buffer);
-                if (strcmp(buffer, "ZZZZ") == 0)
+                TimeOfDayStruct tod = tods[cnt];
+                FileScanner.fscanf(@in, "%s", out buffer);
+                buffer = buffer.ToUpperInvariant();
+                if (buffer== "ZZZZ")
                 {
-                    SetDefaultColor(&tod.RainColor, &tod.HazeGroundColor);
-                    SetDefaultColor(&tod.SnowColor, &tod.HazeGroundColor);
-                    SetDefaultColor(&tod.VisColor, &tod.HazeSkyColor);
+                    SetDefaultColor(ref tod.RainColor, tod.HazeGroundColor);
+                    SetDefaultColor(ref tod.SnowColor, tod.HazeGroundColor);
+                    SetDefaultColor(ref tod.VisColor, tod.HazeSkyColor);
                     break;
                 }
-                else if (strcmp(buffer, "TIME") == 0)
+                else if (buffer=="TIME")
                 {
                     DWORD ivar1, ivar2, ivar3;
                     if (total != 0)
                     {
-                        SetDefaultColor(&tod.RainColor, &tod.HazeGroundColor);
-                        SetDefaultColor(&tod.SnowColor, &tod.HazeGroundColor);
-                        SetDefaultColor(&tod.VisColor, &tod.HazeSkyColor);
+                        SetDefaultColor(ref tod.RainColor, tod.HazeGroundColor);
+                        SetDefaultColor(ref tod.SnowColor, tod.HazeGroundColor);
+                        SetDefaultColor(ref tod.VisColor, tod.HazeSkyColor);
                     }
                     total++;
-                    if (!countflag) tod++;
+                    if (countflag == 0)
+                    {
+                        cnt++;
+                        tod = tods[cnt];
+                    }
 
-                    fscanf(@in, "%ld:%ld:%ld", &ivar1, &ivar2, &ivar3);
+                    FileScanner.fscanf(@in, "%ld:%ld:%ld", out ivar1, out ivar2, out ivar3);
                     ivar1 *= 3600000;
                     ivar2 *= 60000;
                     ivar3 *= 1000;
@@ -737,108 +742,106 @@ namespace FalconNet.Graphics
                     tod.VisColor.r = tod.VisColor.g = tod.VisColor.b = -1;
                     tod.MinVis = 0.1f;
                 }
-                else if (strcmp(buffer, "SUNTILT") == 0)
+                else if (buffer == "SUNTILT")
                 {
-                    fscanf(@in, "%f", &fvar);
-                    ISunTilt = glConvertFromDegree(fvar);
+                    FileScanner.fscanf(@in, "%f", out fvar);
+                    ISunTilt = grmath.glConvertFromDegree(fvar);
                 }
-                else if (strcmp(buffer, "MOONTILT") == 0)
+                else if (buffer== "MOONTILT")
                 {
-                    fscanf(@in, "%f", &fvar);
-                    IMoonTilt = glConvertFromDegree(fvar);
+                    FileScanner.fscanf(@in, "%f", out fvar);
+                    IMoonTilt = grmath.glConvertFromDegree(fvar);
                 }
 
         //---- ignore these ----
-                else if (strcmp(buffer, "SUNYAW") == 0)
+                else if (buffer == "SUNYAW")
                 {
-                    fscanf(@in, "%f", &fvar);
+                    FileScanner.fscanf(@in, "%f", out fvar);
                 }
-                else if (strcmp(buffer, "MOONYAW") == 0)
+                else if (buffer=="MOONYAW")
                 {
-                    fscanf(@in, "%f", &fvar);
+                    FileScanner.fscanf(@in, "%f", out fvar);
                 }
                 //----------------------
-                else if (strcmp(buffer, "HAZESUNSETCOLOR") == 0)
+                else if (buffer=="HAZESUNSETCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &HazeSunsetColor.r, &HazeSunsetColor.g, &HazeSunsetColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out HazeSunsetColor.r, out HazeSunsetColor.g, out HazeSunsetColor.b);
                 }
-                else if (strcmp(buffer, "HAZESUNRISECOLOR") == 0)
+                else if (buffer=="HAZESUNRISECOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &HazeSunriseColor.r, &HazeSunriseColor.g, &HazeSunriseColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out HazeSunriseColor.r, out HazeSunriseColor.g, out HazeSunriseColor.b);
                 }
-                else if (strcmp(buffer, "SKYCOLOR") == 0)
+                else if (buffer=="SKYCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.SkyColor.r, &tod.SkyColor.g, &tod.SkyColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.SkyColor.r, out tod.SkyColor.g, out tod.SkyColor.b);
                 }
-                else if (strcmp(buffer, "HAZESKYCOLOR") == 0)
+                else if (buffer=="HAZESKYCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.HazeSkyColor.r, &tod.HazeSkyColor.g, &tod.HazeSkyColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.HazeSkyColor.r, out tod.HazeSkyColor.g, out tod.HazeSkyColor.b);
                 }
-                else if (strcmp(buffer, "GROUNDCOLOR") == 0)
+                else if (buffer=="GROUNDCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.GroundColor.r, &tod.GroundColor.g, &tod.GroundColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.GroundColor.r, out tod.GroundColor.g, out tod.GroundColor.b);
                 }
-                else if (strcmp(buffer, "HAZEGROUNDCOLOR") == 0)
+                else if (buffer=="HAZEGROUNDCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.HazeGroundColor.r, &tod.HazeGroundColor.g, &tod.HazeGroundColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.HazeGroundColor.r, out tod.HazeGroundColor.g, out tod.HazeGroundColor.b);
                 }
-                else if (strcmp(buffer, "TEXTURELIGHTING") == 0)
+                else if (buffer=="TEXTURELIGHTING")
                 {
-                    fscanf(@in, "%f %f %f", &tod.TextureLighting.r, &tod.TextureLighting.g, &tod.TextureLighting.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.TextureLighting.r, out tod.TextureLighting.g, out tod.TextureLighting.b);
                 }
-                else if (strcmp(buffer, "AMBIENT") == 0)
+                else if (buffer=="AMBIENT")
                 {
-                    fscanf(@in, "%f", &tod.Ambient);
+                    FileScanner.fscanf(@in, "%f", out tod.Ambient);
                 }
-                else if (strcmp(buffer, "DIFFUSE") == 0)
+                else if (buffer=="DIFFUSE")
                 {
-                    fscanf(@in, "%f", &tod.Diffuse);
+                    FileScanner.fscanf(@in, "%f", out tod.Diffuse);
                 }
-                else if (strcmp(buffer, "SUNPITCH") == 0)
+                else if (buffer=="SUNPITCH")
                 {
-                    fscanf(@in, "%f", &tod.SunPitch);
-                    tod.SunPitch = glConvertFromDegreef(tod.SunPitch);
+                    FileScanner.fscanf(@in, "%f", out tod.SunPitch);
+                    tod.SunPitch = grmath.glConvertFromDegreef(tod.SunPitch);
                     tod.Flag |= GL_TIME_OF_DAY_USE_SUN;
                 }
-                else if (strcmp(buffer, "MOONPITCH") == 0)
+                else if (buffer=="MOONPITCH")
                 {
-                    fscanf(@in, "%f", &tod.MoonPitch);
-                    tod.MoonPitch = glConvertFromDegreef(tod.MoonPitch);
+                    FileScanner.fscanf(@in, "%f", out tod.MoonPitch);
+                    tod.MoonPitch = grmath.glConvertFromDegreef(tod.MoonPitch);
                     tod.Flag |= GL_TIME_OF_DAY_USE_MOON;
                 }
-                else if (strcmp(buffer, "STAR") == 0)
+                else if (buffer=="STAR")
                 {
                     tod.StarIntensity = 1.0f;
                 }
-                // JPO additions
-                else if (strcmp(buffer, "RAINCOLOR") == 0)
+                // JPO additions)
+                else if (buffer=="RAINCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.RainColor.r, &tod.RainColor.g, &tod.RainColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.RainColor.r, out tod.RainColor.g, out tod.RainColor.b);
                 }
-                else if (strcmp(buffer, "SNOWCOLOR") == 0)
+                else if (buffer=="SNOWCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.SnowColor.r, &tod.SnowColor.g, &tod.SnowColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.SnowColor.r, out tod.SnowColor.g, out tod.SnowColor.b);
                 }
-                else if (strcmp(buffer, "LIGHTNINGCOLOR") == 0)
+                else if (buffer=="LIGHTNINGCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.LightningColor.r, &tod.LightningColor.g, &tod.LightningColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.LightningColor.r, out tod.LightningColor.g, out tod.LightningColor.b);
                 }
-                else if (strcmp(buffer, "MINVISIBILITY") == 0)
+                else if (buffer=="MINVISIBILITY")
                 {
-                    fscanf(@in, "%f", &tod.MinVis);
+                    FileScanner.fscanf(@in, "%f", out tod.MinVis);
                 }
-                else if (strcmp(buffer, "VISCOLOR") == 0)
+                else if (buffer=="VISCOLOR")
                 {
-                    fscanf(@in, "%f %f %f", &tod.VisColor.r, &tod.VisColor.g, &tod.VisColor.b);
+                    FileScanner.fscanf(@in, "%f %f %f", out tod.VisColor.r, out tod.VisColor.g, out tod.VisColor.b);
                 }
                 else
                 {
-                    MonoPrint("Ignoring TOD item %s\n", buffer);
+                    throw new FormatException("Ignoring TOD item " + buffer);
                 }
             }
             return total;
-#endif
-            throw new NotImplementedException();
         }
         
         protected void SetDefaultColor(ref Tcolor col, Tcolor defcol)

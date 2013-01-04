@@ -840,14 +840,14 @@ public static  VU_ID_NUMBER lastVolitileId;
             return (EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS];
         }
 
-        public Classtable_Types GetFalconType()
+        public ClassTypes GetFalconType()
         {
-            return (Classtable_Types)(EntityType()).classInfo_[(int)VU_CLASS.VU_TYPE];
+            return (ClassTypes)(EntityType()).classInfo_[(int)VU_CLASS.VU_TYPE];
         }
 
-        public byte GetSType()
+        public SubTypes GetSType()
         {
-            return (EntityType()).classInfo_[(int)VU_CLASS.VU_STYPE];
+            return (SubTypes)(EntityType()).classInfo_[(int)VU_CLASS.VU_STYPE];
         }
 
         public byte GetSPType()

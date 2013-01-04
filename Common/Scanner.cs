@@ -12,6 +12,14 @@ namespace FalconNet.Common
         {
             throw new NotImplementedException();
         }
+        public static void fscanf(StreamReader f, string format, out uint var1, out uint var2, out uint var3)
+        {
+            throw new NotImplementedException();
+        }
+        public static void fscanf(StreamReader f, string format, out float var1, out float var2, out float var3)
+        {
+            throw new NotImplementedException();
+        }
         public static void fscanf(StreamReader f, string format, out string var)
         {
             throw new NotImplementedException();

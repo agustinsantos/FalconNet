@@ -198,9 +198,9 @@ typedef unsigned char uchar;
 #endif
 	 TODO */
 	
-	public struct UI95_RECT
+	public class UI95_RECT
 	{
-		internal long left, top, right, bottom;
+		public long left, top, right, bottom;
 	}
 
 	public enum UI_CONST

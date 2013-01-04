@@ -5,6 +5,18 @@ using FalconNet.Common;
 using VU_BYTE=System.Byte;
 namespace FalconNet.FalcLib
 {
+    public class FlightClass {
+        // It is already defined in Campaign :-(
+        public FlightClass()
+        { throw new NotImplementedException(); }
+    }
+
+    public class SquadronClass{
+        // It is already defined in Campaign :-(
+        public SquadronClass()
+        { throw new NotImplementedException(); }
+    }
+
 	// ==========================================
 	// Fly states
 	// ==========================================

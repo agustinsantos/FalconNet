@@ -14,7 +14,7 @@ namespace FalconNet.FalcLib
     //#define FALCON_RELEASE      23
     //#define FALCON40            0x02
     /* Domain Class table Entries */
-    public enum Classtable_Domains
+    public enum Domains
     {
         DOMAIN_ABSTRACT = 1,
         DOMAIN_AIR = 2,
@@ -26,7 +26,7 @@ namespace FalconNet.FalcLib
     };
 
     /* Class Class table Entries */
-    public enum Classtable_Classes
+    public enum Classes
     {
         CLASS_ANIMAL = 1,
         CLASS_FEATURE = 2,
@@ -45,7 +45,7 @@ namespace FalconNet.FalcLib
     };
 
     /* Type Class table Entries */
-    public enum Classtable_Types
+    public enum ClassTypes
     {
         TYPE_NOTHING = 1,
         TYPE_GUN = 3,
@@ -209,8 +209,10 @@ namespace FalconNet.FalcLib
     };
 
     /* Sub type Class table Entries */
-    public enum Sub_Types
+    public enum SubTypes
     {
+        NOSUBTYPE = 0,
+        UI_VU_ANY = 255,
         STYPE_SITE1 = 1,
         STYPE_HARTS1 = 1,
         STYPE_TEST = 1,

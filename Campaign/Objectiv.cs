@@ -118,10 +118,10 @@ namespace FalconNet.Campaign
 
 			link_data = null;
 
-			if (GetFalconType () == Classtable_Types.TYPE_AIRBASE ||
-                GetFalconType () == Classtable_Types.TYPE_AIRSTRIP) {
+			if (GetFalconType () == ClassTypes.TYPE_AIRBASE ||
+                GetFalconType () == ClassTypes.TYPE_AIRSTRIP) {
 
-				if (GetFalconType () == Classtable_Types.TYPE_AIRBASE) {
+				if (GetFalconType () == ClassTypes.TYPE_AIRBASE) {
 					SetTacan (1);
 				}
 				brain = new ATCBrain (this);
@@ -998,7 +998,7 @@ namespace FalconNet.Campaign
 
 		public bool IsPrimary ()
 		{
-			if (GetFalconType () == Classtable_Types.TYPE_CITY && obj_data.priority > AIInput.PRIMARY_OBJ_PRIORITY)
+			if (GetFalconType () == ClassTypes.TYPE_CITY && obj_data.priority > AIInput.PRIMARY_OBJ_PRIORITY)
 				return true;
 			return false;
 		}
@@ -1006,14 +1006,14 @@ namespace FalconNet.Campaign
 		public bool IsSecondary ()
 		{
 			// Only cities and towns can be secondary objectives, and ALL automatically are
-			if ((GetFalconType () == Classtable_Types.TYPE_CITY || GetFalconType () == Classtable_Types.TYPE_TOWN) && obj_data.priority > AIInput.SECONDARY_OBJ_PRIORITY)
+			if ((GetFalconType () == ClassTypes.TYPE_CITY || GetFalconType () == ClassTypes.TYPE_TOWN) && obj_data.priority > AIInput.SECONDARY_OBJ_PRIORITY)
 				return true;
 			return false;
 		}
 
 		public bool IsSupplySource ()
 		{
-			if (GetFalconType () == Classtable_Types.TYPE_CITY || GetFalconType () == Classtable_Types.TYPE_PORT || GetFalconType () == Classtable_Types.TYPE_DEPOT || GetFalconType () == Classtable_Types.TYPE_ARMYBASE) {
+			if (GetFalconType () == ClassTypes.TYPE_CITY || GetFalconType () == ClassTypes.TYPE_PORT || GetFalconType () == ClassTypes.TYPE_DEPOT || GetFalconType () == ClassTypes.TYPE_ARMYBASE) {
 				if (!IsFrontline () && !IsSecondline ())
 					return true;
 			}

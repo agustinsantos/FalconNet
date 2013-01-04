@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FalconNet.Common;
 using WORD=System.UInt16;
+using COLORREF = System.Int32;
 
 namespace FalconNet.Ui95
 {
@@ -31,13 +32,13 @@ namespace FalconNet.Ui95
 		protected long	ID_;
 		protected long[]	Section_ = new long[NUM_SECTIONS];
 		protected UI95_BITTABLE	Flags_;
-		protected short	_CType_;
-		protected short	Type_;
+        protected UI95_ENUM _CType_;
+        protected UI95_ENUM Type_;
 		protected long	x_, y_, w_, h_;
 		protected short	Client_;
 
 		// Don't save
-		protected short	Ready_;
+		protected bool	Ready_;
 		protected Dictionary<long, USERDATA> User_;
 		public C_Window Parent_;
 
@@ -62,10 +63,10 @@ namespace FalconNet.Ui95
 			Flags_ = 0;
 			Parent_ = null;
 			User_ = null;
-			Ready_ = 0;		// OW
+			Ready_ = false;		// OW
 		}
 
-		public C_Base (string stream)
+		public C_Base (byte[] stream, ref int pos)
 		{
 		#if TODO
 			short count,i;
@@ -175,7 +176,7 @@ namespace FalconNet.Ui95
 					throw new NotImplementedException();
 		}
 
-		public virtual void Save (string stream)
+        public virtual void Save(byte[] stream, ref int pos)
 		{
 #if TODO
 			short count;
@@ -286,12 +287,12 @@ namespace FalconNet.Ui95
 			ID_ = id;
 		}
 
-		public void SetType (short type)
+		public void SetType (UI95_ENUM type)
 		{
 			Type_ = type;
 		}
 
-		public void _SetCType_ (short ctype)
+        public void _SetCType_(UI95_ENUM ctype)
 		{
 			_CType_ = ctype;
 		}
@@ -398,7 +399,7 @@ namespace FalconNet.Ui95
 			Parent_ = win;
 		}
 
-		public void SetReady (short r)
+		public void SetReady (bool r)
 		{
 			Ready_ = r;
 		}
@@ -564,12 +565,12 @@ namespace FalconNet.Ui95
 			return(ID_);
 		}
 
-		public virtual short GetCType ()
+		public virtual UI95_ENUM GetCType ()
 		{
 			return(Type_);
 		}
 
-		public short _GetCType_ ()
+        public UI95_ENUM _GetCType_()
 		{
 			return(_CType_);
 		}
@@ -653,7 +654,7 @@ namespace FalconNet.Ui95
 			return(Parent_);
 		}
 
-		public short  Ready ()
+		public bool  Ready ()
 		{
 			return(Ready_);
 		}

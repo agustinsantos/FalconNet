@@ -1,6 +1,7 @@
 using System;
 using FalconNet.Common;
 using System.IO;
+using COLORREF = System.Int32;
 
 namespace FalconNet.Ui95
 {
@@ -103,7 +104,7 @@ public class C_Control :  C_Base
 	
 		public C_Control()
 		{ throw new NotImplementedException(); }
-		public C_Control(string stream)
+        public C_Control(byte[] stream, ref int pos)
 		{ throw new NotImplementedException(); }
 		public C_Control(FileStream fp)
 		{ throw new NotImplementedException(); }
@@ -120,7 +121,7 @@ public class C_Control :  C_Base
 #endif		
 		public override long Size()
 		{ throw new NotImplementedException(); }
-		public override void Save(string stream)
+        public override void Save(byte[] stream, ref int pos)
 		{ throw new NotImplementedException(); }
 		public override void Save(FileStream fp)
 		{ throw new NotImplementedException(); }

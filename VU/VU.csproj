@@ -39,5 +39,11 @@
     <Compile Include="VU_ID.cs" />
     <Compile Include="VU_SESSION_ID.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{63b80e09-c6e2-4077-ab8c-e6ead52eae47}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

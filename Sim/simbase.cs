@@ -107,6 +107,6 @@ namespace FalconNet.Sim
 	}
 
 	
-	// TODO Clases SimBaseClass and SimulationDriver are in Campaign proyect
+	// TODO Clases SimBaseClass and SimulationDriver are in Campaign project
 
 }

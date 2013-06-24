@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DrawBSP.cs" />
+    <Compile Include="DrawGrnd.cs" />
     <Compile Include="GLContext.cs" />
     <Compile Include="localwx.cs" />
     <Compile Include="mpr_light.cs" />

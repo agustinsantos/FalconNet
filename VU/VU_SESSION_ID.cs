@@ -2,6 +2,7 @@
 using VU_MSG_TYPE = System.UInt64;
 using VU_KEY = System.UInt64;
 using VU_ID_NUMBER = System.UInt64;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.VU
 {
@@ -12,6 +13,13 @@ namespace FalconNet.VU
 
         public VU_SESSION_ID() { }
         public VU_SESSION_ID(ulong value) { value_ = value; }
+        
+        public int Encode(ByteWrapper buffer)
+        {
+            byte[] buf = EncodingHelpers.EncodeULongBE(value_);
+            buffer.put(buf);
+            return buf.Length;
+        }
 
         public static bool operator ==(VU_SESSION_ID lhs, VU_SESSION_ID rhs)
         { return (lhs.value_ == rhs.value_ ? true : false); }

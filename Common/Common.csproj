@@ -34,6 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Encoding\ByteWrapper.cs" />
+    <Compile Include="Encoding\ByteWrapperExtension.cs" />
+    <Compile Include="Encoding\EncodingHelpers.cs" />
     <Compile Include="EnumSupport.cs" />
     <Compile Include="ConvertionSupport.cs" />
     <Compile Include="Constants.cs" />

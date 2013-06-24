@@ -41,7 +41,6 @@ namespace FalconNet.Common
     public struct SquadUIInfoClass { }
     public struct EventElement { }
     public struct DrawableTrail { }
-    public class SimVehicleClass { }
     public class CampEntity { }
     public class TailInsertList { }
     public struct FalconDeathMessage { }
@@ -89,6 +88,7 @@ namespace FalconNet.Common
     public struct FireControlComputer { }
     public struct SMSClass { }
     public struct GunClass { }
+
 
 }
 

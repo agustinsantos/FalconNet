@@ -5,8 +5,11 @@ using BIG_SCALAR = System.Single;
 using SM_SCALAR = System.Single;
 using VU_DAMAGE = System.UInt64;
 using VU_BYTE = System.Byte;
+using VU_TIME = System.UInt64;
+using VU_BOOL = System.Boolean;
 
-using System.IO;//typedef float SM_SCALAR;
+using System.IO;
+using FalconNet.Common.Encoding;//typedef float SM_SCALAR;
 
 namespace FalconNet.VU
 {
@@ -47,6 +50,30 @@ namespace FalconNet.VU
         public bool persistent_;
     }
 
+    public struct VuFlagBits
+    {
+        public bool private_;//: 1;	// 1 --> not public
+        public bool transfer_;//: 1;	// 1 --> can be transferred
+        public bool tangible_;//: 1;	// 1 --> can be seen/touched with
+        public bool collidable_;//: 1;	// 1 --> put in auto collision table
+        public bool global_;//: 1;	// 1 --> visible to all groups
+        public bool persistent_;//: 1;	// 1 --> keep ent local across group joins
+        public uint pad_;//: 10;	// unused
+
+        public static explicit operator VuFlagBits(ushort val)
+        {
+            VuFlagBits flag = new VuFlagBits();
+            throw new NotImplementedException();
+            //TODO return flag;
+        }
+        public static explicit operator ushort(VuFlagBits flag)
+        {
+            ushort val = 0;
+            throw new NotImplementedException();
+            //TODO return val;
+        }
+    }
+
     //typedef SM_SCALAR VU_QUAT[4];
     //typedef SM_SCALAR VU_VECT[3];
 
@@ -60,7 +87,7 @@ namespace FalconNet.VU
 	      VuFlagBits breakdown_;
 	    } flags_;
 #endif
-        public ushort flags_;
+        public VuFlagBits flags_;
         public VU_ID id_;
         public VU_ID ownerId_;	// owning session
         public VU_ID assoc_;	// id of ent which must be local to this ent
@@ -75,20 +102,14 @@ namespace FalconNet.VU
 #else // !VU_USE_QUATERNION
         public SM_SCALAR yaw_, pitch_, roll_;
         public SM_SCALAR dyaw_, dpitch_, droll_;
-        public OrientationData(byte[] stream, ref int pos)
+        public OrientationData(ByteWrapper buffer)
         {
-            yaw_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            pitch_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            roll_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            dyaw_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            dpitch_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            droll_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
+            yaw_ = buffer.DecodeFloatLE();
+            pitch_ = buffer.DecodeFloatLE();
+            roll_ = buffer.DecodeFloatLE();
+            dyaw_ = buffer.DecodeFloatLE();
+            dpitch_ = buffer.DecodeFloatLE();
+            droll_ = buffer.DecodeFloatLE();
         }
 #endif
     }
@@ -97,20 +118,14 @@ namespace FalconNet.VU
     {
         public BIG_SCALAR x_, y_, z_;
         public SM_SCALAR dx_, dy_, dz_;
-        public PositionData(byte[] stream, ref int pos)
+        public PositionData(ByteWrapper buffer)
         {
-            x_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            y_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            z_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            dx_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            dy_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
-            dz_ = BitConverter.ToSingle(stream, pos);
-            pos += sizeof(Single);
+            x_ = buffer.DecodeFloatLE();
+            y_ = buffer.DecodeFloatLE();
+            z_ = buffer.DecodeFloatLE();
+            dx_ = buffer.DecodeFloatLE();
+            dy_ = buffer.DecodeFloatLE();
+            dz_ = buffer.DecodeFloatLE();
         }
     }
 
@@ -132,28 +147,20 @@ namespace FalconNet.VU
         {
         }
 
-        public VuEntity(byte[] stream, ref int pos)
+        public VuEntity(ByteWrapper buffer)
         {
             refcount_ = 0;
             //driver_ = 0;
-            share_.entityType_ = BitConverter.ToUInt16(stream, pos);
-            pos += sizeof(UInt16);
-            share_.flags_ = BitConverter.ToUInt16(stream, pos);
-            pos += sizeof(UInt16);
-            share_.id_.creator_ = new VU_SESSION_ID(BitConverter.ToUInt64(stream, pos));
-            pos += sizeof(UInt64);
-            share_.id_.num_ = BitConverter.ToUInt64(stream, pos);
-            pos += sizeof(UInt64);
-            share_.ownerId_.creator_ = new VU_SESSION_ID(BitConverter.ToUInt64(stream, pos));
-            pos += sizeof(UInt64);
-            share_.ownerId_.num_ = BitConverter.ToUInt64(stream, pos);
-            pos += sizeof(UInt64);
-            share_.assoc_.creator_ = new VU_SESSION_ID(BitConverter.ToUInt64(stream, pos));
-            pos += sizeof(UInt64);
-            share_.assoc_.num_ = BitConverter.ToUInt64(stream, pos);
-            pos += sizeof(UInt64);
-            pos_ = new PositionData(stream, ref pos);
-            orient_ = new OrientationData(stream, ref pos);
+            share_.entityType_ = buffer.DecodeUShortLE();
+            share_.flags_ = (VuFlagBits)buffer.DecodeUShortLE();
+            share_.id_.creator_ = new VU_SESSION_ID(buffer.DecodeUShortLE());
+            share_.id_.num_ = buffer.DecodeULongLE();
+            share_.ownerId_.creator_ = new VU_SESSION_ID(buffer.DecodeULongLE());
+            share_.ownerId_.num_ = buffer.DecodeULongLE();
+            share_.assoc_.creator_ = new VU_SESSION_ID(buffer.DecodeULongLE());
+            share_.assoc_.num_ = buffer.DecodeULongLE();
+            pos_ = new PositionData(buffer);
+            orient_ = new OrientationData(buffer);
 
             vuState_ = VU_MEM_STATE.VU_MEM_CREATED;
             SetEntityType(share_.entityType_);
@@ -167,16 +174,16 @@ namespace FalconNet.VU
         }
 
 
-        public VuEntity(FileStream filePtr)
+        public VuEntity(Stream file)
         {
         }
 
-        public virtual int Save(byte[] stream, ref int pos)
+        public virtual int Save(ByteWrapper buffer)
         {
             throw new NotImplementedException();
         }
 
-        public virtual int Save(FileStream filePtr)
+        public virtual int Save(Stream file)
         {
             throw new NotImplementedException();
         }
@@ -189,20 +196,19 @@ namespace FalconNet.VU
         // getters
         public VU_ID Id() { return share_.id_; }
         public VU_BYTE Domain() { return domain_; }
-#if TODO
-  bool IsPrivate()	{ return (bool)share_.flags_.breakdown_.private_; }
-  bool IsTransferrable(){return (bool)share_.flags_.breakdown_.transfer_;}
-  bool IsTangible()	{ return (bool)share_.flags_.breakdown_.tangible_; }
-  bool IsCollidable(){ return (bool)share_.flags_.breakdown_.collidable_;}
-  bool IsGlobal()	{ return (bool)share_.flags_.breakdown_.global_;}
-  bool IsPersistent(){ return (bool)share_.flags_.breakdown_.persistent_;}
-  VuFlagBits Flags()	{ return share_.flags_.breakdown_; }
-  ushort FlagValue()	{ return share_.flags_.value_; }
 
-  ushort VuState()	{ return vuState_; }
-  ushort Type()		{ return share_.entityType_; }
-  bool IsLocal()	{ return (bool)((vuLocalSession == OwnerId()) ? true : false);}
-#endif
+        public bool IsPrivate() { return (bool)share_.flags_.private_; }
+        public bool IsTransferrable() { return (bool)share_.flags_.transfer_; }
+        public bool IsTangible() { return (bool)share_.flags_.tangible_; }
+        public bool IsCollidable() { return (bool)share_.flags_.collidable_; }
+        public bool IsGlobal() { return (bool)share_.flags_.global_; }
+        public bool IsPersistent() { return (bool)share_.flags_.persistent_; }
+        public VuFlagBits Flags() { return share_.flags_; }
+        public ushort FlagValue() { return (ushort)share_.flags_; }
+
+        public ushort Type() { return share_.entityType_; }
+        public bool IsLocal() { return (bool)((VUSTATIC.vuLocalSession == OwnerId()) ? true : false); }
+
         public VU_ID OwnerId() { return share_.ownerId_; }
         public VU_ID Association() { return share_.assoc_; }
 
@@ -238,13 +244,13 @@ namespace FalconNet.VU
             {
                 z = 0.0F;
             }
-#if TODO
+
 #if VU_GRID_TREE_Y_MAJOR
-            vuCollectionManager.HandleMove(this, y, x);
+            VUSTATIC.vuCollectionManager.HandleMove(this, y, x);
 #else
-            vuCollectionManager.HandleMove(this, x, y);
+            VUSTATIC.vuCollectionManager.HandleMove(this, x, y);
 #endif
-#endif
+
             //  assert( x > -1e6F && y > -1e6F && z < 20000.0F);
             //  assert( x < 5e6 && y < 5e6 && z > -250000.0F);
 
@@ -267,12 +273,6 @@ namespace FalconNet.VU
         public void SetAssociation(VU_ID assoc)
         {
             share_.assoc_ = assoc;
-        }
-
-        public bool IsLocal()
-        {
-            //TODO return (bool)((vuLocalSession == OwnerId()) ? true : false);
-            throw new NotImplementedException();
         }
 
         public void SetEntityType(ushort entityType)
@@ -330,7 +330,32 @@ namespace FalconNet.VU
 #endif
             throw new NotImplementedException();
         }
-         // event handlers
+
+        // Special VU type getters
+        public virtual VU_BOOL IsTarget()
+        {
+            return false;
+        }
+        public virtual VU_BOOL IsSession()
+        {
+            return false;
+        }
+        public virtual VU_BOOL IsGroup()
+        {
+            return false;
+        }
+        public virtual VU_BOOL IsGame()
+        {
+            return false;
+        }
+        // not really a type, but a utility nonetheless
+        public virtual VU_BOOL IsCamera()
+        {
+            return false;
+        }
+
+
+        // event handlers
         public virtual VU_ERRCODE Handle(VuErrorMessage error)
         {
             // default implementation stub
@@ -361,8 +386,41 @@ namespace FalconNet.VU
             // default does nothing
             return VU_ERRCODE.VU_NO_OP;
         }
+        int RefCount() { return refcount_; }
+        // destructor
+        //TODO protected virtual ~VuEntity();
+        protected virtual void ChangeId(VuEntity other) { throw new NotImplementedException(); }
+        internal void SetVuState(VU_MEM_STATE newState) { vuState_ = newState; }
+        internal virtual VU_ERRCODE InsertionCallback() { throw new NotImplementedException(); }
+        internal virtual VU_ERRCODE RemovalCallback() { throw new NotImplementedException(); }
 
-        protected ShareData share_;
+        public static int VuReferenceEntity(VuEntity ent)
+        {
+            if (ent!=null)
+                return ++ent.refcount_;
+            else
+                return -1;
+        }
+
+        public static int VuDeReferenceEntity(VuEntity ent)
+        {
+            //Debug.Assert(ent == null || FALSE == F4IsBadWritePtr(ent, sizeof(VuEntity)));
+            //if (ent) { // JB 010305 CTD
+            if (ent!= null)// && !F4IsBadWritePtr(ent, sizeof(VuEntity)))
+            { // JB 010305 CTD
+                if (--ent.refcount_ <= 0)
+                {
+                    //assert(vuDatabase == NULL || vuDatabase->Find(ent->Id()) == NULL);
+                    //assert(vuCollectionManager == NULL || vuCollectionManager->FindEnt(ent) == 0);
+                    //delete ent;
+                    return 0;
+                }
+                return ent.refcount_;
+            }
+            return -1;
+        }
+
+        internal ShareData share_;
         protected PositionData pos_;
         protected OrientationData orient_;
 

@@ -8,6 +8,7 @@ namespace FalconNet.VU
     {
 
         public static VU_ID FalconNullId = new VU_ID();
+        public static VU_ID vuNullId = new VU_ID(0,0);
 
         public VU_ID() { }
         public VU_ID(VU_SESSION_ID sessionpart, VU_ID_NUMBER idpart)
@@ -75,6 +76,17 @@ namespace FalconNet.VU
         {
             return (VU_KEY)(((ushort)id.creator_ << 16)
                     | ((ushort)id.num_));
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)(((ushort)this.creator_ << 16)
+                    | ((ushort)this.num_));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("ID(Num={0}, Creator={1})", num_, creator_);
         }
         // DATA
 

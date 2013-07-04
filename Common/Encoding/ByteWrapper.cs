@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FalconNet.Common.Encoding
 {
@@ -54,7 +51,6 @@ namespace FalconNet.Common.Encoding
         public ByteWrapper(int length)
             : this(new byte[length])
         {
-
         }
 
         /// <summary>
@@ -67,7 +63,6 @@ namespace FalconNet.Common.Encoding
         public ByteWrapper(byte[] buffer)
             : this(buffer, 0, buffer.Length)
         {
-
         }
 
         /// <summary>
@@ -84,7 +79,6 @@ namespace FalconNet.Common.Encoding
         public ByteWrapper(byte[] buffer, int offset)
             : this(buffer, offset, buffer.Length - offset)
         {
-
         }
 
         /// <summary>
@@ -102,7 +96,7 @@ namespace FalconNet.Common.Encoding
         /// </param>
         public ByteWrapper(byte[] buffer, int offset, int length)
         {
-            setBuffer(buffer, offset, length);
+            SetBuffer(buffer, offset, length);
         }
 
         /// <summary>
@@ -118,21 +112,21 @@ namespace FalconNet.Common.Encoding
         /// <param name='length'>
         /// length of the segment to use.
         /// </param>
-        public void reassign(byte[] buffer, int offset, int length)
+        public void Reassign(byte[] buffer, int offset, int length)
         {
-            setBuffer(buffer, offset, length);
+            SetBuffer(buffer, offset, length);
         }
 
-        private void setBuffer(byte[] buffer, int offset, int length)
+        private void SetBuffer(byte[] buffer, int offset, int length)
         {
-            checkBounds(buffer, offset, length);
+            CheckBounds(buffer, offset, length);
             _buffer = buffer;
             _offset = offset;
             _limit = _offset + length;
             _pos = _offset;
         }
 
-        private void checkBounds(byte[] buffer, int offset, int length)
+        private void CheckBounds(byte[] buffer, int offset, int length)
         {
             if (offset < 0)
             {
@@ -147,7 +141,7 @@ namespace FalconNet.Common.Encoding
         /// <summary>
         /// Resets current position to the start of the ByteWrapper.
         /// </summary>
-        public virtual void reset()
+        public virtual void Reset()
         {
             _pos = _offset;
         }
@@ -162,7 +156,7 @@ namespace FalconNet.Common.Encoding
         /// <exception cref='IndexOutOfRangeException'>
         /// if <code>length</code> bytes can not be read.
         /// </exception>
-        public virtual void verify(int length)
+        public virtual void Verify(int length)
         {
             if (length < 0)
             {
@@ -175,43 +169,6 @@ namespace FalconNet.Common.Encoding
         }
 
         /// <summary>
-        /// Reads the next four byte of the ByteWrapper as a hi-endian 32-bit integer.
-        /// The current position is increased by 4.
-        /// </summary>
-        /// <returns>
-        /// decoded value
-        /// </returns>
-        /// <exception cref='IndexOutOfRangeException'>
-        /// if <code>length</code> bytes can not be read.
-        /// </exception
-        public int getInt()
-        {
-            int rst;
-            verify(4);
-            int pos = _pos;
-            byte[] buffer = _buffer;
-            if (!BitConverter.IsLittleEndian)
-            {
-                rst =
-         (((int)buffer[pos] & 0xFF) << 24) +
-         (((int)buffer[pos + 1] & 0xFF) << 16) +
-         (((int)buffer[pos + 2] & 0xFF) << 8) +
-         ((int)buffer[pos + 3] & 0xFF);
-            }
-            else
-            {
-                rst =
-         (((int)buffer[pos + 3] & 0xFF) << 24) +
-         (((int)buffer[pos + 2] & 0xFF) << 16) +
-         (((int)buffer[pos + 1] & 0xFF) << 8) +
-         ((int)buffer[pos] & 0xFF);
-            }
-            _pos += 4;
-
-            return rst;
-        }
-
-        /// <summary>
         /// Reads the next byte of the ByteWrapper. The current position is increased by 1.
         /// </summary>
         /// <returns>
@@ -220,10 +177,10 @@ namespace FalconNet.Common.Encoding
         /// <exception cref='IndexOutOfRangeException'>
         /// if <code>length</code> bytes can not be read.
         /// </exception
-        public int get()
+        public byte GetByte()
         {
-            verify(1);
-            return (int)_buffer[_pos++] & 0xFF;
+            Verify(1);
+            return _buffer[_pos++];
         }
 
         /// <summary>
@@ -236,41 +193,11 @@ namespace FalconNet.Common.Encoding
         /// <exception cref='IndexOutOfRangeException'>
         /// if <code>length</code> bytes can not be read.
         /// </exception
-        public void get(byte[] dest)
+        public void GetBytes(byte[] dest)
         {
-            verify(dest.Length);
+            Verify(dest.Length);
             Array.Copy(_buffer, _pos, dest, 0, dest.Length);
             _pos += dest.Length;
-        }
-
-        /**
-    * Writes <code>value</code> to the ByteWrapper as a hi-endian 32-bit integer. The
-    * current position is increased by 4.
-    *
-    * @param value value to write
-    *
-    * @throws IndexOutOfRangeException if the bytes can not be written
-    *
-    * @noinspection PointlessBitwiseExpression
-    */
-        public virtual void putInt(int value_)
-        {
-            verify(4);
-            uint val = (uint)value_;
-            if (!BitConverter.IsLittleEndian)
-            {
-                put((val >> 24) & 0xFF);
-                put((val >> 16) & 0xFF);
-                put((val >> 8) & 0xFF);
-                put((val >> 0) & 0xFF);
-            }
-            else
-            {
-                put((val >> 0) & 0xFF);
-                put((val >> 8) & 0xFF);
-                put((val >> 16) & 0xFF);
-                put((val >> 24) & 0xFF);
-            }
         }
 
         /**
@@ -281,9 +208,9 @@ namespace FalconNet.Common.Encoding
     *
     * @throws IndexOutOfRangeException if the bytes can not be written
     */
-        public virtual void put(uint b)
+        public virtual void Put(byte b)
         {
-            verify(1);
+            Verify(1);
             _buffer[_pos++] = (byte)b;
         }
 
@@ -295,9 +222,9 @@ namespace FalconNet.Common.Encoding
     *
     * @throws IndexOutOfRangeException if the bytes can not be written
     */
-        public virtual void put(byte[] src)
+        public virtual void Put(byte[] src)
         {
-            verify(src.Length);
+            Verify(src.Length);
             Array.Copy(src, 0, _buffer, _pos, src.Length);
             _pos += src.Length;
         }
@@ -319,9 +246,9 @@ namespace FalconNet.Common.Encoding
         /// <exception cref="IndexOutOfRangeException">
         /// if the bytes can not be written
         /// </exception>
-        public virtual void put(byte[] src, int offset, int count)
+        public virtual void Put(byte[] src, int offset, int count)
         {
-            verify(count);
+            Verify(count);
             Array.Copy(src, offset, _buffer, _pos, count);
             _pos += count;
         }
@@ -332,9 +259,12 @@ namespace FalconNet.Common.Encoding
         /// <returns>
         /// the backing byte array
         /// </returns>
-        public byte[] array()
+        public byte[] Buffer
         {
-            return _buffer;
+            get
+            {
+                return _buffer;
+            }
         }
 
         /// <summary>
@@ -343,20 +273,25 @@ namespace FalconNet.Common.Encoding
         /// <returns>
         /// the current potition within the byte array
         /// </returns>
-        public int getPos()
+        public int Position
         {
-            return _pos;
+            get
+            {
+                return _pos;
+            }
         }
-
         /// <summary>
         /// Returns the number of remaining bytes in the byte array.
         /// </summary>
         /// <returns>
         /// the number of remaining bytes in the byte array
         /// </returns>
-        public int remaining()
+        public int Remaining
         {
-            return _limit - _pos;
+            get
+            {
+                return _limit - _pos;
+            }
         }
 
         /// <summary>
@@ -368,9 +303,9 @@ namespace FalconNet.Common.Encoding
         /// <exception cref="IndexOutOfRangeException">
         /// if the position can not be advanced
         /// </exception>
-        public void advance(int n)
+        public void Advance(int n)
         {
-            verify(n);
+            Verify(n);
             _pos += n;
         }
 
@@ -382,11 +317,11 @@ namespace FalconNet.Common.Encoding
         /// <param name='alignment'>
         /// alignment that the current position must support
         /// </param>
-        public void align(int alignment)
+        public void Align(int alignment)
         {
             while (((_pos - _offset) % alignment) != 0)
             {
-                advance(1);
+                Advance(1);
             }
         }
 
@@ -396,7 +331,7 @@ namespace FalconNet.Common.Encoding
         /// <returns>
         /// a new <code>ByteWrapper</code> backed by the same byte array starting at the current position
         /// </returns>
-        public ByteWrapper slice()
+        public ByteWrapper Slice()
         {
             return new ByteWrapper(_buffer, _pos);
         }
@@ -415,9 +350,9 @@ namespace FalconNet.Common.Encoding
         /// <exception cref="IndexOutOfRangeException">
         /// if the <code>length</code> is to long
         /// </exception>
-        public ByteWrapper slice(int length)
+        public ByteWrapper Slice(int length)
         {
-            verify(length);
+            Verify(length);
             return new ByteWrapper(_buffer, _pos, length);
         }
 

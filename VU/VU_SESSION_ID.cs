@@ -17,7 +17,7 @@ namespace FalconNet.VU
         public int Encode(ByteWrapper buffer)
         {
             byte[] buf = EncodingHelpers.EncodeULongBE(value_);
-            buffer.put(buf);
+            buffer.Put(buf);
             return buf.Length;
         }
 
@@ -33,6 +33,11 @@ namespace FalconNet.VU
         { return (lhs.value_ < rhs.value_ ? true : false); }
         public static bool operator <=(VU_SESSION_ID lhs, VU_SESSION_ID rhs)
         { return (lhs.value_ <= rhs.value_ ? true : false); }
+        
+        public override int GetHashCode()
+        {
+            return (int)this.value_;
+        }
 
         public static explicit operator ulong(VU_SESSION_ID id) { return id.value_; }
         public static implicit operator VU_SESSION_ID(ulong id) { return new VU_SESSION_ID(id); }

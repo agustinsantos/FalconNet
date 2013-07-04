@@ -262,10 +262,9 @@ namespace FalconNet.Sim
             /* open formation file */
             /*---------------------*/
             mnvrFile = SimlibFileClass.Open(MANEUVER_DATA_FILE, SIMLIB.SIMLIB_READ);
-            F4Assert(mnvrFile);
             mnvrFile.Read(fileType, 1);
 
-            if (fileType == 'B') // Binary
+            if (fileType[0] == 'B') // Binary
             {
                 for (i = 0; i < NumMnvrClasses; i++)
                 {
@@ -274,7 +273,7 @@ namespace FalconNet.Sim
                     }
                 }
             }
-            else if (fileType == 'A') // Ascii
+            else if (fileType[0] == 'A') // Ascii
             {
                 for (i = 0; i < NumMnvrClasses; i++)
                 {

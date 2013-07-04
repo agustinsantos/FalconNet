@@ -3,20 +3,20 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
-using VU_BYTE=System.Byte;
+using VU_BYTE = System.Byte;
 using GridIndex = System.Int16;
 namespace FalconNet.Campaign
 {
     public static class CampwpStatic
     {
         public static void ConvertSimToGrid(vector pos, ref GridIndex x, ref GridIndex y)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public static void ConvertGridToSim(GridIndex x, GridIndex y, out vector pos)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public static float GridToSim(GridIndex x)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public static GridIndex SimToGrid(float x)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
 
         // Waypoint actions
@@ -108,34 +108,34 @@ namespace FalconNet.Campaign
         // ===================================================
 
         public static void DeleteWPList(WayPointClass w)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // Sets a set of waypoint times to start at waypoint w at time start. Returns duration of mission
         public static CampaignTime SetWPTimes(WayPointClass w, CampaignTime start, int speed, int flags)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // Shifts a set of waypoints by time delta. Returns duration of mission
         public static CampaignTime SetWPTimes(WayPointClass w, long delta, int flags)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // Sets a set of waypoint times to start at waypoint w as soon as we can get there from x,y.
         public static CampaignTime SetWPTimes(WayPointClass w, GridIndex x, GridIndex y, int speed, int flags)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         public static WayPointClass CloneWPList(WayPointClass w)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public static WayPointClass CloneWPToList(WayPointClass w, WayPointClass stop)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         public static WayPointClass CloneWPList(WayPointClass[] wps, int waypoints)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // KCK: This function requires that the graphic's altitude map is loaded
         public static float AdjustAltitudeForMSL_AGL(float x, float y, float z)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         public static float SetWPSpeed(WayPointClass wp)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
     }
 
     // ============================================
@@ -172,14 +172,14 @@ namespace FalconNet.Campaign
         protected WayPointClass NextWP;					// Make this one public for kicks..
 
         public WayPointClass()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public WayPointClass(GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, CampaignTime station, byte action, int flags)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public WayPointClass(ref VU_BYTE[] stream)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public WayPointClass(FileStream fp)
-		{throw new NotImplementedException();}
-		public WayPointClass(byte[] bytes, ref int offset, int version)
+        { throw new NotImplementedException(); }
+        public WayPointClass(byte[] bytes, ref int offset, int version)
         {
 #if TODO
             haves = bytes[offset];
@@ -237,11 +237,11 @@ namespace FalconNet.Campaign
 #endif
         }
         public int SaveSize()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public int Save(ref VU_BYTE[] stream)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public int Save(FileStream fp)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // These functions are intended for general use
         public void SetWPTarget(VU_ID e) { TargetID = e; }
@@ -265,25 +265,25 @@ namespace FalconNet.Campaign
         public WayPointClass GetPrevWP() { return PrevWP; }
 
         public void SetNextWP(WayPointClass next)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public void SetPrevWP(WayPointClass prev)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public void UnlinkNextWP()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         public void SplitWP()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public void InsertWP(WayPointClass w)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public void DeleteWP()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         public void CloneWP(WayPointClass w)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public void SetWPTimes(CampaignTime t)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
         public float DistanceTo(WayPointClass w)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
         // These functions are intended for use by the campaign (They use Campaign Coordinates and times)
         public void SetWPAltitude(int alt) { GridZ = (short)(alt / CampwpStatic.GRIDZ_SCALE_FACTOR); }

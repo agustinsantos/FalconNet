@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Text;
+using Encoding = System.Text.Encoding;
+
 
 namespace FalconNet.Common
 {
@@ -91,7 +93,7 @@ namespace FalconNet.Common
 		}
 
 		// Read a string with a specific encoding
-		public static string ReadString (this Stream stream, long offset, int maxLength, Encoding encoding, bool nullTerminator)
+        public static string ReadString(this Stream stream, long offset, int maxLength, System.Text.Encoding encoding, bool nullTerminator)
 		{
 			stream.Position = offset;
 
@@ -105,7 +107,7 @@ namespace FalconNet.Common
 			return str;
 		}
 
-		public static string ReadString (this Stream stream, long offset, int maxLength, Encoding encoding)
+        public static string ReadString(this Stream stream, long offset, int maxLength, System.Text.Encoding encoding)
 		{
 			return stream.ReadString (offset, maxLength, encoding, true);
 		}
@@ -186,7 +188,7 @@ namespace FalconNet.Common
 		}
 
 		// Write a string with a specific encoding
-		public static void Write (this Stream stream, string value, int strLength, int length, Encoding encoding)
+        public static void Write(this Stream stream, string value, int strLength, int length, System.Text.Encoding encoding)
 		{
 			byte[] strArray = encoding.GetBytes (value);
 

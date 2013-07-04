@@ -73,7 +73,7 @@ namespace FalconNet.Common
 		public static byte[] GetBytesInDefaultEncoding (string aString)
 		{
 			if (aString != null)
-				return Encoding.Default.GetBytes (aString);
+                return System.Text.Encoding.Default.GetBytes(aString);
 			return new byte[0];
 		}
 		

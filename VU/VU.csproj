@@ -40,6 +40,7 @@
     <Compile Include="VuEntity.cs" />
     <Compile Include="Commons.cs" />
     <Compile Include="VuEvent.cs" />
+    <Compile Include="VuFilters.cs" />
     <Compile Include="VuSession.cs" />
     <Compile Include="VU_ID.cs" />
     <Compile Include="VU_SESSION_ID.cs" />

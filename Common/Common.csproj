@@ -35,8 +35,16 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Encoding\ByteWrapper.cs" />
-    <Compile Include="Encoding\ByteWrapperExtension.cs" />
+    <Compile Include="Encoding\StringEncoding.cs" />
+    <Compile Include="Encoding\DoubleEncoding.cs" />
+    <Compile Include="Encoding\SingleEncoding.cs" />
+    <Compile Include="Encoding\UInt16Encoding.cs" />
+    <Compile Include="Encoding\UInt32Encoding.cs" />
+    <Compile Include="Encoding\UInt64Encoding.cs" />
+    <Compile Include="Encoding\Int64Encoding.cs" />
+    <Compile Include="Encoding\Int32Encoding.cs" />
     <Compile Include="Encoding\EncodingHelpers.cs" />
+    <Compile Include="Encoding\Int16Encoding.cs" />
     <Compile Include="EnumSupport.cs" />
     <Compile Include="ConvertionSupport.cs" />
     <Compile Include="Constants.cs" />

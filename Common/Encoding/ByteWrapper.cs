@@ -200,28 +200,21 @@ namespace FalconNet.Common.Encoding
             _pos += dest.Length;
         }
 
-        /**
-    * Writes <code>byte</code> to the ByteWrapper and advances the current position
-    * by 1.
-    *
-    * @param b byte to write
-    *
-    * @throws IndexOutOfRangeException if the bytes can not be written
-    */
+        /// <summary>
+        /// Writes <code>byte</code> to the ByteWrapper and advances the current position by 1
+        /// </summary>
+        /// <param name="b">byte to write</param>
         public virtual void Put(byte b)
         {
             Verify(1);
             _buffer[_pos++] = (byte)b;
         }
 
-        /**
-    * Writes a byte array to the ByteWrapper and advances the current
-    * posisiton by the size of the byte array.
-    *
-    * @param src byte array to write
-    *
-    * @throws IndexOutOfRangeException if the bytes can not be written
-    */
+        /// <summary>
+        /// Writes a byte array to the ByteWrapper and advances the current
+        /// posisiton by the size of the byte array.
+        /// </summary>
+        /// <param name="src">byte array to write</param>
         public virtual void Put(byte[] src)
         {
             Verify(src.Length);

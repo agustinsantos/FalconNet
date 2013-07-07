@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
+using VU_ID_NUMBER = System.UInt64;
+using VU_KEY = System.UInt64;
 using VU_BOOL = System.Boolean;
 using BIG_SCALAR = System.Single;
 using SM_SCALAR = System.Single;
@@ -11,21 +13,60 @@ using System.Diagnostics;
 
 namespace FalconNet.VU
 {
+    public struct VuReleaseInfo
+    {
+        public int version_;
+        public int revision_;
+        public int patch_;
+        public string revisionDate_;
+        public string patchDate_;
+    }
+
     public static class VUSTATIC
     {
-        public static VuListIterator vuTargetListIter = null;
+        public const int VU_VERSION = 3;
+        public const int VU_REVISION = 1;
+        public const int VU_PATCH = 0;
+        public const string VU_REVISION_DATE = @"28/01/2007";
+        public const string VU_PATCH_DATE = @"28/01/2007";
+        public static VuReleaseInfo vuReleaseInfo = new VuReleaseInfo
+        {
+            version_ = VU_VERSION,
+            revision_ = VU_REVISION,
+            patch_ = VU_PATCH,
+            revisionDate_ = VU_REVISION_DATE,
+            patchDate_ = VU_PATCH_DATE,
+        };
 
-        public static VuFilteredList vuGameList = null;
-        public static VuFilteredList vuTargetList = null;
+        public const string VU_DEFAULT_PLAYER_NAME = "anonymous";
+        public const string VU_GAME_GROUP_NAME = "Vu2 Game";
+        public const string VU_PLAYER_POOL_GROUP_NAME = "Player Pool";
+
+        public static VuSessionEntity vuLocalSessionEntity = null;
         public static VuGlobalGroup vuGlobalGroup = null;
         public static VuPlayerPoolGame vuPlayerPoolGroup = null;
-        public static VuSessionEntity vuLocalSessionEntity = null;
-        public static VuMainThread vuMainThread = null;
+        public static VuFilteredList vuGameList = null;
+        public static VuFilteredList vuTargetList = null;
+
         public static VuPendingSendQueue vuNormalSendQueue = null;
         public static VuPendingSendQueue vuLowSendQueue = null;
+
+        public static VU_SESSION_ID vuKnownConnectionId;       // 0 -. not known (usual case)
+        public static VU_SESSION_ID vuNullSession;
+        public static VU_ID vuLocalSession = new VU_ID(0, 0);
+        //TODO Already defined at VU_ID public static VU_ID vuNullId;
         public static VU_TIME vuTransmitTime = 0;
 
-        public static VU_ID vuLocalSession = new VU_ID(0, 0);
+        //   app provided globals
+        public static int SGpfSwitchVal;
+        public static string vuxWorldName = null;
+        public static ulong vuxLocalDomain = 0xffffffff;
+        public static VU_TIME vuxGameTime = 0;
+        public static VU_TIME vuxRealTime;
+        public static VuDriverSettings vuxDriverSettings;
+#if VU_AUTO_COLLISION
+public static VuGridTree *vuxCollisionGrid;
+#endif // VU_AUTO_COLLISION
 
         public static VuCollectionManager vuCollectionManager = null;
         public static VuDatabase vuDatabase = null;
@@ -37,21 +78,30 @@ namespace FalconNet.VU
 
         public static ulong vuxVersion = 1;
 
+        public static VuEntity VuxCreateEntity(ushort type, ushort size, VU_BYTE[] data)
+        { throw new NotImplementedException(); }
+
+        public static VuEntityType VuxType(ushort id)
+        { throw new NotImplementedException(); }
+
+        public static void VuxRetireEntity(VuEntity theEntity)
+        {
+            //F4Assert(theEntity);
+            Console.WriteLine("You dropped an entity, better find it!!!\n");
+        }
+
+        public const int VU_TICS_PER_SECOND = 1000;
         public static SM_SCALAR vuxTicsPerSec = 1000.0F;
-        public static VuDriverSettings vuxDriverSettings = null;
-        public static VU_TIME vuxGameTime = 0;
         public static VU_TIME vuxTargetGameTime = 0;
         public static VU_TIME vuxLastTargetGameTime = 0;
         public static VU_TIME vuxDeadReconTime = 0;
         public static VU_TIME vuxCurrentTime = 0;
         public static VU_TIME lastTimingMessage = 0;
         public static VU_TIME vuxTransmitTime = 0;
-        //ulong vuxLocalDomain = 1;	// range = 1-31
-        public static ulong vuxLocalDomain = 0xffffffff;	// range = 1-31 // JB 010718
         public static VU_BYTE vuxLocalSession = 1;
 
-        public static string vuxWorldName = null;
-        public static VU_TIME vuxRealTime = 0;
+        public static VuListIterator vuTargetListIter = null;
+
     }
 
     public abstract class VuBaseThread
@@ -106,6 +156,8 @@ namespace FalconNet.VU
 
     public class VuMainThread : VuBaseThread
     {
+        public static VuMainThread vuMainThread;
+
         public delegate VuSessionEntity SessionCtorFunc();
 
         public const int VU_DEFAULT_QUEUE_SIZE = 100;
@@ -197,20 +249,240 @@ namespace FalconNet.VU
 
         protected void Init(int dbSize, SessionCtorFunc sessionCtorFunc)
         {
-            throw new NotImplementedException();
+            // set global, for sneaky internal use...
+            vuMainThread = this;
+
+            VUSTATIC.vuCollectionManager = new VuCollectionManager();
+            VUSTATIC.vuDatabase = new VuDatabase(dbSize);  // create global database
+            VUSTATIC.vuAntiDB = new VuAntiDatabase(1 + dbSize / 8);
+            VUSTATIC.vuAntiDB.Init();
+
+            VuGameFilter gfilter = new VuGameFilter();
+            VUSTATIC.vuGameList = new VuOrderedList(gfilter);
+            VUSTATIC.vuGameList.Init();
+
+            VuTargetFilter tfilter = new VuTargetFilter();
+            VUSTATIC.vuTargetList = new VuFilteredList(tfilter);
+            VUSTATIC.vuTargetList.Init();
+            VUSTATIC.vuTargetListIter = new VuListIterator(VUSTATIC.vuTargetList);
+
+            // create global group
+            VUSTATIC.vuGlobalGroup = new VuGlobalGroup();
+            VUSTATIC.vuDatabase.Insert(VUSTATIC.vuGlobalGroup);
+
+            VUSTATIC.vuPlayerPoolGroup = null;
+
+            // randomize assignment id
+            VuEntity.vuAssignmentId = VuEntity.VuRandomID();
+            if (VuEntity.vuAssignmentId < VU_ID.VU_FIRST_ENTITY_ID)
+            {
+                VuEntity.vuAssignmentId = VU_ID.VU_FIRST_ENTITY_ID;
+            }
+
+            // create local session
+            if (sessionCtorFunc != null)
+            {
+                VUSTATIC.vuLocalSessionEntity = sessionCtorFunc();
+            }
+            else
+            {
+                VUSTATIC.vuLocalSessionEntity = new VuSessionEntity(VUSTATIC.vuxLocalDomain, "player");
+            }
+
+            VUSTATIC.vuLocalSession = VUSTATIC.vuLocalSessionEntity.OwnerId();
+            VUSTATIC.vuDatabase.Insert(VUSTATIC.vuLocalSessionEntity);
         }
+
         protected void UpdateGroupData(VuGroupEntity group)
         {
-            throw new NotImplementedException();
+            int count = 0;
+
+            //	assert(VuHasCriticalSection()); // hmm apparently not required...
+            VuSessionsIterator iter = new VuSessionsIterator(group);
+            VuSessionEntity sess = iter.GetFirst();
+
+            while (sess != null)
+            {
+#if TODO
+                //assert(false == F4IsBadReadPtr(sess, sizeof *sess));
+                if
+                (
+                    (sess != vuLocalSessionEntity) &&
+                    (sess.GetReliableCommsStatus() == VU_CONN_ERROR)
+                )
+                {
+#if DEBUG_KEEPALIVE
+			VU_PRINT("VU: timing out session id 0x%x: time = %d, last sig = %d\n",
+			(VU_KEY)sess.Id(), vuxRealTime, sess.LastTransmissionTime());
+#endif
+
+                    // time out this session
+                    sess.CloseSession();
+                }
+                else
+                {
+                    count++;
+                }
+#endif
+                sess = iter.GetNext();
+            }
         }
+
         protected int GetMessages()
         {
-            throw new NotImplementedException();
+            int
+                count;
+
+            Debug.Assert(CriticalSection.VuHasCriticalSection());
+            count = 0;
+
+#if VU_USE_COMMS
+	VuListIterator  iter(vuTargetList);
+	VuTargetEntity target;
+
+	// Flush all outbound messages into various queues
+
+	target = (VuTargetEntity) iter.GetFirst ();
+	
+	while (target)
+	{
+		// attempt to send one packet of each type
+		target.FlushOutboundMessageBuffer();
+		count += target.GetMessages ();
+
+		// Get the next target
+		target = (VuTargetEntity*) iter.GetNext ();
+	}
+
+	// Get all messages - and send any in a queue
+
+#endif
+
+            return count;
         }
+
+        const int MAX_TARGETS = 256;
+
+        static VU_KEY last_time = 0;
+        static int[] lru_size = new int[MAX_TARGETS];
+
         protected int SendQueuedMessages()
         {
-            throw new NotImplementedException();
+            VuTargetEntity[] targets = new VuTargetEntity[MAX_TARGETS];
+
+            bool[] used = new bool[MAX_TARGETS];
+
+            VU_KEY now;
+
+            int index,
+                size,
+                best,
+                total,
+                count;
+
+            VuTargetEntity target;
+
+            VuListIterator iter = new VuListIterator(VUSTATIC.vuTargetList);
+
+            Debug.Assert(CriticalSection.VuHasCriticalSection());
+            total = 0;
+
+            now = VUSTATIC.vuxRealTime;
+
+            // Decay the LRU sizes
+
+            if (now - last_time > 100)
+            {
+                last_time = now;
+
+                for (index = 0; index < MAX_TARGETS; index++)
+                {
+                    lru_size[index] /= 2;
+                }
+            }
+
+            // Build array of targets - for easy indexing later
+
+            target = (VuTargetEntity)iter.GetFirst();
+            index = 0;
+            while (target != null)
+            {
+                if (target.IsSession())
+                {
+                    targets[index] = target;
+                    used[index] = false;
+
+                    index++;
+                }
+
+                target = (VuTargetEntity)iter.GetNext();
+            }
+
+            while (index < MAX_TARGETS)
+            {
+                targets[index] = null;
+                index++;
+            }
+
+            // Now until we run out of stuff to send
+
+            do
+            {
+                count = 0;
+
+                // clear the used per iteration
+
+                for (index = 0; index < MAX_TARGETS; index++)
+                {
+                    used[index] = false;
+                }
+
+                do
+                {
+                    // find the best - ie. the smallest lru_size
+                    best = -1;
+                    size = 0x7fffffff;
+
+                    for (index = 0; (targets[index] != null) && (index < MAX_TARGETS); index++)
+                    {
+                        if ((!used[index]) && (lru_size[index] < size))
+                        {
+                            best = index;
+                            size = lru_size[index];
+                        }
+                    }
+
+                    // If we found a best target
+
+                    if (best >= 0)
+                    {
+#if VU_USE_COMMS
+
+                        // attempt to send one packet
+                        size = targets[best].SendQueuedMessage();
+#endif
+                        //				if (size)
+                        //				{
+                        //					MonoPrint ("Send %08x %3d %d\n", targets[best], size, lru_size[best]);
+                        //				}
+
+                        // mark it as used
+                        used[best] = true;
+
+                        // add into the lru size
+                        lru_size[best] += size;
+
+                        // remember that we send something
+                        count += size;
+                        total += size;
+                    }
+                }
+                while (best != -1);
+            } while (count != 0);
+
+            return total;
         }
+
 
         // data
 #if VU_USE_COMMS
@@ -254,7 +526,7 @@ namespace FalconNet.VU
 
             while (curr != null)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO CTD
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO CTD
                 if (curr == iter)
                 {
                     if (last == null)
@@ -289,7 +561,7 @@ namespace FalconNet.VU
 
             while (curr != null)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr == iter)
                 {
                     if (last == null)
@@ -365,7 +637,7 @@ namespace FalconNet.VU
 
             while (curr != null)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr == grid)
                 {
                     if (last == null)
@@ -405,7 +677,7 @@ namespace FalconNet.VU
 
             for (VuCollection curr = collcoll_; curr != null; curr = curr.nextcoll_)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr != VUSTATIC.vuDatabase)
                 {
                     curr.Remove(ent);
@@ -421,7 +693,7 @@ namespace FalconNet.VU
 
             for (VuGridTree curr = gridcoll_; curr != null; curr = curr.nextgrid_)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (!curr.suspendUpdates_)
                 {
                     curr.Move(ent, coord1, coord2);
@@ -439,7 +711,7 @@ namespace FalconNet.VU
 
             for (VuCollection curr = collcoll_; curr != null; curr = curr.nextcoll_)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr != VUSTATIC.vuDatabase)
                 {
                     if (curr.Handle(msg) == VU_ERRCODE.VU_SUCCESS)
@@ -459,7 +731,7 @@ namespace FalconNet.VU
 
             while (curr != null)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr.IsReferenced(ent))
                 {
                     return true;
@@ -480,7 +752,7 @@ namespace FalconNet.VU
 
             while (curr != null)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr.curnode_ == node)
                 {
                     return true;
@@ -506,7 +778,7 @@ namespace FalconNet.VU
                 curr != null && //!F4IsBadReadPtr(curr, sizeof(VuLinkNode)) && // JB 010318 CTD (too much CPU)
                 curr != VuTailNode.vuTailNode)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr));
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr));
                 if (IsReferenced(curr.entity_))
                 {
                     last = curr;
@@ -572,7 +844,7 @@ namespace FalconNet.VU
 
                 while (curr != VuTailNode.vuTailNode)
                 {
-                    //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                    //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                     if (curr.next_ == node)
                     {
                         curr.next_ = node.next_;
@@ -608,7 +880,7 @@ namespace FalconNet.VU
 
                 while (curr != null)
                 {
-                    //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                    //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                     if (curr.next_ == node)
                     {
                         curr.next_ = node.next_;
@@ -632,7 +904,7 @@ namespace FalconNet.VU
             SanitizeKillQueue();
             for (VuCollection curr = collcoll_; curr != null; curr = curr.nextcoll_)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 if (curr != VUSTATIC.vuDatabase)
                 {
                     curr.Purge(all);
@@ -652,7 +924,7 @@ namespace FalconNet.VU
             curr = llkillhead_;
             while (curr != VuTailNode.vuTailNode)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 curr.next_ = VuTailNode.vuTailNode;
                 curr = curr.freenext_;
             }
@@ -678,7 +950,7 @@ namespace FalconNet.VU
 
             for (VuCollection curr = collcoll_; curr != null; curr = curr.nextcoll_)
             {
-                //assert(FALSE == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
+                //assert(false == F4IsBadReadPtr(curr, sizeof *curr)); // JPO
                 VuEntity ent2 = curr.Find(ent);
                 if (ent2 != null && ent2 == ent)
                 {
@@ -824,6 +1096,92 @@ namespace FalconNet.VU
 
         public VuLinkNode curr_;
         public VuLinkNode last_;
+    }
+    public class VuGameFilter : VuFilter
+    {
+
+        public VuGameFilter()
+            : base()
+        {
+            // empty
+        }
+        //TODO public virtual ~VuGameFilter();
+
+        public override VU_BOOL Test(VuEntity ent)
+        {
+            //  if (ent == vuPlayerPoolGroup) return false;
+            return ent.IsGame();
+        }
+        public override VU_BOOL RemoveTest(VuEntity ent)
+        {
+            return ent.IsGame();
+        }
+
+        public override int Compare(VuEntity ent1, VuEntity ent2)
+        {
+            if ((VU_KEY)ent2.Id() > (VU_KEY)ent1.Id())
+            {
+                return -1;
+            }
+            else if ((VU_KEY)ent2.Id() < (VU_KEY)ent1.Id())
+            {
+                return 1;
+            }
+
+            return 0;
+        }
+        // returns ent2->Id() - ent1->Id()
+        public override VuFilter Copy()
+        {
+            return new VuGameFilter(this);
+        }
+
+        protected VuGameFilter(VuGameFilter other)
+            : base(other)
+        {
+            // empty
+        }
+    }
+    public class VuTargetFilter : VuFilter
+    {
+        public VuTargetFilter()
+            : base()
+        {
+            // empty
+        }
+        //TODO public virtual ~VuTargetFilter();
+
+        public override VU_BOOL Test(VuEntity ent)
+        {
+            return ent.IsTarget();
+        }
+        public override VU_BOOL RemoveTest(VuEntity ent)
+        {
+            return ent.IsTarget();
+        }
+        public override int Compare(VuEntity ent1, VuEntity ent2)
+        {
+            if ((VU_KEY)ent2.Id() > (VU_KEY)ent1.Id())
+            {
+                return -1;
+            }
+            else if ((VU_KEY)ent2.Id() < (VU_KEY)ent1.Id())
+            {
+                return 1;
+            }
+            return 0;
+        }
+        // returns ent2->Id() - ent1->Id()
+        public override VuFilter Copy()
+        {
+            return new VuTargetFilter(this);
+        }
+
+        protected VuTargetFilter(VuTargetFilter other)
+            : base(other)
+        {
+            // empty
+        }
     }
     #endregion
 }

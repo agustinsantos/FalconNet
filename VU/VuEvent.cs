@@ -10,6 +10,8 @@ using VU_TIME = System.UInt64;
 using SM_SCALAR = System.Single;
 using BIG_SCALAR = System.Single;
 using VU_DAMAGE = System.UInt64;
+using System.IO;
+using System.Diagnostics;
 
 namespace FalconNet.VU
 {
@@ -111,186 +113,6 @@ namespace FalconNet.VU
         VU_SESSION_LATENCY_NOTICE,
     }
 
-    public abstract class VuMessageFilter
-    {
-        //VuMessageFilter() { }
-        //virtual ~VuMessageFilter() { }
-        public abstract VU_BOOL Test(VuMessage evnt);
-        public abstract VuMessageFilter Copy();
-    }
-
-    /// <summary>
-    /// The VuNullMessageFilter lets everything through
-    /// </summary>
-    public class VuNullMessageFilter : VuMessageFilter
-    {
-        //VuNullMessageFilter() : VuMessageFilter() { }
-        //virtual ~VuNullMessageFilter() { }
-        public override VU_BOOL Test(VuMessage evnt)
-        {
-            return true;
-        }
-
-        public override VuMessageFilter Copy()
-        {
-            return new VuNullMessageFilter();
-        }
-    }
-
-    /// <summary>
-    /// provided default filters
-    /// </summary>
-    public class VuMessageTypeFilter : VuMessageFilter
-    {
-
-        public VuMessageTypeFilter(ulong bitfield)
-        {
-            msgTypeBitfield_ = bitfield;
-        }
-
-        // virtual ~VuMessageTypeFilter();
-        public override VU_BOOL Test(VuMessage evnt)
-        {
-            return ((1 << (int)evnt.Type()) != 0 && msgTypeBitfield_ != 0) ? true : false;
-        }
-        public override VuMessageFilter Copy()
-        {
-            return new VuMessageTypeFilter(msgTypeBitfield_);
-        }
-
-        protected ulong msgTypeBitfield_;
-    }
-
-    // the VuStandardMsgFilter allows only these events:
-    //   - VuEvent(s) from a remote session
-    //   - All Delete and Release events
-    //   - All Create, FullUpdate, and Manage events
-    // it filters out these messages:
-    //   - All update events on unknown entities
-    //   - All update events on local entities
-    //   - All non-event messages (though this can be overridden)
-    public class VuStandardMsgFilter : VuMessageFilter
-    {
-
-        public VuStandardMsgFilter(VUBITS bitfield = VUBITS.VU_VU_EVENT_BITS)
-        {
-            msgTypeBitfield_ = bitfield;
-        }
-
-        //virtual ~VuStandardMsgFilter();
-        public override VU_BOOL Test(VuMessage message)
-        {
-            VUBITS eventBit = (VUBITS)(1 << (int)message.Type());
-            if ((eventBit & msgTypeBitfield_) == 0)
-            {
-                return false;
-            }
-            if ((eventBit & (VUBITS.VU_DELETE_EVENT_BITS | VUBITS.VU_CREATE_EVENT_BITS)) != 0)
-            {
-                return true;
-            }
-            if (message.Sender() == VUSTATIC.vuLocalSession)
-            {
-                return false;
-            }
-            // test to see if entity was found in database
-            if (message.Entity() != null)
-            {
-                return true;
-            }
-            return false;
-        }
-        public override VuMessageFilter Copy()
-        {
-            return new VuStandardMsgFilter(msgTypeBitfield_);
-        }
-
-        protected VUBITS msgTypeBitfield_;
-    }
-
-    public delegate VU_BOOL EvalFunc(VuMessage msg, Object arg);
-
-    public class VuMessageQueue
-    {
-        public VuMessageQueue(int queueSize, VuMessageFilter filter = null)
-        { throw new NotImplementedException(); }
-
-        //TODO public  ~VuMessageQueue();
-
-        public VuMessage PeekVuMessage() { throw new NotImplementedException(); }
-        public virtual VuMessage DispatchVuMessage(VU_BOOL autod = false)
-        { throw new NotImplementedException(); }
-
-        public int DispatchAllMessages(VU_BOOL autod = false)
-        { throw new NotImplementedException(); }
-
-        public static int PostVuMessage(VuMessage msg) { throw new NotImplementedException(); }
-        public static void FlushAllQueues() { throw new NotImplementedException(); }
-        public static int InvalidateMessages(EvalFunc evalFunc, Object arg) { throw new NotImplementedException(); }
-        public int InvalidateQueueMessages(EvalFunc evalFunc, Object arg) { throw new NotImplementedException(); }
-
-
-        // called when queue is about to wrap -- default does nothing & returns false
-        protected virtual VU_BOOL ReallocQueue() { throw new NotImplementedException(); }
-
-        protected virtual int AddMessage(VuMessage evnt) // called only by PostVuMessage()
-        { throw new NotImplementedException(); }
-        protected static void RepostMessage(VuMessage evnt, int delay)
-        { throw new NotImplementedException(); }
-
-        // DATA
-
-        protected VuMessage[] head_;	// also queue mem store
-        protected VuMessage[] read_;
-        protected VuMessage[] write_;
-        protected VuMessage[] tail_;
-
-        protected VuMessageFilter filter_;
-#if _DEBUG
-  int _count; // JPO - see what occupancy is like
-#endif
-
-
-        private static VuMessageQueue queuecollhead_;
-        private VuMessageQueue nextqueue_;
-
-    }
-
-    public class VuMainMessageQueue : VuMessageQueue
-    {
-        public VuMainMessageQueue(int queueSize, VuMessageFilter filter = null)
-            : base(queueSize, filter)
-        {
-            timerlisthead_ = null;
-        }
-        //~VuMainMessageQueue();
-
-        public override VuMessage DispatchVuMessage(VU_BOOL autod = false) { throw new NotImplementedException(); }
-        protected virtual int AddMessage(VuMessage evnt) // called only by PostVuMessage()
-        { throw new NotImplementedException(); }
-
-        // DATA
-        protected VuTimerEvent timerlisthead_;
-    }
-
-    public class VuPendingSendQueue : VuMessageQueue
-    {
-        private static VuResendMsgFilter resendMsgFilter = new VuResendMsgFilter();
-
-        public VuPendingSendQueue(int queueSize) : base(queueSize, resendMsgFilter) { throw new NotImplementedException(); }
-        //TODO ~VuPendingSendQueue();
-
-        public override VuMessage DispatchVuMessage(VU_BOOL autod = false) { throw new NotImplementedException(); }
-        public void RemoveTarget(VuTargetEntity target) { throw new NotImplementedException(); }
-
-        public int BytesPending() { return bytesPending_; }
-
-        protected override int AddMessage(VuMessage evnt) // called only by PostVuMessage()
-        { throw new NotImplementedException(); }
-
-        // DATA
-        protected int bytesPending_;
-    }
 
     public abstract class VuMessage
     {
@@ -319,14 +141,54 @@ public:
         public VuTargetEntity Target() { return target_; }
 
         public void SetPostTime(VU_TIME posttime) { postTime_ = posttime; }
-        public virtual int Size() { throw new NotImplementedException(); }
 
+        public VU_ERRCODE Dispatch(VU_BOOL autod)
+        {
+            //if (F4IsBadReadPtr(this, sizeof(VuMessage))) // JB 010318 CTD
+            //return VU_ERROR; // JB 010318 CTD
 
-        public virtual int Read(ByteWrapper buf) { throw new NotImplementedException(); }
-        public virtual int Write(ByteWrapper buf) { throw new NotImplementedException(); }
+            VU_ERRCODE retval = VU_ERRCODE.VU_NO_OP;
 
-        public VU_ERRCODE Dispatch(VU_BOOL autod) { throw new NotImplementedException(); }
-        public VU_ERRCODE Send() { throw new NotImplementedException(); }
+            if (!IsLocal() || (flags_ & VU_MSG_FLAG.VU_LOOPBACK_MSG_FLAG) != 0)
+            {
+                //assert(FALSE == F4IsBadReadPtr(vuDatabase, sizeof *vuDatabase));
+                if (Entity() == null)
+                {
+                    // try to find ent again -- may have been in queue
+                    VuEntity ent = VUSTATIC.vuDatabase.Find(entityId_);
+                    if (ent != null)
+                    {
+                        Activate(ent);
+                    }
+                }
+                retval = Process(autod);
+
+                //if (F4IsBadCodePtr((FARPROC)VUSTATIC.vuDatabase)) // JB 010404 CTD
+                //        return VU_ERRCODE.VU_ERROR;
+
+                VUSTATIC.vuDatabase.Handle(this);
+                // mark as sent
+                flags_ |= VU_MSG_FLAG.VU_PROCESSED_MSG_FLAG;
+            }
+
+            return retval;
+        }
+
+        public VU_ERRCODE Send()
+        {
+            VU_ERRCODE retval = VU_ERRCODE.VU_ERROR;
+            if (Target() != null && Target() != VUSTATIC.vuLocalSessionEntity)
+            {
+
+#if VU_USE_COMMS
+    retval = Target().SendMessage(this);
+#endif
+
+                if (retval <= 0)
+                    flags_ |= VU_MSG_FLAG.VU_SEND_FAILED_MSG_FLAG;
+            }
+            return retval;
+        }
 
 
         public void RequestLoopback() { flags_ |= VU_MSG_FLAG.VU_LOOPBACK_MSG_FLAG; }
@@ -336,49 +198,147 @@ public:
 
         // app needs to Ref & UnRef messages they keep around
         // 	most often this need not be done
-        public int Ref() { throw new NotImplementedException(); }
-        public int UnRef() { throw new NotImplementedException(); }
+        public int Ref()
+        {
+            return ++refcnt_;
+        }
+
+        public int UnRef()
+        {
+            // NOTE: must assign temp here as memory may be freed prior to return
+            int retval = --refcnt_;
+            if (refcnt_ <= 0)
+                throw new NotImplementedException();
+            //delete this;
+
+            return retval;
+        }
 
         // the following determines just prior to sending message whether or not
         // it goes out on the wire (default is true, of course)
-        public virtual VU_BOOL DoSend() { throw new NotImplementedException(); }
-
+        public virtual VU_BOOL DoSend()
+        {
+            return true;
+        }
 
         protected VuMessage(VU_MSG_TYPE type, VU_ID entityId, VuTargetEntity target,
-                      VU_BOOL loopback) { throw new NotImplementedException(); }
-        protected VuMessage(VU_MSG_TYPE type, VU_ID sender, VU_ID target) { throw new NotImplementedException(); }
-        protected virtual VU_ERRCODE Activate(VuEntity ent) { throw new NotImplementedException(); }
+                      VU_BOOL loopback)
+        {
+            refcnt_ = 0;
+            type_ = type;
+            flags_ = VU_MSG_FLAG.VU_NORMAL_PRIORITY_MSG_FLAG;
+            entityId_ = entityId;
+            target_ = target;
+            postTime_ = 0;
+            ent_ = null;
+            if (target == VUSTATIC.vuLocalSessionEntity)
+            {
+                loopback = true;
+            }
+            if (target != null)
+            {
+                target_ = target;
+            }
+            else if (VUSTATIC.vuGlobalGroup != null)
+            {
+                target_ = VUSTATIC.vuGlobalGroup;
+            }
+            else
+            {
+                target_ = VUSTATIC.vuLocalSessionEntity;
+            }
+            if (target_ != null)
+            {
+                tgtid_ = target_.Id();
+            }
+            if (loopback)
+            {
+                flags_ |= VU_MSG_FLAG.VU_LOOPBACK_MSG_FLAG;
+            }
+            // note: msg id is set only for external messages which are sent out
+            sender_.num_ = VUSTATIC.vuLocalSession.num_;
+            sender_.creator_ = VUSTATIC.vuLocalSession.creator_;
+        }
+
+        protected VuMessage(VU_MSG_TYPE type, VU_ID sender, VU_ID target)
+        {
+            refcnt_ = 0;
+            type_ = type;
+            flags_ = VU_MSG_FLAG.VU_REMOTE_MSG_FLAG;
+            sender_ = sender;
+            tgtid_ = target;
+            entityId_ = new VU_ID(0, 0);
+            target_ = null;
+            postTime_ = 0;
+            ent_ = null;
+
+        }
+
+        protected virtual VU_ERRCODE Activate(VuEntity ent)
+        {
+            SetEntity(ent);
+            return VU_ERRCODE.VU_SUCCESS;
+        }
         protected abstract VU_ERRCODE Process(VU_BOOL autod);
 
-        public virtual int Encode(ByteWrapper buf)
+        protected VuEntity SetEntity(VuEntity ent)
         {
-            int size = entityId_.creator_.Encode(buf);
-            size += entityId_.num_.Encode(buf);
-            return size;
+            // basically try and catch the bad case (ref/deref now swapped)
+            // its ok if 0, cos nothing bad will happen
+            // its ok if they are not the same entity as we don't care then
+            // its ok if the refcount is more than 1, cos the deref wouldn't destroy it anyway
+            Debug.Assert(ent == null || ent != ent_ || ent.RefCount() > 1); // JPO test
+
+            if (ent != null)
+                VuEntity.VuReferenceEntity(ent);
+
+            if (ent_ != null)
+                VuEntity.VuDeReferenceEntity(ent_);
+
+            ent_ = ent;
+            return ent_;
         }
 
-        public virtual int Decode(ByteWrapper buf)
-        {
-            entityId_.creator_ = buf.DecodeULong();
-            entityId_.num_ = buf.DecodeULong();
-            return sizeof(ulong) + sizeof(ulong);
-        }
-
-        protected VuEntity SetEntity(VuEntity ent) { throw new NotImplementedException(); }
 
         private VU_BYTE refcnt_;		// vu references
 
 
         protected VU_MSG_TYPE type_;
-        protected VU_MSG_FLAG flags_;		// misc flags
+        internal VU_MSG_FLAG flags_;		// misc flags
         protected VU_ID sender_;
         protected VU_ID tgtid_;
-        protected VU_ID entityId_;
+        internal VU_ID entityId_;
         // scratch variables (not networked)
         protected VuTargetEntity target_;
         protected VU_TIME postTime_;
 
         private VuEntity ent_;
+    }
+
+    public static class VuMessageEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, VuMessage val)
+        {
+            VU_IDEncodingLE.Encode(buffer, val.entityId_);
+        }
+        public static void Encode(Stream stream, VuMessage val)
+        {
+            VU_IDEncodingLE.Encode(stream, val.entityId_);
+        }
+
+        public static void Decode(ByteWrapper buffer, VuMessage rst)
+        {
+            rst.entityId_ = VU_IDEncodingLE.Decode(buffer);
+        }
+        public static void Decode(Stream stream, VuMessage rst)
+        {
+            rst.entityId_ = VU_IDEncodingLE.Decode(stream);
+        }
+
+        public static int Size
+        {
+            get { return VU_IDEncodingLE.Size; }
+        }
     }
 
     public class VuErrorMessage : VuMessage
@@ -397,30 +357,64 @@ public:
             srcmsgid_.num_ = 0;
             srcmsgid_.creator_ = 0;
         }
+
+        internal VuErrorMessage() : base(VU_MSG_TYPE.VU_ERROR_MESSAGE, null, null) { }
+
         //TODO public virtual ~VuErrorMessage();
 
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf)
-        {
-#if TODO 
-            base.Encode(buf);
-            srcmsgid_.
-        memcpy(*buf, &srcmsgid_, sizeof(srcmsgid_)); *buf += sizeof(srcmsgid_);
-            memcpy(*buf, &etype_, sizeof(etype_)); *buf += sizeof(etype_);
-
-#endif
-            throw new NotImplementedException();
-
-        }
         public VUERROR ErrorType() { return etype_; }
 
-        protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
+        protected override VU_ERRCODE Process(VU_BOOL autod)
+        {
+            if (Entity() != null)
+            {
+                Entity().Handle(this);
+                return VU_ERRCODE.VU_SUCCESS;
+            }
+            return VU_ERRCODE.VU_NO_OP;
+        }
 
-        private int LocalSize() { throw new NotImplementedException(); }
 
-        protected VU_ID srcmsgid_;
-        protected VUERROR etype_;
+        internal VU_ID srcmsgid_;
+        internal VUERROR etype_;
+    }
+
+    public static class VuErrorMessageEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, VuErrorMessage val)
+        {
+            VuMessageEncodingLE.Encode(buffer, val);
+            VU_IDEncodingLE.Encode(buffer, val.srcmsgid_);
+            Int16EncodingLE.Encode(buffer, (short)val.etype_);
+        }
+        public static void Encode(Stream stream, VuErrorMessage val)
+        {
+            VuMessageEncodingLE.Encode(stream, val);
+            VU_IDEncodingLE.Encode(stream, val.srcmsgid_);
+            Int16EncodingLE.Encode(stream, (short)val.etype_);
+        }
+
+        public static VuErrorMessage Decode(ByteWrapper buffer)
+        {
+            VuErrorMessage rst = new VuErrorMessage();
+            VuMessageEncodingLE.Decode(buffer, rst);
+            rst.srcmsgid_ = VU_IDEncodingLE.Decode(buffer);
+            rst.etype_ = (VUERROR)Int16EncodingLE.Decode(buffer);
+            return rst;
+        }
+        public static VuErrorMessage Decode(Stream stream)
+        {
+            VuErrorMessage rst = new VuErrorMessage();
+            VuMessageEncodingLE.Decode(stream, rst);
+            rst.srcmsgid_ = VU_IDEncodingLE.Decode(stream);
+            rst.etype_ = (VUERROR)Int16EncodingLE.Decode(stream);
+            return rst;
+        }
+
+        public static int Size
+        {
+            get { return VuMessageEncodingLE.Size + VU_IDEncodingLE.Size + Int16EncodingLE.Size; }
+        }
     }
 
     //--------------------------------------------------
@@ -440,8 +434,6 @@ public:
             // empty
         }
         //protected abstract VU_ERRCODE Process(VU_BOOL autod);
-
-
     }
 
     //--------------------------------------------------
@@ -473,7 +465,146 @@ public:
         }
         //TODO public virtual ~VuGetRequest();
 
-        protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
+        protected override VU_ERRCODE Process(VU_BOOL autod)
+        {
+            VuTargetEntity sender = (VuTargetEntity)VUSTATIC.vuDatabase.Find(Sender());
+
+            if (!IsLocal())
+            {
+                //		MonoPrint ("Get Request %08x\n", entityId_);
+
+                if (sender != null && sender.IsTarget())
+                {
+                    VuMessage resp = null;
+                    if (autod)
+                    {
+                        resp = new VuErrorMessage(VUERROR.VU_NOT_AVAILABLE_ERROR, Sender(), EntityId(), sender);
+                    }
+                    else if (entityId_ == VU_ID.vuNullId)
+                    {
+                        // get ALL ents
+                        if (tgtid_ == VUSTATIC.vuGlobalGroup.Id() || tgtid_ == VUSTATIC.vuLocalSession)
+                        {
+                            // get all _global_ ents
+                            VuDatabaseIterator iter = new VuDatabaseIterator();
+                            VuEntity ent = iter.GetFirst();
+
+                            while (ent != null)
+                            {
+                                if (!ent.IsPrivate() && ent.IsGlobal())
+                                {// ent.IsLocal() && 
+                                    if (ent.Id() != sender.Id())
+                                    {
+                                        if (ent.IsLocal())
+                                        {
+                                            //									MonoPrint("Get Request: Sending Full Update on %08x to %08x\n", ent.Id().creator_.value_, sender.Id().creator_.value_);
+                                            resp = new VuFullUpdateEvent(ent, sender);
+                                            resp.RequestOutOfBandTransmit();
+                                            resp.RequestReliableTransmit();
+                                            VuMessageQueue.PostVuMessage(resp);
+                                        }
+                                        else
+                                        {
+                                            //									MonoPrint("Get Request: Sending Broadcast Global on %08x to %08x\n", ent.Id().creator_.value_, sender.Id().creator_.value_);
+                                            resp = new VuBroadcastGlobalEvent(ent, sender);
+                                            resp.RequestReliableTransmit();
+                                            resp.RequestOutOfBandTransmit();
+                                            VuMessageQueue.PostVuMessage(resp);
+                                        }
+                                    }
+                                }
+
+                                ent = iter.GetNext();
+                            }
+                            return VU_ERRCODE.VU_SUCCESS;
+                        }
+                        else if (tgtid_ == VUSTATIC.vuLocalSessionEntity.GameId())
+                        {
+                            // get all _game_ ents
+                            VuDatabaseIterator iter = new VuDatabaseIterator();
+                            VuEntity ent = iter.GetFirst();
+
+                            while (ent != null)
+                            {
+                                if (!ent.IsPrivate() && ent.IsLocal() && !ent.IsGlobal())
+                                {
+                                    if (ent.Id() != sender.Id())
+                                    {
+                                        resp = new VuFullUpdateEvent(ent, sender);
+                                        resp.RequestReliableTransmit();
+                                        //					resp.RequestLowPriorityTransmit();
+                                        VuMessageQueue.PostVuMessage(resp);
+                                    }
+                                }
+                                ent = iter.GetNext();
+                            }
+                            return VU_ERRCODE.VU_SUCCESS;
+                        }
+                    }
+                    else if (Entity() != null && Entity().OwnerId() == VUSTATIC.vuLocalSession)
+                    {
+                        resp = new VuFullUpdateEvent(Entity(), sender);
+                    }
+                    else if (Destination() == VUSTATIC.vuLocalSession)
+                    {
+                        // we were asked specifically, so send the error response
+                        resp = new VuErrorMessage(VUERROR.VU_NO_SUCH_ENTITY_ERROR, Sender(), EntityId(), sender);
+                    }
+                    if (resp != null)
+                    {
+                        resp.RequestReliableTransmit();
+                        VuMessageQueue.PostVuMessage(resp);
+                        return VU_ERRCODE.VU_SUCCESS;
+                    }
+                }
+                else
+                {
+                    if (entityId_ == VU_ID.vuNullId)
+                    {
+                        // get all _global_ ents
+                        VuDatabaseIterator iter = new VuDatabaseIterator();
+                        VuEntity ent = iter.GetFirst();
+                        VuMessage resp = null;
+
+                        while (ent != null)
+                        {
+                            if (!ent.IsPrivate() && ent.IsGlobal())
+                            {// ent.IsLocal() && 
+                                if ((sender != null) && (ent.Id() != sender.Id()))
+                                {
+                                    if (ent.IsLocal())
+                                    {
+                                        //								MonoPrint("Get Request: Sending Full Update on %08x to %08x\n", ent.Id().creator_.value_, sender.Id().creator_.value_);
+                                        resp = new VuFullUpdateEvent(ent, sender);
+                                        resp.RequestOutOfBandTransmit();
+                                        VuMessageQueue.PostVuMessage(resp);
+                                    }
+                                    else
+                                    {
+                                        //								MonoPrint("Get Request: Sending Broadcast Global on %08x to %08x\n", ent.Id().creator_.value_, sender.Id().creator_.value_);
+                                        resp = new VuBroadcastGlobalEvent(ent, sender);
+                                        resp.RequestOutOfBandTransmit();
+                                        VuMessageQueue.PostVuMessage(resp);
+                                    }
+                                }
+                            }
+
+                            ent = iter.GetNext();
+                        }
+                        return VU_ERRCODE.VU_SUCCESS;
+                    }
+                    else if ((Entity()) != null && (Entity().IsLocal()))
+                    {
+                        VuMessage resp = null;
+
+                        resp = new VuFullUpdateEvent(Entity(), sender);
+                        VuMessageQueue.PostVuMessage(resp);
+                        return VU_ERRCODE.VU_SUCCESS;
+                    }
+                }
+            }
+            return VU_ERRCODE.VU_NO_OP;
+        }
     }
 
     //--------------------------------------------------
@@ -572,9 +703,6 @@ public:
 
         //TODO public virtual ~VuEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
 
         protected VuEvent(VU_MSG_TYPE type, VU_ID entityId, VuTargetEntity target, VU_BOOL loopback = false)
             : base(type, entityId, target, loopback)
@@ -586,19 +714,56 @@ public:
         protected VuEvent(VU_MSG_TYPE type, VU_ID senderid, VU_ID target)
             : base(type, senderid, target)
         {
-
             updateTime_ = VUSTATIC.vuxGameTime;
         }
-        protected override VU_ERRCODE Activate(VuEntity ent) { throw new NotImplementedException(); }
-        //protected abstract VU_ERRCODE Process(VU_BOOL autod);
+        protected override VU_ERRCODE Activate(VuEntity ent)
+        {
+            SetEntity(ent);
+            if (IsLocal() && ent != null)
+                updateTime_ = ent.LastUpdateTime();
 
-        private int LocalSize() { throw new NotImplementedException(); }
+            //  vuDatabase.Handle(this);
+            return VU_ERRCODE.VU_SUCCESS;
+        }
+        //protected abstract VU_ERRCODE Process(VU_BOOL autod);
 
         // DATA
 
         // these fields are filled in on Activate()
         public VU_TIME updateTime_;
     }
+    public static class VuEventEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, VuEvent val)
+        {
+            VuMessageEncodingLE.Encode(buffer, val);
+            UInt64EncodingLE.Encode(buffer, val.updateTime_);
+        }
+        public static void Encode(Stream stream, VuEvent val)
+        {
+            VuMessageEncodingLE.Encode(stream, val);
+            UInt64EncodingLE.Encode(stream, val.updateTime_);
+        }
+
+        public static VuEvent Decode(ByteWrapper buffer, VuEvent rst)
+        {
+            VuMessageEncodingLE.Decode(buffer, rst);
+            rst.updateTime_ = UInt64EncodingLE.Decode(buffer);
+            return rst;
+        }
+        public static VuEvent Decode(Stream stream, VuEvent rst)
+        {
+            VuMessageEncodingLE.Decode(stream, rst);
+            rst.updateTime_ = UInt64EncodingLE.Decode(stream);
+            return rst;
+        }
+
+        public static int Size
+        {
+            get { return VuMessageEncodingLE.Size + UInt64EncodingLE.Size; }
+        }
+    }
+
 
     //--------------------------------------------------
     public class VuCreateEvent : VuEvent
@@ -628,9 +793,6 @@ public:
         }
         //TODO public virtual ~VuCreateEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
         public override VU_BOOL DoSend()     // returns true if ent is in database
         {
             if (Entity() != null && Entity().VuState() == VU_MEM_STATE.VU_MEM_ACTIVE)
@@ -677,11 +839,171 @@ public:
 #endif
         }
 
-        protected override VU_ERRCODE Activate(VuEntity ent) { throw new NotImplementedException(); }
-        protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
+        protected override VU_ERRCODE Activate(VuEntity ent)
+        {
+            return base.Activate(ent);
+        }
 
-        private int LocalSize() { throw new NotImplementedException(); }
+        protected override VU_ERRCODE Process(VU_BOOL autod)
+        {
+            if (expandedData_ != null)
+            {
+                return VU_ERRCODE.VU_NO_OP;    // already done...
+            }
+            if (vutype_ < VuEntity.VU_LAST_ENTITY_TYPE)
+            {
+                expandedData_ = VuCreateEntity(vutype_, size_, new ByteWrapper(data_));
+            }
+            else
+            {
+                expandedData_ = VUSTATIC.VuxCreateEntity(vutype_, size_, data_);
+            }
+            if (expandedData_ != null)
+            {
+                VuEntity.VuReferenceEntity(expandedData_);
+                if (!expandedData_.IsLocal())
+                {
+                    expandedData_.SetTransmissionTime(postTime_);
+                }
+                if (Entity() != null && (Entity().OwnerId() != expandedData_.OwnerId()) &&
+                    Entity() != expandedData_)
+                {
+                    if (Entity().IsPrivate())
+                    {
+                        Entity().ChangeId(expandedData_);
+                        SetEntity(null);
+                    }
+                    else
+                    {
+                        VuEntity winner = ResolveWinner(Entity(), expandedData_);
+                        if (winner == Entity())
+                        {
+                            // this will prevent a db insert of expandedData
+                            SetEntity(expandedData_);
+                        }
+                        else if (winner == expandedData_)
+                        {
+                            Entity().SetOwnerId(expandedData_.OwnerId());
+                            if (Entity().Type() == expandedData_.Type())
+                            {
+                                // if we have the same type, then just transfer to winner
+                                VuTargetEntity dest = null;
+                                if (Entity().IsGlobal())
+                                {
+                                    dest = VUSTATIC.vuGlobalGroup;
+                                }
+                                else
+                                {
+                                    dest = VUSTATIC.vuLocalSessionEntity.Game();
+                                }
+                                VuTransferEvent event_ = new VuTransferEvent(Entity(), dest);
+                                event_.Ref();
+                                VuMessageQueue.PostVuMessage(event_);
+                                Entity().Handle(event_);
+                                VUSTATIC.vuDatabase.Handle(event_);
+                                event_.UnRef();
+                                SetEntity(expandedData_);
+                            }
+                            else
+                            {
+                                type_ = VU_MSG_TYPE.VU_CREATE_EVENT;
+                                if (Entity().VuState() == VU_MEM_STATE.VU_MEM_ACTIVE)
+                                {
+                                    // note: this will cause a memory leak! (but is extrememly rare)
+                                    //   Basically, we have two ents with the same id, and we cannot
+                                    //   keep track of both, even to know when it is safe to delete
+                                    //   the abandoned entity -- so we remove it from VU, but don't
+                                    //   call its destructor... the last thing we do with it is call 
+                                    //   VuxRetireEntity, leaving ultimate cleanup up to the app
+                                    VuEntity.VuReferenceEntity(Entity());
+                                    VUSTATIC.vuDatabase.Remove(Entity());
+                                    VUSTATIC.vuAntiDB.Remove(Entity());
+                                }
+                                VUSTATIC.VuxRetireEntity(Entity());
+                                SetEntity(null);
+                            }
+                        }
+                    }
+                }
+                if (Entity() != null && type_ == VU_MSG_TYPE.VU_FULL_UPDATE_EVENT)
+                {
+                    Entity().Handle((VuFullUpdateEvent)this);
+                    return VU_ERRCODE.VU_SUCCESS;
+                }
+                else if (Entity() == null)
+                {
+                    SetEntity(expandedData_);
 
+                    // OW: me123 MP Fix
+#if NOTHING
+      vuDatabase.Insert(Entity());
+#else
+                    VUSTATIC.vuDatabase.SilentInsert(Entity());	 //me123 to silent otherwise this will
+#endif
+
+                    return VU_ERRCODE.VU_SUCCESS;
+                }
+                return VU_ERRCODE.VU_NO_OP;
+            }
+            return VU_ERRCODE.VU_ERROR;
+        }
+
+        protected static VuEntity VuCreateEntity(ushort type,
+               ushort p,
+               ByteWrapper data)
+        {
+            VuEntity retval = null;
+
+            switch (type)
+            {
+                case VuEntity.VU_SESSION_ENTITY_TYPE:
+                    retval = VuSessionEntityEncodingLE.Decode(data);
+                    break;
+                case VuEntity.VU_GROUP_ENTITY_TYPE:
+                    retval = VuGroupEntityEncodingLE.Decode(data);
+                    break;
+                case VuEntity.VU_GAME_ENTITY_TYPE:
+                    retval = VuGameEntityEncodingLE.Decode(data);
+                    break;
+                case VuEntity.VU_GLOBAL_GROUP_ENTITY_TYPE:
+                case VuEntity.VU_PLAYER_POOL_GROUP_ENTITY_TYPE:
+                    retval = null;
+                    break;
+            }
+            return retval;
+        }
+
+        protected static VuEntity ResolveWinner(VuEntity ent1, VuEntity ent2)
+        {
+            VuEntity retval = null;
+
+            if (ent1.EntityType().createPriority_ > ent2.EntityType().createPriority_)
+            {
+                retval = ent1;
+            }
+            else if (ent1.EntityType().createPriority_ < ent2.EntityType().createPriority_)
+            {
+                retval = ent2;
+            }
+            else if (ent1.OwnerId().creator_ == ent1.Id().creator_)
+            {
+                retval = ent1;
+            }
+            else if (ent2.OwnerId().creator_ == ent2.Id().creator_)
+            {
+                retval = ent2;
+            }
+            else if (ent1.OwnerId().creator_ < ent2.OwnerId().creator_)
+            {
+                retval = ent1;
+            }
+            else
+            {
+                retval = ent2;
+            }
+
+            return retval;
+        }
         // data
 
         public VuEntity expandedData_;
@@ -798,12 +1120,6 @@ public:
 
         //TODO public virtual ~VuUnmanageEvent();
 
-        public override int Size()
-        {
-            return sizeof(VU_TIME);
-        }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
 
         protected override VU_ERRCODE Process(VU_BOOL autod)
         {
@@ -814,8 +1130,6 @@ public:
             }
             return VU_ERRCODE.VU_NO_OP;
         }
-
-        private int LocalSize() { throw new NotImplementedException(); }
 
         // data
 
@@ -833,26 +1147,6 @@ public:
             SetEntity(entity);
         }
         //TODO public virtual ~VuReleaseEvent();
-
-        public override int Size()
-        {
-            return 0;
-        }
-
-        // all these are stubbed out here, as this is not a net message
-        public override int Decode(ByteWrapper buf)
-        {
-            // not a net event, so just return
-            return 0;
-        }
-
-
-        public override int Encode(ByteWrapper buf)
-        {
-            // not a net event, so just return
-            return 0;
-        }
-
 
         public override VU_BOOL DoSend()     // returns false
         {
@@ -909,11 +1203,6 @@ public:
         }
         //TODO public virtual ~VuTransferEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
-
         protected override VU_ERRCODE Activate(VuEntity ent)
         {
             return base.Activate(ent);
@@ -927,8 +1216,6 @@ public:
             }
             return VU_ERRCODE.VU_NO_OP;
         }
-
-        private int LocalSize() { throw new NotImplementedException(); }
 
         // data
         public VU_ID newOwnerId_;
@@ -980,10 +1267,6 @@ public:
         }
         //TODO public virtual ~VuPositionUpdateEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
-
         public override VU_BOOL DoSend()
         {
             // test is done in vudriver.cpp, prior to generation of event
@@ -1000,8 +1283,6 @@ public:
             }
             return VU_ERRCODE.VU_NO_OP;
         }
-
-        private int LocalSize() { throw new NotImplementedException(); }
 
         // data
 
@@ -1026,7 +1307,7 @@ public:
         {
 
 #if VU_USE_CLASS_INFO
-	memcpy(classInfo_, entity->EntityType()->classInfo_, CLASS_NUM_BYTES);
+	memcpy(classInfo_, entity.EntityType().classInfo_, CLASS_NUM_BYTES);
 #endif
 
 
@@ -1047,10 +1328,6 @@ public:
         //TODO public virtual ~VuBroadcastGlobalEvent();
 
         public void MarkAsKeepalive() { flags_ |= VU_MSG_FLAG.VU_KEEPALIVE_MSG_FLAG; }
-
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
 
         protected override VU_ERRCODE Activate(VuEntity ent) { throw new NotImplementedException(); }
         protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
@@ -1114,11 +1391,6 @@ public:
 
         //TODO public virtual ~VuEntityCollisionEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
-
-
         protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
 
         private int LocalSize() { throw new NotImplementedException(); }
@@ -1170,7 +1442,7 @@ public:
                 group_ = ((VuSessionEntity)ent).GameId();
 
 #if VU_TRACK_LATENCY
-    syncState_ = ((VuSessionEntity*)ent)->TimeSyncState();
+    syncState_ = ((VuSessionEntity*)ent).TimeSyncState();
 #endif
 
             }
@@ -1196,11 +1468,6 @@ public:
             RequestReliableTransmit();
         }
         //TODO public virtual ~VuSessionEvent();
-
-        public override int Size() { throw new NotImplementedException(); }
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
-
 
         protected override VU_ERRCODE Process(VU_BOOL autod) { throw new NotImplementedException(); }
 
@@ -1234,24 +1501,6 @@ public:
         }
         //TODO public virtual ~VuTimerEvent();
 
-        public override int Size()
-        {
-            return 0;
-        }
-
-        // all these are stubbed out here, as this is not a net message
-        public override int Decode(ByteWrapper buf)
-        {
-            // not a net event, so just return
-            return 0;
-        }
-
-        public override int Encode(ByteWrapper buf)
-        {
-            // not a net event, so just return
-            return 0;
-        }
-
         public override VU_BOOL DoSend()
         {
             return false;
@@ -1267,7 +1516,7 @@ public:
     VU_PRINT("VU: Posting timer delayed event id %d -- time = %d\n", msgid_.id_, vuxRealTime);
 #endif
 
-                if (event_.Target() != null && event_.Target() != VUSTATIC.vuLocalSessionEntity)//me123 from Target() to event_->Target()
+                if (event_.Target() != null && event_.Target() != VUSTATIC.vuLocalSessionEntity)//me123 from Target() to event_.Target()
                 {
                     retval = event_.Send();
                 }
@@ -1317,10 +1566,6 @@ public:
         }
         //TODO public virtual ~VuShutdownEvent();
 
-        public override int Size() { throw new NotImplementedException(); }
-        // all these are stubbed out here, as this is not a net message
-        public override int Decode(ByteWrapper buf) { throw new NotImplementedException(); }
-        public override int Encode(ByteWrapper buf) { throw new NotImplementedException(); }
         public override VU_BOOL DoSend()     // returns false
         { throw new NotImplementedException(); }
 
@@ -1365,24 +1610,6 @@ public:
             // empty
         }
         //TODO public virtual ~VuUnknownMessage();
-
-        public override int Size()
-        {
-            return 0;
-        }
-
-        // all these are stubbed out here, as this is not a net message
-        public override int Decode(ByteWrapper buf)
-        {
-            // not a net event, so just return
-            return 0;
-        }
-
-        public override int Encode(ByteWrapper buf)
-        {
-            // Not a net event, so just return
-            return 0;
-        }
 
         public override VU_BOOL DoSend()     // returns false
         {

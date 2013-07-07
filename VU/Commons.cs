@@ -11,10 +11,6 @@ namespace FalconNet.VU
 
     public class F4LIt { }
 
-    public struct VuFullUpdateevnt { }
-    public struct VuPositionUpdateevnt { }
-    public struct VuTransferevnt { }
-
     public static class CriticalSection
     {
         public static void VuEnterCriticalSection()

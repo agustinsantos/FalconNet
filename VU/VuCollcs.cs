@@ -866,40 +866,40 @@ public:
                                 HeaderCB headercb, 	  // >= 0 -. continue
                                 SaveCB savecb) // > 0 -. save it
         {
-            if (String.IsNullOrWhiteSpace(filename)) return VU_ERRCODE.VU_ERROR;
-            if (savecb == null) return VU_ERRCODE.VU_ERROR;
+            //if (String.IsNullOrWhiteSpace(filename)) return VU_ERRCODE.VU_ERROR;
+            //if (savecb == null) return VU_ERRCODE.VU_ERROR;
 
-            FileStream file = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
-            if (file == null) return VU_ERRCODE.VU_ERROR;
+            //FileStream file = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
+            //if (file == null) return VU_ERRCODE.VU_ERROR;
 
-            if (headercb != null)
-            {
-                if (headercb(file) < 0)
-                {
-                    file.Close();
-                    return VU_ERRCODE.VU_ERROR;
-                }
-            }
+            //if (headercb != null)
+            //{
+            //    if (headercb(file) < 0)
+            //    {
+            //        file.Close();
+            //        return VU_ERRCODE.VU_ERROR;
+            //    }
+            //}
 
-            // reverse order...
-            VuLinkedList tmp = new VuLinkedList();
-            VuEntity ent;
-            VuDatabaseIterator dbiter = new VuDatabaseIterator();
-            for (ent = dbiter.GetFirst(); ent != null; ent = dbiter.GetNext())
-            {
-                tmp.Insert(ent);
-            }
-            VuListIterator lliter = new VuListIterator(tmp);
-            for (ent = lliter.GetFirst(); ent != null; ent = lliter.GetNext())
-            {
-                if (savecb(file, ent) >= 0)
-                {
-                    ent.Save(file);
-                }
-            }
-            int tail = 0;
-            file.Write(EncodingHelpers.EncodeIntLE(tail), sizeof(int), 1);
-            file.Close();
+            //// reverse order...
+            //VuLinkedList tmp = new VuLinkedList();
+            //VuEntity ent;
+            //VuDatabaseIterator dbiter = new VuDatabaseIterator();
+            //for (ent = dbiter.GetFirst(); ent != null; ent = dbiter.GetNext())
+            //{
+            //    tmp.Insert(ent);
+            //}
+            //VuListIterator lliter = new VuListIterator(tmp);
+            //for (ent = lliter.GetFirst(); ent != null; ent = lliter.GetNext())
+            //{
+            //    if (savecb(file, ent) >= 0)
+            //    {
+            //        ent.Save(file);
+            //    }
+            //}
+            //int tail = 0;
+            //file.Write(EncodingHelpers.EncodeIntLE(tail), sizeof(int), 1);
+            //file.Close();
             return VU_ERRCODE.VU_SUCCESS;
         }
 
@@ -934,7 +934,7 @@ public:
             return VU_ERRCODE.VU_SUCCESS;
         }
 
-        public virtual int Type()
+        public override int Type()
         {
             return VU_DATABASE_COLLECTION;
         }
@@ -2634,7 +2634,7 @@ public:
 
         //TODO public virtual ~VuFilteredList();
 
-        public virtual VU_ERRCODE Handle(VuMessage msg)
+        public override VU_ERRCODE Handle(VuMessage msg)
         {
             if (filter_.Notice(msg))
             {
@@ -2786,7 +2786,7 @@ public:
 
         //TODO public virtual ~VuFifoQueue();
 
-        public virtual VU_ERRCODE ForcedInsert(VuEntity entity)
+        public override VU_ERRCODE ForcedInsert(VuEntity entity)
         {
             if (entity.VuState() == VU_MEM_STATE.VU_MEM_ACTIVE)
             {

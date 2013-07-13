@@ -8,14 +8,14 @@ namespace FalconNet.FalcLib
 	// ==============================
 	// Vu Class heirarchy defines
 	// ==============================
-	public enum VU_CLASS
+	public static class Vu_CLASS
 	{
-		VU_DOMAIN		=0,
-		VU_CLASS		=1,
-		VU_TYPE			=2,
-		VU_STYPE		=3,
-		VU_SPTYPE		=4,
-		VU_OWNER		=5
+		public const int VU_DOMAIN		=0;
+		public const int VU_CLASS		=1;
+		public const int VU_TYPE		=2;
+		public const int VU_STYPE		=3;
+		public const int VU_SPTYPE		=4;
+		public const int VU_OWNER		=5;
 	}
 
 	// ========================

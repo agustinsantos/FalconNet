@@ -1,23 +1,24 @@
-﻿using System;
-using System.Drawing;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using DWORD = System.UInt32;
+using System;
 
 namespace FalconNet.Graphics
 {
     public class GLContext : IContext
     {
-
-        public bool Setup(ImageBuffer pIB, Common.DXContext c)
+        public bool Setup()
         {
-            throw new NotImplementedException();
+            context = new GameWindow();
+            context.Load += HandleOnLoadEvent;
+            context.RenderFrame += HandleRenderEvent;
+            return true;
         }
 
         public void Cleanup()
         {
-            throw new NotImplementedException();
+            context.Load -= HandleOnLoadEvent;
+            context.RenderFrame -= HandleRenderEvent;
         }
 
         public void NewImageBuffer(uint lpDDSBack)
@@ -42,17 +43,21 @@ namespace FalconNet.Graphics
 
         public void SwapBuffers(ushort SwapInfo)
         {
-            throw new NotImplementedException();
+            context.SwapBuffers(); 
         }
 
         public void StartFrame()
         {
-            throw new NotImplementedException();
+            GL.Clear(ClearBufferMask.DepthBufferBit |
+                    ClearBufferMask.ColorBufferBit |
+                    ClearBufferMask.AccumBufferBit |
+                    ClearBufferMask.StencilBufferBit);
+
         }
 
         public void FinishFrame(object lpFnPtr)
         {
-            throw new NotImplementedException();
+            context.SwapBuffers(); 
         }
 
         public void SetColorCorrection(uint color, float percent)
@@ -65,7 +70,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        public void SelectForegroundColor(DWORD color)
+        public void SelectForegroundColor(uint color)
         {
             throw new NotImplementedException();
         }
@@ -144,5 +149,27 @@ namespace FalconNet.Graphics
         {
             throw new NotImplementedException();
         }
+
+        public bool Setup(ImageBuffer pIB, Common.DXContext c)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void HandleOnLoadEvent(object sender, EventArgs e)
+        {
+            context.WindowBorder = WindowBorder.Hidden;
+            context.WindowState = WindowState.Fullscreen;
+            GL.ClearColor(new Color4(0.1f, 0.0f, 0.0f, 1.0f));
+        }
+
+        protected void HandleRenderEvent(object sender, FrameEventArgs e)
+        {
+            this.StartFrame();
+
+            this.FinishFrame(null);
+        }
+
+        GameWindow context;
+
     }
 }

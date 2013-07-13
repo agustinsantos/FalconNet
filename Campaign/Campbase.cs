@@ -8,6 +8,7 @@ using Team = System.Int32;
 using GridIndex = System.Int16;
 using Control = System.Byte;
 using System.Diagnostics;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

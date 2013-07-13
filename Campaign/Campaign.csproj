@@ -35,16 +35,13 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Campbase.cs" />
-    <Compile Include="Campglobl.cs" />
     <Compile Include="camplist.cs" />
-    <Compile Include="Campterr.cs" />
     <Compile Include="Campwp.cs" />
     <Compile Include="Division.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="Gtmobj.cs" />
     <Compile Include="Mission.cs" />
     <Compile Include="Campaign.cs" />
-    <Compile Include="CampCell.cs" />
     <Compile Include="Ntm.cs" />
     <Compile Include="Objectiv.cs" />
     <Compile Include="Options.cs" />
@@ -64,7 +61,6 @@
     <Compile Include="Battalion.cs" />
     <Compile Include="Brigade.cs" />
     <Compile Include="GndUnit.cs" />
-    <Compile Include="Unit.cs" />
     <Compile Include="Squadron.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="Pilot.cs" />
@@ -73,12 +69,17 @@
     <Compile Include="Brief.cs" />
     <Compile Include="Asearch.cs" />
     <Compile Include="CampRadar.cs" />
+    <Compile Include="Unit.cs" />
     <Compile Include="vehicle.cs" />
     <Compile Include="SimBaseClass.cs" />
     <Compile Include="Package.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\CampLib\CampaignBase.csproj">
+      <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
+      <Name>CampaignBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FalcLib\FalcLib.csproj">
       <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>
       <Name>FalcLib</Name>
@@ -90,14 +91,6 @@
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>
       <Name>VU</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UI\UI.csproj">
-      <Project>{5EFB2579-EA16-49B7-94FC-430735B35DF9}</Project>
-      <Name>UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sim\Sim.csproj">
-      <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
-      <Name>Sim</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

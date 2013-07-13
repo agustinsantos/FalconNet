@@ -1,6 +1,5 @@
 using System;
 using FalconNet.Common;
-using FalconNet.Graphics;
 
 namespace FalconNet.FalcLib
 {
@@ -72,7 +71,7 @@ namespace FalconNet.FalcLib
 		public int	windowStyle;
 		// Device managment
 		public DeviceManager	devmgr;
-		public DisplayDevice	theDisplayDevice;
+		//TODO public DisplayDevice	theDisplayDevice;
 		public int	deviceNumber;
 		public bool	displayFullScreen;
 	
@@ -296,9 +295,9 @@ namespace FalconNet.FalcLib
 			ShowWindow( appWin, SW_SHOW );
 #endif
 		}
-
-		public ImageBuffer GetImageBuffer() {return theDisplayDevice.GetImageBuffer();}
 #if TODO	
+		public ImageBuffer GetImageBuffer() {return theDisplayDevice.GetImageBuffer();}
+
 		// OW
 
 		protected void _LeaveMode();

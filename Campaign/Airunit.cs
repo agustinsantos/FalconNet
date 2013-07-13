@@ -4,7 +4,8 @@ using VU_BYTE=System.Byte;
 using FalconNet.FalcLib;
 using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.Common;
-using FalconNet.Sim;
+using FalconNet.CampaignBase;
+//using FalconNet.Sim;
 
 namespace FalconNet.Campaign
 {

@@ -62,7 +62,7 @@ namespace FalconNet.Graphics
         public float minZ, maxZ;
 
         public LODrecord pLODs;
-        public Ppoint pSlotAndDynamicPositions;
+        public Ppoint[] pSlotAndDynamicPositions;
 
         public short nTextureSets;
         public short nDynamicCoords;

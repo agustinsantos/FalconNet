@@ -231,5 +231,10 @@ namespace FalconNet.Common
 		{
 			WriteString (section, key, value.ToString ());
 		}
+
+        public static int GetPrivateProfileInt(string section, string key, int defval, string file)
+        {
+            throw new NotImplementedException();
+        }
 	}
 }

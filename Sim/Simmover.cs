@@ -45,7 +45,8 @@ namespace FalconNet.Sim
         }
 
         protected virtual void Cleanup()
-            {
+        {
+#if TODO
 	if (numSensors > 0 && (!sensorArray || F4IsBadReadPtr(sensorArray, sizeof(SensorClass*)))) // JB 010223 CTD
 		return; // JB 010223 CTD
 
@@ -59,11 +60,11 @@ namespace FalconNet.Sim
 	  sensorArray[i] = null;
 	  numSensors = 0; // 2002-02-01 ADDED BY S.G. Say we don't have any sensors
    }
-   delete [] sensorArray;
+   //delete [] sensorArray;
    sensorArray = null;
    SimVuDriver *oldd = (SimVuDriver *)SetDriver(null);
-   if ( oldd )
-      delete oldd;
+   //if ( oldd )
+      //delete oldd;
 
    // tear down nonlocal data
    if ( nonLocalData )
@@ -82,7 +83,9 @@ namespace FalconNet.Sim
 	   delete nonLocalData;
 	   nonLocalData = null;
    }
-}
+#endif
+            throw new NotImplementedException();
+        }
 
         protected float vt, kias;
         protected void MakeComplex()
@@ -245,43 +248,43 @@ namespace FalconNet.Sim
         public SimMoverClass(FILE* filePtr);
         //TODO virtual ~SimMoverClass (void);
         public virtual void Init(SimInitDataClass* initData)
+        {
+            Falcon4EntityClassType* classPtr;
+            SimVuDriver* oldd;
+
+            if (initData)
             {
-	Falcon4EntityClassType* classPtr;
-	SimVuDriver *oldd;
+                SetCampaignObject(initData.campUnit);
+                // pilotSlot is only different from vehicleInUnit in the
+                // case of player owned aircraft
+                pilotSlot = vehicleInUnit = static_cast<uchar>(initData.vehicleInUnit);
+            }
 
-	if (initData)
-	{
-		SetCampaignObject(initData.campUnit);
-		// pilotSlot is only different from vehicleInUnit in the
-		// case of player owned aircraft
-		pilotSlot = vehicleInUnit = static_cast<uchar>(initData.vehicleInUnit);
-	}
-	
-	SimBaseClass.Init(initData);
-	
-	// Init mover data
-	classPtr = (Falcon4EntityClassType*)EntityType();
-	// 2002-03-02 ADDED BY S.G. If not enough vehicles in vehicle.lst compared to the value in vehicleDataIndex, it will overflow the array
-	if (classPtr.vehicleDataIndex >= NumSimMoverDefinitions)
-		mvrDefinition = null;
-	else
-	// END OF ADDED SECTION
-		mvrDefinition = moverDefinitionData[classPtr.vehicleDataIndex];
-	ShiAssert(mvrDefinition);
+            SimBaseClass.Init(initData);
 
-	// SetDelta(0.0F, 0.0F, 0.0F);
-	// SetYPRDelta(0.0F, 0.0F, 0.0F);
-	if (IsLocal())
-	{
-		oldd = (SimVuDriver *)SetDriver(new SimVuDriver(this));
-	}
-	else
-	{
-		oldd = (SimVuDriver *)SetDriver(new SimVuSlave(this));
-	}
-	//TODO if ( oldd )
-	//TODO	delete oldd;
-}
+            // Init mover data
+            classPtr = (Falcon4EntityClassType*)EntityType();
+            // 2002-03-02 ADDED BY S.G. If not enough vehicles in vehicle.lst compared to the value in vehicleDataIndex, it will overflow the array
+            if (classPtr.vehicleDataIndex >= NumSimMoverDefinitions)
+                mvrDefinition = null;
+            else
+                // END OF ADDED SECTION
+                mvrDefinition = moverDefinitionData[classPtr.vehicleDataIndex];
+            ShiAssert(mvrDefinition);
+
+            // SetDelta(0.0F, 0.0F, 0.0F);
+            // SetYPRDelta(0.0F, 0.0F, 0.0F);
+            if (IsLocal())
+            {
+                oldd = (SimVuDriver*)SetDriver(new SimVuDriver(this));
+            }
+            else
+            {
+                oldd = (SimVuDriver*)SetDriver(new SimVuSlave(this));
+            }
+            //TODO if ( oldd )
+            //TODO	delete oldd;
+        }
 
         public virtual int Exec()
         {
@@ -497,83 +500,83 @@ namespace FalconNet.Sim
         }
 
         public virtual int Sleep()
+        {
+            int numRef, i;
+
+            SimObjectType* tmpObject;
+
+            SimDriver.RemoveFromObjectList(this);
+
+            base.Sleep();
+
+            while (targetList)
             {
-	int numRef,i;
+                tmpObject = targetList;
+                targetList = targetList.next;
+                tmpObject.prev = null;
+                tmpObject.next = null;
 
-	SimObjectType* tmpObject;
-	
-	SimDriver.RemoveFromObjectList(this);
-	
-	base.Sleep();
-	
-	while (targetList)
-	{
-		tmpObject = targetList;
-		targetList = targetList.next;
-		tmpObject.prev = null;
-		tmpObject.next = null;
+                // use for debugging
+                numRef = tmpObject.IsReferenced();
 
-		// use for debugging
-		numRef = tmpObject.IsReferenced();
+                tmpObject.Release(SIM_OBJ_REF_ARGS);
+                tmpObject = null;
+            }
+            ClearTarget();
 
-		tmpObject.Release( SIM_OBJ_REF_ARGS );
-		tmpObject = null;
-	}
-	ClearTarget();
-	
-	for ( i=0; i<numSensors; i++)
-	{
-		if (sensorArray[i])
-			sensorArray[i].SetPower( FALSE );
-	}
+            for (i = 0; i < numSensors; i++)
+            {
+                if (sensorArray[i])
+                    sensorArray[i].SetPower(FALSE);
+            }
 
-	// SetDelta(0.0F, 0.0F, 0.0F);
-	// SetYPRDelta(0.0F, 0.0F, 0.0F);
-	return 0;
-}
+            // SetDelta(0.0F, 0.0F, 0.0F);
+            // SetYPRDelta(0.0F, 0.0F, 0.0F);
+            return 0;
+        }
         public virtual int Wake()
+        {
+            int
+                i;
+
+            base.Wake();
+
+            if (EntityDriver())
             {
-	int
-		i;
+                EntityDriver().ResetLastUpdateTime(vuxGameTime);
+            }
 
-	base.Wake();
+            // SetDelta(0.0F, 0.0F, 0.0F);
+            // SetYPRDelta(0.0F, 0.0F, 0.0F);
 
-	if (EntityDriver())
-	{
-		EntityDriver().ResetLastUpdateTime (vuxGameTime);
-	}
-	
-	// SetDelta(0.0F, 0.0F, 0.0F);
-	// SetYPRDelta(0.0F, 0.0F, 0.0F);
+            if (drawPointer && !IsExploding())
+            {
+                for (i = 0; i < numSwitches; i++)
+                {
+                    if (switchChange[i])
+                    {
+                        ((DrawableBSP*)drawPointer).SetSwitchMask(i, switchData[i]);
+                        switchChange[i] = FALSE;
+                    }
+                }
+                for (i = 0; i < numDofs; i++)
+                {
+                    if (DOFType[i] == AngleDof)
+                        ((DrawableBSP*)drawPointer).SetDOFangle(i, DOFData[i]);
+                    else if (DOFType[i] == TranslateDof)
+                        ((DrawableBSP*)drawPointer).SetDOFoffset(i, DOFData[i]);
+                }
 
-	if (drawPointer && !IsExploding())
-	{
-		for (i=0; i<numSwitches; i++)
-		{
-			if (switchChange[i])
-			{
-				((DrawableBSP*)drawPointer).SetSwitchMask(i, switchData[i]);
-				switchChange[i] = FALSE;
-			}
-		}
-		for (i=0; i<numDofs; i++)
-		{
-			if (DOFType[i] == AngleDof)
-				((DrawableBSP*)drawPointer).SetDOFangle(i, DOFData[i]);
-			else if (DOFType[i] == TranslateDof)
-				((DrawableBSP*)drawPointer).SetDOFoffset(i, DOFData[i]);
-		}
-		
-		for (i=0; i<numVertices; i++)
-		{
-			((DrawableBSP*)drawPointer).SetDynamicVertex(i, VertexData[i], 0.0F, 0.0F);
-		}
-	}
-	
-	SimDriver.AddToObjectList(this);
+                for (i = 0; i < numVertices; i++)
+                {
+                    ((DrawableBSP*)drawPointer).SetDynamicVertex(i, VertexData[i], 0.0F, 0.0F);
+                }
+            }
 
-	return 0;
-}
+            SimDriver.AddToObjectList(this);
+
+            return 0;
+        }
         public virtual void MakeLocal()
             {
 	// LEON TODO: Need to do all necessary shit to convert from a remote to a local entity.
@@ -749,132 +752,132 @@ namespace FalconNet.Sim
 
         // collision with feature
         public virtual SimBaseClass FeatureCollision(float groundZ)
-{
-CampBaseClass* objective;
+        {
+            CampBaseClass* objective;
 #if VU_GRID_TREE_Y_MAJOR
 VuGridIterator gridIt(ObjProxList, YPos(), XPos(), 3.0F * NM_TO_FT);
 #else
-VuGridIterator gridIt = new VuGridIterator(ObjProxList, XPos(), YPos(), 3.0F * NM_TO_FT);
+            VuGridIterator gridIt = new VuGridIterator(ObjProxList, XPos(), YPos(), 3.0F * NM_TO_FT);
 #endif
-SimBaseClass *foundFeature = null;
-SimBaseClass *testFeature;
-float radius;
-Tpoint pos, fpos, vec, p3, collide;
-BOOL firstFeature;
-WeaponClassDataType* wc = null;
-const float deltat = 1.0f; // JPO time to look ahead for flat surfaces - arrived at by experiment.
-// this required to land on highway strips - that are in forest or similar.
+            SimBaseClass* foundFeature = null;
+            SimBaseClass* testFeature;
+            float radius;
+            Tpoint pos, fpos, vec, p3, collide;
+            BOOL firstFeature;
+            WeaponClassDataType* wc = null;
+            const float deltat = 1.0f; // JPO time to look ahead for flat surfaces - arrived at by experiment.
+            // this required to land on highway strips - that are in forest or similar.
 
-if ( IsWeapon() )
-{
-	wc = (WeaponClassDataType*)Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].dataPtr;
-}
-
-	onFlatFeature = FALSE;
-
-	// get the 1st objective that contains the bomb
-	objective = (CampBaseClass*)gridIt.GetFirst();
-	while ( objective )
-	{
-      if (objective.GetComponents())
-      {
-		   pos.x = XPos();
-		   pos.y = YPos();
-		   pos.z = ZPos();
-	   
-		   // check out some time in the future (was without multiplier JPO)
-		   vec.x = XDelta() * SimLibMajorFrameTime * deltat;
-		   vec.y = YDelta() * SimLibMajorFrameTime * deltat;
-		   vec.z = ZDelta() * SimLibMajorFrameTime * deltat;
-	   
-		   p3.x = (float)fabs( vec.x );
-		   p3.y = (float)fabs( vec.y );
-		   p3.z = (float)fabs( vec.z );
-	   
-			// loop thru each element in the objective
-			VuListIterator	featureWalker(objective.GetComponents());
-			testFeature = (SimBaseClass*) featureWalker.GetFirst();
-			firstFeature = TRUE;
-			while (testFeature)
-         {
-			   if (testFeature.drawPointer)
+            if (IsWeapon())
             {
-			      // get feature's radius and position
-			      radius = testFeature.drawPointer.Radius();
-				  if(drawPointer)
-					  radius += drawPointer.Radius();
-			      testFeature.drawPointer.GetPosition( &fpos );
-	      
-			      // test with gross level bounds of object
-			      if (fabs (pos.x - fpos.x) < radius + p3.x &&
-				      fabs (pos.y - fpos.y) < radius + p3.y &&
-				      fabs (pos.z - fpos.z) < radius + p3.z )
-			      {
-				      // if we're on the ground make sure we have a downward vector if
-				      // we're testing a flat container so we detect a collision
-				      if ( OnGround())
-				      {
-						  if(testFeature.IsSetCampaignFlag (FEAT_FLAT_CONTAINER))
-						  {
-							  vec.z = 1500.0f;
-							  pos.z = groundZ - 50.0f;
-						  }
-						  else
-						  {
-							  vec.z = 0.0f;
-							  pos.z = groundZ - 0.5f;
-						  }
-				      }
-				      else
-				      {
-					      vec.z = ZDelta() * SimLibMajorFrameTime * deltat;
-					      pos.z = ZPos();
-				      }
-					      
-				      if ( testFeature.drawPointer.GetRayHit( &pos, &vec, &collide, 1.0f ) )
-				      {
-						  if ( IsWeapon() )
-						  {
-							  FeatureClassDataType* fc = GetFeatureClassData(testFeature.Type() - VU_LAST_ENTITY_TYPE);
-
-							  if(fc.DamageMod[wc.DamageType])
-								  return testFeature;
-
-							  foundFeature = testFeature;
-						  }
-						  else
-						  {
-							  // if we're a bomb and we've hit a flat thingy, it's OK to
-							  // return detect a hit on the feature so return it....
-							  // other wise we just note if we're on top of a flat feature
-							  if (testFeature.IsSetCampaignFlag (FEAT_FLAT_CONTAINER))
-							  {
-								  onFlatFeature = TRUE;
-							  }
-							  else
-								{
-									if (FalconLocalSession && this == FalconLocalSession.GetPlayerEntity())
-										g_intellivibeData.CollisionCounter++;
-
-								  return testFeature;
-								}
-						  }
-				      }
-			      }
+                wc = (WeaponClassDataType*)Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].dataPtr;
             }
-   			testFeature = (SimBaseClass*) featureWalker.GetNext();
-			firstFeature = FALSE;
-   		}
-      }
 
-      objective = (CampBaseClass*)gridIt.GetNext();
-	}
+            onFlatFeature = FALSE;
 
-	if (foundFeature && FalconLocalSession && this == FalconLocalSession.GetPlayerEntity())
-		g_intellivibeData.CollisionCounter++;
+            // get the 1st objective that contains the bomb
+            objective = (CampBaseClass*)gridIt.GetFirst();
+            while (objective)
+            {
+                if (objective.GetComponents())
+                {
+                    pos.x = XPos();
+                    pos.y = YPos();
+                    pos.z = ZPos();
 
-	return foundFeature;
-}
+                    // check out some time in the future (was without multiplier JPO)
+                    vec.x = XDelta() * SimLibMajorFrameTime * deltat;
+                    vec.y = YDelta() * SimLibMajorFrameTime * deltat;
+                    vec.z = ZDelta() * SimLibMajorFrameTime * deltat;
+
+                    p3.x = (float)fabs(vec.x);
+                    p3.y = (float)fabs(vec.y);
+                    p3.z = (float)fabs(vec.z);
+
+                    // loop thru each element in the objective
+                    VuListIterator featureWalker = new VuListIterator(objective.GetComponents());
+                    testFeature = (SimBaseClass)featureWalker.GetFirst();
+                    firstFeature = TRUE;
+                    while (testFeature)
+                    {
+                        if (testFeature.drawPointer)
+                        {
+                            // get feature's radius and position
+                            radius = testFeature.drawPointer.Radius();
+                            if (drawPointer)
+                                radius += drawPointer.Radius();
+                            testFeature.drawPointer.GetPosition(&fpos);
+
+                            // test with gross level bounds of object
+                            if (fabs(pos.x - fpos.x) < radius + p3.x &&
+                                fabs(pos.y - fpos.y) < radius + p3.y &&
+                                fabs(pos.z - fpos.z) < radius + p3.z)
+                            {
+                                // if we're on the ground make sure we have a downward vector if
+                                // we're testing a flat container so we detect a collision
+                                if (OnGround())
+                                {
+                                    if (testFeature.IsSetCampaignFlag(FEAT_FLAT_CONTAINER))
+                                    {
+                                        vec.z = 1500.0f;
+                                        pos.z = groundZ - 50.0f;
+                                    }
+                                    else
+                                    {
+                                        vec.z = 0.0f;
+                                        pos.z = groundZ - 0.5f;
+                                    }
+                                }
+                                else
+                                {
+                                    vec.z = ZDelta() * SimLibMajorFrameTime * deltat;
+                                    pos.z = ZPos();
+                                }
+
+                                if (testFeature.drawPointer.GetRayHit(&pos, &vec, &collide, 1.0f))
+                                {
+                                    if (IsWeapon())
+                                    {
+                                        FeatureClassDataType* fc = GetFeatureClassData(testFeature.Type() - VU_LAST_ENTITY_TYPE);
+
+                                        if (fc.DamageMod[wc.DamageType])
+                                            return testFeature;
+
+                                        foundFeature = testFeature;
+                                    }
+                                    else
+                                    {
+                                        // if we're a bomb and we've hit a flat thingy, it's OK to
+                                        // return detect a hit on the feature so return it....
+                                        // other wise we just note if we're on top of a flat feature
+                                        if (testFeature.IsSetCampaignFlag(FEAT_FLAT_CONTAINER))
+                                        {
+                                            onFlatFeature = TRUE;
+                                        }
+                                        else
+                                        {
+                                            if (FalconLocalSession && this == FalconLocalSession.GetPlayerEntity())
+                                                g_intellivibeData.CollisionCounter++;
+
+                                            return testFeature;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        testFeature = (SimBaseClass*)featureWalker.GetNext();
+                        firstFeature = FALSE;
+                    }
+                }
+
+                objective = (CampBaseClass*)gridIt.GetNext();
+            }
+
+            if (foundFeature && FalconLocalSession && this == FalconLocalSession.GetPlayerEntity())
+                g_intellivibeData.CollisionCounter++;
+
+            return foundFeature;
+        }
 
         public virtual int CheckLOS(SimObjectType* obj)
         {

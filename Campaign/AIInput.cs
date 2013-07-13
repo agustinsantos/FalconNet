@@ -2,6 +2,7 @@ using System;
 using FalconNet.Common;
 using System.Globalization;
 using FalconNet.FalcLib;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

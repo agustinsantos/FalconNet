@@ -669,6 +669,7 @@ namespace FalconNet.Sim
         protected void DragManeuver();//me123
         protected int MachHold(float m1, float m2, int pitchStick)
         {
+#if TODO
             float eProp = 0.0F, thr = 0.0F;
             float maxDelta = 0.0F, cornerDelta = 0.0F, burnerDelta = 0.0F;
             float dx = 0, dy = 0, dist = 0;
@@ -851,7 +852,7 @@ namespace FalconNet.Sim
             /* add pitch stick interaction */
             /*-----------------------------*/
             if (pitchStick)
-                throtl = thr + ((float)fabs(pStick) / 15.0F);
+                throtl = thr + ((float)Math.Abs(pStick) / 15.0F);
             else
                 throtl = thr;
             //me123 status test. IRCM STUFF.
@@ -896,6 +897,8 @@ if (g_nShowDebugLabels & 0x10000)
                 return (true);
             else
                 return (false);
+#endif
+            throw new NotImplementedException();
         }
 
         protected void PullUp();
@@ -1055,7 +1058,7 @@ if (g_nShowDebugLabels & 0x10000)
         protected int HeadingAndAltitudeHold(float desPsi, float desAlt)
         {
             float altErr, psiErr;
-            int retval = false;
+            bool retval = false;
             int newTurn;
             float turnDir;
 
@@ -13093,13 +13096,13 @@ public:
             }
             return 0;
         }
-        enum Actions
+        public enum Actions
         {
             CANOPY, FUEL1, FUEL2, FNX, RALTON, POWERON, AFFLAGS, RADAR, SEAT, MAINPOWER, EWSPGM,
             MASTERARM, EXTLON, INS, VOLUME, FLAPS
         };
 
-        static struct PreflightActions
+        public struct PreflightActions
         {
             int action; // what to do, 
             int data;	// any data

@@ -73,6 +73,6 @@ namespace FalconNet.FalcLib
 	   SimPositionUpdateMsg,               // 84
 	   SimRoughPositionUpdateMsg,          // 85
 	   LastFalconEvent                     // 86
-   };
+   }
 }
 

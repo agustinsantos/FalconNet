@@ -2,14 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Float32 = System.Single;
+using BOOL = System.Boolean;
+using VU_TIME = System.UInt64;
+using FalconNet.FalcLib;
 
 namespace FalconNet.Sim
 {
 public class SimObjectLocalData
 {
   
-	public SimObjectLocalData (void) {	rdrDetect = painted = detFlags = nextLOSCheck = 0;
-								range = ata = az = el = droll = 0.0F; };
+	public SimObjectLocalData () 
+    {
+        painted = false;
+        rdrDetect = detFlags = nextLOSCheck = 0;
+								range = ata = az = el = droll = 0.0F;
+    }
 
 	// Absolute true relative geometry for this target
 	public Float32 ata;				// "antenna train angle" is total angle from nose to target
@@ -26,13 +34,13 @@ public class SimObjectLocalData
 
 	// Radar specific target data (move into Radar classes???)
 	public BOOL	painted;					// Was this target painted this frame
-	public unsigned int lockmsgsend;					// 0=no, 1 = lock 2 = unlock
+	public uint lockmsgsend;					// 0=no, 1 = lock 2 = unlock
 	public int lastRadarMode;					// 2002-02-10 ADDED BY S.G. Need to know the last mode the radar was in
 	public Float32 aspect;						// Target aspect (= 180.0F*DTR - ataFrom)
-	public Int32   rdrSy[NUM_RADAR_HISTORY];	// radar symbol (assigned by exec in RadarDoppler)
-	public Float32 rdrX[NUM_RADAR_HISTORY];	// azmuth in radians?
-	public Float32 rdrY[NUM_RADAR_HISTORY];	// range in feet (radial)
-	public Float32 rdrHd[NUM_RADAR_HISTORY];	// our heading at target paint time (platform->Yaw())
+	public Int32[]   rdrSy = new int[NUM_RADAR_HISTORY];	// radar symbol (assigned by exec in RadarDoppler)
+	public Float32[] rdrX = new Float32[NUM_RADAR_HISTORY];	// azmuth in radians?
+	public Float32[] rdrY = new Float32[NUM_RADAR_HISTORY];	// range in feet (radial)
+	public Float32[] rdrHd= new Float32[NUM_RADAR_HISTORY];	// our heading at target paint time (platform->Yaw())
 	public VU_TIME rdrLastHit;					// Last time this target was detected (SimLibElapsedTime)
 	public UInt32	rdrDetect;					// Bit field indicating when we did/didn't detect the target
 
@@ -41,18 +49,18 @@ public class SimObjectLocalData
 	public Float32 targetTime;					// How long to kill this target (digi use only)
 
 	// Per sensor data
-	public Int32		sensorLoopCount[SensorClass::NumSensorTypes];	// Number of frames since the target was last seen
-	public SensorClass::TrackTypes	sensorState[SensorClass::NumSensorTypes];	// What kind of sensor lock do we have
+	public Int32[]		sensorLoopCount = new int[SensorClass.NumSensorTypes];	// Number of frames since the target was last seen
+	public SensorClass.TrackTypes[]	sensorState = new SensorClass.TrackTypes[SensorClass.NumSensorTypes];	// What kind of sensor lock do we have
 
 	public Float32		irSignature;									// Should go away - look it up when required
 
 	public UInt32		detFlags;				//flag field indicating which los's are true
 	public UInt32		nextLOSCheck;			//next time to check LOS again
 
-	public int		CloudLOS(void)				{return (detFlags & 0x01) && TRUE;}
-	public void	SetCloudLOS(int value)		{if(value)detFlags |= 0x01; else detFlags &= ~0x01;}
-	public int		TerrainLOS(void)			{return (detFlags & 0x02) && TRUE;}
-	public void	SetTerrainLOS(int value)	{if(value)detFlags |= 0x02; else detFlags &= ~0x02;}
+	public int		CloudLOS( )				{return (detFlags & 0x01) && true;}
+	public void	SetCloudLOS(int value)		{if(value != 0)detFlags |= 0x01; else detFlags &= ~0x01;}
+	public int		TerrainLOS( )			{return (detFlags & 0x02) && true;}
+	public void	SetTerrainLOS(int value)	{if(value!= 0)detFlags |= 0x02; else detFlags &= ~0x02;}
 #if USE_SH_POOLS
    public:
       // Overload new/delete to use a SmartHeap fixed size pool
@@ -68,15 +76,15 @@ public class SimObjectLocalData
 public class SimObjectType
 {
 #if DEBUG
-	public SimObjectType(char *from, FalconEntity *owner, FalconEntity* baseObj);
-	public SimObjectType* Copy(char *from, FalconEntity *owner);
+	public SimObjectType(string from, FalconEntity owner, FalconEntity baseObj);
+	public SimObjectType Copy(string from, FalconEntity owner);
 #else
 	public SimObjectType(FalconEntity* baseObj);
 	public SimObjectType* Copy(void);
 #endif
 
 #if SIMOBJ_REF_COUNT_DEBUG
-	#define SIM_OBJ_REF_ARGS	__LINE__, __FILE__
+	//TODO #define SIM_OBJ_REF_ARGS	__LINE__, __FILE__
 	void Reference( int line, char *file );
 	void Release( int line, char *file );
 
@@ -87,17 +95,17 @@ public class SimObjectType
 		struct DebugRecord	*prev;
 	} *refOps;
 #else
-	#define SIM_OBJ_REF_ARGS
-	void Reference(void);
-	void Release(void);
+//TODO	#define SIM_OBJ_REF_ARGS
+	public void Reference( );
+	public void Release( );
 #endif
 
-	public FalconEntity* BaseData(void) { return baseData; };
-	public BOOL IsReferenced(void);
+	public FalconEntity BaseData( ) { return baseData; }
+	public BOOL IsReferenced( );
 
   
-	private ~SimObjectType();
-	private FalconEntity		*baseData;
+	//TODO private ~SimObjectType();
+	private FalconEntity		baseData;
 
 	private int					refCount;
 
@@ -106,10 +114,10 @@ public class SimObjectType
 	#endif
 
   
-	public SimObjectLocalData	*localData;
+	public SimObjectLocalData	localData;
 
-	public SimObjectType		*next;
-	public SimObjectType		*prev;
+	public SimObjectType		next;
+	public SimObjectType		prev;
 
 
 #if USE_SH_POOLS

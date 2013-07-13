@@ -984,10 +984,10 @@ namespace FalconNet.Graphics
         protected Tcolor haze_ground_color;	// This is the color distant terrain blends toward
         protected Tcolor earth_end_color;	// This is the color of the ground at the horizon
         protected Tcolor haze_sky_color;		// This is the color at which the sky blend starts
-        protected float haze_start;			// The distance (in feet) from the viewer at which hazing starts
-        protected float haze_depth;
-        protected float blend_start;
-        protected float blend_depth;
+        internal float haze_start;			// The distance (in feet) from the viewer at which hazing starts
+        internal float haze_depth;
+        internal float blend_start;
+        internal float blend_depth;
         protected float SunGlareValue;
         protected float SunGlareWashout;
 

@@ -18,14 +18,23 @@ namespace FalconNet.Graphics
 #endif
 
 
-        public DrawableGroundVehicle(int type, Tpoint* pos, float heading, float scale = 1.0f);
+        public DrawableGroundVehicle(int type, Tpoint pos, float heading, float scale = 1.0f)
+            : base(scale, type)
+        { throw new NotImplementedException(); }
+
         //TODO public virtual ~DrawableGroundVehicle()	{};
 
-        public virtual void SetParentList(ObjectDisplayList* list);
-        public void Update(Tpoint* pos, float heading);
-        public void SetUpon(DrawableBridge* bridge) { drivingOn = bridge; previousLOD = -1; }
+        public virtual void SetParentList(ObjectDisplayList list) 
+        { throw new NotImplementedException(); }
 
-        public virtual void Draw(RenderOTW renderer, int LOD);
+        public void Update(Tpoint pos, float heading)
+        { throw new NotImplementedException(); }
+#if TODO
+        public void SetUpon(DrawableBridge bridge) { drivingOn = bridge; previousLOD = -1; }
+#endif
+
+        public virtual void Draw(RenderOTW renderer, int LOD)
+        { throw new NotImplementedException(); }
 
         public float GetHeading() { return yaw; }
 
@@ -34,6 +43,8 @@ namespace FalconNet.Graphics
         protected float yaw;
         protected float cosYaw;
         protected float sinYaw;
-        protected DrawableBridge* drivingOn;
+#if TODO
+        protected DrawableBridge drivingOn;
+#endif
     }
 }

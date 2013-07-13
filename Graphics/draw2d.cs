@@ -296,7 +296,7 @@ namespace FalconNet.Graphics
         }
         // public virtual ~Drawable2D();
 
-        public virtual void Draw(RenderOTW renderer, int LOD)
+        public override void Draw(RenderOTW renderer, int LOD)
         { throw new NotImplementedException(); }
 
         public virtual void Update(Tpoint pos, Trotation rot)

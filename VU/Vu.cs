@@ -89,6 +89,11 @@ public static VuGridTree *vuxCollisionGrid;
             //F4Assert(theEntity);
             Console.WriteLine("You dropped an entity, better find it!!!\n");
         }
+        public static VU_ID_NUMBER VuxGetId()
+        {
+            throw new NotImplementedException(); 
+            //TODO return GetIdFromNamespace(VolatileNS);
+        }
 
         public const int VU_TICS_PER_SECOND = 1000;
         public static SM_SCALAR vuxTicsPerSec = 1000.0F;
@@ -295,6 +300,7 @@ public static VuGridTree *vuxCollisionGrid;
 
         protected void UpdateGroupData(VuGroupEntity group)
         {
+#if TODO 
             int count = 0;
 
             //	assert(VuHasCriticalSection()); // hmm apparently not required...
@@ -303,7 +309,7 @@ public static VuGridTree *vuxCollisionGrid;
 
             while (sess != null)
             {
-#if TODO
+
                 //assert(false == F4IsBadReadPtr(sess, sizeof *sess));
                 if
                 (
@@ -323,9 +329,10 @@ public static VuGridTree *vuxCollisionGrid;
                 {
                     count++;
                 }
-#endif
+
                 sess = iter.GetNext();
             }
+#endif
         }
 
         protected int GetMessages()

@@ -1,42 +1,43 @@
 using System;
 using System.Diagnostics;
+using Pmatrix = FalconNet.Graphics.Trotation;
 
 namespace FalconNet.Graphics
 {
-	public enum BNodeType
-	{
-		tagBNode,
-		tagBSubTree,
-		tagBRoot,
-		tagBSlotNode,
-		tagBDofNode,
-		tagBSwitchNode,
-		tagBSplitterNode,
-		tagBPrimitiveNode,
-		tagBLitPrimitiveNode,
-		tagBCulledPrimitiveNode,
-		tagBSpecialXform,
-		tagBLightStringNode,
-	}
+    public enum BNodeType
+    {
+        tagBNode,
+        tagBSubTree,
+        tagBRoot,
+        tagBSlotNode,
+        tagBDofNode,
+        tagBSwitchNode,
+        tagBSplitterNode,
+        tagBPrimitiveNode,
+        tagBLitPrimitiveNode,
+        tagBCulledPrimitiveNode,
+        tagBSpecialXform,
+        tagBLightStringNode,
+    }
 
-	public enum BTransformType
-	{
-		Normal,
-		Billboard,
-		Tree
-	} 
+    public enum BTransformType
+    {
+        Normal,
+        Billboard,
+        Tree
+    }
 
-	
-	/***************************************************************\
-		To improve performance, these classes use several global
-		variables to store command data instead of passing it
-		through the call stack.
-		The global variables are maintained by the StackState
-		module.
-	\***************************************************************/
-	public abstract class BNode
-	{
-		#if TODO	
+
+    /***************************************************************\
+        To improve performance, these classes use several global
+        variables to store command data instead of passing it
+        through the call stack.
+        The global variables are maintained by the StackState
+        module.
+    \***************************************************************/
+    public abstract class BNode
+    {
+#if TODO	
 		// Convert from file offsets back to pointers   
 		public BNode (byte *baseAddress, BNodeType **tagListPtr)
 		{
@@ -47,13 +48,13 @@ namespace FalconNet.Graphics
 				sibling = null;
 			}
 		}
-		#endif
-		
-		public BNode ()
-		{
-			sibling = null;
-		}
-		// public  virtual ~BNode()									{ delete sibling; };
+#endif
+
+        public BNode()
+        {
+            sibling = null;
+        }
+        // public  virtual ~BNode()									{ delete sibling; };
 
 #if TODO
 	// We have special new and delete operators which don't do any memory operations
@@ -62,9 +63,9 @@ namespace FalconNet.Graphics
 	public void operator delete(void *)			{ }
 //	void operator delete(void *, void *) { };
 #endif
-		// Function to identify the type of an encoded node and call the appropriate constructor
-		// Determine the type of an encoded node and intialize and contruct
-		// it appropriatly.
+        // Function to identify the type of an encoded node and call the appropriate constructor
+        // Determine the type of an encoded node and intialize and contruct
+        // it appropriatly.
 #if TODO
 		public static BNode RestorePointers (byte *baseAddress, int offset, BNodeType **tagListPtr)
 		{
@@ -121,21 +122,21 @@ namespace FalconNet.Graphics
 	}
 #endif
 
-		public BNode sibling;
+        public BNode sibling;
 
-		public abstract void Draw ();
+        public abstract void Draw();
 
-		public virtual BNodeType Type ()
-		{
-			return BNodeType.tagBNode;
-		}
-	}
-	
+        public virtual BNodeType Type()
+        {
+            return BNodeType.tagBNode;
+        }
+    }
+
+
+    // Convert from file offsets back to pointers
+    public class BSubTree : BNode
+    {
 #if TODO
-	// Convert from file offsets back to pointers
-	public class BSubTree: BNode
-	{
-	#if TODO
 		public BSubTree (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
@@ -146,55 +147,58 @@ namespace FalconNet.Graphics
 			pCoords		= (Tpoint*)(baseAddress + (int)pCoords);
 			pNormals	= (Pnormal*)(baseAddress + (int)pNormals);
 		}
-	#endif
-		public BSubTree ()
-		{
-			subTree = null;
-		}
-		//public virtual ~BSubTree()	{ delete subTree; };
+#endif
+        public BSubTree()
+        {
+            subTree = null;
+        }
+        //public virtual ~BSubTree()	{ delete subTree; };
 
-		public Tpoint[]	pCoords;
-		public int		nCoords;
-		public int		nDynamicCoords;
-		public int		DynamicCoordOffset;
-		public Pnormal[]	pNormals;
-		public int		nNormals;
-		public BNode	subTree;
+        public Tpoint[] pCoords;
+        public int nCoords;
+        public int nDynamicCoords;
+        public int DynamicCoordOffset;
+        public Pnormal[] pNormals;
+        public int nNormals;
+        public BNode subTree;
 
-		public override void Draw ()
-		{
-			BNode child;
+        public override void Draw()
+        {
 
-            StateStackClass.TheStateStack.Light(pNormals, nNormals);
-		
-			if (nDynamicCoords == 0) {
-                StateStackClass.TheStateStack.Transform(pCoords, nCoords);
-			} else {
-                StateStackClass.TheStateStack.Transform(pCoords, nCoords - nDynamicCoords);
-                StateStackClass.TheStateStack.Transform(StateStackClass.TheStateStack.CurrentInstance.DynamicCoords + DynamicCoordOffset, 
-										 nDynamicCoords );
-			}
-		
-			child = subTree;
-			//TODO Debug.Assert(false == F4IsBadReadPtr( child, sizeof*child) );
-			do
-			{
-				child.Draw();
-				child = child.sibling;
-			} while (child != null); // JB 010306 CTD
-			//} while (child && !F4IsBadReadPtr(child, sizeof(BNode))); // JB 010306 CTD (too much CPU)
-		}
+            BNode child;
+
+            if (nNormals != 0)
+                StateStackClass.Light(pNormals, nNormals);
+
+            if (nDynamicCoords == 0)
+            {
+                StateStackClass.Transform(pCoords, nCoords);
+            }
+            else
+            {
+                StateStackClass.Transform(pCoords, nCoords - nDynamicCoords);
+                StateStackClass.Transform(StateStackClass.CurrentInstance.DynamicCoords, nDynamicCoords, DynamicCoordOffset);
+            }
+            child = subTree;
+            //TODO Debug.Assert(false == F4IsBadReadPtr( child, sizeof*child) );
+            do
+            {
+                child.Draw();
+                child = child.sibling;
+            } while (child != null); // JB 010306 CTD
+            //} while (child && !F4IsBadReadPtr(child, sizeof(BNode))); // JB 010306 CTD (too much CPU)
+        }
 
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBSubTree;
-		}
-	}
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBSubTree;
+        }
+    }
 
-	public class BRoot: BSubTree
-	{
-		// Convert from file offsets back to pointers 
+    public class BRoot : BSubTree
+    {
+        // Convert from file offsets back to pointers 
 #if TODO
 		public BRoot (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -203,66 +207,72 @@ namespace FalconNet.Graphics
 			pTexIDs		= (int*)(baseAddress + (int)pTexIDs);
 		}
 #endif
-		public BRoot () : base()
-		{
-			pTexIDs = null;
-			nTexIDs = -1;
-			ScriptNumber = -1;
-		}
-		//public virtual ~BRoot()	{};
+        public BRoot()
+            : base()
+        {
+            pTexIDs = null;
+            nTexIDs = -1;
+            ScriptNumber = -1;
+        }
+        //public virtual ~BRoot()	{};
 
-		public void	LoadTextures ()
-		{
-			for (int i=0; i<nTexIDs; i++) {
-				// Skip unsed texture indices
-				if (pTexIDs[i] >= 0) {
-					TheTextureBank.Reference( pTexIDs[i] );
-				}
-			}
-		}
-
-
-		public void	UnloadTextures ()
-		{
-			for (int i=0; i<nTexIDs; i++) {
-				if (pTexIDs[i] >= 0) {
-					TheTextureBank.Release( pTexIDs[i] );
-				}
-			}
-		}
-
-		public int[] 	pTexIDs;
-		public int		nTexIDs;
-		public int		ScriptNumber;
-
-		public override void Draw ()
-		{
-			// Compute the offset to the first texture in the texture set
-			int texOffset = TheStateStack.CurrentInstance.TextureSet * 
-				(nTexIDs/TheStateStack.CurrentInstance.ParentObject.nTextureSets);
-			TheStateStack.SetTextureTable( pTexIDs + texOffset );
-										   
-			if (ScriptNumber > 0) {
-				Debug.Assert( ScriptNumber < ScriptArrayLength );
-				if (ScriptNumber < ScriptArrayLength) {
-					ScriptArray[ScriptNumber]();
-				}
-			}
-		
-			base.Draw();
-		}
-
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBRoot;
-		}
-	}
+        public void LoadTextures()
+        {
+            for (int i = 0; i < nTexIDs; i++)
+            {
+                // Skip unsed texture indices
+                if (pTexIDs[i] >= 0)
+                {
+                    TextureBankClass.Reference(pTexIDs[i]);
+                }
+            }
+        }
 
 
-	public class BSpecialXform:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+        public void UnloadTextures()
+        {
+            for (int i = 0; i < nTexIDs; i++)
+            {
+                if (pTexIDs[i] >= 0)
+                {
+                    TextureBankClass.Release(pTexIDs[i]);
+                }
+            }
+        }
+
+        public int[] pTexIDs;
+        public int nTexIDs;
+        public int ScriptNumber;
+
+        public override void Draw()
+        {
+            // Compute the offset to the first texture in the texture set
+            int texOffset = StateStackClass.CurrentInstance.TextureSet *
+                (nTexIDs / StateStackClass.CurrentInstance.ParentObject.nTextureSets);
+            StateStackClass.SetTextureTable(pTexIDs); //TODO +texOffset]);
+
+            if (ScriptNumber > 0)
+            {
+                Debug.Assert(ScriptNumber < Scripts.ScriptArrayLength);
+                if (ScriptNumber < Scripts.ScriptArrayLength)
+                {
+                    Scripts.ScriptArray[ScriptNumber]();
+                }
+            }
+
+            base.Draw();
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBRoot;
+        }
+    }
+
+
+    public class BSpecialXform : BNode
+    {
+        // Convert from file offsets back to pointers
 #if TODO
 		public BSpecialXform (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -274,140 +284,142 @@ namespace FalconNet.Graphics
 			pCoords		= (Tpoint*)(baseAddress + (int)pCoords);
 		}
 #endif
-		public BSpecialXform ()
-		{
-			subTree = null;
-		}
-		// public virtual ~BSpecialXform()	{ delete subTree; };
+        public BSpecialXform()
+        {
+            subTree = null;
+        }
+        // public virtual ~BSpecialXform()	{ delete subTree; };
 
-		public Tpoint[]			pCoords;
-		public int				nCoords;
-		public BTransformType	type;
-		public BNode			subTree;
+        public Tpoint[] pCoords;
+        public int nCoords;
+        public BTransformType type;
+        public BNode subTree;
 
-		public override void		Draw ()
-		{
-			Debug.Assert( subTree != null);
-		
-			TheStateStack.PushVerts();
-			TheStateStack.TransformBillboardWithClip( pCoords, nCoords, type );
-			subTree.Draw();
-			TheStateStack.PopVerts();
-		}
+        public override void Draw()
+        {
+            Debug.Assert(subTree != null);
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBSpecialXform;
-		}
-	}
-	
-	
-	public class BSlotNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+            StateStackClass.PushVerts();
+            StateStackClass.TransformBillboardWithClip(pCoords, nCoords, type);
+            subTree.Draw();
+            StateStackClass.PopVerts();
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBSpecialXform;
+        }
+    }
+
+
+    public class BSlotNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BSlotNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
-#endif	
-		public BSlotNode ()
-		{
-			slotNumber = -1;
-		}
-		// public virtual ~BSlotNode()	{};
+#endif
+        public BSlotNode()
+        {
+            slotNumber = -1;
+        }
+        // public virtual ~BSlotNode()	{};
 
-		public Pmatrix			rotation;
-		public Tpoint			origin;
-		public int				slotNumber;
+        public Pmatrix rotation;
+        public Tpoint origin;
+        public int slotNumber;
 
-		public override void Draw ()
-		{
-			Debug.Assert( slotNumber < TheStateStack.CurrentInstance.ParentObject.nSlots );
-			if (slotNumber >= TheStateStack.CurrentInstance.ParentObject.nSlots )
-				return; // JPO fix
-			ObjectInstance *subObject = TheStateStack.CurrentInstance.SlotChildren[slotNumber];
-		
-			if (subObject) {
-				TheStateStack.DrawSubObject( subObject, &rotation, &origin );
-			}
-		}
+        public override void Draw()
+        {
+            Debug.Assert(slotNumber < StateStackClass.CurrentInstance.ParentObject.nSlots);
+            if (slotNumber >= StateStackClass.CurrentInstance.ParentObject.nSlots)
+                return; // JPO fix
+            ObjectInstance subObject = StateStackClass.CurrentInstance.SlotChildren[slotNumber];
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBSlotNode;
-		}
-	}
+            if (subObject != null)
+            {
+                StateStackClass.DrawSubObject(subObject, rotation, origin);
+            }
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBSlotNode;
+        }
+    }
 
 
-	public class BDofNode:   BSubTree
-	{
-		// Convert from file offsets back to pointers 
+    public class BDofNode : BSubTree
+    {
+        // Convert from file offsets back to pointers 
 #if TODO
 		public BDofNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
 #endif
-		public BDofNode () : base()
-		{
-			dofNumber = -1;
-		}
-		//public virtual ~BDofNode()		{};
+        public BDofNode()
+            : base()
+        {
+            dofNumber = -1;
+        }
+        //public virtual ~BDofNode()		{};
 
-		public int			dofNumber;
-		public Pmatrix		rotation;
-		public Tpoint		translation;
+        public int dofNumber;
+        public Pmatrix rotation;
+        public Tpoint translation;
 
-		public override void Draw ()
-		{
-			Pmatrix	dofRot;
-			Pmatrix	R;
-			Tpoint	T;
-			mlTrig trig;
-		
-			Debug.Assert( dofNumber < TheStateStack.CurrentInstance.ParentObject.nDOFs );
-			if (dofNumber >= TheStateStack.CurrentInstance.ParentObject.nDOFs )
-				return;
-			// Set up our free rotation
-			mlSinCos (&trig, TheStateStack.CurrentInstance.DOFValues[dofNumber].rotation);
-			dofRot.M11 = 1.0f;	dofRot.M12 = 0.0f;	dofRot.M13 = 0.0f;
-			dofRot.M21 = 0.0f;	dofRot.M22 = trig.cos;	dofRot.M23 = -trig.sin;
-			dofRot.M31 = 0.0f;	dofRot.M32 = trig.sin;	dofRot.M33 = trig.cos;
-		
-		
-			// Now compose this with the rotation into our parents coordinate system
-			MatrixMult( &rotation, &dofRot, &R );
-		
-			// Now do our free translation
-			// SCR 10/28/98:  THIS IS WRONG FOR TRANSLATION DOFs.  "DOFValues" is supposed to 
-			// translate along the local x axis, but this will translate along the parent's x axis.
-			// To fix this would require a bit more math (and/or thought).  Since it
-			// only happens once in Falcon, I'll leave it broken and put a workaround into
-			// the KC10 object so that the parent's and child's x axis are forced into alignment
-			// by inserting an extra dummy DOF bead.
-			T.x = translation.x + TheStateStack.CurrentInstance.DOFValues[dofNumber].translation;
-			T.y = translation.y;
-			T.z = translation.z;
-		
-			// Draw our subtree
-			TheStateStack.PushAll();
-			TheStateStack.CompoundTransform( &R, &T );
-			BSubTree::Draw();
-			TheStateStack.PopAll();
-		}
+        public override void Draw()
+        {
+            Pmatrix dofRot;
+            Pmatrix R = new Pmatrix();
+            Tpoint T = new Tpoint();
+            float trig;
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBDofNode;
-		}
-	}
+            Debug.Assert(dofNumber < StateStackClass.CurrentInstance.ParentObject.nDOFs);
+            if (dofNumber >= StateStackClass.CurrentInstance.ParentObject.nDOFs)
+                return;
+            // Set up our free rotation
+            trig = StateStackClass.CurrentInstance.DOFValues[dofNumber].rotation;
+            dofRot.M11 = 1.0f; dofRot.M12 = 0.0f; dofRot.M13 = 0.0f;
+            dofRot.M21 = 0.0f; dofRot.M22 = (float)Math.Cos(trig); dofRot.M23 = (float)Math.Sin(-trig);
+            dofRot.M31 = 0.0f; dofRot.M32 = (float)Math.Sin(trig); dofRot.M33 = (float)Math.Cos(trig);
 
-	public class BSwitchNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+
+            // Now compose this with the rotation into our parents coordinate system
+            Matrix.MatrixMult(rotation, dofRot, ref R);
+
+            // Now do our free translation
+            // SCR 10/28/98:  THIS IS WRONG FOR TRANSLATION DOFs.  "DOFValues" is supposed to 
+            // translate along the local x axis, but this will translate along the parent's x axis.
+            // To fix this would require a bit more math (and/or thought).  Since it
+            // only happens once in Falcon, I'll leave it broken and put a workaround into
+            // the KC10 object so that the parent's and child's x axis are forced into alignment
+            // by inserting an extra dummy DOF bead.
+            T.x = translation.x + StateStackClass.CurrentInstance.DOFValues[dofNumber].translation;
+            T.y = translation.y;
+            T.z = translation.z;
+
+            // Draw our subtree
+            StateStackClass.PushAll();
+            StateStackClass.CompoundTransform(R, T);
+            base.Draw();
+            StateStackClass.PopAll();
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBDofNode;
+        }
+    }
+
+    public class BSwitchNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BSwitchNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -421,58 +433,60 @@ namespace FalconNet.Graphics
 			}
 		}
 #endif
-		public BSwitchNode ()
-		{
-			subTrees = null;
-			numChildren = 0;
-			switchNumber = -1;
-		}
-		//public virtual ~BSwitchNode()	{ while (numChildren--) delete subTrees[numChildren]; };
+        public BSwitchNode()
+        {
+            subTrees = null;
+            numChildren = 0;
+            switchNumber = -1;
+        }
+        //public virtual ~BSwitchNode()	{ while (numChildren--) delete subTrees[numChildren]; };
 
-		public int			switchNumber;
-		public int			numChildren;
-		public BSubTree[]  subTrees;
+        public int switchNumber;
+        public int numChildren;
+        public BSubTree[] subTrees;
 
-		public override void Draw ()
-		{
-			UInt32		mask;
-			int			i = 0;
-		
-			Debug.Assert( switchNumber < TheStateStack.CurrentInstance.ParentObject.nSwitches );
-			if (switchNumber >= TheStateStack.CurrentInstance.ParentObject.nSwitches)
-				return;
-			mask = TheStateStack.CurrentInstance.SwitchValues[switchNumber];
-		
-		#if NOTHING	// This will generally be faster due to early termination
+        public override void Draw()
+        {
+            UInt32 mask;
+            int i = 0;
+
+            Debug.Assert(switchNumber < StateStackClass.CurrentInstance.ParentObject.nSwitches);
+            if (switchNumber >= StateStackClass.CurrentInstance.ParentObject.nSwitches)
+                return;
+            mask = StateStackClass.CurrentInstance.SwitchValues[switchNumber];
+
+#if NOTHING	// This will generally be faster due to early termination
 			// Go until all ON switch children have been drawn.
 			while (mask) {
-		#else	// This will work even if the mask is set for non-existent children
-			// Go until all children have been considered for drawing.
-			while (i < numChildren) {
-		#endif
-				Debug.Assert( subTrees[i] );
-		
-				// Only draw this subtree if the corresponding switch bit is set
-				if (mask & 1) {
-					TheStateStack.PushVerts();
-					subTrees[i].Draw();
-					TheStateStack.PopVerts();
-				}
-				mask >>= 1;
-				i++;
-			}
-		}
+#else	// This will work even if the mask is set for non-existent children
+            // Go until all children have been considered for drawing.
+            while (i < numChildren)
+            {
+#endif
+                Debug.Assert(subTrees[i] != null);
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBSwitchNode;
-		}
-	};
+                // Only draw this subtree if the corresponding switch bit is set
+                if ((mask & 1)!=0)
+                {
+                    StateStackClass.PushVerts();
+                    subTrees[i].Draw();
+                    StateStackClass.PopVerts();
+                }
+                mask >>= 1;
+                i++;
+            }
+        }
 
-	public class BSplitterNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBSwitchNode;
+        }
+    };
+
+    public class BSplitterNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BSplitterNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -482,69 +496,70 @@ namespace FalconNet.Graphics
 			back	= RestorePointers( baseAddress, (int)back,  tagListPtr );
 		}
 #endif
-		public BSplitterNode ()
-		{
-			front = back = null;
-		}
-		//public virtual ~BSplitterNode()	{ delete front; delete back; };
+        public BSplitterNode()
+        {
+            front = back = null;
+        }
+        //public virtual ~BSplitterNode()	{ delete front; delete back; };
 
-		public float	A, B, C, D;
-		public BNode	front;
-		public BNode	back;
+        public float A, B, C, D;
+        public BNode front;
+        public BNode back;
 
-		public override void		Draw ()
-		{
-			BNode	child;
-		
-			Debug.Assert( front );
-			Debug.Assert( back );
-		
-			if (A*TheStateStack.ObjSpaceEye.x + 
-				B*TheStateStack.ObjSpaceEye.y + 
-				C*TheStateStack.ObjSpaceEye.z + D > 0.0f) {
-		
-				child = front;
-				do
-				{
-					child.Draw();
-					child = child.sibling;
-				} while (child);
-		
-				child = back;
-				do
-				{
-					child.Draw();
-					child = child.sibling;
-				} while (child);
-			}
-			else
-			{
-				child = back;
-				do
-				{
-					child.Draw();
-					child = child.sibling;
-				} while (child);
-		
-				child = front;
-				do
-				{
-					child.Draw();
-					child = child.sibling;
-				} while (child);
-			}
-		}
+        public override void Draw()
+        {
+            BNode child;
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBSplitterNode;
-		}
-	}
+            Debug.Assert(front != null);
+            Debug.Assert(back != null);
 
-	public class BPrimitiveNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+            if (A * StateStackClass.ObjSpaceEye.x +
+                B * StateStackClass.ObjSpaceEye.y +
+                C * StateStackClass.ObjSpaceEye.z + D > 0.0f)
+            {
+
+                child = front;
+                do
+                {
+                    child.Draw();
+                    child = child.sibling;
+                } while (child != null);
+
+                child = back;
+                do
+                {
+                    child.Draw();
+                    child = child.sibling;
+                } while (child!=null);
+            }
+            else
+            {
+                child = back;
+                do
+                {
+                    child.Draw();
+                    child = child.sibling;
+                } while (child != null);
+
+                child = front;
+                do
+                {
+                    child.Draw();
+                    child = child.sibling;
+                } while (child != null);
+            }
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBSplitterNode;
+        }
+    }
+
+    public class BPrimitiveNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -552,31 +567,31 @@ namespace FalconNet.Graphics
 			// Now fixup our polygon
 			prim		= RestorePrimPointers( baseAddress, (int)prim );
 		}
-#endif	
-		public BPrimitiveNode ()
-		{
-			prim = null;
-		}
-		//public virtual ~BPrimitiveNode()	{};
+#endif
+        public BPrimitiveNode()
+        {
+            prim = null;
+        }
+        //public virtual ~BPrimitiveNode()	{};
 
-		public Prim		prim;
+        public Prim prim;
 
-		public override void		Draw ()
-		{
-			// Call the appropriate draw function for this primitive
-			DrawPrimJumpTable[prim.type]( prim );
-		}
+        public override void Draw()
+        {
+            // Call the appropriate draw function for this primitive
+            PolyLib.DrawPrimJumpTable[(int)prim.type](prim);
+        }
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBPrimitiveNode;
-		}
-	}
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBPrimitiveNode;
+        }
+    }
 
-	public class BLitPrimitiveNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+    public class BLitPrimitiveNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BLitPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -586,36 +601,39 @@ namespace FalconNet.Graphics
 			backpoly	= (Poly*)RestorePrimPointers( baseAddress, (int)backpoly );
 		}
 #endif
-		public BLitPrimitiveNode ()
-		{
-			poly = null;
-			backpoly = null;
-		}
-		//public virtual ~BLitPrimitiveNode()	{};
+        public BLitPrimitiveNode()
+        {
+            poly = null;
+            backpoly = null;
+        }
+        //public virtual ~BLitPrimitiveNode()	{};
 
-		public Poly		poly;
-		public Poly		backpoly;
+        public Poly poly;
+        public Poly backpoly;
 
-		public override void Draw ()
-		{
-			// Choose the front facing polygon so that lighting is correct
-			if ((poly.A*TheStateStack.ObjSpaceEye.x + poly.B*TheStateStack.ObjSpaceEye.y + poly.C*TheStateStack.ObjSpaceEye.z + poly.D) >= 0) {
-				DrawPrimJumpTable[poly.type]( poly );
-			} else {
-				DrawPrimJumpTable[poly.type]( backpoly );
-			}
-		}
+        public override void Draw()
+        {
+            // Choose the front facing polygon so that lighting is correct
+            if ((poly.A * StateStackClass.ObjSpaceEye.x + poly.B * StateStackClass.ObjSpaceEye.y + poly.C * StateStackClass.ObjSpaceEye.z + poly.D) >= 0)
+            {
+                PolyLib.DrawPrimJumpTable[(int)poly.type](poly);
+            }
+            else
+            {
+                PolyLib.DrawPrimJumpTable[(int)poly.type](backpoly);
+            }
+        }
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBLitPrimitiveNode;
-		}
-	}
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBLitPrimitiveNode;
+        }
+    }
 
-	public class BCulledPrimitiveNode:   BNode
-	{
- 
-		// Convert from file offsets back to pointers
+    public class BCulledPrimitiveNode : BNode
+    {
+
+        // Convert from file offsets back to pointers
 #if TODO
 		public BCulledPrimitiveNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
@@ -624,68 +642,73 @@ namespace FalconNet.Graphics
 			poly		= (Poly*)RestorePrimPointers( baseAddress, (int)poly );
 		}
 #endif
-		public BCulledPrimitiveNode ()
-		{
-			poly = null;
-		}
-		//public virtual~BCulledPrimitiveNode()	{};
+        public BCulledPrimitiveNode()
+        {
+            poly = null;
+        }
+        //public virtual~BCulledPrimitiveNode()	{};
 
-		public Poly		poly;
+        public Poly poly;
 
-		public override void Draw ()
-		{
-			// Only draw front facing polygons
-			if ((poly.A*TheStateStack.ObjSpaceEye.x + poly.B*TheStateStack.ObjSpaceEye.y + poly.C*TheStateStack.ObjSpaceEye.z + poly.D) >= 0) {
-				// Call the appropriate draw function for this polygon
-				DrawPrimJumpTable[poly.type]( poly );
-			}
-		}
+        public override void Draw()
+        {
+            // Only draw front facing polygons
+            if ((poly.A * StateStackClass.ObjSpaceEye.x + poly.B * StateStackClass.ObjSpaceEye.y + poly.C * StateStackClass.ObjSpaceEye.z + poly.D) >= 0)
+            {
+                // Call the appropriate draw function for this polygon
+                PolyLib.DrawPrimJumpTable[(int)poly.type](poly);
+            }
+        }
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBCulledPrimitiveNode;
-		}
-	}
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBCulledPrimitiveNode;
+        }
+    }
 
-	public class BLightStringNode:   BPrimitiveNode
-	{
-		// Convert from file offsets back to pointers
+    public class BLightStringNode : BPrimitiveNode
+    {
+        // Convert from file offsets back to pointers
 #if TODO
 		public BLightStringNode (byte *baseAddress, BNodeType **tagListPtr)
 		:base( baseAddress, tagListPtr )
 		{
 		}
 #endif
-		public BLightStringNode () : base()
-		{
-			rgbaFront = -1;
-			rgbaBack = -1;
-			A = B = C = D = 0.0f;
-		}
-		//public virtual~BLightStringNode()	{};
+        public BLightStringNode()
+            : base()
+        {
+            rgbaFront = -1;
+            rgbaBack = -1;
+            A = B = C = D = 0.0f;
+        }
+        //public virtual~BLightStringNode()	{};
 
-		// For directional lights
-		public float		A, B, C, D;
-		public int			rgbaFront;
-		public int			rgbaBack;
+        // For directional lights
+        public float A, B, C, D;
+        public int rgbaFront;
+        public int rgbaBack;
 
-		public override void		Draw ()
-		{
-			// Clobber the primitive color with the appropriate front or back color
-			if ((A*TheStateStack.ObjSpaceEye.x + B*TheStateStack.ObjSpaceEye.y + C*TheStateStack.ObjSpaceEye.z + D) >= 0) {
-				((PrimPointFC*)prim).rgba = rgbaFront;
-			} else {
-				((PrimPointFC*)prim).rgba = rgbaBack;
-			}
-		
-			// Call the appropriate draw function for this polygon
-			DrawPrimJumpTable[prim.type]( prim );
-		}
+        public override void Draw()
+        {
+            // Clobber the primitive color with the appropriate front or back color
+            if ((A * StateStackClass.ObjSpaceEye.x + B * StateStackClass.ObjSpaceEye.y + C * StateStackClass.ObjSpaceEye.z + D) >= 0)
+            {
+                ((PrimPointFC)prim).rgba = rgbaFront;
+            }
+            else
+            {
+                ((PrimPointFC)prim).rgba = rgbaBack;
+            }
 
-		public override BNodeType	Type ()
-		{
-			return BNodeType.tagBLightStringNode;
-		}
-	}
-#endif
+            // Call the appropriate draw function for this polygon
+            PolyLib.DrawPrimJumpTable[(int)prim.type](prim);
+        }
+
+        public override BNodeType Type()
+        {
+            return BNodeType.tagBLightStringNode;
+        }
+    }
+
 }

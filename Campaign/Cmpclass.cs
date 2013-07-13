@@ -6,6 +6,7 @@ using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using GridIndex = System.Int16;
 using DWORD = System.UInt32;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

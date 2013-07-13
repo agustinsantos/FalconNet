@@ -2,22 +2,11 @@ using System;
 using System.IO;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.FalcLib
 {
-	// ==========================================
-	// Game types
-	// ==========================================
-	public enum FalconGameType
-	{
-		game_PlayerPool=0,
-		game_InstantAction,
-		game_Dogfight,
-		game_TacticalEngagement,
-		game_Campaign,
-		game_MaxGameTypes, // This MUST be the last type (I use it as an array size) Please don't assign values individually
-		// (Except for playerpool = 0)
-	};
+
 
 	public class FalconGameEntity : VuGameEntity
 	{
@@ -25,11 +14,11 @@ namespace FalconNet.FalcLib
 		public RulesClass		rules;
 		
 		// constructors & destructor
-		public FalconGameEntity (ulong domainMask, string gameName)
+		public FalconGameEntity (ulong domainMask, string gameName) : base(domainMask,gameName)
 		{
 			throw new NotImplementedException ();
 		}
-		
+#if TODO
 		public FalconGameEntity (VU_BYTE[] stream)
 		{
 			throw new NotImplementedException ();
@@ -39,6 +28,7 @@ namespace FalconNet.FalcLib
 		{
 			throw new NotImplementedException ();
 		}
+#endif
 		//TODO public virtual ~FalconGameEntity();
 
 		// encoders

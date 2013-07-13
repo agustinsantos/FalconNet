@@ -21,7 +21,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
     Initialize the contents of a matrix provided by the caller
 \***************************************************************************/
-        public void MatrixLoad(ref Trotation T, float a11, float a12, float a13,
+        public static void MatrixLoad(ref Trotation T, float a11, float a12, float a13,
                                         float a21, float a22, float a23,
                                         float a31, float a32, float a33)
         {
@@ -33,7 +33,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
             Swap the rows and columns of the matrix
         \***************************************************************************/
-        public void MatrixTranspose(Trotation Src, ref Trotation T)
+        public static void MatrixTranspose(Trotation Src, ref Trotation T)
         {
             T.M11 = Src.M11; T.M12 = Src.M21; T.M13 = Src.M31;
             T.M21 = Src.M12; T.M22 = Src.M22; T.M23 = Src.M32;
@@ -43,7 +43,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
             Multiply the two provided matricies and store the result in the target
         \***************************************************************************/
-        public void MatrixMult(Trotation S1, Trotation S2, ref Trotation T)
+        public static void MatrixMult(Trotation S1, Trotation S2, ref Trotation T)
         {
             T.M11 = S1.M11 * S2.M11 + S1.M12 * S2.M21 + S1.M13 * S2.M31;
             T.M12 = S1.M11 * S2.M12 + S1.M12 * S2.M22 + S1.M13 * S2.M32;
@@ -62,7 +62,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
             Multiply the two provided matricies and store the result in the target
         \***************************************************************************/
-        public void MatrixMult(Trotation M, float k, ref Trotation T)
+        public static void MatrixMult(Trotation M, float k, ref Trotation T)
         {
             T.M11 = M.M11 * k; T.M12 = M.M12 * k; T.M13 = M.M13 * k;
             T.M21 = M.M21 * k; T.M22 = M.M22 * k; T.M23 = M.M23 * k;
@@ -73,7 +73,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
             Multiply the matrix with the point and store the result in the target
         \***************************************************************************/
-        public void MatrixMult(Trotation M, Tpoint P, ref Tpoint Tgt)
+        public static void MatrixMult(Trotation M, Tpoint P, ref Tpoint Tgt)
         {
             Tgt.x = M.M11 * P.x + M.M12 * P.y + M.M13 * P.z;
             Tgt.y = M.M21 * P.x + M.M22 * P.y + M.M23 * P.z;
@@ -85,7 +85,7 @@ namespace FalconNet.Graphics
             Multiply the transpose of the matrix with the point and store the 
             result in the target
         \***************************************************************************/
-        public void MatrixMultTranspose(Trotation M, Tpoint P, ref Tpoint Tgt)
+        public static void MatrixMultTranspose(Trotation M, Tpoint P, ref Tpoint Tgt)
         {
             Tgt.x = M.M11 * P.x + M.M21 * P.y + M.M31 * P.z;
             Tgt.y = M.M12 * P.x + M.M22 * P.y + M.M32 * P.z;

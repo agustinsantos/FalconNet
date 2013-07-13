@@ -37,7 +37,7 @@ namespace FalconNet.Graphics
         public int GetNTextureSet() { return ParentObject.nTextureSets; }
         public void SetDynamicVertex(int id, float dx, float dy, float dz)
         { throw new NotImplementedException(); }
-        public void GetDynamicVertex(int id, float[] dx, float[] dy, float[] dz)
+        public void GetDynamicVertex(int id, ref float dx, ref float dy, ref float dz)
         { throw new NotImplementedException(); }
 
 

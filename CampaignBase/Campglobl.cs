@@ -1,84 +1,8 @@
-﻿using System;
-using FalconNet.FalcLib;
-using FalconNet.Common;
+﻿using FalconNet.Common;
+using System;
 
-
-namespace FalconNet.Campaign
+namespace FalconNet.CampaignBase
 {
-    public enum CoverType
-    {
-        Water,                           // Cover types
-        Bog,
-        Barren,
-        Plain,
-        Brush,
-        LightForest,
-        HeavyForest,
-        Urban
-    }
-
-    public enum DistanceUnitType
-    {
-        StatuteMiles,
-        NauticalMiles,
-        Kilometers
-    }
-
-
-    public struct LatLong
-    {
-        sbyte EastOfGreenwich;    // East Longitude is "Negative"
-        sbyte SouthOfEquator;     // South Latitude is "Negative"
-        sbyte DegreesOfLatitude;  // 0 to 90
-        byte MinutesOfLatitude;  // 0 to 60
-        byte SecondsOfLatitude;  // 0 to 60
-        byte DegreesOfLongitude; // 0 to 180
-        byte MinutesOfLongitude; // 0 to 60
-        byte SecondsOfLongitude; // 0 to 60
-    }
-
-    public enum AltitudeLevelType
-    {
-        GroundAltitude,
-        LowAltitude,
-        MediumAltitude,
-        HighAltitude,
-        VeryHighAltitude
-    }
-
-    public enum RelType
-    {
-        NoRelations,
-        Allied,
-        Friendly,
-        Neutral,
-        Hostile,
-        War
-    }
-    public enum ObjectiveStatus
-    {
-        nullStatus,
-        Operational,
-        Damaged,
-        Destroyed
-    }
-
-    public enum AltitudeType
-    {
-        OnGround,
-        LowAlt,
-        MediumAlt,
-        HighAlt
-    }
-
-    public enum ReliefType
-    {
-        Flat,
-        Rough,
-        Hills,
-        Mountains
-    }
-
     public static class CampGlobal
     {
         // ----------------

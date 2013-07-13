@@ -4,14 +4,6 @@ using VU_MSG_TYPE = System.Byte;
 
 namespace FalconNet.FalcLib
 {
-    /*
-     * Machine Generated include file for message "Campaign Weap Fire".
-     * NOTE: This file is read only. DO NOT ATTEMPT TO MODIFY IT BY HAND.
-     * Generated on 18-March-1998 at 09:20:55
-     * Generated from file EVENTS.XLS by MicroProse
-     */
-
-
     // =============================================================================
     // KCK: This message is used to broadcast damage data to the entire game for
     // Campaign Entities. This is called only from a Campaign Entity's ApplyDamage()
@@ -44,10 +36,10 @@ namespace FalconNet.FalcLib
     {
 
         public FalconCampWeaponsFire(VU_ID entityId, VuTargetEntity target, bool loopback = true)
-            : base(FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, entityId, target, loopback)
+            : base((VU_MSG_TYPE)FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, entityId, target, loopback)
         { throw new NotImplementedException(); }
         public FalconCampWeaponsFire(VU_MSG_TYPE type, VU_ID senderid, VU_ID target)
-            : base(FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, senderid, target)
+            : base((VU_MSG_TYPE)FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, senderid, target)
         { throw new NotImplementedException(); }
         //TODO public  ~FalconCampWeaponsFire();
 
@@ -70,7 +62,8 @@ namespace FalconNet.FalcLib
         };
         public DATA_BLOCK dataBlock;
 
-        protected override int Process(byte autodisp)
+        protected override VU_ERRCODE Process(bool autodisp)
         { throw new NotImplementedException(); }
+
     }
 }

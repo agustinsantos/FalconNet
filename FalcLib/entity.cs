@@ -5,6 +5,7 @@ using FalconNet.VU;
 using System.IO;
 using System.Diagnostics;
 using DWORD = System.UInt32;
+using FalconNet.CampaignBase;
  
 namespace FalconNet.FalcLib
 {
@@ -74,38 +75,38 @@ namespace FalconNet.FalcLib
         public byte Features;					// Number of features in this objective
         public byte RadarFeature;				// ID of the radar feature for this objective
         public short FirstFeature;				// Index of first feature entry
-    };
+    }
 
     public class WeaponClassDataType
     {
-        short Index;						// descriptionIndex pointing here
+        public short Index;						// descriptionIndex pointing here
         // 2002-02-08 MN changed from short to ushort
-        ushort Strength;					// How much damage it'll do.
-        DamageDataType DamageType;					// What type of damage it does.
-        short Range;						// Range, in km.
-        ushort Flags;
-        string Name;
-        byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];
-        byte FireRate;					// # of shots fired per barrage
-        byte Rariety;					// % of full supply which is actually provided
-        ushort GuidanceFlags;
-        byte Collective;
-        short SimweapIndex;				// Index into sim's weapon data tables
-        ushort Weight;						// Weight in lbs.
-        short DragIndex;
-        ushort BlastRadius;				// radius in ft.
-        short RadarType;					// Index into RadarDataTable
-        short SimDataIdx;					// Index int SimWeaponDataTable
-        char MaxAlt;						// Maximum altitude it can hit in thousands of feet
-    };
+        public ushort Strength;					// How much damage it'll do.
+        public DamageDataType DamageType;					// What type of damage it does.
+        public short Range;						// Range, in km.
+        public ushort Flags;
+        public string Name;
+        public byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];
+        public byte FireRate;					// # of shots fired per barrage
+        public byte Rariety;					// % of full supply which is actually provided
+        public ushort GuidanceFlags;
+        public byte Collective;
+        public short SimweapIndex;				// Index into sim's weapon data tables
+        public ushort Weight;						// Weight in lbs.
+        public short DragIndex;
+        public ushort BlastRadius;				// radius in ft.
+        public short RadarType;					// Index into RadarDataTable
+        public short SimDataIdx;					// Index int SimWeaponDataTable
+        public byte MaxAlt;						// Maximum altitude it can hit in thousands of feet
+    }
 
     // 2001-11-05 Added by M.N.
 
     public struct RocketClassDataType
     {
-        short weaponId;					// Weapon ID
-        short nweaponId;						// new Weapon ID (if type of munition changes)
-        short weaponCount;						// number of rockets to fire
+        public short weaponId;					// Weapon ID
+        public short nweaponId;						// new Weapon ID (if type of munition changes)
+        public short weaponCount;						// number of rockets to fire
     }
 
     // 2002-04-20 Added by M.N. public static alised DD priorities
@@ -134,102 +135,102 @@ namespace FalconNet.FalcLib
 
     public class VehicleClassDataType
     {
-        short Index;						// descriptionIndex pointing here
-        short HitPoints;					// Damage this thing can take
-        uint Flags;						// see VEH_ flags in vehicle.h
-        string Name;
-        string NCTR;
-        float RCSfactor;					// log2( 1 + RCS relative to an F16 )
-        long MaxWt;						// Max loaded weight in lbs.
-        long EmptyWt;					// Empty weight in lbs.	
-        long FuelWt;						// Weight of max fuel in lbs.
-        short FuelEcon;					// Fuel usage in lbs./min.
-        short EngineSound;				// SoundFX sample index of corresponding engine sound
-        short HighAlt;					// in hundreds of feet
-        short LowAlt;						// in hundreds of feet
-        short CruiseAlt;					// in hundreds of feet
-        short MaxSpeed;					// Maximum vehicle speed, in kph
-        short RadarType;					// Index into RadarDataTable
-        short NumberOfPilots;				// # of pilots (for eject)
-        ushort RackFlags;					//0x01 means hardpoint 0 needs a rack, 0x02 . hdpt 1, etc
-        ushort VisibleFlags;				//0x01 means hardpoint 0 is visible, 0x02 . hdpt 1, etc
-        byte CallsignIndex;
-        byte CallsignSlots;
-        byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];	// Vehicle hit chances (best hitchance & bonus)
-        byte[] Strength = new byte[(int)MoveType.MOVEMENT_TYPES];	// Combat strengths (full strength only) (calculated)
-        byte[] Range = new byte[(int)MoveType.MOVEMENT_TYPES];		// Firing ranges (full strength only) (calculated)
-        byte[] Detection = new byte[(int)MoveType.MOVEMENT_TYPES];	// Electronic detection ranges
-        short[] Weapon = new short[CampWeapons.HARDPOINT_MAX];		// Weapon id of weapons (or weapon list)
-        byte[] Weapons = new byte[CampWeapons.HARDPOINT_MAX];		// Number of shots each (fully supplied)
-        byte[] DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
-    };
+        public short Index;						// descriptionIndex pointing here
+        public short HitPoints;					// Damage this thing can take
+        public uint Flags;						// see VEH_ flags in vehicle.h
+        public string Name;
+        public string NCTR;
+        public float RCSfactor;					// log2( 1 + RCS relative to an F16 )
+        public long MaxWt;						// Max loaded weight in lbs.
+        public long EmptyWt;					// Empty weight in lbs.	
+        public long FuelWt;						// Weight of max fuel in lbs.
+        public short FuelEcon;					// Fuel usage in lbs./min.
+        public short EngineSound;				// SoundFX sample index of corresponding engine sound
+        public short HighAlt;					// in hundreds of feet
+        public short LowAlt;						// in hundreds of feet
+        public short CruiseAlt;					// in hundreds of feet
+        public short MaxSpeed;					// Maximum vehicle speed, in kph
+        public short RadarType;					// Index into RadarDataTable
+        public short NumberOfPilots;				// # of pilots (for eject)
+        public ushort RackFlags;					//0x01 means hardpoint 0 needs a rack, 0x02 . hdpt 1, etc
+        public ushort VisibleFlags;				//0x01 means hardpoint 0 is visible, 0x02 . hdpt 1, etc
+        public byte CallsignIndex;
+        public byte CallsignSlots;
+        public byte[] HitChance = new byte[(int)MoveType.MOVEMENT_TYPES];	// Vehicle hit chances (best hitchance & bonus)
+        public byte[] Strength = new byte[(int)MoveType.MOVEMENT_TYPES];	// Combat strengths (full strength only) (calculated)
+        public byte[] Range = new byte[(int)MoveType.MOVEMENT_TYPES];		// Firing ranges (full strength only) (calculated)
+        public byte[] Detection = new byte[(int)MoveType.MOVEMENT_TYPES];	// Electronic detection ranges
+        public short[] Weapon = new short[CampWeapons.HARDPOINT_MAX];		// Weapon id of weapons (or weapon list)
+        public byte[] Weapons = new byte[CampWeapons.HARDPOINT_MAX];		// Number of shots each (fully supplied)
+        public byte[] DamageMod = new byte[(int)DamageDataType.OtherDam + 1];		// How much each type will hurt me (% of strength applied)
+    }
 
     public class SquadronStoresDataType
     {
-        byte[] Stores = new byte[Camplib.MAXIMUM_WEAPTYPES];	// Weapon stores (only has meaning for squadrons)
-        byte infiniteAG;					// One AG weapon we've chosen to always have available
-        byte infiniteAA;					// One AA weapon we've chosen to always have available
-        byte infiniteGun;				// Our main gun weapon, which we will always have available
-    };
+        public byte[] Stores = new byte[Camplib.MAXIMUM_WEAPTYPES];	// Weapon stores (only has meaning for squadrons)
+        public byte infiniteAG;					// One AG weapon we've chosen to always have available
+        public byte infiniteAA;					// One AA weapon we've chosen to always have available
+        public byte infiniteGun;				// Our main gun weapon, which we will always have available
+    }
 
     public class PtHeaderDataType
     {
-        short objID;						// ID of the objective this belongs to
-        byte type;						// The type of pt data this contains
-        byte count;						// Number of points
-        byte[] features = new byte[Camplib.MAX_FEAT_DEPEND];	// Features this list depends on (# in objective's feature list)
-        short data;						// Other data (runway heading, for example)
-        float sinHeading;
-        float cosHeading;
-        short first;						// Index of first point
-        short texIdx;						// texture to apply to this runway
-        char runwayNum;					// -1 if not a runway, indicates which runway this list applies to
-        char ltrt;						// put base pt to rt or left
-        short nextHeader;					// Index of next header, if any
-    };
+        public short objID;						// ID of the objective this belongs to
+        public byte type;						// The type of pt data this contains
+        public byte count;						// Number of points
+        public byte[] features = new byte[Camplib.MAX_FEAT_DEPEND];	// Features this list depends on (# in objective's feature list)
+        public short data;						// Other data (runway heading, for example)
+        public float sinHeading;
+        public float cosHeading;
+        public short first;						// Index of first point
+        public short texIdx;						// texture to apply to this runway
+        public byte runwayNum;					// -1 if not a runway, indicates which runway this list applies to
+        public byte ltrt;						// put base pt to rt or left
+        public short nextHeader;					// Index of next header, if any
+    }
 
     public struct PtDataType
     {
-        float xOffset, yOffset;			// X and Y offsets of this point (from center of objective tile)
-        byte type;						// The type of point this is
-        byte flags;
-    };
+        public float xOffset, yOffset;			// X and Y offsets of this point (from center of objective tile)
+        public byte type;						// The type of point this is
+        public byte flags;
+    }
 
     public class SimWeaponDataType
     {
-        int flags;                            // Flags for the SMS
-        float cd;                              // Drag coefficient
-        float weight;                          // Weight
-        float area;                            // sirface area for drag calc
-        float xEjection;                       // Body X axis ejection velocity
-        float yEjection;                       // Body Y axis ejection velocity
-        float zEjection;                       // Body Z axis ejection velocity
-        char[] mnemonic = new char[8];                     // SMS Mnemonic
-        int weaponClass;                     // SMS Weapon Class
-        int domain;                          // SMS Weapon Domain
-        int weaponType;                      // SMS Weapon Type
-        int dataIdx;                         // Aditional characteristics data file
+        public int flags;                            // Flags for the SMS
+        public float cd;                              // Drag coefficient
+        public float weight;                          // Weight
+        public float area;                            // sirface area for drag calc
+        public float xEjection;                       // Body X axis ejection velocity
+        public float yEjection;                       // Body Y axis ejection velocity
+        public float zEjection;                       // Body Z axis ejection velocity
+        public string mnemonic;       // SMS Mnemonic
+        public int weaponClass;                     // SMS Weapon Class
+        public int domain;                          // SMS Weapon Domain
+        public int weaponType;                      // SMS Weapon Type
+        public int dataIdx;                         // Aditional characteristics data file
     } // SimWEaponDataType;
 
     public class SimACDefType
     {
-        int combatClass;                      // What type of combat does it do?
-        int airframeIdx;                      // Index into airframe tables
-        int signatureIdx;                     // Index into signature tables (IR only for now)
-        int[] sensorType = new int[5];                    // Sensor Types
-        int[] sensorIdx = new int[5];                     // Index into sensor data tables
+        public int combatClass;                      // What type of combat does it do?
+        public int airframeIdx;                      // Index into airframe tables
+        public int signatureIdx;                     // Index into signature tables (IR only for now)
+        public int[] sensorType = new int[5];                    // Sensor Types
+        public int[] sensorIdx = new int[5];                     // Index into sensor data tables
     } //SimACDefType;
 
     public struct RackGroup
     {
-        int nentries;
-        int[] entries;
+        public int nentries;
+        public int[] entries;
     } //RackGroup;
 
     public struct RackObject
     {
-        int ctind;
-        int maxoccupancy;
+        public int ctind;
+        public int maxoccupancy;
     } // RackObject;
 
     // ===============================================

@@ -8,6 +8,7 @@ using VU_BOOL = System.Boolean;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using VU_KEY = System.UInt64;
+using VU_ID_NUMBER = System.UInt64;
 
 namespace FalconNet.VU
 {
@@ -72,8 +73,8 @@ protected:
 #endif
 
 
-        protected VuTargetEntity(int typeindex)
-            : base((ushort)typeindex)
+        protected VuTargetEntity(ushort type, VU_ID_NUMBER eid)
+            : base(type, eid)
         {
 #if VU_USE_COMMS
   Init(&bestEffortComms_);
@@ -84,7 +85,7 @@ protected:
         }
 
         internal VuTargetEntity()
-            : base((ushort)VU_UNKNOWN_ENTITY_TYPE)
+            : base((ushort)VU_UNKNOWN_ENTITY_TYPE, 0)
         { }
 
         //data
@@ -173,8 +174,8 @@ protected:
         public static readonly VU_ID VU_SESSION_NULL_GROUP = VU_ID.vuNullId;
 
         // constructors & destructor
-        protected VuSessionEntity(int typeindex, ulong domainMask, string callsign)
-            : base(typeindex)
+        protected VuSessionEntity(ushort typeindex, ulong domainMask, string callsign)
+            : base(typeindex, VU_ID.VU_SESSION_ENTITY_ID)
         {
 
             sessionId_ = VU_SESSION_NULL_CONNECTION.creator_; // assigned on session open
@@ -220,7 +221,7 @@ protected:
         //TODO public virtual ~VuSessionEntity();
 
         public VuSessionEntity(ulong domainMask, string callsign)
-            : base(VU_SESSION_ENTITY_TYPE)
+            : base(VU_SESSION_ENTITY_TYPE, VU_ID.VU_SESSION_ENTITY_ID)
         {
             sessionId_ = VU_SESSION_NULL_CONNECTION.creator_; // assigned on session open
             domainMask_ = domainMask;
@@ -684,8 +685,8 @@ protected:
 
             switch (evnt.Type())
             {
-                case VU_MSG_TYPE.VU_DELETE_EVENT:
-                case VU_MSG_TYPE.VU_RELEASE_EVENT:
+                case VU_MSG_DEF.VU_DELETE_EVENT:
+                case VU_MSG_DEF.VU_RELEASE_EVENT:
                     if (Game() != null && this != VUSTATIC.vuLocalSessionEntity)
                     {
                         JoinGame(VUSTATIC.vuPlayerPoolGroup);
@@ -1284,7 +1285,7 @@ protected:
         public const int VU_DEFAULT_GROUP_SIZE = 6;
         // constructors & destructor
         public VuGroupEntity(string groupname)
-            : base(VU_GROUP_ENTITY_TYPE)
+            : base(VU_GROUP_ENTITY_TYPE, VU_ID.VU_SESSION_ENTITY_ID)
         {
             sessionMax_ = VU_DEFAULT_GROUP_SIZE;
             groupName_ = groupname;
@@ -1447,8 +1448,8 @@ protected:
 #endif //VU_LOW_WARNING_VERSION
 
 
-        protected VuGroupEntity(int type, string groupname, VuFilter filter = null)
-            : base(type)
+        protected VuGroupEntity(ushort type, string groupname, VuFilter filter = null)
+            : base(type, VUSTATIC.VuxGetId())
         {
             sessionMax_ = VU_DEFAULT_GROUP_SIZE;
             groupName_ = groupname;
@@ -1638,7 +1639,7 @@ protected:
   public virtual VU_ERRCODE Handle(VuTransferEvent *evnt);
   public virtual VU_ERRCODE Handle(VuSessionEvent *evnt);
 #else
-        public virtual VU_ERRCODE Handle(VuSessionEvent evnt)
+        public override VU_ERRCODE Handle(VuSessionEvent evnt)
         {
             VU_ERRCODE retval = VU_ERRCODE.VU_NO_OP;
             switch (evnt.subtype_)
@@ -1664,7 +1665,7 @@ protected:
 #endif //VU_LOW_WARNING_VERSION
 
 
-        protected VuGameEntity(int type, ulong domainMask, string gamename, string groupname)
+        protected VuGameEntity(ushort type, ulong domainMask, string gamename, string groupname)
             : base(type, groupname)
         {
             domainMask_ = domainMask;
@@ -2041,7 +2042,7 @@ protected:
         public override VU_BOOL Notice(VuMessage evnt)
         {
             // danm_TBD: do we need VU_FULL_UPDATE event as well?
-            if (((1 << (int)evnt.Type()) & (int)VU_MSG_TYPE.VU_TRANSFER_EVENT) != 0)
+            if (((1 << (int)evnt.Type()) & (int)VU_MSG_DEF.VU_TRANSFER_EVENT) != 0)
             {
                 return true;
             }

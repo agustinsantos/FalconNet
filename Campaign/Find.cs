@@ -6,6 +6,7 @@ using Flight=FalconNet.Campaign.FlightClass;
 using Team=System.Int32;
 using GridIndex = System.Int16;
 using FalconNet.VU;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

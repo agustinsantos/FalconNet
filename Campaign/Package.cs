@@ -6,6 +6,7 @@ using Flight=FalconNet.Campaign.FlightClass;
 using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.FalcLib;
 using FalconNet.Common;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

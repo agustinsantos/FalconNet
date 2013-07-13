@@ -6,11 +6,13 @@ using Path=FalconNet.Campaign.BasePathClass;
 using WayPoint=FalconNet.Campaign.WayPointClass;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
+using VU_TIME = System.UInt64;
 using GridIndex = System.Int16;
 using Control = System.Byte;
 using VehicleID=System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

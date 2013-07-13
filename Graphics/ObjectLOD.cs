@@ -1,12 +1,11 @@
-﻿using System;
+﻿using FalconNet.Common;
+using System;
 using System.Diagnostics;
 
 
 namespace FalconNet.Graphics
 {
     public class LoaderQ { public LoaderQ() { throw new NotImplementedException(); } }
-    public class FileMemMap { public FileMemMap() { throw new NotImplementedException(); } }
-    public class BRoot { public void Draw() { throw new NotImplementedException(); } }
 
     public class ObjectLOD
     {

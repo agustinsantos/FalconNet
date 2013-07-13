@@ -184,7 +184,7 @@ namespace FalconNet.Graphics
     public struct IDirectDrawSurface7 { }
     public struct IDirect3DDevice7 { }
     public struct _D3DDeviceDesc7 { }
-    public struct IDirectDraw7 {}
+    public struct IDirectDraw7 { }
     public struct IDirectDrawPalette { }
 
     public class TextureHandle

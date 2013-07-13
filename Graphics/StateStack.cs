@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Pintensity = System.Single;
 using Pmatrix = FalconNet.Graphics.Trotation;
 
@@ -7,20 +8,19 @@ namespace FalconNet.Graphics
 
     public struct StateStackFrame
     {
-#if TODO
-		public Tpoint						*XformedPosPool;
-		public Pintensity					*IntensityPool;
-		public PclipInfo					*ClipInfoPool;
+		public Tpoint[]						XformedPosPool;
+        public Pintensity[] IntensityPool;
+        public PclipInfo[] ClipInfoPool;
 		public Pmatrix						Rotation;
 		public Tpoint						Xlation;
 		public Tpoint						ObjSpaceEye;
 		public Tpoint						ObjSpaceLight;
-		public int 					*CurrentTextureTable;
-		public ObjectInstance		*CurrentInstance;
-		public ObjectLOD		*CurrentLOD;
-		public DrawPrimFp			*DrawPrimJumpTable;
-		public TransformFp					Transform;
-#endif
+        public int[] CurrentTextureTable;
+		public ObjectInstance		CurrentInstance;
+		public ObjectLOD		CurrentLOD;
+        public PolyLib.DrawPrimFp DrawPrimJumpTable;
+        public StateStackClass.TransformFp Transform;
+
     }
 
     public class StateStackClass
@@ -30,7 +30,7 @@ namespace FalconNet.Graphics
         // if more than one stack were to be simultaniously maintained.
         public static StateStackClass TheStateStack;
 
-        public delegate void TransformFp(Tpoint[] p, int n);
+        public delegate void TransformFp(Tpoint[] p, int n, int offset =0);
 
         public const int MAX_STATE_STACK_DEPTH = 8;	// Arbitrary
         public const int MAX_SLOT_AND_DYNAMIC_PER_OBJECT = 64;	// Arbitrary
@@ -41,67 +41,74 @@ namespace FalconNet.Graphics
         public const int MAX_VERTS_PER_CLIPPED_POLYGON = MAX_VERTS_PER_POLYGON + MAX_CLIP_PLANES;
         public const int MAX_CLIP_VERTS = 2 * MAX_CLIP_PLANES;
         public const int MAX_VERTS_PER_OBJECT_TREE = MAX_VERT_POOL_SIZE - MAX_VERTS_PER_POLYGON - MAX_CLIP_VERTS;
+
+        public const float NEAR_CLIP_DISTANCE = 1.0f;
+
+        public StateStackClass()
+        {
 #if TODO
-		public StateStackClass ()
-		{
-			stackDepth			= 0;
-			XformedPosPoolNext	= XformedPosPoolBuffer;
-			IntensityPoolNext	= IntensityPoolBuffer;
-			ClipInfoPoolNext	= ClipInfoPoolBuffer;
-			LODBiasInv			= 1.0f;
-			SetTextureState( true );
-			SetFog( 0.0f, null );
-		}
+            stackDepth = 0;
+            XformedPosPoolNext = XformedPosPoolBuffer;
+            IntensityPoolNext = IntensityPoolBuffer;
+            ClipInfoPoolNext = ClipInfoPoolBuffer;
+            LODBiasInv = 1.0f;
+            SetTextureState(true);
+            SetFog(0.0f, null);
+#endif
+            throw new NotImplementedException();
+        }
 
-		//public ~StateStackClass()	{ Debug.Assert(stackDepth == 0); };
+        //public ~StateStackClass()	{ Debug.Assert(stackDepth == 0); };
 
-		// Called by application
-		public static void SetContext (ContextMPR *cntxt)
-		{
-			context = cntxt;
-		}
+        // Called by application
+        public static void SetContext(ContextMPR cntxt)
+        {
 
-		public static void	SetLight (float a, float d, Tpoint atLight)
-		{
-			LightAmbient = a;
-			LightDiffuse = d;
-		
-			// Prescale the light vector with the diffuse multiplier
-			LightVector.x = atLight.x * d;
-			LightVector.y = atLight.y * d;
-			LightVector.z = atLight.z * d;
-		
-			// Intialize the light postion in world space
-			ObjSpaceLight = LightVector;
-		}
+            context = cntxt;
+       }
 
+        public static void SetLight(float a, float d, Tpoint atLight)
+        {
+            LightAmbient = a;
+            LightDiffuse = d;
 
-		public static void SetCameraProperties (float ooTanHHAngle, float ooTanVHAngle, float sclx, float scly, float shftx, float shfty)
-		{
-			float	rx2;
-		
-			rx2 = (ooTanHHAngle*ooTanHHAngle);
-			hAspectDepthCorrection = 1.0f / (float)sqrt(rx2 + 1.0f);
-			hAspectWidthCorrection = rx2 * hAspectDepthCorrection;
-		
-			rx2 = (ooTanVHAngle*ooTanVHAngle);
-			vAspectDepthCorrection = 1.0f / (float)sqrt(rx2 + 1.0f);
-			vAspectWidthCorrection = rx2 * vAspectDepthCorrection;
-		
-			scaleX = sclx;
-			scaleY = scly;
-			shiftX = shftx;
-			shiftY = shfty;
-		}
+            // Prescale the light vector with the diffuse multiplier
+            LightVector.x = atLight.x * d;
+            LightVector.y = atLight.y * d;
+            LightVector.z = atLight.z * d;
+
+            // Intialize the light postion in world space
+            ObjSpaceLight = LightVector;
+        }
 
 
-		public static void SetLODBias (float bias)
-		{
-			LODBiasInv = 1.0f / bias;
-		}
+        public static void SetCameraProperties(float ooTanHHAngle, float ooTanVHAngle, float sclx, float scly, float shftx, float shfty)
+        {
+            float rx2;
 
-		public static void SetTextureState (bool state)
-		{
+            rx2 = (ooTanHHAngle * ooTanHHAngle);
+            hAspectDepthCorrection = 1.0f / (float)Math.Sqrt(rx2 + 1.0f);
+            hAspectWidthCorrection = rx2 * hAspectDepthCorrection;
+
+            rx2 = (ooTanVHAngle * ooTanVHAngle);
+            vAspectDepthCorrection = 1.0f / (float)Math.Sqrt(rx2 + 1.0f);
+            vAspectWidthCorrection = rx2 * vAspectDepthCorrection;
+
+            scaleX = sclx;
+            scaleY = scly;
+            shiftX = shftx;
+            shiftY = shfty;
+        }
+
+
+        public static void SetLODBias(float bias)
+        {
+            LODBiasInv = 1.0f / bias;
+        }
+
+        public static void SetTextureState(bool state)
+        {
+#if TODO
 			if(!PlayerOptions.bFilteredObjects)
 			{
 				// OW original code
@@ -147,8 +154,7 @@ namespace FalconNet.Graphics
 					DrawPrimNoClipJumpTable = DrawPrimFogNoClipJumpTable;
 					ClipPrimJumpTable		= ClipPrimFogJumpTable;
 				}
-			}
-		
+			}		
 			else	// OW
 			{
 				if(state)
@@ -193,10 +199,12 @@ namespace FalconNet.Graphics
 					ClipPrimJumpTable		= ClipPrimFogJumpTable;
 				}
 			}
-		}
+#endif
+        }
 
-		public static void SetFog (float percent, Pcolor *color)
-		{
+        public static void SetFog(float percent, Pcolor color)
+        {
+#if TODO
 			Debug.Assert( percent <= 1.0f );
 		
 			fogValue = percent;
@@ -239,14 +247,16 @@ namespace FalconNet.Graphics
 				}
 #endif
 			}
-		}
+#endif
+        }
 
-		public static void SetCamera (Tpoint *pos, Pmatrix *rotWaspect, Pmatrix *Bill, Pmatrix *Tree)
-		{
+        public static void SetCamera(Tpoint pos, Pmatrix rotWaspect, Pmatrix Bill, Pmatrix Tree)
+        {
+#if TODO
 			Debug.Assert(stackDepth == 0);
 		
 			// Store our rotation from world to camera space (including aspect scale effects)
-			Rotation = *rotWaspect;	
+			Rotation = rotWaspect;	
 		
 			// Compute the vector from the camera to the origin rotated into camera space
 			Xlation.x = -pos.x * Rotation.M11 - pos.y * Rotation.M12 - pos.z * Rotation.M13;
@@ -254,49 +264,60 @@ namespace FalconNet.Graphics
 			Xlation.z = -pos.x * Rotation.M31 - pos.y * Rotation.M32 - pos.z * Rotation.M33;
 		
 			// Intialize the eye postion in world space
-			ObjSpaceEye = *pos;
+			ObjSpaceEye = pos;
 		
 			// Store pointers out to the billboard and tree matrices in case we need them
 			Tb = Bill;
 			Tt = Tree;
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		// This call is for the application to call to draw an instance of an object.
-		public static void DrawObject (ObjectInstance *objInst, Pmatrix *rot, Tpoint *pos, float scale=1.0f)
-		{
+        // This call is for the application to call to draw an instance of an object.
+        public static void DrawObject(ObjectInstance objInst, Pmatrix rot, Tpoint pos, float scale = 1.0f)
+        {
+#if TODO
 			pvtDrawObject( OP_NONE, 
 							objInst, 
 							rot,	pos, 
 							1.0f,	1.0f, 	1.0f, 
 							scale );
-		}
-		
-		// This call is rather specialized.  It is intended for use in drawing shadows which  
-		// are simple objects (no slots, dofs, etc) but require asymetric scaling in x and y 
-		// to simulate orientation changes of the object casting the shadow.
-		public static void DrawWarpedObject (ObjectInstance *objInst, Pmatrix *rot, Tpoint *pos, float sx, float sy, float sz, float scale=1.0f)
-		{
+#endif
+            throw new NotImplementedException();
+        }
+
+        // This call is rather specialized.  It is intended for use in drawing shadows which  
+        // are simple objects (no slots, dofs, etc) but require asymetric scaling in x and y 
+        // to simulate orientation changes of the object casting the shadow.
+        public static void DrawWarpedObject(ObjectInstance objInst, Pmatrix rot, Tpoint pos, float sx, float sy, float sz, float scale = 1.0f)
+        {
+#if TODO
 			pvtDrawObject( OP_WARP, 
 							objInst, 
 							rot,	pos, 
 							sx,		sy, 	sz, 
 							scale );
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		// Called by BRoot nodes at draw time
-		// This call is for the BSPlib to call to draw a child instance attached to a slot.
-		public static void DrawSubObject (ObjectInstance *objInst, Pmatrix *rot, Tpoint *pos)
-		{
+        // Called by BRoot nodes at draw time
+        // This call is for the BSPlib to call to draw a child instance attached to a slot.
+        public static void DrawSubObject(ObjectInstance objInst, Pmatrix rot, Tpoint pos)
+        {
+#if TODO
 			pvtDrawObject( OP_NONE, 
 							objInst, 
 							rot,	pos, 
 							1.0f,	1.0f, 	1.0f, 
 							1.0f );
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public static void	CompoundTransform (Pmatrix *rot, Tpoint *pos)
-		{
-			Tpoint	tempP, tempP2;
+        public static void CompoundTransform(Pmatrix rot, Tpoint pos)
+        {
+            Tpoint tempP = new Tpoint(), tempP2;
 			Pmatrix	tempM;
 		
 			// Compute the rotated translation vector for this object
@@ -311,42 +332,45 @@ namespace FalconNet.Graphics
 			tempP2 = ObjSpaceLight;
 		
 			// Composit the camera matrix with the object rotation
-			MatrixMult( &tempM, rot, &Rotation );
+            Matrix.MatrixMult(tempM, rot, ref Rotation);
 		
 			// Compute the eye point in object space
-			MatrixMultTranspose( rot, &tempP, &ObjSpaceEye );
+            Matrix.MatrixMultTranspose(rot, tempP, ref ObjSpaceEye);
 		
 			// Compute the light direction in object space.
-			MatrixMultTranspose( rot, &tempP2, &ObjSpaceLight );
-		}
+            Matrix.MatrixMultTranspose(rot, tempP2, ref ObjSpaceLight);
+        }
 
-		public static void	Light (Pnormal pNormals, int nNormals)
-		{
+        public static void Light(Pnormal[] pNormals, int nNormals)
+        {
+
 			// Make sure we've got enough room in the light value pool
-			Debug.Assert( IsValidIntensityIndex( n-1 ) );
-			
-			while( n-- ) {
+            Debug.Assert(IsValidIntensityIndex(nNormals - 1));
+
+            for(int j = 0; j < nNormals; j++)
+            {
 				// light intensity = ambient + diffuse*(lightVector dot normal)
 				// and we already scaled the lightVector by the diffuse intensity.
-				*IntensityPoolNext = p.i*ObjSpaceLight.x + p.j*ObjSpaceLight.y + p.k*ObjSpaceLight.z;
-				if (*IntensityPoolNext > 0.0f) {
-					*IntensityPoolNext += LightAmbient;
+                IntensityPool[IntensityPoolNext] = pNormals[j].i * ObjSpaceLight.x + pNormals[j].j * ObjSpaceLight.y + pNormals[j].k * ObjSpaceLight.z;
+                if (IntensityPool[IntensityPoolNext] > 0.0f)
+                {
+                    IntensityPool[IntensityPoolNext] += LightAmbient;
 				} else {
-					*IntensityPoolNext = LightAmbient;
+                    IntensityPool[IntensityPoolNext] = LightAmbient;
 				}
-		
-				p++;
+	
 				IntensityPoolNext++;
 			}
-		}
+        }
 
-		public static void SetTextureTable (int *pTexIDs)
-		{
-			CurrentTextureTable = pTexIDs;
-		}
+        public static void SetTextureTable(int[] pTexIDs)
+        {
+            CurrentTextureTable = pTexIDs;
+        }
 
-		public static void	PushAll ()
-		{
+        public static void PushAll()
+        {
+#if TODO
 			Debug.Assert( stackDepth < MAX_STATE_STACK_DEPTH );
 		
 			stack[stackDepth].XformedPosPool		= XformedPosPool;
@@ -371,11 +395,14 @@ namespace FalconNet.Graphics
 			ClipInfoPool							= ClipInfoPoolNext;
 		
 			stackDepth++;
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
 
-		public static void	PopAll ()
-		{
+        public static void PopAll()
+        {
+#if TODO
 			stackDepth--;
 		
 			XformedPosPoolNext	= XformedPosPool;
@@ -398,11 +425,14 @@ namespace FalconNet.Graphics
 		
 			DrawPrimJumpTable	= stack[stackDepth].DrawPrimJumpTable;
 			Transform			= stack[stackDepth].Transform;
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
 
-		public static void	PushVerts ()
-		{
+        public static void PushVerts()
+        {
+#if TODO
 			Debug.Assert( stackDepth < MAX_STATE_STACK_DEPTH );
 		
 			stack[stackDepth].XformedPosPool	= XformedPosPool;
@@ -414,10 +444,13 @@ namespace FalconNet.Graphics
 			ClipInfoPool						= ClipInfoPoolNext;
 		
 			stackDepth++;
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public static void	PopVerts ()
-		{
+        public static void PopVerts()
+        {
+#if TODO
 			stackDepth--;
 		
 			XformedPosPoolNext	= XformedPosPool;
@@ -427,14 +460,17 @@ namespace FalconNet.Graphics
 			XformedPosPool		= stack[stackDepth].XformedPosPool;
 			IntensityPool		= stack[stackDepth].IntensityPool;
 			ClipInfoPool		= stack[stackDepth].ClipInfoPool;
-		}
-			
+#endif
+            throw new NotImplementedException();
+        }
 
-		// This should be cleaned up and probably have special clip/noclip versions
-		public static void TransformBillboardWithClip (Tpoint *p, int n, BTransformType type)
-		{
+
+        // This should be cleaned up and probably have special clip/noclip versions
+        public static void TransformBillboardWithClip(Tpoint[] p, int n, BTransformType type)
+        {
+#if TODO
 			float	scratch_x, scratch_y, scratch_z;
-			Pmatrix	*T;
+			Pmatrix	T;
 		
 			// Make sure we've got enough room in the transformed position pool
 			Debug.Assert( IsValidPosIndex( n-1 ) );
@@ -486,168 +522,197 @@ namespace FalconNet.Graphics
 				XformedPosPoolNext.y = YtoPixel( scratch_y * OneOverZ );
 				XformedPosPoolNext++;
 			}
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		// Called by our own transformations and the clipper
-		public static float XtoPixel (float x)
-		{
-			return (x * scaleX) + shiftX;
-		}
+        // Called by our own transformations and the clipper
+        public static float XtoPixel(float x)
+        {
+            return (x * scaleX) + shiftX;
+        }
 
-		public static float YtoPixel (float y)
-		{
-			return (y * scaleY) + shiftY;
-		}
+        public static float YtoPixel(float y)
+        {
+            return (y * scaleY) + shiftY;
+        }
 
-		// For parameter validation during debug
-		public static bool IsValidPosIndex (int i)
-		{
+        // For parameter validation during debug
+        public static bool IsValidPosIndex(int i)
+        {
+#if TODO
 			return (i+XformedPosPool < XformedPosPoolBuffer+MAX_VERT_POOL_SIZE);
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public static bool IsValidIntensityIndex (int i)
-		{
+        public static bool IsValidIntensityIndex(int i)
+        {
+#if TODO
 			return (i+IntensityPool  < IntensityPoolBuffer+MAX_VERT_POOL_SIZE);
-		}			
-  
-		protected static void	TransformNoClip (Tpoint *pCoords, int nCoords)
-		{
-			TransformInline( p, n, false );
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		protected static void	TransformWithClip (Tpoint *pCoords, int nCoords)
-		{
-			TransformInline( p, n, true );
-		}
+        protected static void TransformNoClip(Tpoint[] pCoords, int nCoords, int offset = 0)
+        {
+            TransformInline(pCoords, nCoords, false, offset);
+        }
 
-		protected static  ClippingFlags	CheckBoundingSphereClipping ()
-		{
-			// Decide if we need clipping, or if the object is totally off screen
-			// REMEMBER:  Xlation is camera oriented, but still X front, Y right, Z down
-			//			  so range from viewer is in the X term.
-			// NOTE:  We compute "d", the distance from the viewer at which the bounding
-			//		  sphere should intersect the view frustum.  We use .707 since the
-			//		  rotation matrix already normalized us to a 45 degree half angle.
-			//		  We do have to adjust the radius shift by the FOV correction factors,
-			//		  though, since it didn't go through the matix.
-			// NOTE2: We could develop the complete set of clip flags here by continuing to 
-			//        check other edges instead of returning in the clipped cases.  For now,
-			//        we only need to know if it IS clipped or not, so we terminate early.
-			// TODO:  We should roll the radius of any attached slot children into the check radius
-			//		  to ensure that we don't reject a parent object whose _children_ may be on screen.
-			//        (though this should be fairly rare in practice)
-			float	rd;
-			float	rh;
-		//	UInt32	clipFlag = ClippingFlags.ON_SCREEN;
-		
-			rd = CurrentInstance.Radius() * vAspectDepthCorrection;
-			rh = CurrentInstance.Radius() * vAspectWidthCorrection;
-			if (-(Xlation.z - rh) >= Xlation.x - rd) {
-				if (-(Xlation.z + rh) > Xlation.x + rd) {
-					return ClippingFlags.OFF_SCREEN;			// Trivial reject top
-				}
-		//		clipFlag = ClippingFlags.CLIP_TOP;
-				return ClippingFlags.CLIP_TOP;
-			}
-			if (Xlation.z + rh >= Xlation.x - rd) {
-				if (Xlation.z - rh > Xlation.x + rd) {
-					return ClippingFlags.OFF_SCREEN;			// Trivial reject bottom
-				}
-		//		clipFlag |= ClippingFlags.CLIP_BOTTOM;
-				return ClippingFlags.CLIP_BOTTOM;
-			}
-		
-			rd = CurrentInstance.Radius() * hAspectDepthCorrection;
-			rh = CurrentInstance.Radius() * hAspectWidthCorrection;
-			if (-(Xlation.y - rh) >= Xlation.x - rd) {
-				if (-(Xlation.x + rh) > Xlation.x + rd) {
-					return ClippingFlags.OFF_SCREEN;			// Trivial reject left
-				}
-		//		clipFlag |= ClippingFlags.CLIP_LEFT;
-				return ClippingFlags.CLIP_LEFT;
-			}
-			if (Xlation.y + rh >= Xlation.x - rd) {
-				if (Xlation.y - rh > Xlation.x + rd) {
-					return ClippingFlags.OFF_SCREEN;			// Trivial reject right
-				}
-		//		clipFlag |= ClippingFlags.CLIP_RIGHT;
-				return ClippingFlags.CLIP_RIGHT;
-			}
-		
-			rh = CurrentInstance.Radius();
-			if (Xlation.x - rh < NEAR_CLIP_DISTANCE) {
-				if (Xlation.x + rh < NEAR_CLIP_DISTANCE) {
-					return OFF_SCREEN;			// Trivial reject near
-				}
-		//		clipFlag |= ClippingFlags.CLIP_NEAR;
-				return ClippingFlags.CLIP_NEAR;
-			}
-		
-		//	return clipFlag;
-			return ON_SCREEN;
-		}
+        protected static void TransformWithClip(Tpoint[] pCoords, int nCoords, int offset = 0)
+        {
+            TransformInline(pCoords, nCoords, true, offset);
+        }
 
-		protected static  void	TransformInline (Tpoint[] p, int nCoords, bool clip)
-		{
-			float	scratch_x, scratch_y, scratch_z;
-		
-			// Make sure we've got enough room in the transformed position pool
-			Debug.Assert( IsValidPosIndex( n-1 ) );
-		
-			while( n-- ) {
-				scratch_z = Rotation.M11 * p.x + Rotation.M12 * p.y + Rotation.M13 * p.z + Xlation.x;
-				scratch_x = Rotation.M21 * p.x + Rotation.M22 * p.y + Rotation.M23 * p.z + Xlation.y;
-				scratch_y = Rotation.M31 * p.x + Rotation.M32 * p.y + Rotation.M33 * p.z + Xlation.z;
-		
-		
-				if (clip) {
-					ClipInfoPoolNext.clipFlag = ClippingFlags.ON_SCREEN;
-		
-					if ( scratch_z < NEAR_CLIP_DISTANCE ) {
-						ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_NEAR;
-					}
-		
-					if ( fabs(scratch_y) > scratch_z ) {
-						if ( scratch_y > scratch_z ) {
-							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_BOTTOM;
-						} else {
-							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_TOP;
-						}
-					}
-		
-					if ( fabs(scratch_x) > scratch_z ) {
-						if ( scratch_x > scratch_z ) {
-							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_RIGHT;
-						} else {
-							ClipInfoPoolNext.clipFlag |= ClippingFlags.CLIP_LEFT;
-						}
-					}
-		
-					ClipInfoPoolNext.csX = scratch_x;
-					ClipInfoPoolNext.csY = scratch_y;
-					ClipInfoPoolNext.csZ = scratch_z;
-		
-					ClipInfoPoolNext++;
-				}
-		
-		
-				float OneOverZ = 1.0f/scratch_z;
-				p++;
-		
-				XformedPosPoolNext.z = scratch_z;
-				XformedPosPoolNext.x = XtoPixel( scratch_x * OneOverZ );
-				XformedPosPoolNext.y = YtoPixel( scratch_y * OneOverZ );
-				XformedPosPoolNext++;
-			}
-		}
+        protected static ClippingFlags CheckBoundingSphereClipping()
+        {
+            // Decide if we need clipping, or if the object is totally off screen
+            // REMEMBER:  Xlation is camera oriented, but still X front, Y right, Z down
+            //			  so range from viewer is in the X term.
+            // NOTE:  We compute "d", the distance from the viewer at which the bounding
+            //		  sphere should intersect the view frustum.  We use .707 since the
+            //		  rotation matrix already normalized us to a 45 degree half angle.
+            //		  We do have to adjust the radius shift by the FOV correction factors,
+            //		  though, since it didn't go through the matix.
+            // NOTE2: We could develop the complete set of clip flags here by continuing to 
+            //        check other edges instead of returning in the clipped cases.  For now,
+            //        we only need to know if it IS clipped or not, so we terminate early.
+            // TODO:  We should roll the radius of any attached slot children into the check radius
+            //		  to ensure that we don't reject a parent object whose _children_ may be on screen.
+            //        (though this should be fairly rare in practice)
+            float rd;
+            float rh;
+            //	UInt32	clipFlag = ClippingFlags.ON_SCREEN;
 
-		// The asymetric scale factors MUST be <= 1.0f.
-		// The global scale factor can be any positive value.
-		// The effects of the scales are multiplicative.
-		private const UInt32	OP_NONE	= 0;
-		private const UInt32	OP_FOG	= 1;
-		private const UInt32	OP_WARP	= 2;
-		static int in_ = 0;
+            rd = CurrentInstance.Radius() * vAspectDepthCorrection;
+            rh = CurrentInstance.Radius() * vAspectWidthCorrection;
+            if (-(Xlation.z - rh) >= Xlation.x - rd)
+            {
+                if (-(Xlation.z + rh) > Xlation.x + rd)
+                {
+                    return ClippingFlags.OFF_SCREEN;			// Trivial reject top
+                }
+                //		clipFlag = ClippingFlags.CLIP_TOP;
+                return ClippingFlags.CLIP_TOP;
+            }
+            if (Xlation.z + rh >= Xlation.x - rd)
+            {
+                if (Xlation.z - rh > Xlation.x + rd)
+                {
+                    return ClippingFlags.OFF_SCREEN;			// Trivial reject bottom
+                }
+                //		clipFlag |= ClippingFlags.CLIP_BOTTOM;
+                return ClippingFlags.CLIP_BOTTOM;
+            }
+
+            rd = CurrentInstance.Radius() * hAspectDepthCorrection;
+            rh = CurrentInstance.Radius() * hAspectWidthCorrection;
+            if (-(Xlation.y - rh) >= Xlation.x - rd)
+            {
+                if (-(Xlation.x + rh) > Xlation.x + rd)
+                {
+                    return ClippingFlags.OFF_SCREEN;			// Trivial reject left
+                }
+                //		clipFlag |= ClippingFlags.CLIP_LEFT;
+                return ClippingFlags.CLIP_LEFT;
+            }
+            if (Xlation.y + rh >= Xlation.x - rd)
+            {
+                if (Xlation.y - rh > Xlation.x + rd)
+                {
+                    return ClippingFlags.OFF_SCREEN;			// Trivial reject right
+                }
+                //		clipFlag |= ClippingFlags.CLIP_RIGHT;
+                return ClippingFlags.CLIP_RIGHT;
+            }
+
+            rh = CurrentInstance.Radius();
+            if (Xlation.x - rh < NEAR_CLIP_DISTANCE)
+            {
+                if (Xlation.x + rh < NEAR_CLIP_DISTANCE)
+                {
+                    return ClippingFlags.OFF_SCREEN;			// Trivial reject near
+                }
+                //		clipFlag |= ClippingFlags.CLIP_NEAR;
+                return ClippingFlags.CLIP_NEAR;
+            }
+
+            //	return clipFlag;
+            return ClippingFlags.ON_SCREEN;
+        }
+
+        protected static void TransformInline(Tpoint[] p, int nCoords, bool clip, int offset = 0)
+        {
+            float scratch_x, scratch_y, scratch_z;
+
+            // Make sure we've got enough room in the transformed position pool
+            Debug.Assert(IsValidPosIndex(nCoords - 1));
+
+            for (int n = 0; n < nCoords; n++ )
+            {
+                scratch_z = Rotation.M11 * p[n].x + Rotation.M12 * p[n].y + Rotation.M13 * p[n].z + Xlation.x;
+                scratch_x = Rotation.M21 * p[n].x + Rotation.M22 * p[n].y + Rotation.M23 * p[n].z + Xlation.y;
+                scratch_y = Rotation.M31 * p[n].x + Rotation.M32 * p[n].y + Rotation.M33 * p[n].z + Xlation.z;
+
+
+                if (clip)
+                {
+                    ClipInfoPool[ClipInfoPoolNext].clipFlag = ClippingFlags.ON_SCREEN;
+
+                    if (scratch_z < NEAR_CLIP_DISTANCE)
+                    {
+                        ClipInfoPool[ClipInfoPoolNext].clipFlag |= ClippingFlags.CLIP_NEAR;
+                    }
+
+                    if (Math.Abs(scratch_y) > scratch_z)
+                    {
+                        if (scratch_y > scratch_z)
+                        {
+                            ClipInfoPool[ClipInfoPoolNext].clipFlag |= ClippingFlags.CLIP_BOTTOM;
+                        }
+                        else
+                        {
+                            ClipInfoPool[ClipInfoPoolNext].clipFlag |= ClippingFlags.CLIP_TOP;
+                        }
+                    }
+
+                    if (Math.Abs(scratch_x) > scratch_z)
+                    {
+                        if (scratch_x > scratch_z)
+                        {
+                            ClipInfoPool[ClipInfoPoolNext].clipFlag |= ClippingFlags.CLIP_RIGHT;
+                        }
+                        else
+                        {
+                            ClipInfoPool[ClipInfoPoolNext].clipFlag |= ClippingFlags.CLIP_LEFT;
+                        }
+                    }
+
+                    ClipInfoPool[ClipInfoPoolNext].csX = scratch_x;
+                    ClipInfoPool[ClipInfoPoolNext].csY = scratch_y;
+                    ClipInfoPool[ClipInfoPoolNext].csZ = scratch_z;
+
+                    ClipInfoPoolNext++;
+                }
+
+
+                float OneOverZ = 1.0f / scratch_z;
+
+                XformedPosPool[XformedPosPoolNext].z = scratch_z;
+                XformedPosPool[XformedPosPoolNext].x = XtoPixel(scratch_x * OneOverZ);
+                XformedPosPool[XformedPosPoolNext].y = YtoPixel(scratch_y * OneOverZ);
+                XformedPosPoolNext++;
+            }
+        }
+
+        // The asymetric scale factors MUST be <= 1.0f.
+        // The global scale factor can be any positive value.
+        // The effects of the scales are multiplicative.
+        private const UInt32 OP_NONE = 0;
+        private const UInt32 OP_FOG = 1;
+        private const UInt32 OP_WARP = 2;
+        static int in_ = 0;
+#if TODO
 		protected static  void	pvtDrawObject (DWORD operation, ObjectInstance *objInst, Pmatrix *rot, Tpoint *pos, float sx, float sy, float sz, float scale=1.0f)
 		{
 			UInt32 clipFlag;
@@ -765,16 +830,17 @@ namespace FalconNet.Graphics
 			PopAll();
 		}
 #endif
-		// Active transformation function (selects between with or without clipping)
-		public static TransformFp	Transform;
+
+        // Active transformation function (selects between with or without clipping)
+        public static TransformFp Transform;
 
         // Computed data pools
         public static Tpoint[] XformedPosPool;	// These point into global storage.  They will point
         public static Pintensity[] IntensityPool;		// to the computed tables for each sub-object.
         public static PclipInfo[] ClipInfoPool;
-        public static Tpoint[] XformedPosPoolNext;// These point into global storage.  They will point
-        public static Pintensity[] IntensityPoolNext;	// to at least MAX_CLIP_VERTS empty slots beyond 
-        public static PclipInfo[] ClipInfoPoolNext;	// the computed tables in use by the current sub-object.
+        public static int XformedPosPoolNext;// These point into global storage.  They will point
+        public static int IntensityPoolNext;	// to at least MAX_CLIP_VERTS empty slots beyond 
+        public static int ClipInfoPoolNext;	// the computed tables in use by the current sub-object.
 
         // Instance of the object we're drawing and its range normalized for resolution and FOV
         public static ObjectInstance CurrentInstance;

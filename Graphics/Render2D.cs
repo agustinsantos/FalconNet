@@ -261,7 +261,7 @@ namespace FalconNet.Graphics
 
             // Make sure we recognize this file type
             texFile.imageType = CheckImageType(filename);
-            Debug.Assert(texFile.imageType != IMAGE_TYPE_UNKNOWN);
+            Debug.Assert(texFile.imageType != ImageType.IMAGE_TYPE_UNKNOWN);
 
             // Open the input file
             result = texFile.glOpenFileMem(filename);

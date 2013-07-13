@@ -1,6 +1,7 @@
 ﻿using System;
 using FalconNet.FalcLib;
 using Team = System.Int32;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

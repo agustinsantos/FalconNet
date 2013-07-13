@@ -2,7 +2,8 @@
 using Unit = FalconNet.Campaign.UnitClass;
 using VehicleSP = System.Byte; //typedef  uchar VehicleSP;
 using VehicleID = System.Int16;
-using FalconNet.FalcLib; //typedef  short VehicleID;
+using FalconNet.FalcLib;
+using FalconNet.CampaignBase; //typedef  short VehicleID;
 
 namespace FalconNet.Campaign
 {

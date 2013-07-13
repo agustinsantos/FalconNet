@@ -83,10 +83,8 @@ namespace FalconNet.Common
 			case PlatformID.Unix:
 			case PlatformID.MacOSX:
 				return path.Replace ('\\', Path.DirectorySeparatorChar);
-				break;
 			default:
 				return path.Replace ('/', Path.DirectorySeparatorChar);
-				break;
 			}
 		}
 	}

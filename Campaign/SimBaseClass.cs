@@ -1,8 +1,9 @@
 using System;
 using FalconNet.Common;
 using FalconNet.VU;
-using FalconNet.Sim;
+//using FalconNet.Sim;
 using FalconNet.FalcLib;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

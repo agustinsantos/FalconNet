@@ -10,6 +10,7 @@ using GridIndex = System.Int16;
 using Control = System.Byte;
 using FalconNet.Common;
 using System.IO;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

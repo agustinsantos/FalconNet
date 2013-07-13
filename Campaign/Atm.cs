@@ -10,6 +10,7 @@ using WayPoint=FalconNet.Campaign.WayPointClass;
 using Package=FalconNet.Campaign.PackageClass;
 using Team=System.Int32;
 using GridIndex = System.Int16;
+using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
 

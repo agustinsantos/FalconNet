@@ -2,10 +2,12 @@ using System;
 using FalconNet.Common;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
+using VU_TIME = System.UInt64;
 using Percentage=System.Int32;
 using FalconNet.FalcLib;
 using System.Diagnostics;
 using Unit=FalconNet.Campaign.UnitClass;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

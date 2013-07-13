@@ -4,6 +4,7 @@ using VU_BYTE=System.Byte;
 using FalconNet.FalcLib;
 using Flight=FalconNet.Campaign.FlightClass;
 using FalconNet.Common;
+using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
 

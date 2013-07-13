@@ -5,7 +5,9 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using System.IO;
 using VU_BYTE=System.Byte;
+using VU_TIME = System.UInt64;
 using Control = System.Byte;
+using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
 // Flags used to convey special data
@@ -601,13 +603,13 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}		// returns bytes written
 	
 		// event handlers
-		public virtual int Handle (VuFullUpdateevnt evnt)
+		public virtual int Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuPositionUpdateevnt evnt)
+        public virtual int Handle(VuPositionUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
-		public virtual int Handle (VuTransferevnt evnt)
+        public virtual int Handle(VuTransferEvent evnt)
 		{throw new NotImplementedException();}
 
 		public virtual VU_ERRCODE InsertionCallback ()

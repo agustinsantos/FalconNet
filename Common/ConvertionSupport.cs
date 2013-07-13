@@ -48,7 +48,6 @@ namespace FalconNet.Common
     public class F4POList { }
     public class FalconPrivateOrderedList { }
     public class FalconPrivateList { }
-    public class VuLinkedList { }
     public struct UnitType { }
     public class MissionRequest { }
     public class ATCBrain
@@ -57,7 +56,7 @@ namespace FalconNet.Common
     }
     public struct FalconDivertMessage { }
     public struct FalconPlayerStatusMessage { }
-    public struct FalconWeaponsFire { }
+ 
     public struct FalconDamageMessage { }
     public struct FalconEjectMessage { }
     public struct FalconLandingMessage { }

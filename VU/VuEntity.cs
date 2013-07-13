@@ -1,7 +1,5 @@
 using System;
-
 using BIG_SCALAR = System.Single;
-//typedef float BIG_SCALAR;
 using SM_SCALAR = System.Single;
 using VU_DAMAGE = System.UInt64;
 using VU_BYTE = System.Byte;
@@ -262,7 +260,12 @@ namespace FalconNet.VU
 
         public VuEntity() { }
 
-        public VuEntity(ushort typeindex)
+        /// <summary>
+        /// creates the entity of a given type with the given id
+        /// </summary>
+        /// <param name="typeindex"></param>
+        /// <param name="eid"></param>
+        public VuEntity(ushort typeindex, VU_ID_NUMBER eid)
         {
             refcount_ = 0;
             driver_ = null;
@@ -273,24 +276,12 @@ namespace FalconNet.VU
             pos_.dy_ = 0.0f;
             pos_.dz_ = 0.0f;
 
-#if VU_USE_QUATERNION
-  for (int i = 0; i < 3; i++)
-    orient_.quat_[i] = 0.0f;
-
-  orient_.quat_[3] = 1.0f;
-
-  for (i = 0; i < 3; i++)
-    orient_.dquat_[i] = 0.0f;
-
-  orient_.theta_ = 0.0f;
-#else
             orient_.yaw_ = 0.0f;
             orient_.pitch_ = 0.0f;
             orient_.roll_ = 0.0f;
-            //orient_.dyaw_   = 0.0f;
-            //orient_.dpitch_ = 0.0f;
-            //orient_.droll_  = 0.0f;
-#endif
+            orient_.dyaw_ = 0.0f;
+            orient_.dpitch_ = 0.0f;
+            orient_.droll_ = 0.0f;
 
             vuState_ = VU_MEM_STATE.VU_MEM_CREATED;
 
@@ -298,32 +289,11 @@ namespace FalconNet.VU
             share_.assoc_ = VU_ID.vuNullId;
             share_.ownerId_ = VUSTATIC.vuLocalSession; // need to fill in from id structure
             share_.id_.creator_ = share_.ownerId_.creator_;
-
-            if (typeindex == VU_UNKNOWN_ENTITY_TYPE)
-            {
-                share_.id_.num_ = 0;
-            }
-            else
-            {
-                CriticalSection.VuEnterCriticalSection();
-                if (vuAssignmentId < vuLowWrapNumber || vuAssignmentId > vuHighWrapNumber)
-                    vuAssignmentId = vuLowWrapNumber; // cover wrap
-                share_.id_.num_ = vuAssignmentId++;
-                while (VUSTATIC.vuDatabase.Find(Id()) != null || VUSTATIC.vuAntiDB.Find(Id()) != null)
-                {
-                    share_.id_.num_ = vuAssignmentId++;
-                }
-                CriticalSection.VuExitCriticalSection();
-            }
+            share_.id_.num_ = eid;
 
             lastUpdateTime_ = vuxGameTime;
             lastTransmissionTime_ = VUSTATIC.vuTransmitTime - VuRandomTime(UpdateRate());
             lastCollisionCheckTime_ = vuxGameTime;
-#if _DEBUG
-  vuentitycount ++;
-  if (vuentitycount > vuentitypeak)
-      vuentitypeak = vuentitycount;
-#endif
         }
 
         // setters
@@ -579,7 +549,7 @@ namespace FalconNet.VU
             {
                 if (sender.IsTarget())
                 {
-                    if (share_.flags_.transfer_ == null)
+                    if (share_.flags_.transfer_)
                     {
                         VuMessage resp = new VuErrorMessage(VUERROR.VU_CANT_TRANSFER_ENTITY_ERROR,
                                                              msg.Sender(), Id(), sender);
@@ -627,7 +597,7 @@ namespace FalconNet.VU
                 if (sender.IsTarget())
                 {
 
-                    if (share_.flags_.transfer_ == null)
+                    if (share_.flags_.transfer_)
                     {
                         resp = new VuErrorMessage(VUERROR.VU_CANT_TRANSFER_ENTITY_ERROR,
                                                   msg.Sender(), Id(), sender);
@@ -803,7 +773,7 @@ namespace FalconNet.VU
             return (VU_ID_NUMBER)rand.NextDouble() * UInt64.MaxValue;
         }
 
-        internal ShareData share_;
+        protected internal ShareData share_;
         internal PositionData pos_;
         internal OrientationData orient_;
 

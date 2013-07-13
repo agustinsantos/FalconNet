@@ -1,3 +1,4 @@
+using FalconNet.Common;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -4378,12 +4379,14 @@ namespace FalconNet.FalcLib
 
     public static class ClassTableStatic
     {
+        static int gLangIDNum = 1;
+
         /*
          * Class Table Constant Init Function
          */
-        public static void InitClassTableAndData(string fileName, object objset)
+        public static void InitClassTableAndData(string name, string objset)
         {
-#if TODO
+
             FileStream filePtr;
             string fileName;
 
@@ -4393,11 +4396,12 @@ namespace FalconNet.FalcLib
                 Debug.Assert("ObjectSet0708" == objset);
             }
 
-            fileName = FalconObjectDataDir + Path.DirectorySeparatorChar + name + ".ini";
+            fileName = F4Find.FalconObjectDataDir + Path.DirectorySeparatorChar + name + ".ini";
 
-            gLangIDNum = GetPrivateProfileInt("Lang", "Id", 0, fileName);
+            gLangIDNum = MultiplatformIni.GetPrivateProfileInt("Lang", "Id", 0, fileName);
 
-            filePtr = OpenCampFile(name, "ct", "rb");
+            filePtr = Camplib.OpenCampFile(name, "ct", FileAccess.Read);
+#if TODO        
             if (filePtr)
             {
                 fread(&NumEntities, sizeof(short), 1, filePtr);

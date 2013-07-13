@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FalconNet.Common;
 using FalconNet.FalcLib;
-using FalconNet.UI;
+//using FalconNet.UI;
 using FalconNet.VU;
 using Flight = FalconNet.Campaign.FlightClass;
 using Objective = FalconNet.Campaign.ObjectiveClass;
 using WayPoint=FalconNet.Campaign.WayPointClass;
 using Team=System.Int32;
 using GridIndex = System.Int16;
+using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
 	// Flight specific status flags

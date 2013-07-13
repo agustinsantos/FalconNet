@@ -3,6 +3,7 @@ using CellDataType=System.Byte;
 using System.Diagnostics;
 using GridIndex = System.Int16;
 using CellData=System.UInt16;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {
@@ -62,7 +63,7 @@ namespace FalconNet.Campaign
 			int data_ptr;
 	
 			FreeTheaterTerrain ();
-			data = CampaignStatic.ReadCampFile (name, "thr");
+			data = CampaignFile.ReadCampFile (name, "thr");
 			if (data == null)
 				return false;
 

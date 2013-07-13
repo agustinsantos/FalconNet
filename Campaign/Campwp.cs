@@ -5,6 +5,7 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
 using GridIndex = System.Int16;
+using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
     public static class CampwpStatic

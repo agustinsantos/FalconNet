@@ -12,105 +12,7 @@ using System.IO;
 
 namespace FalconNet.VU
 {
-    public abstract class VuMessageFilter
-    {
-        //VuMessageFilter() { }
-        //virtual ~VuMessageFilter() { }
-        public abstract VU_BOOL Test(VuMessage evnt);
-        public abstract VuMessageFilter Copy();
-    }
-
-    /// <summary>
-    /// The VuNullMessageFilter lets everything through
-    /// </summary>
-    public class VuNullMessageFilter : VuMessageFilter
-    {
-        public static readonly VuNullMessageFilter vuNullFilter = new VuNullMessageFilter();
-        //VuNullMessageFilter() : VuMessageFilter() { }
-        //virtual ~VuNullMessageFilter() { }
-        public override VU_BOOL Test(VuMessage evnt)
-        {
-            return true;
-        }
-
-        public override VuMessageFilter Copy()
-        {
-            return new VuNullMessageFilter();
-        }
-    }
-
-    /// <summary>
-    /// provided default filters
-    /// </summary>
-    public class VuMessageTypeFilter : VuMessageFilter
-    {
-
-        public VuMessageTypeFilter(ulong bitfield)
-        {
-            msgTypeBitfield_ = bitfield;
-        }
-
-        // virtual ~VuMessageTypeFilter();
-        public override VU_BOOL Test(VuMessage evnt)
-        {
-            return ((1 << (int)evnt.Type()) != 0 && msgTypeBitfield_ != 0) ? true : false;
-        }
-        public override VuMessageFilter Copy()
-        {
-            return new VuMessageTypeFilter(msgTypeBitfield_);
-        }
-
-        protected ulong msgTypeBitfield_;
-    }
-
-    // the VuStandardMsgFilter allows only these events:
-    //   - VuEvent(s) from a remote session
-    //   - All Delete and Release events
-    //   - All Create, FullUpdate, and Manage events
-    // it filters out these messages:
-    //   - All update events on unknown entities
-    //   - All update events on local entities
-    //   - All non-event messages (though this can be overridden)
-    public class VuStandardMsgFilter : VuMessageFilter
-    {
-
-        public VuStandardMsgFilter(VUBITS bitfield = VUBITS.VU_VU_EVENT_BITS)
-        {
-            msgTypeBitfield_ = bitfield;
-        }
-
-        //virtual ~VuStandardMsgFilter();
-        public override VU_BOOL Test(VuMessage message)
-        {
-            VUBITS eventBit = (VUBITS)(1 << (int)message.Type());
-            if ((eventBit & msgTypeBitfield_) == 0)
-            {
-                return false;
-            }
-            if ((eventBit & (VUBITS.VU_DELETE_EVENT_BITS | VUBITS.VU_CREATE_EVENT_BITS)) != 0)
-            {
-                return true;
-            }
-            if (message.Sender() == VUSTATIC.vuLocalSession)
-            {
-                return false;
-            }
-            // test to see if entity was found in database
-            if (message.Entity() != null)
-            {
-                return true;
-            }
-            return false;
-        }
-        public override VuMessageFilter Copy()
-        {
-            return new VuStandardMsgFilter(msgTypeBitfield_);
-        }
-
-        protected VUBITS msgTypeBitfield_;
-    }
-
-
+ 
 
     public delegate VU_BOOL EvalFunc(VuMessage msg, Object arg);
 
@@ -259,7 +161,7 @@ namespace FalconNet.VU
                 return 0;
 
             int retval = 0;
-            if (filter_.Test(evnt) && evnt.Type() != VU_MSG_TYPE.VU_TIMER_EVENT)
+            if (filter_.Test(evnt) && evnt.Type() != VU_MSG_DEF.VU_TIMER_EVENT)
             {
                 retval = 1;
                 evnt.Ref();
@@ -331,7 +233,7 @@ namespace FalconNet.VU
         //~VuMainMessageQueue();
 
         public override VuMessage DispatchVuMessage(VU_BOOL autod = false) { throw new NotImplementedException(); }
-        protected virtual int AddMessage(VuMessage evnt) // called only by PostVuMessage()
+        protected override int AddMessage(VuMessage evnt) // called only by PostVuMessage()
         { throw new NotImplementedException(); }
 
         // DATA

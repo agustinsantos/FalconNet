@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using FalconNet.FalcLib;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

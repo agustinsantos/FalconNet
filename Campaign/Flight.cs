@@ -8,7 +8,8 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using GridIndex = System.Int16;
-using FalconNet.Sim;
+using FalconNet.CampaignBase;
+//using FalconNet.Sim;
 
 namespace FalconNet.Campaign
 {

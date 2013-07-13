@@ -13,7 +13,9 @@ using GridIndex = System.Int16;
 using VU_BYTE = System.Byte;
 using Control = System.Byte;
 using System.Diagnostics;
-using FalconNet.Sim;
+//using FalconNet.Sim;
+using FalconNet.CampaignBase;
+using FalconNet.Campaign;
 
 //using VU_ERRCODE=System.Int32;
 

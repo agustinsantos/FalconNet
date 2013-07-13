@@ -4,6 +4,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Objective = FalconNet.Campaign.ObjectiveClass;
+using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {

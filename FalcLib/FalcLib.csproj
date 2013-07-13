@@ -34,10 +34,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="CampWeaponsFireMsg.cs" />
-    <Compile Include="Falcmesg.cs" />
+    <Compile Include="Messages\CampWeaponsFireMsg.cs" />
+    <Compile Include="Messages\FalcMesg.cs" />
     <Compile Include="mddriver.cs" />
     <Compile Include="F4Find.cs" />
+    <Compile Include="Messages\FalconATCCmdMessage.cs" />
+    <Compile Include="Messages\FalconATCMessage.cs" />
+    <Compile Include="Messages\FalconAWACSMessage.cs" />
+    <Compile Include="Messages\FalconCampDataMessage.cs" />
+    <Compile Include="Messages\FalconWeaponsFire.cs" />
     <Compile Include="PlayerOp.cs" />
     <Compile Include="PlayerOpDef.cs" />
     <Compile Include="rules.cs" />
@@ -55,19 +60,19 @@
     <Compile Include="FalcSess.cs" />
     <Compile Include="Classtbl.cs" />
     <Compile Include="FalcGame.cs" />
-    <Compile Include="Mesg.cs" />
+    <Compile Include="Messages\Mesg.cs" />
     <Compile Include="mesgr.cs" />
-    <Compile Include="ObjectiveMsg.cs" />
+    <Compile Include="Messages\ObjectiveMsg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
+      <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
+      <Name>CampaignBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
-      <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>

@@ -146,6 +146,7 @@ namespace FalconNet.Graphics
 
     public interface IContext
     {
+        bool Setup();
         bool Setup(ImageBuffer pIB, DXContext c);
 
         void Cleanup();
@@ -206,7 +207,7 @@ namespace FalconNet.Graphics
     }
 
 
-    public class ContextMPR
+    public class ContextMPR : IContext
     {
 
         public ContextMPR()
@@ -280,6 +281,17 @@ namespace FalconNet.Graphics
         public void UnlockViewport()
         { throw new NotImplementedException(); }
         //public void GetViewport(RECT* prc);
+
+
+        public void SelectForegroundColor(DWORD color)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Setup()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

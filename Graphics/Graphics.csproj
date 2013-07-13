@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Defines.cs" />
     <Compile Include="DrawBSP.cs" />
     <Compile Include="DrawGrnd.cs" />
     <Compile Include="GLContext.cs" />
@@ -50,7 +51,9 @@
     <Compile Include="ObjectLOD.cs" />
     <Compile Include="ObjectParent.cs" />
     <Compile Include="PalBank.cs" />
+    <Compile Include="Scripts.cs" />
     <Compile Include="star.cs" />
+    <Compile Include="TexBank.cs" />
     <Compile Include="TimeMgr.cs" />
     <Compile Include="Tod.cs" />
     <Compile Include="Ttypes.cs" />

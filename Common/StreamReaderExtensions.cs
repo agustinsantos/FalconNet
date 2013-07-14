@@ -27,6 +27,14 @@ namespace FalconNet.Common
 			return array;
 		}
 
+        public static byte[] ReadBytes(this Stream stream, int length)
+        {
+            byte[] array = new byte[length];
+            stream.Read(array, 0, length);
+
+            return array;
+        }
+
 		public static byte[] ReadBytes (this Stream stream, long offset, uint length)
 		{
 			return stream.ReadBytes (offset, (int)length);

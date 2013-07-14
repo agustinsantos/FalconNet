@@ -1,12 +1,11 @@
 // TODO delete this define, for the moment is just for testing purposes
 #define USE_GWEN
 
-using System;
-using FalconNet.UI;
+using FalconNet.F4Common;
 using FalconNet.FalcLib;
-using System.IO;
-using OpenTK;
 using FalconNet.Ui95;
+using OpenTK;
+using System;
 using System.Diagnostics;
 
 
@@ -66,8 +65,8 @@ namespace FalconNet.Main
 		
 		[STAThread]
 		public static void Main (string[] args)
-		{	
-
+		{
+            log4net.Config.XmlConfigurator.Configure();
 			TextWriterTraceListener tr1 = new TextWriterTraceListener(System.Console.Out);
 			Debug.Listeners.Add(tr1);
 			Debug.WriteLine ("FalconNet started...!");

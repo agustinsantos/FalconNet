@@ -41,7 +41,7 @@ namespace FalconNet.VU
 
         // data
 
-        // time of removal
+        // heading of removal
         public VU_TIME mark_;
     }
 

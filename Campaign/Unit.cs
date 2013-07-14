@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Unit=FalconNet.Campaign.UnitClass;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Path=FalconNet.Campaign.BasePathClass;
-using WayPoint=FalconNet.Campaign.WayPointClass;
+using WayPoint=FalconNet.CampaignBase.WayPointClass;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using VU_TIME = System.UInt64;

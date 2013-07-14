@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using VU_TIME = System.UInt64;
 
 namespace FalconNet.Sim
 {
     public class FackClass
     {
-
+#if TODO
         private bool mMasterCaution;
         private bool NeedsWarnReset;	//MI for Warn Reset switch
         private bool DidManWarnReset;	//MI for Warn Reset switch
@@ -395,5 +396,6 @@ namespace FalconNet.Sim
         }
 
         // TODO ~FackClass();
+#endif
     }
 }

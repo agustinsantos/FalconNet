@@ -1,6 +1,9 @@
-﻿using FalconNet.SimBase;
+﻿using FalconNet.Common.Encoding;
+using FalconNet.SimBase;
+using FalconNet.VU;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,7 +12,7 @@ namespace FalconNet.Sim
 
     public class SimMoverClass : SimBaseClass
     {
-
+#if TODO
         private int* switchData;
         private int* switchChange;
 
@@ -242,10 +245,16 @@ namespace FalconNet.Sim
             kias = new_kias;
         }
 
-
-        public SimMoverClass(int type);
-        public SimMoverClass(VU_BYTE** stream);
-        public SimMoverClass(FILE* filePtr);
+#endif
+        public SimMoverClass(int type) :base(type)
+        { throw new NotImplementedException(); }
+        public SimMoverClass(ByteWrapper buf)
+            : base(buf)
+        { throw new NotImplementedException(); }
+        public SimMoverClass(FileStream stream)
+            : base(stream)
+        { throw new NotImplementedException(); }
+#if TODO
         //TODO virtual ~SimMoverClass (void);
         public virtual void Init(SimInitDataClass* initData)
         {
@@ -602,8 +611,8 @@ namespace FalconNet.Sim
 	SimVuDriver *drive = new SimVuDriver(this);
 	drive.ExecDR(vuxGameTime);
 	SimVuDriver *oldd = (SimVuDriver *)SetDriver (drive);
-	if ( oldd )
-		delete oldd;
+    //if ( oldd )
+    //    delete oldd;
 }
 
         public virtual void MakeRemote(){
@@ -611,7 +620,7 @@ namespace FalconNet.Sim
 	SimBaseClass.MakeRemote();
 	
 	// Allocate and init nonLocal Data
-	nonLocalData = new SimBaseNonLocalData;
+	nonLocalData = new SimBaseNonLocalData();
 	nonLocalData.flags = 0;
 	nonLocalData.smokeTrail = null;
 	nonLocalData.timer3 = (float)SimLibElapsedTime / SEC_TO_MSEC;
@@ -985,5 +994,6 @@ VuGridIterator gridIt(ObjProxList, YPos(), XPos(), 3.0F * NM_TO_FT);
         public virtual VU_ERRCODE InsertionCallback();
         public virtual VU_ERRCODE RemovalCallback();
         public virtual bool IsMover() { return true; }
+#endif
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using DWORD = System.UInt32;
+using FalconNet.F4Common;
 
 namespace FalconNet.UI
 {
@@ -321,8 +322,8 @@ namespace FalconNet.UI
 			string path;
 		
 			Debug.Assert (!string.IsNullOrEmpty (PilotName));
-		
-			path = F4Find.FalconDataDirectory + "config" + System.IO.Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
+
+            path = F4File.FalconDataDirectory + "config" + System.IO.Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
 			
 			fp = File.OpenRead (path);
 #if TODO // Handle error....

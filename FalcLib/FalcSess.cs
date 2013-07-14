@@ -4,6 +4,7 @@ using FalconNet.VU;
 using FalconNet.Common;
 using VU_BYTE = System.Byte;
 using FalconNet.CampaignBase;
+using FalconNet.F4Common;
 namespace FalconNet.FalcLib
 {
     public class FlightClass

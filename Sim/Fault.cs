@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using VU_TIME = System.UInt64;
 
 namespace FalconNet.Sim
 {
     class FaultClass
     {
-
+#if TODO
 
         public const int MAX_MFL = 17; // 15 + T/O Land
 
@@ -536,5 +537,6 @@ namespace FalconNet.Sim
 					"RST",	"TEMP",
 					"WARN",  ""
             };
+#endif
     }
 }

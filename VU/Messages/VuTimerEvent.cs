@@ -64,7 +64,7 @@ namespace FalconNet.VU
 
         // data
 
-        // time of firing
+        // heading of firing
         public VU_TIME mark_;
         public TIMERTYPES timertype_;
         // event to launch on firing

@@ -21,7 +21,7 @@ namespace FalconNet.Graphics
     public class ObjectParent
     {
 
-        // Update this each time the object file formats change
+        // Update this each heading the object file formats change
         public const UInt32 FORMAT_VERSION = 0x03087000;
 
 

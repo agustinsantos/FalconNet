@@ -1,12 +1,12 @@
+using FalconNet.Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using FalconNet.Sim;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 
-namespace FalconNet.UI
+namespace FalconNet.F4Common
 {
 	public class ConfigOption<T>
 	{
@@ -488,7 +488,12 @@ bool g_b3dHUD = true;
 		public static float g_fclientbwforupdatesmodifyerMAX = 0.8f;
 		public static float g_fclientbwforupdatesmodifyerMIN = 0.7f;
 		public static float g_fReliablemsgwaitMAX = 60000;
-		private static readonly IDictionary<string, Action<bool> > BoolOpts = new Dictionary<string, Action<bool> > (){
+
+        // Wombat778 11-5-03 Allow waypoints to be placed with greater precision.  Needs testing, so disabled by default.
+        public static bool g_bPrecisionWaypoints = false;
+
+		private static readonly IDictionary<string, Action<bool> > BoolOpts = 
+            new Dictionary<string, Action<bool> > (){
 		//	{ "EnableCATIIIExtension", v => g_bEnableCATIIIExtension = v },	MI
 			{ "ForceDXMultiThreadedCoopLevel", v => g_bForceDXMultiThreadedCoopLevel = v },
 			{ "EnableABRelocation", v => g_bEnableABRelocation = v },
@@ -638,7 +643,9 @@ bool g_b3dHUD = true;
 			{ "EmergencyJettisonFix", v => g_bEmergencyJettisonFix = v },
 			{ "OldSamActivity", v => g_bOldSamActivity = v }, // no LOS check and stuff - just the old code
 			{ "SAM2D3DHandover", v => g_bSAM2D3DHandover = v },
-			{ "MavFix2", v => g_bMavFix2 = v }
+			{ "MavFix2", v => g_bMavFix2 = v },
+
+             { "PrecisionWaypoints", v => g_bPrecisionWaypoints= v},
 		};
 		private static readonly IDictionary<string, Action<int> > IntOpts = new Dictionary<string, Action<int> > (){
 			{ "ThrottleMode", v => g_nThrottleMode = v },

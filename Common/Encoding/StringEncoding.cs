@@ -53,11 +53,17 @@ namespace FalconNet.Common.Encoding
         }
         public static String Decode(ByteWrapper buffer)
         {
-            throw new NotImplementedException();
+            int len = buffer.GetByte();
+            len &= 0xff;
+            byte[] buf = buffer.GetBytes(len);
+            return System.Text.Encoding.Unicode.GetString(buf);
         }
         public static String Decode(Stream stream)
         {
-            throw new NotImplementedException();
+            int len = stream.ReadByte();
+            len &= 0xff;
+            byte[] buf = stream.ReadBytes(0, len);
+            return System.Text.Encoding.Unicode.GetString(buf);
         }
 
         public static int Size
@@ -118,13 +124,19 @@ namespace FalconNet.Common.Encoding
         {
             throw new NotImplementedException();
         }
-        public static String DecodeShortLE(ByteWrapper buffer)
+        public static String Decode(ByteWrapper buffer)
         {
-            throw new NotImplementedException();
+            int len = buffer.GetByte();
+            len &= 0xff;
+            byte[] buf = buffer.GetBytes(len);
+            return System.Text.Encoding.Unicode.GetString(buf);
         }
         public static String Decode(Stream stream)
         {
-            throw new NotImplementedException();
+            int len = stream.ReadByte();
+            len &= 0xff;
+            byte[] buf = stream.ReadBytes(0, len);
+            return System.Text.Encoding.Unicode.GetString(buf);
         }
 
         public static int Size

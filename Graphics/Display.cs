@@ -48,7 +48,7 @@ namespace FalconNet.Graphics
 
         // public virtual ~VirtualDisplay()	{ Debug.Assert( ready == false ); };
 
-        // One time call to create inverse font
+        // One heading call to create inverse font
         public static void InitializeFonts()
         {
 #if TODO
@@ -603,7 +603,7 @@ namespace FalconNet.Graphics
 
         /***************************************************************************\
             This function is used by 3d canvas and is needed to do the boxed strings
-            since we do 1 char at a time in the canvas
+            since we do 1 char at a heading in the canvas
         \***************************************************************************/
         public virtual void ScreenChar(float xLeft, float yTop, string str, int boxed = 0)
         {

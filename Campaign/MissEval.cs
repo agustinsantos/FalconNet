@@ -7,7 +7,7 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using Flight = FalconNet.Campaign.FlightClass;
 using Objective = FalconNet.Campaign.ObjectiveClass;
-using WayPoint=FalconNet.Campaign.WayPointClass;
+using WayPoint=FalconNet.CampaignBase.WayPointClass;
 using Team=System.Int32;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;

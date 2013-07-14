@@ -107,7 +107,7 @@ namespace FalconNet.Graphics
 #endif
             }
 
-            // Now put the extra reference back for next time (to hold the MPR palette once its loaded)
+            // Now put the extra reference back for next heading (to hold the MPR palette once its loaded)
             for (id = 0; id < nPalettes; id++)
             {
                 PalettePool[id].Reference();

@@ -29,6 +29,7 @@ namespace FalconNet.Sim
     // They don't need a complex thingamabob
     public class BasicWeaponStation
     {
+#if TODO
 #if USE_SH_POOLS
    public:
       // Overload new/delete to use a SmartHeap fixed size pool
@@ -74,10 +75,12 @@ namespace FalconNet.Sim
         public virtual void SetWeaponClass(WeaponClass wc) { }
         public abstract GunClass GetGun();
         public virtual void SetGun(GunClass gun) { }
+#endif
     }
 
     public class AdvancedWeaponStation : BasicWeaponStation
     {
+#if TODO
 #if USE_SH_POOLS
    public:
       // Overload new/delete to use a SmartHeap fixed size pool
@@ -137,5 +140,6 @@ namespace FalconNet.Sim
         public virtual void SetWeaponClass(WeaponClass wc) { weaponData.weaponClass = wc; }
         public virtual GunClass GetGun() { return aGun; }
         public virtual void SetGun(GunClass gun) { aGun = gun; }
+#endif
     }
 }

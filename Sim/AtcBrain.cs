@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using VU_BYTE = System.Byte;
+using VU_TIME = System.UInt64;
 
 namespace FalconNet.Sim
 {
@@ -66,16 +68,16 @@ public:
 	runwayQueueStruct()		{ deletor = null; deleteLine = 0; };
 	~runwayQueueStruct()	{ ShiAssert( !"We don't want to do this while testing (except for shutdown)" ); };
 #else
-    public struct runwayQueueStruct
+    public class runwayQueueStruct
     {
 #endif
 
         public VU_ID aircraftID;				//which plane is it
         public AtcStatusEnum status;					//at what point in the landing/takeoff process
         public VU_TIME schedTime;				//when scheduled to be on runway
-        public VU_TIME lastContacted;			//time last talked to
+        public VU_TIME lastContacted;			//heading last talked to
         //	int					curTaxiPoint;			//used for tracking players
-        //	int					timer;					//at what time have I been in my current state too long
+        //	int					timer;					//at what heading have I been in my current state too long
         int rwindex;				//what runway I'm supposed to use
         public runwayQueueStruct next;
         public runwayQueueStruct prev;
@@ -100,7 +102,7 @@ public:
     }
 #endif
 
-    public struct runwayStatsStruct
+    public class runwayStatsStruct
     {
         public int[] rwIndexes = new int[2];						//rwindexes into PtHeaderDataTable for this runway
         public float halfwidth;
@@ -115,6 +117,7 @@ public:
 
     public class ATCBrain
     {
+#if TODO
 #if USE_SH_POOLS
    public:
       // Overload new/delete to use a SmartHeap fixed size pool
@@ -4800,6 +4803,6 @@ public:
             }
             return FALSE;
         }
-
+#endif
     }
 }

@@ -42,7 +42,7 @@ namespace FalconNet.Graphics
 
         /***************************************************************************\
             Store some useful global information.  The RC is used for loading.
-            This means that at present, only one device at a time can load textures
+            This means that at present, only one device at a heading can load textures
             through this interface.
         \***************************************************************************/
         public static void SetupForDevice(DXContext texRC)

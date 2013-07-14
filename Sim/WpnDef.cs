@@ -16,6 +16,7 @@ namespace FalconNet.Sim
 
         public SimWpnDefinition(string fileName)
         {
+#if TODO
             SimlibFileClass* wpnFile;
 
             wpnFile = SimlibFileClass.Open(fileName, SIMLIB_READ);
@@ -35,6 +36,8 @@ namespace FalconNet.Sim
 
             wpnFile.Close();
             //TODO delete wpnFile;
+#endif
+            throw new NotImplementedException();
         }
 
         //TODO public ~SimWpnDefinition (void);

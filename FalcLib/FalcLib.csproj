@@ -34,6 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="EntityEnum.cs" />
+    <Compile Include="FEC_FLAGS.cs" />
+    <Compile Include="FEC_RADAR.cs" />
     <Compile Include="Messages\CampWeaponsFireMsg.cs" />
     <Compile Include="Messages\FalcMesg.cs" />
     <Compile Include="mddriver.cs" />
@@ -50,7 +53,7 @@
     <Compile Include="SoundGroups.cs" />
     <Compile Include="Camplib.cs" />
     <Compile Include="entity.cs" />
-    <Compile Include="FalcEnt.cs" />
+    <Compile Include="Entities\FalconEntity.cs" />
     <Compile Include="Campweap.cs" />
     <Compile Include="dispcfg.cs" />
     <Compile Include="dirtybits.cs" />
@@ -73,6 +76,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{EDA4023D-884D-4F58-9E25-0F77A34CF43C}</Project>

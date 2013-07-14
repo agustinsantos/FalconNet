@@ -1,4 +1,6 @@
+using FalconNet.CampaignBase;
 using FalconNet.Common;
+using FalconNet.F4Common;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -4396,11 +4398,11 @@ namespace FalconNet.FalcLib
                 Debug.Assert("ObjectSet0708" == objset);
             }
 
-            fileName = F4Find.FalconObjectDataDir + Path.DirectorySeparatorChar + name + ".ini";
+            fileName = F4File.FalconObjectDataDir + Path.DirectorySeparatorChar + name + ".ini";
 
             gLangIDNum = MultiplatformIni.GetPrivateProfileInt("Lang", "Id", 0, fileName);
 
-            filePtr = Camplib.OpenCampFile(name, "ct", FileAccess.Read);
+            filePtr = F4File.OpenCampFile(name, "ct", FileAccess.Read);
 #if TODO        
             if (filePtr)
             {

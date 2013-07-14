@@ -377,7 +377,7 @@ namespace FalconNet.Graphics
         protected uint startSFrame; // in ms
         protected TYPES2D typeData;		// data for anim type
         protected bool startFade;			// start fading?
-        protected bool explicitStartTime;	// caller set start time
+        protected bool explicitStartTime;	// caller set start heading
         protected Texture curTex;		// last valid texture we got
         protected Tpoint[] oVerts = new Tpoint[4];		// object space verts
         protected Tpoint[] uvCoords = new Tpoint[4];		// x = u, y = v
@@ -408,7 +408,7 @@ namespace FalconNet.Graphics
         protected void APLScatterPlot(RenderOTW renderer)
         { throw new NotImplementedException(); }
 
-        // Handle time of day notifications
+        // Handle heading of day notifications
         protected void TimeUpdateCallback(object unused)
         {
 #if TODO

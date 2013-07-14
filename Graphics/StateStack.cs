@@ -301,7 +301,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        // Called by BRoot nodes at draw time
+        // Called by BRoot nodes at draw heading
         // This call is for the BSPlib to call to draw a child instance attached to a slot.
         public static void DrawSubObject(ObjectInstance objInst, Pmatrix rot, Tpoint pos)
         {

@@ -1,8 +1,11 @@
-﻿using FalconNet.Graphics;
+﻿using FalconNet.FalcLib;
+using FalconNet.Graphics;
+using FalconNet.SimBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VU_TIME = System.UInt64;
 
 namespace FalconNet.Sim
 {
@@ -25,6 +28,7 @@ namespace FalconNet.Sim
 
     public class GunClass : SimWeaponClass
     {
+#if TODO
         // returned by tracer checks
         public const int TRACER_HIT_NOTHING = 0x00000000;
         public const int TRACER_HIT_FEATURE = 0x00000001;
@@ -74,7 +78,7 @@ namespace FalconNet.Sim
         public enum GunStatus { Ready, Sim, Safe };
         public float initBulletVelocity;
         public GunStatus status;
-        public GunTracerType* bullet;
+        public GunTracerType bullet;
         public float roundsPerSecond;
         public int numRoundsRemaining;
         public int numTracers;
@@ -111,8 +115,8 @@ namespace FalconNet.Sim
         public bool IsShell();
         public bool IsTracer();
         public bool ReadyToFire();
-        public float GetDamageAssessment(SimBaseClass* target, float range);
-        public void FireShell(SimObjectType* target);
+        public float GetDamageAssessment(SimBaseClass target, float range);
+        public void FireShell(SimObjectType target);
         public void UpdateShell();
         public WeaponDomain GetSMSDomain();
 
@@ -123,11 +127,12 @@ namespace FalconNet.Sim
 
         // member variables
         public WeaponDomain gunDomain;				// air, land, both
-        public SimObjectType* shellTargetPtr;		// set when shell flying
+        public SimObjectType shellTargetPtr;		// set when shell flying
         public GunType typeOfGun;				// tracer or shell
         public VU_TIME shellDetonateTime;		// when it goes cablooey
         public float minShellRange;			// minimum for shell
         public float maxShellRange;			// max for shell
-        public WeaponClassDataType* wcPtr;					// pointer to weapon class data
-    }
+        public WeaponClassDataType wcPtr;					// pointer to weapon class data
+#endif
+        }
 }

@@ -32,19 +32,7 @@ namespace FalconNet.FalcLib
 		VIS_BOTH_DEST	=6
 	}
 
-	public struct vector
-	{
-		public float		x;
-		public float		y;
-		public float		z;
-	};
 
-	public struct euler
-	{
-		public float		yaw;
-		public float		pitch;
-		public float		roll;
-	};
 
 	// =========================
 	// Function Prototypes
@@ -78,7 +66,7 @@ namespace FalconNet.FalcLib
 		// Default values
 		// ========================
 
-		public const int  F4_EVENT_QUEUE_SIZE = 2000;		// How many events we can have on the queue at one time
+		public const int  F4_EVENT_QUEUE_SIZE = 2000;		// How many events we can have on the queue at one heading
 
 		public static VuMainThread gMainThread;
 		public static int NumEntities;

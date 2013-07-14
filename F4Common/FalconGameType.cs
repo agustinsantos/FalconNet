@@ -1,5 +1,5 @@
 ﻿
-namespace FalconNet.CampaignBase
+namespace FalconNet.F4Common
 {
     // ==========================================
     // Game types

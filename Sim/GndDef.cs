@@ -10,8 +10,9 @@ namespace FalconNet.Sim
 
         public SimGroundDefinition(string fileName)
         {
+#if TODO
             int i;
-            SimlibFileClass* gndFile;
+            SimlibFileClass gndFile;
 
             gndFile = SimlibFileClass.Open(fileName, SIMLIB_READ);
 
@@ -29,6 +30,8 @@ namespace FalconNet.Sim
             }
             gndFile.Close();
             //TODO delete gndFile;
+#endif
+            throw new NotImplementedException();
         }
         //TODO public ~SimGroundDefinition (void);
     }

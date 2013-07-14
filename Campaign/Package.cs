@@ -1,7 +1,7 @@
 using System;
 using FalconNet.VU;
 using GridIndex = System.Int16;
-using WayPoint=FalconNet.Campaign.WayPointClass;
+using WayPoint=FalconNet.CampaignBase.WayPointClass;
 using Flight=FalconNet.Campaign.FlightClass;
 using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.FalcLib;

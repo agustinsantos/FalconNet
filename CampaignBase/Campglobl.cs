@@ -9,7 +9,7 @@ namespace FalconNet.CampaignBase
         // Type Definitions
         // ----------------
 
-        public const float GRID_SIZE_FT = Constants.FEET_PER_KM;		// Grid size, in feet (standard sim unit)
+        public const float GRID_SIZE_FT = Phyconst.FEET_PER_KM;		// Grid size, in feet (standard sim unit)
         public const float GRID_SIZE_KM = 1.0F;			// Grid size, in km (standard campaign unit)
 
         public const float DEG_TO_RADIANS = 0.017453F;		// PI / 180

@@ -14,7 +14,7 @@ namespace FalconNet.Graphics
 
 
     // This structure is used in the viewpoint sorting to move objects directly to the list
-    // they should go to, instead of only allowing them to go up or down one level at a time
+    // they should go to, instead of only allowing them to go up or down one level at a heading
     internal class TransportStr
     {
         const int _NUM_OBJECT_LISTS_ = 5;

@@ -6,6 +6,7 @@ using System.IO;
 using System.Diagnostics;
 using DWORD = System.UInt32;
 using FalconNet.CampaignBase;
+using FalconNet.Common.Maths;
  
 namespace FalconNet.FalcLib
 {

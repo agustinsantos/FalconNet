@@ -20,6 +20,7 @@ namespace FalconNet.Sim
 
         public SimACDefinition(string fileName)
         {
+#if TODO
             int i;
             SimlibFileClass* acFile;
 
@@ -57,6 +58,8 @@ namespace FalconNet.Sim
 
             acFile.Close();
             //TODO delete acFile;
+#endif
+            throw new NotImplementedException();
         }
 
         // TODO public ~SimACDefinition (void);

@@ -16,6 +16,7 @@ namespace FalconNet.Sim
 
         public SimHeloDefinition(string fileName)
         {
+#if TODO
             int i;
             SimlibFileClass* heloFile;
 
@@ -36,6 +37,8 @@ namespace FalconNet.Sim
             }
             heloFile.Close();
             //TODO delete heloFile;
+#endif
+            throw new NotImplementedException();
         }
         //TODO public ~SimHeloDefinition (void);
         int airframeIndex;

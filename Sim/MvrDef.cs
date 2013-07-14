@@ -24,8 +24,9 @@ namespace FalconNet.Sim
         //TODO public virtual ~SimMoverDefinition();
         public static void ReadSimMoverDefinitionData()
         {
+#if TODO
             int i;
-            SimlibFileClass* vehList;
+            SimlibFileClass vehList;
             MoverType vehicleType;
 
             vehList = SimlibFileClass.Open(SIM_VEHICLE_DEFINITION_FILE, SIMLIB_READ);
@@ -71,6 +72,8 @@ namespace FalconNet.Sim
             }
             vehList.Close();
             //TODO delete vehList;
+#endif
+            throw new NotImplementedException();
         }
 
         public static void FreeSimMoverDefinitionData()

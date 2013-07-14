@@ -6,52 +6,16 @@ using Control = System.Byte;
 using VU_TIME = System.UInt64;
 using VU_ID_NUMBER = System.UInt64;
 using FalconNet.CampaignBase;
+using FalconNet.Common.Maths;
 
 namespace FalconNet.FalcLib
 {
-
-
-    [Flags]
-    public enum FEC_FLAGS : byte
-    {
-        FEC_HOLDSHORT = 0x01,		// Don't takeoff until a player attaches
-        FEC_PLAYERONLY = 0x02,		// This entity is only valid if under player control
-        FEC_HASPLAYERS = 0x04,		// One or more player is attached to this entity
-        FEC_REGENERATING = 0x08,		// This entity is undead.
-        FEC_PLAYER_ENTERING = 0x10,		// A player is soon to attach to this aircraft/flight
-        FEC_INVULNERABLE = 0x20		// This thing can't be destroyed
-    }
-
-    [Flags]
-    public enum EntityEnum : sbyte
-    {
-        FalconCampaignEntity = 0x1,
-        FalconSimEntity = 0x2,
-        FalconPersistantEntity = 0x8,
-        FalconSimObjective = 0x20
-    }
-
-    // Radar Modes
-    public enum FEC_RADAR
-    {
-        FEC_RADAR_OFF = 0x00,	   	// Radar always off
-        FEC_RADAR_SEARCH_100 = 0x01,	   	// Search Radar - 100 % of the time (always on)
-        FEC_RADAR_SEARCH_1 = 0x02,	   	// Search Sequence #1
-        FEC_RADAR_SEARCH_2 = 0x03,	   	// Search Sequence #2
-        FEC_RADAR_SEARCH_3 = 0x04,	   	// Search Sequence #3
-        FEC_RADAR_AQUIRE = 0x05,	   	// Aquire Mode (looking for a target)
-        FEC_RADAR_GUIDE = 0x06,	   	// Missile in flight. Death is imminent
-        FEC_RADAR_CHANGEMODE = 0x07	   	// Missile in flight. Death is imminent
-    }
-
     // ================================
     // FalcEntity class
     // ================================
 
     public abstract class FalconEntity : VuEntity
     {
-
-
         public FalconEntity(ushort type, VU_ID_NUMBER eid)
             : base(type, eid)
         {

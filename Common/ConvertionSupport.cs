@@ -61,7 +61,7 @@ namespace FalconNet.Common
     public struct FalconEjectMessage { }
     public struct FalconLandingMessage { }
     public struct LoadoutStruct { }
-    public struct CampaignHeading { }
+    
 
     public struct SmallPathClass
     {

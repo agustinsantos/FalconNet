@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestVU", "UnitTestVU\Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampaignBase", "CampaignBase\CampaignBase.csproj", "{5446161E-DB85-46E2-92AD-473B72766618}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F4Common", "F4Common\F4Common.csproj", "{28DAF802-4D24-475B-B3EB-2BE45DC2CFE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{5446161E-DB85-46E2-92AD-473B72766618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5446161E-DB85-46E2-92AD-473B72766618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5446161E-DB85-46E2-92AD-473B72766618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28DAF802-4D24-475B-B3EB-2BE45DC2CFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28DAF802-4D24-475B-B3EB-2BE45DC2CFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28DAF802-4D24-475B-B3EB-2BE45DC2CFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28DAF802-4D24-475B-B3EB-2BE45DC2CFE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

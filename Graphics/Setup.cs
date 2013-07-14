@@ -90,7 +90,7 @@ namespace FalconNet.Graphics
         /***************************************************************************\
             Load all data and create all structures which require a specific 
             graphics device to be identified.  For now, this can only be done
-            for one device at a time.  In the future, we might allow multiple
+            for one device at a heading.  In the future, we might allow multiple
             simultanious graphics devices through this interface.
         \***************************************************************************/
         public static void DeviceDependentGraphicsSetup(DisplayDevice dd)

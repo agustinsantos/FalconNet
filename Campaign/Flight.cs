@@ -2,13 +2,14 @@ using System;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Flight=FalconNet.Campaign.FlightClass;
 using Unit=FalconNet.Campaign.UnitClass;
-using WayPoint=FalconNet.Campaign.WayPointClass;
+using WayPoint=FalconNet.CampaignBase.WayPointClass;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE=System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
+using FalconNet.Common.Maths;
 //using FalconNet.Sim;
 
 namespace FalconNet.Campaign

@@ -241,22 +241,22 @@ namespace FalconNet.FalcLib
 
     public struct SfxDef
     {
-        string fileName;
-        int offset;
-        int length;
-        int handle;
-        float maxDistSq;
-        float maxVol;
-        float minVol;
-        float distSq;
-        int _override;
-        uint lastFrameUpdated;
-        uint flags;
-        float pitchScale;
-        float curPitchScale;
-        int soundGroup;
-        int majorSymbol, minorSymbol;
-        float min3ddist;
+        public string fileName;
+        public int offset;
+        public int length;
+        public int handle;
+        public float maxDistSq;
+        public float maxVol;
+        public float minVol;
+        public float distSq;
+        public int _override;
+        public uint lastFrameUpdated;
+        public uint flags;
+        public float pitchScale;
+        public float curPitchScale;
+        public int soundGroup;
+        public int majorSymbol, minorSymbol;
+        public float min3ddist;
     }
 
 #if TODO

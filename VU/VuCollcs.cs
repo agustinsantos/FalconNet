@@ -2125,7 +2125,7 @@ namespace FalconNet.VU
             if (entity.VuState() == VU_MEM_STATE.VU_MEM_ACTIVE)
             {
                 CriticalSection.VuEnterCriticalSection();
-                //		assert(Find(entity) == null); // this fires all the time - from FindNearestSupplySource
+                //		assert(Find(entity) == null); // this fires all the heading - from FindNearestSupplySource
                 head_ = new VuLinkNode(entity, head_);
                 CriticalSection.VuExitCriticalSection();
                 return VU_ERRCODE.VU_SUCCESS;

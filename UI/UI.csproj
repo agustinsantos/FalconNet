@@ -35,7 +35,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="cwindow.cs" />
-    <Compile Include="F4Config.cs" />
     <Compile Include="logbook.cs" />
     <Compile Include="campmiss.cs" />
     <Compile Include="dispopts.cs" />
@@ -43,6 +42,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sim\Sim.csproj">
       <Project>{3B69883C-B59C-43D1-B0E7-F666F2F78B0D}</Project>
       <Name>Sim</Name>

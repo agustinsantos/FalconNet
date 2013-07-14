@@ -5303,7 +5303,7 @@ namespace FalconNet.Graphics
             throw new NotImplementedException();
         }
 
-        // Handle time of day and lighting stuff
+        // Handle heading of day and lighting stuff
         protected virtual void SetTimeOfDayColor()
         {
  #if TODO

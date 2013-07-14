@@ -15,7 +15,7 @@ namespace FalconNet.Sim
 
     public class SMSBaseClass
     {
-
+#if TODO
 #if USE_SH_POOLS
       // Overload new/delete to use a SmartHeap fixed size pool
       void *operator new(size_t size) { Debug.Assert( size == sizeof(SMSBaseClass) ); return MemAllocFS(pool);	};
@@ -3822,6 +3822,7 @@ namespace FalconNet.Sim
 
             return weapPtr;
         }
+#endif
     }
 
 

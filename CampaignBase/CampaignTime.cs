@@ -14,16 +14,26 @@ namespace FalconNet.CampaignBase
         {
             time = t;
         }
+
         public static CampaignTime operator +(CampaignTime c1, CampaignTime c2)
         {
             return new CampaignTime(c1.time + c2.time);
         }
+
         public static CampaignTime operator -(CampaignTime c1, CampaignTime c2)
         {
             return new CampaignTime(c1.time - c2.time);
         }
+
         public static implicit operator ulong(CampaignTime t)
-        { return t.time; }
+        { 
+            return t.time;
+        }
+
+        public static implicit operator CampaignTime(ulong t)
+        {
+            return new CampaignTime(t);
+        }
     }
 
 

@@ -3,8 +3,9 @@ using FalconNet.VU;
 using FalconNet.Common;
 using System.IO;
 using FalconNet.FalcLib;
-using FalconNet.FalcSnd;
 using FalconNet.Graphics;
+using VU_BYTE = System.Byte;
+using VU_TIME = System.UInt64;
 
 namespace FalconNet.Sim
 {
@@ -27,7 +28,12 @@ namespace FalconNet.Sim
 
     public class AircraftClass : SimVehicleClass
     {
-
+        // TODO, inserted just for compilation, not in the original code!
+        public AircraftClass(): base(0)
+        {
+            throw new NotImplementedException();
+        }
+#if TODO
         public const int FLARE_STATION = 0;
         public const int CHAFF_STATION = 1;
         public const int DEBRIS_STATION = 2;
@@ -1122,6 +1128,7 @@ namespace FalconNet.Sim
 
         public void ShowDamage()
         {
+#if TODO
             BOOL hasMilSmoke = false;
             float radius;
             Tpoint pos, rearOffset;
@@ -1414,7 +1421,8 @@ namespace FalconNet.Sim
                 ioPerturb = 0.5f + (1.0f - pctStrength);
                 // good place also to stick in a damage, clunky sound....
             }
-
+#endif 
+            throw new NotImplementedException();
         }
 
 
@@ -2452,6 +2460,7 @@ int failedFunc;
         private void DeployDragChute(int n);
 
         private int FindBestSpawnPoint(ObjectiveClass* obj, SimInitDataClass* initData);
+#endif
     }
 }
 

@@ -1,34 +1,22 @@
-﻿using System;
-using CellDataType=System.Byte;
+﻿using FalconNet.CampaignBase;
+using FalconNet.Common.Encoding;
+using FalconNet.F4Common;
+using System;
 using System.Diagnostics;
+using System.IO;
+using CellData = System.UInt16;
+using CellDataType = System.Byte;
 using GridIndex = System.Int16;
-using CellData=System.UInt16;
-using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {
-	// ====================
-	// Campaign Terrain ADT
-	// ====================
-	public struct GridLocation
-	{
-		public GridIndex x;
-		public GridIndex y;
-	} ;
+
 
 	// ---------------------------------------
 	// Type and public static al Function Declarations
 	// ---------------------------------------
 	public static class CampTerrStatic
 	{
-		public const int GroundCoverMask = 0x0F; // 0xF0
-		public const int GroundCoverShift = 0;
-		public const int ReliefMask = 0x30; // 0xCF
-		public const int ReliefShift = 4;
-		public const int RoadMask = 0x40; // 0xBF
-		public const int RoadShift = 6;
-		public const int RailMask = 0x80; // 0x7F
-		public const int RailShift = 7;
 		public static short Map_Max_X = 0;							// World Size, in grid coordinates
 		public static short Map_Max_Y = 0;
 		
@@ -38,18 +26,16 @@ namespace FalconNet.Campaign
 		// =============================================
                        
 		private static CellDataType[] 	TheaterCells = null;
-		private static byte	EastLongitude;
-		private static byte	SouthLatitude;
-		private static float Latitude;
-		private static float Longitude;
-		private static float CellSizeInKilometers;
+        //private static byte	EastLongitude;
+        //private static byte	SouthLatitude;
+        //private static float Latitude;
+        //private static float Longitude;
+        //private static float CellSizeInKilometers;
 		
 		public static void InitTheaterTerrain ()
 		{
 			if (TheaterCells != null)
 				FreeTheaterTerrain ();
-			TheaterCells = new CellDataType[Map_Max_X * Map_Max_Y];
-			//TODO memset(TheaterCells,0,sizeof(CellDataType)*Map_Max_X*Map_Max_Y);
 		}
 
 		public static void FreeTheaterTerrain ()
@@ -59,20 +45,15 @@ namespace FalconNet.Campaign
 
 		public static bool LoadTheaterTerrain (string name)
 		{
-			byte[] data;
-			int data_ptr;
+            ByteWrapper data;
 	
 			FreeTheaterTerrain ();
-			data = CampaignFile.ReadCampFile (name, "thr");
+			data = F4File.ReadCampFile (name, "thr");
 			if (data == null)
 				return false;
-
-			data_ptr = 0;
 	
-			Map_Max_X = BitConverter.ToInt16 (data, data_ptr);
-			data_ptr += sizeof(short);
-			Map_Max_Y = BitConverter.ToInt16 (data, data_ptr);
-			data_ptr += sizeof(short);
+			Map_Max_X = Int16EncodingLE.Decode(data);
+            Map_Max_Y = Int16EncodingLE.Decode(data);
 
 #if DEBUG
 			//TODO Debug.Assert(Map_Max_X == CampaignClass.TheCampaign.TheaterSizeX);
@@ -82,22 +63,41 @@ namespace FalconNet.Campaign
 			InitTheaterTerrain ();
 	
 			TheaterCells = new CellDataType[sizeof(CellDataType) * Map_Max_X * Map_Max_Y];
-			//TODO copy data to TheaterCells
-			//memcpy (TheaterCells, data_ptr, sizeof (CellDataType) * Map_Max_X * Map_Max_Y);
-			Array.Copy(data,data_ptr, TheaterCells, 0,Map_Max_X * Map_Max_Y);
-			data = null;
+			//copy data to TheaterCells
+            TheaterCells = data.GetBytes(Map_Max_X * Map_Max_Y);
 			return true;
 		}
 
-		public static int LoadTheaterTerrainLight (string name)
-		{
-			throw new NotImplementedException ();
-		}
+        public static bool LoadTheaterTerrainLight(string fileName)
+        {
+            FileStream fp;
 
-		public static int SaveTheaterTerrain (string FileName)
-		{
-			throw new NotImplementedException ();
-		}
+            FreeTheaterTerrain();
+            if ((fp = F4File.OpenCampFile(fileName, "thr", FileAccess.Read)) == null)
+                return false;
+
+            Map_Max_X = Int16EncodingLE.Decode(fp);
+            Map_Max_Y = Int16EncodingLE.Decode(fp);
+            F4File.CloseCampFile(fp);
+            return true;
+        }
+
+		public static bool SaveTheaterTerrain (string fileName)
+        {
+            FileStream fp;
+
+            if (TheaterCells == null)
+                return false;
+
+            if ((fp = F4File.OpenCampFile(fileName, "thr", FileAccess.Write)) == null)
+                return false;
+
+            Int16EncodingLE.Encode(fp, Map_Max_X);
+            Int16EncodingLE.Encode(fp, Map_Max_Y);
+            fp.Write(TheaterCells, 0, Map_Max_X * Map_Max_Y);
+            F4File.CloseCampFile(fp);
+            return true;
+        }
 
 		public static CellData GetCell (GridIndex x, GridIndex y)
 		{
@@ -108,27 +108,27 @@ namespace FalconNet.Campaign
 		public static ReliefType GetRelief (GridIndex x, GridIndex y)
 		{
 			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (ReliefType)((TheaterCells [x * Map_Max_Y + y] & CampTerrStatic.ReliefMask) >> CampTerrStatic.ReliefShift);
+            return CampCell.GetReliefType(TheaterCells[x * Map_Max_Y + y]);
 		}
 
 		public static CoverType GetCover (GridIndex x, GridIndex y)
 		{
 			if ((x < 0) || (x >= Map_Max_X) || (y < 0) || (y >= Map_Max_Y))
-				return (CoverType)CoverType.Water;
+				return CoverType.Water;
 			else
-				return (CoverType)((TheaterCells [x * Map_Max_Y + y] & GroundCoverMask) >> GroundCoverShift);
+                return CampCell.GetGroundCover(TheaterCells[x * Map_Max_Y + y]);
 		}
 
-		public static char GetRoad (GridIndex x, GridIndex y)
+        public static byte GetRoad(GridIndex x, GridIndex y)
 		{
 			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells [x * Map_Max_Y + y] & RoadMask) >> RoadShift);
+            return CampCell.GetRoadCell(TheaterCells[x * Map_Max_Y + y]);
 		}
 
-		public static char GetRail (GridIndex x, GridIndex y)
+        public static byte GetRail(GridIndex x, GridIndex y)
 		{
 			Debug.Assert (x >= 0 && x < Map_Max_X && y >= 0 && y < Map_Max_Y);
-			return (char)((TheaterCells [x * Map_Max_Y + y] & RailMask) >> RailShift);
-		}
+            return CampCell.GetRailCell(TheaterCells[x * Map_Max_Y + y]);
+        }
 	}
 }

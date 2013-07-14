@@ -199,6 +199,13 @@ namespace FalconNet.Common.Encoding
             Array.Copy(_buffer, _pos, dest, 0, dest.Length);
             _pos += dest.Length;
         }
+        public byte[] GetBytes(int len)
+        {
+            byte[] dest = new byte[len];
+            Array.Copy(_buffer, _pos, dest, 0, dest.Length);
+            _pos += dest.Length;
+            return dest;
+        }
 
         /// <summary>
         /// Writes <code>byte</code> to the ByteWrapper and advances the current position by 1

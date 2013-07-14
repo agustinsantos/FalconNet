@@ -76,7 +76,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\CampLib\CampaignBase.csproj">
+    <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
       <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
       <Name>CampaignBase</Name>
     </ProjectReference>

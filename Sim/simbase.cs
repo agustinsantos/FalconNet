@@ -7,6 +7,7 @@ using System.IO;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using Control = System.Byte;
+using FalconNet.Common.Encoding;
 namespace FalconNet.SimBase
 {
     // Flags used to convey special data
@@ -108,7 +109,7 @@ namespace FalconNet.SimBase
 
     public class SimBaseClass : FalconEntity
     {
-
+#if TODO
         private CampBaseClass campaignObject;
 
         // Special Transmit Data
@@ -160,20 +161,20 @@ namespace FalconNet.SimBase
         public virtual void JoinFlight()
         {
         }
-
+#endif
         //Functions
         public SimBaseClass(int type)
-            : base(type)
+            : base((ushort)type,0)
         { throw new NotImplementedException(); }
 
-        public SimBaseClass(VU_BYTE[] stream)
-            : base(FalconEntity.VU_LAST_ENTITY_TYPE)
+        public SimBaseClass(ByteWrapper buf)
+            : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
         { throw new NotImplementedException(); }
 
         public SimBaseClass(FileStream filePtr)
-            : base(FalconEntity.VU_LAST_ENTITY_TYPE)
+            : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
         { throw new NotImplementedException(); }
-
+#if TODO
         //TODO public virtual ~SimBaseClass();
         public int GetCallsignIdx()
         {
@@ -640,6 +641,32 @@ namespace FalconNet.SimBase
 
         public virtual void ReadDirty(byte[] stream, ref int pos)
         { throw new NotImplementedException(); }
+#endif
+
+        public override int Wake()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int Sleep()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override short GetCampID()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Control GetTeam()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Control GetCountry()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

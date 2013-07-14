@@ -828,7 +828,7 @@ namespace FalconNet.Graphics
         protected int labelLen;
         protected DWORD labelColor;
 
-        // Handle time of day notifications
+        // Handle heading of day notifications
         protected static void TimeUpdateCallback(Object unused)
         {
 #if TODO

@@ -1,3 +1,4 @@
+using FalconNet.F4Common;
 using System;
 using System.IO;
 
@@ -5,23 +6,10 @@ namespace FalconNet.FalcLib
 {
 	public class F4Find
 	{
-		public static  string FalconDataDirectory;
-		public static  string FalconTerrainDataDir;
-		public static  string FalconObjectDataDir;
-		public static  string Falcon3DDataDir;
-		public static  string FalconMiscTexDataDir;
-		public static  string FalconCampaignSaveDirectory;
-		public static  string FalconCampUserSaveDirectory;
 		
 		public static void InitDirectories()
 		{
-			FalconDataDirectory = "." + Path.DirectorySeparatorChar;
-			FalconTerrainDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "theater";
-			FalconObjectDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "object";
-			FalconMiscTexDataDir = FalconDataDirectory + Path.DirectorySeparatorChar + "FalconMiscTexData";
-			string campaignDir = FalconDataDirectory + Path.DirectorySeparatorChar + "Campaign"; 
-			FalconCampaignSaveDirectory = campaignDir + Path.DirectorySeparatorChar + "Save";
-			FalconCampUserSaveDirectory = campaignDir + Path.DirectorySeparatorChar + "Save";
+            F4File.InitDirectories();
 	
 		}
 		
@@ -30,8 +18,8 @@ namespace FalconNet.FalcLib
 		{
 			string path, tmp;
 			string tmpStr;
-		
-			path = FalconDataDirectory + Path.DirectorySeparatorChar + "files.dir";
+
+            path = F4File.FalconDataDirectory + Path.DirectorySeparatorChar + "files.dir";
 			throw new NotImplementedException ();
 #if TODO
 	   if (GetPrivateProfileString ("Files", filename, "", tmpStr, 1024, path))

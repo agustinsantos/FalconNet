@@ -1,8 +1,8 @@
+using FalconNet.F4Common;
+using FalconNet.VU;
 using System;
 using System.IO;
-using FalconNet.VU;
-using VU_BYTE=System.Byte;
-using FalconNet.CampaignBase;
+using VU_BYTE = System.Byte;
 
 namespace FalconNet.FalcLib
 {

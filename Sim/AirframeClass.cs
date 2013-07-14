@@ -12,11 +12,11 @@ namespace FalconNet.Sim
         // delete cdrag; delete cy; };
         public int numMach;
         public int numAlpha;
-        public float* mach;
-        public float* alpha;
-        public float* clift;
-        public float* cdrag;
-        public float* cy;
+        public float[] mach;
+        public float[] alpha;
+        public float[] clift;
+        public float[] cdrag;
+        public float[] cy;
         public float clFactor;
         public float cdFactor;
         public float cyFactor;
@@ -30,6 +30,7 @@ public:
 
     public class AuxAeroData
     {
+#if TODO
         public AuxAeroData() { rollMomentum = 1; pitchMomentum = 1; yawMomentum = 1; pitchElasticity = 1; sinkRate = 15.0f; }
 
 
@@ -215,6 +216,7 @@ public:
         public float addMARIded18k;	// 2002-03-22 ADDED BY S.G. Add MAR for this type of aicraft when target is ID'ed and below 18K
         public float addMARIded28k;	// 2002-03-22 ADDED BY S.G. Add MAR for this type of aicraft when target is ID'ed and below 28K
         public float addMARIdedSpike;	// 2002-03-22 ADDED BY S.G. Add MAR for this type of aicraft when target is ID'ed and spiked
+#endif
     }
 
     /*------------------*/
@@ -228,8 +230,8 @@ public:
         public float fuelFlowFactor;
         public int numMach;
         public int numAlt;
-        public float* mach;
-        public float* alt;
+        public float[] mach;
+        public float[] alt;
         public bool hasAB; // JB 010706
         public float[] thrust = new float[3];
 #if USE_SH_POOLS
@@ -248,9 +250,9 @@ public:
         //TODO ~RollData(void) {delete alpha; delete qbar; delete roll;};
         public int numAlpha;
         public int numQbar;
-        public float* alpha;
-        public float* qbar;
-        public float* roll;
+        public float[] alpha;
+        public float[] qbar;
+        public float[] roll;
 #if USE_SH_POOLS
 public:
 	// Overload new/delete to use a SmartHeap fixed size pool
@@ -270,7 +272,7 @@ public:
             DoorBroken = 0x08,
             GearProblem = 0x0F,
         };
-        public GearData();
+        public GearData() { throw new NotImplementedException(); }
         //TODO ~GearData(void) {}
         public float strength;	//how many hitpoints it has left
         public float vel;		//at what rate is it currently compressing/extending in ft/s
@@ -286,7 +288,7 @@ public:
 
     public class AirframeClass
     {
-
+#if TODO
 #if USE_SH_POOLS
 public:
 	// Overload new/delete to use a SmartHeap fixed size pool
@@ -1926,7 +1928,7 @@ public:
             num_sets = atoi(aclist.GetNext());
 
             /*
-            #ifdef USE_SH_POOLS
+            #if USE_SH_POOLS
             aeroDataset = (AeroDataSet *)MemAllocPtr(AirFrameDataPool, sizeof(AeroDataSet)*num_sets,0);
             #else
             aeroDataset = new AeroDataSet[num_sets];
@@ -2591,6 +2593,7 @@ public:
         }
         private static AeroDataSet[] aeroDataset = null;
         private static int num_sets = 0;
+#endif
     }
 
 }

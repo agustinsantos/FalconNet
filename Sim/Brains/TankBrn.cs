@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FalconNet.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +12,16 @@ public enum BOOM {
 	BOOM_EXTENSION,
 }
 
-public struct BoomData{
-	float			rx;				//relative to tanker center in ft
-	float			ry;				//relative to tanker center in ft
-	float			rz;				//relative to tanker center in ft
-	DrawableBSP*	drawPointer;	//pointer to our boom
-	float			az;				//in radians
-	float			el;				//in radians
-	float			ext;			//how far boom is extended in ft
+public struct BoomData {
+	public float			rx;				//relative to tanker center in ft
+	public float			ry;				//relative to tanker center in ft
+	public float			rz;				//relative to tanker center in ft
+	public DrawableBSP	drawPointer;	//pointer to our boom
+	public float			az;				//in radians
+	public float			el;				//in radians
+	public float			ext;			//how far boom is extended in ft
 }
-
+#if TODO
 public class TankerBrain : DigitalBrain
 {
 
@@ -72,23 +73,23 @@ public class TankerBrain : DigitalBrain
          PrecontactPos = 0x10,
          ContactPos = 0x20,
 		 ClearingPlane = 0x40};
-      public TankerBrain (AircraftClass *myPlatform, AirframeClass* myAf);
+      public TankerBrain (AircraftClass myPlatform, AirframeClass myAf);
       public virtual ~TankerBrain ();
-      public void FrameExec(SimObjectType*, SimObjectType*);
-      public int  AddToQ (SimVehicleClass* thirstyOne);
-      public void RemoveFromQ (SimVehicleClass* thirstyOne);
-	  public int AddToWaitQ (SimVehicleClass* doneOne);
+      public void FrameExec(SimObjectType objtype1, SimObjectType objtype1);
+      public int  AddToQ (SimVehicleClass thirstyOne);
+      public void RemoveFromQ (SimVehicleClass thirstyOne);
+	  public int AddToWaitQ (SimVehicleClass doneOne);
 	  public void PurgeWaitQ ();
-	  public int TankingPosition(SimVehicleClass* thirstyOne);
+	  public int TankingPosition(SimVehicleClass thirstyOne);
 	  public void DoneRefueling ();
-	  public int IsSet(int flag)				{return (flags & flag) && TRUE;}
-	  public SimObjectType* TankingPtr()	{return tankingPtr;}
+	  public bool IsSet(int flag)				{return (flags & flag) != 0 && true;}
+	  public SimObjectType TankingPtr()	{return tankingPtr;}
 
-	  public void OptTankingPosition(Tpoint *pos);
-	  public void BoomWorldPosition(Tpoint *pos);
-	  public void ReceptorRelPosition(Tpoint *pos, SimVehicleClass *thirsty);
-	  public void BoomTipPosition(Tpoint *pos);
-	  public virtual int IsTanker()	{return TRUE;}
+	  public void OptTankingPosition(Tpoint pos);
+	  public void BoomWorldPosition(Tpoint pos);
+	  public void ReceptorRelPosition(Tpoint pos, SimVehicleClass thirsty);
+	  public void BoomTipPosition(Tpoint pos);
+	  public virtual bool IsTanker()	{return true;}
 	  public virtual void InitBoom();
 	  public virtual void CleanupBoom();
 	  public void SetInitial()	{ turnallow = 0; HeadsUp = 0; directionsetup = 1; currentTP = 0; }
@@ -102,4 +103,5 @@ public:
 	void operator delete(void *mem) { if (mem) MemFreePtr(mem); };
 #endif
 }
+#endif
 }

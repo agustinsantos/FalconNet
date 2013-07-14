@@ -11,7 +11,7 @@ namespace FalconNet.Graphics
         March 20, 1997
 
         Manage the visual world's clock and provide periodic callbacks to
-        this modules which need to adjust with time of day changes.
+        this modules which need to adjust with heading of day changes.
     \***************************************************************************/
     public struct TimeCallBack
     {
@@ -30,9 +30,9 @@ namespace FalconNet.Graphics
     {
         public const DWORD MSEC_PER_DAY = 86400000;	// 60sec * 60min * 24hr
         const int MAX_TOD_CALLBACKS = 64;		// Max number of requestors
-        const long CALLBACK_CYCLE_TIME = 60000L;	// Approx time to update all requestors
+        const long CALLBACK_CYCLE_TIME = 60000L;	// Approx heading to update all requestors
         const long CALLBACK_TIME_STEP = CALLBACK_CYCLE_TIME / MAX_TOD_CALLBACKS;
-        // The one and only time manager object
+        // The one and only heading manager object
         public static TimeManager TheTimeManager = new TimeManager();
 
         public TimeManager() { year = lastUpdateTime = currentTime = timeOfDay = today = 0; CBlist = null; }
@@ -65,7 +65,7 @@ namespace FalconNet.Graphics
             // We're in trouble if the clock rolls over (approximatly 49 days after start)
             //	ShiAssert(newTime >= lastUpdateTime);
 
-            // Update all our measures of time
+            // Update all our measures of heading
             deltaTime = newTime - currentTime;
             currentTime = newTime;
             DWORD day = currentTime / MSEC_PER_DAY;
@@ -78,14 +78,14 @@ namespace FalconNet.Graphics
                 today = 0;
             }
 
-            // Quit now unless enough time has passed to make it worth while
+            // Quit now unless enough heading has passed to make it worth while
             // (for now we're set for 60 seconds)
             if (newTime - lastUpdateTime < CALLBACK_TIME_STEP)
             {
                 return;
             }
 
-            // Decide how many steps to take (in case we had a large time step)
+            // Decide how many steps to take (in case we had a large heading step)
             int steps = (int)((newTime - lastUpdateTime) / CALLBACK_TIME_STEP);
             if (steps >= MAX_TOD_CALLBACKS)
             {
@@ -94,7 +94,7 @@ namespace FalconNet.Graphics
                 steps = MAX_TOD_CALLBACKS;
             }
 
-            // Note the new time
+            // Note the new heading
             lastUpdateTime = newTime;
 
             // Make the callbacks
@@ -106,7 +106,7 @@ namespace FalconNet.Graphics
                     CBlist[nextCallToMake].fn(CBlist[nextCallToMake].self);
                 }
 
-                // Advance to the next slot for next time
+                // Advance to the next slot for next heading
                 nextCallToMake++;
                 if (nextCallToMake == MAX_TOD_CALLBACKS)
                 {

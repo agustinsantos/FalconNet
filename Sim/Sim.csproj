@@ -34,12 +34,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcDef.cs" />
+    <Compile Include="ACFormationData.cs" />
     <Compile Include="AirframeClass.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="AtcBrain.cs" />
     <Compile Include="Caution.cs" />
     <Compile Include="DataFile.cs" />
-    <Compile Include="Digi.cs" />
+    <Compile Include="Brains\Digi.cs" />
     <Compile Include="DofsnSwitches.cs" />
     <Compile Include="Fack.cs" />
     <Compile Include="Fault.cs" />
@@ -51,7 +52,7 @@
     <Compile Include="Object.cs" />
     <Compile Include="Phyconst.cs" />
     <Compile Include="simbase.cs" />
-    <Compile Include="SimBrain.cs" />
+    <Compile Include="Brains\SimBrain.cs" />
     <Compile Include="Simdrive.cs" />
     <Compile Include="Simfile.cs" />
     <Compile Include="Simloop.cs" />
@@ -61,11 +62,15 @@
     <Compile Include="Sms.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="Aircraft.cs" />
-    <Compile Include="TankBrn.cs" />
+    <Compile Include="Brains\TankBrn.cs" />
     <Compile Include="WpnDef.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
+      <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
+      <Name>CampaignBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
@@ -73,10 +78,6 @@
     <ProjectReference Include="..\FalcLib\FalcLib.csproj">
       <Project>{12899d19-7f1a-49fe-82e2-3535b3ced5c3}</Project>
       <Name>FalcLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FalcSnd\FalcSnd.csproj">
-      <Project>{db39313a-0989-4c45-9a59-2d2facdcbe71}</Project>
-      <Name>FalcSnd</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimBase\SimBase.csproj">
       <Project>{352558ff-c81f-4659-91eb-dd096c93fa5d}</Project>

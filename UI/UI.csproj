@@ -35,8 +35,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="cwindow.cs" />
-    <Compile Include="logbook.cs" />
-    <Compile Include="campmiss.cs" />
     <Compile Include="dispopts.cs" />
     <Compile Include="tac_class.cs" />
   </ItemGroup>

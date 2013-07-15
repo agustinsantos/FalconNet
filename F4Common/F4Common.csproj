@@ -42,10 +42,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encrypter.cs" />
     <Compile Include="F4Config.cs" />
     <Compile Include="F4File.cs" />
     <Compile Include="FalconGameType.cs" />
+    <Compile Include="LogBook\CampaignMissionRst.cs" />
+    <Compile Include="LogBook\CampaignStats.cs" />
+    <Compile Include="LogBook\DogfightStats.cs" />
+    <Compile Include="LogBook\LogBookData.cs" />
+    <Compile Include="LogBook\Medals.cs" />
+    <Compile Include="LogBook\Pilot.cs" />
+    <Compile Include="LogBook\Ranks.cs" />
+    <Compile Include="PlayerOptions\AutoPilotModeType.cs" />
+    <Compile Include="PlayerOptions\AvionicsType.cs" />
+    <Compile Include="PlayerOptions\FlightModelType.cs" />
+    <Compile Include="PlayerOptions\PadlockModeType.cs" />
+    <Compile Include="PlayerOptions\PlayerOp.cs" />
+    <Compile Include="PlayerOptions\PlayerOpDef.cs" />
+    <Compile Include="PlayerOptions\PoDispFlags.cs" />
+    <Compile Include="PlayerOptions\PoGenFlags.cs" />
+    <Compile Include="PlayerOptions\PoObjFlags.cs" />
+    <Compile Include="PlayerOptions\PoSimFlags.cs" />
+    <Compile Include="PlayerOptions\RefuelModeType.cs" />
+    <Compile Include="PlayerOptions\rules.cs" />
+    <Compile Include="PlayerOptions\SimStartFlags.cs" />
+    <Compile Include="PlayerOptions\TrackIRVector.cs" />
+    <Compile Include="PlayerOptions\VisualCueType.cs" />
+    <Compile Include="PlayerOptions\WeaponEffectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoundGroups.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

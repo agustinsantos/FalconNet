@@ -145,7 +145,7 @@ namespace FalconNet.Common.Encoding
                 EncodingHelpers.ReverseBytes(buffer, startPos, Size);
             return BitConverter.ToInt32(buffer, startPos);
         }
-        public static Int32 DecodeShortLE(ByteWrapper buffer)
+        public static Int32 Decode(ByteWrapper buffer)
         {
             Debug.Assert(buffer != null, "Buffer is null");
             Int32 val = Decode(buffer.Buffer, buffer.Position);

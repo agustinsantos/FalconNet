@@ -1,6 +1,6 @@
 using System;
 
-namespace FalconNet.FalcLib
+namespace FalconNet.F4Common
 {
 	public static class SoundGroups
 	{

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using FalconNet.Common;
 
-namespace FalconNet.FalcLib
+namespace FalconNet.F4Common
 {
 	// TODO enum{RUL_PW_LEN = 20}
 	public class RulesStruct

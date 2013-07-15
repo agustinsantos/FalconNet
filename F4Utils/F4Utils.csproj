@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -74,22 +74,9 @@
     <Compile Include="Campaign\Unit.cs" />
     <Compile Include="Campaign\Waypoint.cs" />
     <Compile Include="Campaign\WthFile.cs" />
-    <Compile Include="PlayerOp\AutoPilotModeType.cs" />
-    <Compile Include="PlayerOp\AvionicsType.cs" />
-    <Compile Include="PlayerOp\FlightModelType.cs" />
-    <Compile Include="PlayerOp\PadlockModeType.cs" />
     <Compile Include="PlayerOp\Pit3DPanMode.cs" />
     <Compile Include="PlayerOp\PlayerOp.cs" />
-    <Compile Include="PlayerOp\PoDispFlags.cs" />
-    <Compile Include="PlayerOp\PoGenFlags.cs" />
-    <Compile Include="PlayerOp\PoObjFlags.cs" />
-    <Compile Include="PlayerOp\PoSimFlags.cs" />
-    <Compile Include="PlayerOp\RefuelModeType.cs" />
-    <Compile Include="PlayerOp\SimStartFlags.cs" />
     <Compile Include="PlayerOp\SoundGroup.cs" />
-    <Compile Include="PlayerOp\TrackIRVector.cs" />
-    <Compile Include="PlayerOp\VisualCueType.cs" />
-    <Compile Include="PlayerOp\WeaponEffectType.cs" />
     <Compile Include="Terrain\Constants.cs" />
     <Compile Include="Terrain\Util.cs" />
     <Compile Include="Terrain\Structs\FarTilesDotPalFileInfo.cs" />
@@ -113,9 +100,9 @@
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Campaign\Campaign.csproj">
-      <Project>{B822ED47-038A-4E04-8BA8-5742C69ADF6E}</Project>
-      <Name>Campaign</Name>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

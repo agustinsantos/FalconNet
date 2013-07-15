@@ -24,17 +24,26 @@ namespace FalconNet.Common.Encoding
 
         public static void Encode(ByteWrapper buffer, String val)
         {
-
-            byte[] buf = System.Text.Encoding.ASCII.GetBytes(val);
-            Int32EncodingLE.Encode(buffer, buf.Length);
-            buffer.Put(buf, 0, buf.Length);
+            if (val == null)
+                Int32EncodingLE.Encode(buffer, -1);
+            else
+            {
+                byte[] buf = System.Text.Encoding.ASCII.GetBytes(val);
+                Int32EncodingLE.Encode(buffer, buf.Length);
+                buffer.Put(buf, 0, buf.Length);
+            }
         }
 
         public static void Encode(Stream stream, String val)
         {
-            byte[] buf = System.Text.Encoding.ASCII.GetBytes(val);
-            Int32EncodingLE.Encode(stream, buf.Length);
-            stream.Write(buf, 0, buf.Length);
+            if (val == null)
+                Int32EncodingLE.Encode(stream, -1);
+            else
+            {
+                byte[] buf = System.Text.Encoding.ASCII.GetBytes(val);
+                Int32EncodingLE.Encode(stream, buf.Length);
+                stream.Write(buf, 0, buf.Length);
+            }
         }
 
         /// <summary> 
@@ -46,7 +55,7 @@ namespace FalconNet.Common.Encoding
         /// </returns>
         public static String Decode(byte[] buffer)
         {
-            throw new NotImplementedException();
+            return System.Text.Encoding.ASCII.GetString(buffer);
         }
         public static String Decode(byte[] buffer, int startPos)
         {
@@ -55,16 +64,18 @@ namespace FalconNet.Common.Encoding
         public static String Decode(ByteWrapper buffer)
         {
             int len = buffer.GetByte();
+            if (len == -1) return null;
             len &= 0xff;
             byte[] buf = buffer.GetBytes(len);
-            return System.Text.Encoding.ASCII.GetString(buf);
+            return Decode(buf);
         }
         public static String Decode(Stream stream)
         {
             int len = stream.ReadByte();
+            if (len == -1) return null;
             len &= 0xff;
             byte[] buf = stream.ReadBytes(0, len);
-            return System.Text.Encoding.ASCII.GetString(buf);
+            return Decode(buf);
         }
 
         public static int Size
@@ -98,16 +109,26 @@ namespace FalconNet.Common.Encoding
 
         public static void Encode(ByteWrapper buffer, String val)
         {
-            byte[] buf = System.Text.Encoding.Unicode.GetBytes(val);
-            Int32EncodingLE.Encode(buffer, buf.Length);
-            buffer.Put(buf, 0, buf.Length);
+            if (val == null)
+                Int32EncodingBE.Encode(buffer, -1);
+            else
+            {
+                byte[] buf = System.Text.Encoding.Unicode.GetBytes(val);
+                Int32EncodingBE.Encode(buffer, buf.Length);
+                buffer.Put(buf, 0, buf.Length);
+            }
         }
 
         public static void Encode(Stream stream, String val)
         {
-            byte[] buf = System.Text.Encoding.Unicode.GetBytes(val);
-            Int32EncodingBE.Encode(stream, buf.Length);
-            stream.Write(buf, 0, buf.Length);
+            if (val == null)
+                Int32EncodingBE.Encode(stream, -1);
+            else
+            {
+                byte[] buf = System.Text.Encoding.Unicode.GetBytes(val);
+                Int32EncodingBE.Encode(stream, buf.Length);
+                stream.Write(buf, 0, buf.Length);
+            }
         }
 
         /// <summary> 
@@ -119,7 +140,7 @@ namespace FalconNet.Common.Encoding
         /// </returns>
         public static String Decode(byte[] buffer)
         {
-            throw new NotImplementedException();
+            return System.Text.Encoding.ASCII.GetString(buffer);
         }
         public static String Decode(byte[] buffer, int startPos)
         {
@@ -128,16 +149,18 @@ namespace FalconNet.Common.Encoding
         public static String Decode(ByteWrapper buffer)
         {
             int len = buffer.GetByte();
+            if (len == -1) return null;
             len &= 0xff;
             byte[] buf = buffer.GetBytes(len);
-            return System.Text.Encoding.ASCII.GetString(buf);
+            return Decode(buf);
         }
         public static String Decode(Stream stream)
         {
             int len = stream.ReadByte();
+            if (len == -1) return null;
             len &= 0xff;
             byte[] buf = stream.ReadBytes(0, len);
-            return System.Text.Encoding.ASCII.GetString(buf);
+            return Decode(buf);
         }
 
         public static int Size

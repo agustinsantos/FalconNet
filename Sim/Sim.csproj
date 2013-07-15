@@ -37,7 +37,7 @@
     <Compile Include="ACFormationData.cs" />
     <Compile Include="AirframeClass.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="AtcBrain.cs" />
+    <Compile Include="Brains\AtcBrain.cs" />
     <Compile Include="Caution.cs" />
     <Compile Include="DataFile.cs" />
     <Compile Include="Brains\Digi.cs" />
@@ -50,7 +50,6 @@
     <Compile Include="HeloDef.cs" />
     <Compile Include="MvrDef.cs" />
     <Compile Include="Object.cs" />
-    <Compile Include="Phyconst.cs" />
     <Compile Include="simbase.cs" />
     <Compile Include="Brains\SimBrain.cs" />
     <Compile Include="Simdrive.cs" />

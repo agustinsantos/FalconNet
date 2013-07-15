@@ -46,11 +46,7 @@
     <Compile Include="Messages\FalconAWACSMessage.cs" />
     <Compile Include="Messages\FalconCampDataMessage.cs" />
     <Compile Include="Messages\FalconWeaponsFire.cs" />
-    <Compile Include="PlayerOp.cs" />
-    <Compile Include="PlayerOpDef.cs" />
-    <Compile Include="rules.cs" />
     <Compile Include="SoundFX.cs" />
-    <Compile Include="SoundGroups.cs" />
     <Compile Include="Camplib.cs" />
     <Compile Include="entity.cs" />
     <Compile Include="Entities\FalconEntity.cs" />

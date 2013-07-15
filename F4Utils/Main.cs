@@ -7,7 +7,6 @@ using F4Utils.Campaign;
 using System.Text;
 using System.Diagnostics;
 using F4Utils.Terrain;
-using FalconNet.Campaign;
 
 namespace F4Resources
 {
@@ -30,6 +29,7 @@ namespace F4Resources
 
 		public static void ReadTHR (string filename)
 		{
+#if TODO
 			CampTerrStatic.LoadTheaterTerrain (filename);
 			Bitmap bitmap = new Bitmap (CampTerrStatic.Map_Max_X, CampTerrStatic.Map_Max_Y);
 			for (short x = 0; x < bitmap.Width; x++)
@@ -59,6 +59,7 @@ namespace F4Resources
 					}
 				}
 			bitmap.Save ("Bitmap.bmp");
+#endif
 		}
 
 		public static void ReadTerrain ()

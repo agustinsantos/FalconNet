@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Encoding\ByteWrapper.cs" />
+    <Compile Include="Encoding\ByteWrapperCompression.cs" />
     <Compile Include="Encoding\StringASCIIEncoding.cs" />
     <Compile Include="Encoding\StringEncoding.cs" />
     <Compile Include="Encoding\DoubleEncoding.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="MultiplataformIni.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="SizeUtils.cs" />
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="StringSupport.cs" />
     <Compile Include="StreamReaderExtensions.cs" />
     <Compile Include="Lzss.cs" />

@@ -46,10 +46,10 @@
     <Compile Include="AltitudeType.cs" />
     <Compile Include="CampaignHeading.cs" />
     <Compile Include="CampaignTime.cs" />
-    <Compile Include="CampCell.cs" />
+    <Compile Include="Terrain\CampCell.cs" />
     <Compile Include="Campglobl.cs" />
-    <Compile Include="Campterr.cs" />
-    <Compile Include="CoverType.cs" />
+    <Compile Include="Terrain\Campterr.cs" />
+    <Compile Include="Terrain\CoverType.cs" />
     <Compile Include="DistanceUnitType.cs" />
     <Compile Include="GridIndexMath.cs" />
     <Compile Include="GridLocation.cs" />
@@ -57,7 +57,7 @@
     <Compile Include="MoveType.cs" />
     <Compile Include="ObjectiveStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReliefType.cs" />
+    <Compile Include="Terrain\ReliefType.cs" />
     <Compile Include="RelType.cs" />
     <Compile Include="WayPoint\WPAction.cs" />
     <Compile Include="WayPoint\WayPointClass.cs" />

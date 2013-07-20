@@ -62,16 +62,16 @@ namespace FalconNet.Campaign
 
 	
 		// constructors and serial functions
-		public BattalionClass (int type, Unit parent):base(type)
+		public BattalionClass (ushort type, Unit parent):base(type)
 		{throw new NotImplementedException();}
-
+#if TODO		
 		public BattalionClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		
 		public BattalionClass(byte[] bytes, ref int offset, int version)
             : base(bytes, ref offset, version)
         {
-#if TODO			
+	
             last_move = BitConverter.ToUInt32(bytes, offset);
             offset += 4;
 
@@ -112,7 +112,7 @@ namespace FalconNet.Campaign
             }
             position = bytes[offset];
             offset++;
-#endif
+
         }
 		//TODO public virtual ~BattalionClass();
 		public override int SaveSize ()
@@ -120,7 +120,7 @@ namespace FalconNet.Campaign
 
 		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-
+#endif
 		// event Handlers
 		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
@@ -160,10 +160,10 @@ namespace FalconNet.Campaign
 		public override void ClearDeaggregationData ()
 		{throw new NotImplementedException();}
 
-		public override int GetDeaggregationPoint (int slot, CampEntity ent)
+        public override int GetDeaggregationPoint(int slot, CampBaseClass ent)
 		{throw new NotImplementedException();}
 
-		public override int Reaction (CampEntity what, int zone, float range)
+        public override int Reaction(CampBaseClass what, int zone, float range)
 		{throw new NotImplementedException();}
 
 		public override int ChooseTactic ()
@@ -214,7 +214,7 @@ namespace FalconNet.Campaign
 
 		public override int GetDetectionRange (int mt)
 		{throw new NotImplementedException();}				// Takes into account emitter status
-		public override int GetElectronicDetectionRange (int mt)
+        public override int GetElectronicDetectionRange(MoveType mt)
 		{throw new NotImplementedException();}	// Max Electronic detection range, even if turned off
 		public override FEC_RADAR GetRadarMode ()
 		{
@@ -323,7 +323,7 @@ namespace FalconNet.Campaign
 
 		public override UnitClass GetUnitParent ()
 		{
-			return (UnitClass)VuDatabase.vuDatabase.Find (parent_id);
+			return (UnitClass)VUSTATIC.vuDatabase.Find (parent_id);
 		}
 
 		public override VU_ID GetUnitParentID ()
@@ -338,7 +338,7 @@ namespace FalconNet.Campaign
 
 		public override FalconEntity GetAirTarget ()
 		{
-			return (FalconEntity)VuDatabase.vuDatabase.Find (air_target);
+			return (FalconEntity)VUSTATIC.vuDatabase.Find (air_target);
 		}
 
 		public virtual void SetAirTarget (FalconEntity t)

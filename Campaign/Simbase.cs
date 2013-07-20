@@ -7,6 +7,7 @@ using System.IO;
 using VU_BYTE=System.Byte;
 using VU_TIME = System.UInt64;
 using Control = System.Byte;
+using Team = System.SByte;
 using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
@@ -163,15 +164,17 @@ namespace FalconNet.Campaign
 		}
 	
 		//Functions
-		public SimBaseClass (int type) : base(type)
+		public SimBaseClass (ushort type) : base(type,0)
 		{throw new NotImplementedException();}
  
-		public SimBaseClass (VU_BYTE[] stream) : base(FalconEntity.VU_LAST_ENTITY_TYPE)
+#if TODO
+		public SimBaseClass (VU_BYTE[] stream) : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
 		{throw new NotImplementedException();}
  
-		public SimBaseClass (FileStream filePtr) : base(FalconEntity.VU_LAST_ENTITY_TYPE)
+		public SimBaseClass (FileStream filePtr) : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
 		{throw new NotImplementedException();}
-		
+#endif
+
 		//TODO public virtual ~SimBaseClass();
 		public int GetCallsignIdx ()
 		{
@@ -183,7 +186,7 @@ namespace FalconNet.Campaign
 			return slotNumber;
 		}
 
-		public override byte GetTeam ()
+		public override Team GetTeam ()
 		{throw new NotImplementedException();}
 
 		public override Control GetCountry ()
@@ -196,27 +199,27 @@ namespace FalconNet.Campaign
 
 		public override byte GetDomain ()
 		{
-			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_DOMAIN];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
 		}
 
 		public byte GetClass ()
 		{
-			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_CLASS];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS];
 		}
 
         public byte GetFalconType()
 		{
-			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_TYPE];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_TYPE];
 		}
 
 		public byte GetSType ()
 		{
-			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_STYPE];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_STYPE];
 		}
 
 		public byte GetSPType ()
 		{
-			return (EntityType ()). classInfo_ [(int)VU_CLASS.VU_SPTYPE];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_SPTYPE];
 		}
 
 		public void ChangeOwner (VU_ID new_owner)
@@ -594,6 +597,7 @@ namespace FalconNet.Campaign
 	
 		// virtual function interface
 		// serialization functions
+#if TODO
 		public override int SaveSize ()
 		{throw new NotImplementedException();}
 
@@ -601,7 +605,8 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}	// returns bytes written
 		public override int Save (FileStream file)
 		{throw new NotImplementedException();}		// returns bytes written
-	
+#endif
+
 		// event handlers
 		public virtual int Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}

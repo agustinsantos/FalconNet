@@ -7,10 +7,10 @@ using FalconNet.CampaignBase;
 using FalconNet.F4Common;
 namespace FalconNet.FalcLib
 {
-    public class FlightClass
+    public class FlightClass : CampBaseClass
     {
         // It is already defined in Campaign :-(
-        public FlightClass()
+        public FlightClass(): base(0,0)
         { throw new NotImplementedException(); }
     }
 

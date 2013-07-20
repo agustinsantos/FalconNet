@@ -30,14 +30,15 @@ namespace FalconNet.Campaign
 		private short			fullstrength;						// How many vehicles we were before we took losses
 
 		// constructors and serial functions
-		public BrigadeClass (int type) : base(type)
+		public BrigadeClass (ushort type) : base(type)
 		{throw new NotImplementedException();}
-		public BrigadeClass (byte[] stream, ref int offset) : base(stream, ref offset)
+#if TODO	
+        public BrigadeClass (byte[] stream, ref int offset) : base(stream, ref offset)
 		{throw new NotImplementedException();}
 		public BrigadeClass(byte[] bytes, ref int offset, int version)
             : base(bytes, ref offset, version)
         {
-#if TODO
+
             elements = bytes[offset];
             offset++;
             element = new VU_ID[elements];
@@ -51,7 +52,7 @@ namespace FalconNet.Campaign
                 offset += 4;
                 element[i] = thisElement;
             }
-#endif     
+     
 		}
 		// TODO public virtual ~BrigadeClass();
 		public override int SaveSize ()
@@ -59,7 +60,7 @@ namespace FalconNet.Campaign
 
 		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-
+#endif
 		// event Handlers
 		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
@@ -106,7 +107,7 @@ namespace FalconNet.Campaign
 		public override int MoveUnit (CampaignTime time)
 		{throw new NotImplementedException();}
 
-		public override int Reaction (CampEntity what, int zone, float range)
+        public override int Reaction(CampBaseClass what, int zone, float range)
 		{throw new NotImplementedException();}
 
 		public override int ChooseTactic ()

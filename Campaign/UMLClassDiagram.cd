@@ -17,7 +17,7 @@
   <Class Name="FalconNet.Campaign.AirUnitClass" Collapsed="true">
     <Position X="8.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIIAAAAgAAUACAAAAQAAAAAEAAQIAAEAAAAAAgAA=</HashCode>
+      <HashCode>AAAAAAAAAAgAAUACAAAAQAAAAAEAAQIAAEAAAAAAgAA=</HashCode>
       <FileName>Airunit.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -66,7 +66,7 @@
   <Class Name="FalconNet.Campaign.AirTaskingManagerClass" Collapsed="true">
     <Position X="2.75" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BZSAIIQEBCAwSEABiDAAgAAAAoIgAAJAAGAEQAAFAAQ=</HashCode>
+      <HashCode>BZSAAAQEBCAwSEABiDAAgAAAAoIgAAJAAGAEQAAFAAQ=</HashCode>
       <FileName>Atm.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -80,21 +80,21 @@
   <Class Name="FalconNet.Campaign.BattalionClass" Collapsed="true">
     <Position X="5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>KYJ8IKghwQiAiQOAAswC4PW0CkksKENhEhecOIiKUCg=</HashCode>
+      <HashCode>KYJ8ACghwQiAiQOAAswC4PW0CkksKENhEhecOIiKUCg=</HashCode>
       <FileName>Battalion.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FalconNet.Campaign.BrigadeClass" Collapsed="true">
     <Position X="2.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIKgQkAAQBNSQAB0AROAIAFIFAEMBEAAVIAAIEAA=</HashCode>
+      <HashCode>AAAAACgQkAAQBNSQAB0AROAIAFIFAEMBEAAVIAAIEAA=</HashCode>
       <FileName>Brigade.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FalconNet.Campaign.CampaignStatic" Collapsed="true">
     <Position X="13" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAAgAEAQAAABAACAEAIAFiEAQBQQAAAgEQBQKBBDMA=</HashCode>
+      <HashCode>ACAAgAEAQAAABAACAEAAAFiEAQBQQAAAgEABQCABCEA=</HashCode>
       <FileName>Campaign.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -114,10 +114,7 @@
   </Class>
   <Class Name="FalconNet.Campaign.CampCell" Collapsed="true">
     <Position X="18.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAAAgAEACAAAQAAAAAAAAAAAAAQAEAA=</HashCode>
-      <FileName>CampCell.cs</FileName>
-    </TypeIdentifier>
+    <TypeIdentifier />
   </Class>
   <Class Name="FalconNet.Campaign.CampGlobal" Collapsed="true">
     <Position X="20" Y="1.5" Width="1.5" />
@@ -198,15 +195,12 @@
   </Class>
   <Class Name="FalconNet.Campaign.CampTerrStatic" Collapsed="true">
     <Position X="25.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QAAAgACQAEAAAACxEAAMoAAABACAAKACACACAAAAAAI=</HashCode>
-      <FileName>Campterr.cs</FileName>
-    </TypeIdentifier>
+    <TypeIdentifier />
   </Class>
   <Class Name="FalconNet.Campaign.CampwpStatic" Collapsed="true">
     <Position X="13" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>NBCQAmA0kAAAKQhgUIDhSQMAAkBAAIDQ0GS0YB0dTAg=</HashCode>
+      <HashCode>BBAQAgAAAAAAAABAAAAgAAIAAkAAAAAAEAAEAAAQTAA=</HashCode>
       <FileName>Campwp.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -255,14 +249,14 @@
   <Class Name="FalconNet.Campaign.FlightClass" Collapsed="true">
     <Position X="9.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BH7vorixjCzEld/0huoTc2E0Y/G2CtYIDEyOqB5qrPk=</HashCode>
+      <HashCode>BH7vgjixjCzEld/0huoTc2E0Y/G2CtYIDEyOqB5qqPk=</HashCode>
       <FileName>Flight.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FalconNet.Campaign.GroundUnitClass" Collapsed="true">
     <Position X="4" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>UABBYZIBjCkAIUQ2ySAGEAQAEgOUUkIAYsESAAWpEHA=</HashCode>
+      <HashCode>UABBQRIBjCkAIUQ2ySAGEAQAEgOUUkIAYsESAAWpEHA=</HashCode>
       <FileName>GndUnit.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -276,7 +270,7 @@
   <Class Name="FalconNet.Campaign.GroundTaskingManagerClass" Collapsed="true">
     <Position X="0.5" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEICKIAACAIAAQEAQRAAgAAAQACAQAYQAEACAECBBAQ=</HashCode>
+      <HashCode>AEICCAAACAIAAQEAQRAAgAAAQACAQAYQAEACAECBBAQ=</HashCode>
       <FileName>Gtm.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -325,7 +319,7 @@
   <Class Name="FalconNet.Campaign.MissEvakStatic" Collapsed="true">
     <Position X="16.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAgIAAJAAAAAAAARAAAAAAAIAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MissEval.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -395,7 +389,7 @@
   <Class Name="FalconNet.Campaign.NavalTaskingManagerClass" Collapsed="true">
     <Position X="5" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIIAAQAIAAAAAAABAgAgAAAAAAAIAAEAQAAAAAAQ=</HashCode>
+      <HashCode>AAAAAAAAQAIAAAAAAABAgAgAAAAAAAIAAEAQAAAAAAQ=</HashCode>
       <FileName>Ntm.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -409,14 +403,14 @@
   <Class Name="FalconNet.Campaign.ObjectiveClass" Collapsed="true">
     <Position X="0.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EQBgMM6Ku3+pw9Ky0C50pNlQomZA6jd9cxBTHYWg5BU=</HashCode>
+      <HashCode>EQBgMM6Ku3+pw9Ki0C50pNlQomZA6jd9dxBTHYWg5BU=</HashCode>
       <FileName>Objectiv.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FalconNet.Campaign.ObjectivStatic" Collapsed="true">
     <Position X="14.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABAABCACAgAAACAQAAIAAAAAQBEBAAAQAMAAAAAAgI=</HashCode>
+      <HashCode>AABAABCACAgAAACAQAAIAAAAAQBEBAAAQAMAABAAAgI=</HashCode>
       <FileName>Objectiv.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -465,14 +459,14 @@
   <Class Name="FalconNet.Campaign.SimBaseClass" Collapsed="true">
     <Position X="20" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>wUBQNI8n3cgqP8gB4/XZGDOwSkNkSFeJ52KCCUChS1s=</HashCode>
+      <HashCode>wUBQFA8n3cgqP8gB4/XZGDOwSkNkSFaJ52KCCUChy1s=</HashCode>
       <FileName>Simbase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FalconNet.Campaign.SquadronClass" Collapsed="true">
     <Position X="7.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CjFxoboAkKQQCVCAhAGARCYJVzimUoZBAQ9WoQBcYQo=</HashCode>
+      <HashCode>CjFxgToAkKQQCVCAhAGARCYJVzimUoZBAQ9WoQBcYQo=</HashCode>
       <FileName>Squadron.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -490,24 +484,10 @@
       <FileName>Team.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FalconNet.Campaign.TeamClass" Collapsed="true">
-    <Position X="13" Y="6.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>DAlAJYgQlSnF/RAAoTQSkHxhhwMmDAqMrStVQ7DAhBY=</HashCode>
-      <FileName>Team.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="FalconNet.Campaign.TeamStatic" Collapsed="true">
-    <Position X="16.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AiAIDgAAADBAAIAAAAESACEhAAAMAAAhAEgIAIBCAAQ=</HashCode>
-      <FileName>Team.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="FalconNet.Campaign.UnitClass" Collapsed="true">
     <Position X="6.25" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>M897+7+mr/qhvd22N/v7/f/XR3v939/tS9fdeIv/7z8=</HashCode>
+      <HashCode>M897+z+mr/qhvd22N/v7/f/XR3v939/tS9fdeIv/7z8=</HashCode>
       <FileName>Unit.cs</FileName>
     </TypeIdentifier>
   </Class>

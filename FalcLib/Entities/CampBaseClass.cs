@@ -1,117 +1,20 @@
-﻿using System;
+﻿using FalconNet.CampaignBase;
 using FalconNet.Common;
-using FalconNet.FalcLib;
 using FalconNet.VU;
-using VU_BYTE = System.Byte;
-using Objective = FalconNet.Campaign.ObjectiveClass;
-using Team = System.Int32;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Team = System.SByte;
 using GridIndex = System.Int16;
 using Control = System.Byte;
+using VU_ID_NUMBER = System.UInt64;
+using FalconNet.Common.Maths;
+using FalconNet.Campaign;
 using System.Diagnostics;
-using FalconNet.CampaignBase;
 
-namespace FalconNet.Campaign
+namespace FalconNet.FalcLib
 {
-    // Transmittable
-    // Various user flags
-    [Flags]
-    public enum Transmittable : short
-    {
-        CBC_EMITTING = 0x01,
-        CBC_JAMMED = 0x04
-    }
-    // Local
-    public enum CBC_ENUM
-    {
-        CBC_CHECKED = 0x001,			// Used by mission planning to prevent repeated targetting
-        CBC_AWAKE = 0x002,			// Deaggregated on local machine
-        CBC_IN_PACKAGE = 0x004,			// This item is in our local package (only applicable to flights)
-        CBC_HAS_DELTA = 0x008,
-        CBC_IN_SIM_LIST = 0x010,			// In the sim's nearby campaign entity lists
-        CBC_INTEREST = 0x020,			// Some session still is interested in this entity
-        CBC_RESERVED_ONLY = 0x040,			// This entity is here only in order to reserve namespace
-        CBC_AGGREGATE = 0x080,
-        CBC_HAS_TACAN = 0x100
-    }
-
-    public static class CampbaseStatic
-    {
-        // ===================================
-        // Camp base defines
-        // ===================================
-
-        // ===================================
-        // Base class flags
-        // ===================================
-
-
-
-
-        // ===================================
-        // Name space shit
-        // ===================================
-        /* TODO
-public static int  FIRST_OBJECTIVE_VU_ID_NUMBER	(VU_FIRST_ENTITY_ID)
-public static int  LAST_OBJECTIVE_VU_ID_NUMBER		(VU_FIRST_ENTITY_ID+MAX_NUMBER_OF_OBJECTIVES)
-public static int  FIRST_NON_VOLITILE_VU_ID_NUMBER	(LAST_OBJECTIVE_VU_ID_NUMBER+1)
-public static int  LAST_NON_VOLITILE_VU_ID_NUMBER	(FIRST_NON_VOLITILE_VU_ID_NUMBER+(MAX_NUMBER_OF_UNITS))
-public static int  FIRST_LOW_VOLITILE_VU_ID_NUMBER	(LAST_NON_VOLITILE_VU_ID_NUMBER+1)
-public static int  LAST_LOW_VOLITILE_VU_ID_NUMBER	(FIRST_LOW_VOLITILE_VU_ID_NUMBER+(MAX_NUMBER_OF_VOLITILE_UNITS))
-public static int  FIRST_VOLITILE_VU_ID_NUMBER		(LAST_LOW_VOLITILE_VU_ID_NUMBER+1)
-public static int  LAST_VOLITILE_VU_ID_NUMBER		~((VU_ID_NUMBER)0);
-
-
-public static  VU_ID_NUMBER vuAssignmentId;
-public static  VU_ID_NUMBER vuLowWrapNumber;
-public static  VU_ID_NUMBER vuHighWrapNumber;
-public static  VU_ID_NUMBER lastObjectiveId;
-public static  VU_ID_NUMBER lastNonVolitileId;
-public static  VU_ID_NUMBER lastLowVolitileId;
-public static  VU_ID_NUMBER lastFlightId;
-public static  VU_ID_NUMBER lastPackageId;
-public static  VU_ID_NUMBER lastVolitileId;
-    TODO */
-        // ===================================
-        // Camp base globals
-        // ===================================
-
-        public static byte[] CampSearch = new byte[Camplib.MAX_CAMP_ENTITIES];	// Search data - Could reduce to bitwise
-
-        // ===========================
-        // Global functions
-        // ===========================
-
-        public static CampEntity GetFirstEntity(F4LIt list)
-        { throw new NotImplementedException(); }
-
-        public static CampEntity GetNextEntity(F4LIt list)
-        { throw new NotImplementedException(); }
-
-        public static int Parent(CampEntity e)
-        { throw new NotImplementedException(); }
-
-        public static int Real(int type)
-        { throw new NotImplementedException(); }
-
-        public static short GetEntityClass(VuEntity h)
-        { throw new NotImplementedException(); }
-
-        public static short GetEntityDomain(VuEntity h)
-        { throw new NotImplementedException(); }
-
-        public static Unit GetEntityUnit(VuEntity h)
-        { throw new NotImplementedException(); }
-
-        public static Objective GetEntityObjective(VuEntity h)
-        { throw new NotImplementedException(); }
-
-        public static short FindUniqueID()
-        { throw new NotImplementedException(); }
-
-        public static int GetVisualDetectionRange(int mt)
-        { throw new NotImplementedException(); }
-    }
-
     public class CampBaseClass : FalconEntity
     {
 
@@ -288,7 +191,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 
                 vector v;
 
-                CampwpStatic.ConvertGridToSim(x, y, out v);
+                GridIndexMath.ConvertGridToSim(x, y, out v);
                 SetPosition(v.x, v.y, ZPos());
                 if (IsFlight())
                 {
@@ -327,10 +230,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 
             //MonoPrint ("(%d)", *stream - start);
         }
-
-        // Constructors and serial functions
-        public CampBaseClass(int typeindex)
-            : base(typeindex)
+        private void InitLocalData()
         {
             SetTypeFlag(EntityEnum.FalconCampaignEntity);
             spotted = 0;
@@ -341,12 +241,20 @@ public static  VU_ID_NUMBER lastVolitileId;
             pos_.z_ = 0.0F;
             components = null;
             deag_owner = VU_ID.FalconNullId;
-            SetAggregate(1);
+            SetAggregate(true);
             SetAssociation(FalconSessionEntity.FalconLocalGame.Id());
             dirty_camp_base = 0;
             spotTime = new CampaignTime(0); // JB 010719
         }
 
+        // Constructors and serial functions
+        public CampBaseClass(ushort typeindex, VU_ID_NUMBER id)
+            : base(typeindex, id)
+        {
+            InitLocalData();
+            camp_id = CampbaseStatic.FindUniqueID();
+        }
+#if TODO
         public CampBaseClass(byte[] stream, ref int offset)
             : base(VuEntity.VU_LAST_ENTITY_TYPE)
         { throw new NotImplementedException(); }
@@ -462,7 +370,7 @@ public static  VU_ID_NUMBER lastVolitileId;
 
         public virtual int Save(ref VU_BYTE[] stream)
         { throw new NotImplementedException(); }
-
+#endif
         // event handlers
         public override VU_ERRCODE Handle(VuEvent evnt)
         {
@@ -638,6 +546,7 @@ public static  VU_ID_NUMBER lastVolitileId;
         {
             return 0;
         } // 2008-03-08 ADDED SECOND DEFAULT PARM
+
         public virtual int GetAproxWeaponRange(int r)
         {
             return 0;
@@ -647,25 +556,29 @@ public static  VU_ID_NUMBER lastVolitileId;
         {
             return 0;
         }			// Takes into account emitter status
-        public virtual int GetElectronicDetectionRange(int r)
+
+        public virtual int GetElectronicDetectionRange(MoveType r)
         {
             return 0;
         }			// Full range, regardless of emitter
+
         public virtual int CanDetect(FalconEntity e)
         {
             return 0;
         }			// Nonzero if this entity can see ent
+
         public override bool OnGround()
         {
             return false;
         }
 
-        public override float Vt()
+
+        public virtual float Vt()
         {
             return 0.0F;
         }
 
-        public override float Kias()
+        public virtual float Kias()
         {
             return 0.0F;
         }
@@ -675,7 +588,7 @@ public static  VU_ID_NUMBER lastVolitileId;
             return camp_id;
         }
 
-        public override byte GetTeam()
+        public override Team GetTeam()
         {
             return TeamStatic.GetTeam(owner);
         }
@@ -684,6 +597,7 @@ public static  VU_ID_NUMBER lastVolitileId;
         {
             return owner;
         }		// New FalcEnt friendly form
+
         public virtual FEC_RADAR StepRadar(int t, int d, float range)
         {
             return FEC_RADAR.FEC_RADAR_OFF;
@@ -744,7 +658,7 @@ public static  VU_ID_NUMBER lastVolitileId;
             {
                 SetTacan(0);
             }
-            return VuDatabase.vuDatabase.Remove(this);
+            return VUSTATIC.vuDatabase.Remove(this);
         }
 
         public int ReSpot()
@@ -757,19 +671,19 @@ public static  VU_ID_NUMBER lastVolitileId;
         public int GetComponentIndex(VuEntity me)
         { throw new NotImplementedException(); }
 
-        public SimBaseClass GetComponentEntity(int idx)
+        public FalconEntity /* TODO in the original version was SimBaseClass */ GetComponentEntity(int idx)
         { throw new NotImplementedException(); }
 
-        public SimBaseClass GetComponentLead()
+        public FalconEntity /* TODO in the original version was SimBaseClass */  GetComponentLead()
         { throw new NotImplementedException(); }
 
-        public SimBaseClass GetComponentNumber(int component)
+        public FalconEntity /* TODO in the original version was SimBaseClass */  GetComponentNumber(int component)
         { throw new NotImplementedException(); }
 
         public int NumberOfComponents()
         { throw new NotImplementedException(); }
 
-        public byte Domain()
+        public override byte Domain()
         {
             return GetDomain();
         }
@@ -833,27 +747,27 @@ public static  VU_ID_NUMBER lastVolitileId;
         // Getters
         public override byte GetDomain()
         {
-            return (EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
         }
 
         public byte GetClass()
         {
-            return (EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS];
         }
 
         public ClassTypes GetFalconType()
         {
-            return (ClassTypes)(EntityType()).classInfo_[(int)VU_CLASS.VU_TYPE];
+            return (ClassTypes)(EntityType()).classInfo_[(int)Vu_CLASS.VU_TYPE];
         }
 
         public SubTypes GetSType()
         {
-            return (SubTypes)(EntityType()).classInfo_[(int)VU_CLASS.VU_STYPE];
+            return (SubTypes)(EntityType()).classInfo_[(int)Vu_CLASS.VU_STYPE];
         }
 
         public byte GetSPType()
         {
-            return (EntityType()).classInfo_[(int)VU_CLASS.VU_SPTYPE];
+            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_SPTYPE];
         }
 
         public CampaignTime GetSpottedTime()
@@ -878,12 +792,10 @@ public static  VU_ID_NUMBER lastVolitileId;
                 case MoveType.LowAir:
                 case MoveType.Foot:
                     return 0;
-                    break;
                 case MoveType.Tracked:
                 case MoveType.Wheeled:
                 case MoveType.Rail:
                     return 0;
-                    break;
                 case MoveType.Naval:
                     if (TeamStatic.TeamInfo[t] != null && TeamStatic.TeamInfo[t].HasSatelites()) // 2002-03-06 MN CTD fix
                     {
@@ -953,7 +865,7 @@ public static  VU_ID_NUMBER lastVolitileId;
                         y = (GridIndex)(CampTerrStatic.Map_Max_Y - 2);
                 }
 
-                CampwpStatic.ConvertGridToSim(x, y, out v);
+                GridIndexMath.ConvertGridToSim(x, y, out v);
                 SetPosition(v.x, v.y, ZPos());
 
                 //		MakeCampBaseDirty (DIRTY_POSITION, SEND_SOON);
@@ -1033,15 +945,20 @@ public static  VU_ID_NUMBER lastVolitileId;
                 MakeCampBaseDirty(Dirty_Campaign_Base.DIRTY_BASE_FLAGS, EntityDB.DDP[5].priority);
                 //		MakeCampBaseDirty (DIRTY_BASE_FLAGS, SEND_SOMETIME);
             }
-#endif 
+#endif
             throw new NotImplementedException();
         }
 
-        public void SetAggregate(int a)
+        public void SetAggregate(bool agg)
         {
-            local_flags |= CBC_ENUM.CBC_AGGREGATE;
-            if (a == 0)
-                local_flags ^= CBC_ENUM.CBC_AGGREGATE;
+            if (agg)
+            {
+                local_flags |= CBC_ENUM.CBC_AGGREGATE;
+            }
+            else
+            {
+                local_flags &= (~CBC_ENUM.CBC_AGGREGATE);
+            }
         }
 
         public virtual void SetJammed(int j)

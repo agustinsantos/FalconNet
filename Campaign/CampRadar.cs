@@ -1,3 +1,5 @@
+using FalconNet.Common;
+using FalconNet.Common.Maths;
 using System;
 //using FalconNet.Sim;
 
@@ -52,9 +54,9 @@ namespace FalconNet.Campaign
 		}
 
 		public void GetArcAngle (int anum, ref float a1, ref float a2)
-		{ 
-			a1 = anum * (360 / NUM_RADAR_ARCS) * Phyconst.DTR;
-			a2 = (anum + 1) * (360 / NUM_RADAR_ARCS) * Phyconst.DTR;
+		{
+            a1 = anum * (360 / NUM_RADAR_ARCS) * Angle.DegreeToRadianF;
+            a2 = (anum + 1) * (360 / NUM_RADAR_ARCS) * Angle.DegreeToRadianF;
 		}
 
 		public void SetArcRatio (int anum, float ratio)

@@ -3,8 +3,8 @@ using System.IO;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
-using VU_BYTE=System.Byte;
-using Team=System.Int32;
+using VU_BYTE = System.Byte;
+using Team = System.SByte;
 
 namespace FalconNet.Campaign
 {
@@ -16,8 +16,10 @@ namespace FalconNet.Campaign
 
 
         // Constructors
-        public CampManagerClass(ushort type, Team t) :base(type)
-		{throw new NotImplementedException();}
+        public CampManagerClass(ushort type, Team t)
+            : base(type, 0)
+        { throw new NotImplementedException(); }
+#if TODO
         public CampManagerClass(VU_BYTE[] stream): base(FalconEntity.VU_LAST_ENTITY_TYPE)
 		{throw new NotImplementedException();}
         public CampManagerClass(FileStream file): base(FalconEntity.VU_LAST_ENTITY_TYPE)
@@ -40,24 +42,24 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
         public override int Save(FileStream file)
 		{throw new NotImplementedException();}
-
+#endif
         // event handlers
-        public virtual int Handle(VuEvent evnt)
-		{throw new NotImplementedException();}
-        public virtual int Handle(VuFullUpdateEvent evnt)
-		{throw new NotImplementedException();}
-        public virtual int Handle(VuPositionUpdateEvent evnt)
-		{throw new NotImplementedException();}
-        public virtual int Handle(VuEntityCollisionEvent evnt)
-		{throw new NotImplementedException();}
-        public virtual int Handle(VuTransferEvent evnt)
-		{throw new NotImplementedException();}
-        public virtual int Handle(VuSessionEvent evnt)
-		{throw new NotImplementedException();}
+        public override VU_ERRCODE Handle(VuEvent evnt)
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE Handle(VuPositionUpdateEvent evnt)
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE Handle(VuEntityCollisionEvent evnt)
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE Handle(VuTransferEvent evnt)
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE Handle(VuSessionEvent evnt)
+        { throw new NotImplementedException(); }
         public virtual VU_ERRCODE InsertionCallback()
-		{throw new NotImplementedException();}
-        public virtual VU_ERRCODE RemovalCallback()
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
+        public override VU_ERRCODE RemovalCallback()
+        { throw new NotImplementedException(); }
         public override int Wake() { return 0; }
         public override int Sleep() { return 0; }
 
@@ -69,7 +71,7 @@ namespace FalconNet.Campaign
         public bool MyTasker(ushort p) { return IsLocal(); }
         public Team GetTaskTeam() { return owner; }
         public void SendMessage(VU_ID id, short msg, short d1, short d2, short d3)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
 
 
         // ===========================
@@ -77,7 +79,22 @@ namespace FalconNet.Campaign
         // ===========================
 
         public static VuEntity NewManager(short tid, VU_BYTE[] stream)
-		{throw new NotImplementedException();}
+        { throw new NotImplementedException(); }
+
+        public override short GetCampID()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Team GetTeam()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override VU_BYTE GetCountry()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

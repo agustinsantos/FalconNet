@@ -17,10 +17,6 @@ namespace FalconNet.Campaign
 		DF_PLAYER_REQ_REGEN	=0x02,			// The player has requested regeneration (by keystroke)
 	}
 	
-	public static class DogfightStatic
-	{
-			public const int MAX_DOGFIGHT_TEAMS	= 5;
-	}
 	
 	// Dogfight game types
 	public enum DogfightType  { dog_Furball, dog_TeamFurball, dog_TeamMatchplay };

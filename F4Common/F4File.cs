@@ -20,22 +20,52 @@ namespace FalconNet.F4Common
         public static string FalconCampaignSaveDirectory;
         public static string FalconCampUserSaveDirectory;
 
-        private static readonly char Sep = Path.DirectorySeparatorChar;
+        public static readonly char Sep = Path.DirectorySeparatorChar;
 
         public static string FalconDataDirectory
         {
             get { return falconDataDirectory; }
+            set
+            {
+                falconDataDirectory = value;
+                InitDirectories();
+            }
         }
 
         public static void InitDirectories()
         {
-            falconDataDirectory = ".";
+            //falconDataDirectory = ".";
             FalconTerrainDataDir = FalconDataDirectory + "theater";
-            FalconObjectDataDir = FalconDataDirectory + "object";
+            FalconObjectDataDir = FalconDataDirectory + "terrdata" + Sep + "objects";
             FalconMiscTexDataDir = FalconDataDirectory + "FalconMiscTexData";
             string campaignDir = FalconDataDirectory + "Campaign";
             FalconCampaignSaveDirectory = campaignDir + Sep + "Save";
             FalconCampUserSaveDirectory = campaignDir + Sep + "Save";
+        }
+
+        // Returns path of file data is in.
+        public static string F4FindFile(string filename)
+        {
+            string path = FalconDataDirectory + "files.dir";
+            string location = MultiplatformIni.GetPrivateProfileString("Files", filename, "", path);
+            if (!string.IsNullOrEmpty(location))
+            {
+#if TODO
+           if (strchr(tmpStr, ','))
+		      *(strchr(tmpStr, ',')) = ' ';
+		   if (strchr(tmpStr, ','))
+		      *(strchr(tmpStr, ',')) = ' ';
+		   sscanf (tmpStr, "%s %d %d", tmp, fileOffset, fileLen);
+			sprintf(path,"%s\\%s",FalconDataDirectory,tmp);
+		   strncpy (buffer, path, min (strlen(path) + 1, (size_t)bufSize - 1));
+		   buffer[bufSize-1] = 0;
+#endif
+                throw new NotImplementedException();
+			}
+		else
+			{
+                return filename;
+            }
         }
 
         public static int CreateCampFile(string filename, string path)

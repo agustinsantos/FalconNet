@@ -45,6 +45,7 @@
     <Compile Include="Encrypter.cs" />
     <Compile Include="F4Config.cs" />
     <Compile Include="F4File.cs" />
+    <Compile Include="F4Globals.cs" />
     <Compile Include="FalconGameType.cs" />
     <Compile Include="LogBook\CampaignMissionRst.cs" />
     <Compile Include="LogBook\CampaignStats.cs" />

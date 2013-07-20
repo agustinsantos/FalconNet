@@ -8,233 +8,257 @@ using System.Globalization;
 
 namespace FalconNet.Common
 {
-	/* 
-	 * Copyright (C) 2009 Iskren Slavov (site@dotfusion.net).
-	 * 
-	 * This code (Class): MultipatformIni.cs must be redistributed 
-	 * and edited under the terms of GNU LGPL v3.0. For more 
-	 * information read LGPL-3.0.TXT, supplied with the Class.
-	 * 
-	 * The class is tested with .NET framework 2.0 and Mono 2.2.
-	 * Hope it is helpful to you. Have fun!
-	 * 
-	 * http://www.dotfusion.net/
-	 * 
-	 */
-	public class MultiplatformIni
-	{
-		private String iniFilePath;
+    /* 
+     * Copyright (C) 2009 Iskren Slavov (site@dotfusion.net).
+     * 
+     * This code (Class): MultipatformIni.cs must be redistributed 
+     * and edited under the terms of GNU LGPL v3.0. For more 
+     * information read LGPL-3.0.TXT, supplied with the Class.
+     * 
+     * The class is tested with .NET framework 2.0 and Mono 2.2.
+     * Hope it is helpful to you. Have fun!
+     * 
+     * http://www.dotfusion.net/
+     * 
+     */
+    public class MultiplatformIni
+    {
+        private String iniFilePath;
 
-		public String IniPath {
-			get { return iniFilePath; }
-		}
+        public String IniPath
+        {
+            get { return iniFilePath; }
+        }
 
-		private static Char decSep = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator.ToCharArray () [0];
-		private static Regex keyValRegex = new Regex (
+        private static Char decSep = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator.ToCharArray()[0];
+        private static Regex keyValRegex = new Regex(
           @"((\s)*(?<Key>([^\=^\n]+))[\s^\n]*\=(\s)*(?<Value>([^\n]+(\n){0,1})))",
-            RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled | 
+            RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled |
             RegexOptions.CultureInvariant
         );
-		private static Regex secRegex = new Regex (
+        private static Regex secRegex = new Regex(
           @"(\[)*(?<Section>([^\]^\n]+))(\])",
           RegexOptions.Compiled | RegexOptions.CultureInvariant
         );
-		private ArrayList newValues = new ArrayList ();
-		struct sectKeyVal
-		{
-			public String section, key, value;
+        private ArrayList newValues = new ArrayList();
+        struct sectKeyVal
+        {
+            public String section, key, value;
 
-			public sectKeyVal (String section, String key, String value)
-			{
-				this.section = section;
-				this.key = key;
-				this.value = value;
-			}
-		}
+            public sectKeyVal(String section, String key, String value)
+            {
+                this.section = section;
+                this.key = key;
+                this.value = value;
+            }
+        }
 
-		public MultiplatformIni (String iniFilePath)
-		{
-			this.iniFilePath = iniFilePath;
-		}
+        public MultiplatformIni(String iniFilePath)
+        {
+            this.iniFilePath = iniFilePath;
+        }
 
-		~MultiplatformIni ()
-		{
-			Flush ();
-		}
+        ~MultiplatformIni()
+        {
+            Flush();
+        }
 
-		private bool isThisTheSection (String line, ref String sectionName)
-		{
-			Match match = secRegex.Match (line);
-			if (match.Success) {
-				String currSection = match.Groups ["Section"].Value as String;
-				return (currSection != null && currSection.CompareTo (sectionName) == 0);
-			}
-			return false;
-		}
+        private bool isThisTheSection(String line, ref String sectionName)
+        {
+            Match match = secRegex.Match(line);
+            if (match.Success)
+            {
+                String currSection = match.Groups["Section"].Value as String;
+                return (currSection != null && currSection.CompareTo(sectionName) == 0);
+            }
+            return false;
+        }
 
-		private bool isThisTheKey (String line, ref String key, ref String value)
-		{
-			Match match = keyValRegex.Match (line);
-			if (match.Success) {
-				String currKey = match.Groups ["Key"].Value as String;
-				if (currKey != null && currKey.CompareTo (key) == 0) {
-					value = match.Groups ["Value"].Value as String;
-					return true;
-				}
-			} else if (secRegex.Match (line).Success)
-				value = "Section"; // Oops, we're at the next section
-			return false;
-		}
+        private bool isThisTheKey(String line, ref String key, ref String value)
+        {
+            Match match = keyValRegex.Match(line);
+            if (match.Success)
+            {
+                String currKey = match.Groups["Key"].Value as String;
+                if (currKey != null && currKey.Trim().CompareTo(key) == 0)
+                {
+                    value = match.Groups["Value"].Value as String;
+                    return true;
+                }
+            }
+            else if (secRegex.Match(line).Success)
+                value = "Section"; // Oops, we're at the next section
+            return false;
+        }
 
-		public String ReadString (String section, String key, String defaultValue)
-		{
-			FileStream fileStream = new FileStream (iniFilePath, FileMode.OpenOrCreate, FileAccess.Read);
-			TextReader reader = new StreamReader (fileStream);
-			bool sectionFound = false;
+        public String ReadString(String section, String key, String defaultValue)
+        {
+            FileStream fileStream = new FileStream(iniFilePath, FileMode.OpenOrCreate, FileAccess.Read);
+            TextReader reader = new StreamReader(fileStream);
+            bool sectionFound = false;
 
-			String line;
-			while ((line = reader.ReadLine()) != null) {
-				/* First we find our section,
+            String line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                /* First we find our section,
                    then - the key */
-				if (!sectionFound)
-					sectionFound = isThisTheSection (line, ref section);
-				else {
-					String value = "";
-					if (isThisTheKey (line, ref key, ref value)) {
-						fileStream.Close ();
-						return value;
-					}
-				}
-			}
+                if (!sectionFound)
+                    sectionFound = isThisTheSection(line, ref section);
+                else
+                {
+                    String value = "";
+                    if (isThisTheKey(line, ref key, ref value))
+                    {
+                        fileStream.Close();
+                        return value;
+                    }
+                }
+            }
 
-			fileStream.Close ();
-			return defaultValue;
-		}
+            fileStream.Close();
+            return defaultValue;
+        }
 
-		public int ReadInt (String section, String key, int defaultValue)
-		{
-			return Int32.Parse (ReadString (section, key, defaultValue.ToString ()));
-		}
+        public int ReadInt(String section, String key, int defaultValue)
+        {
+            return Int32.Parse(ReadString(section, key, defaultValue.ToString()));
+        }
 
-		public Double ReadDouble (String section, String key, Double defaultValue)
-		{
-			return Double.Parse (
-                ReadString (section, key, defaultValue.ToString ()).Replace ('.', decSep).Replace (',', decSep)
+        public Double ReadDouble(String section, String key, Double defaultValue)
+        {
+            return Double.Parse(
+                ReadString(section, key, defaultValue.ToString()).Replace('.', decSep).Replace(',', decSep)
             );
-		}
+        }
 
-		public void WriteString (String section, String key, String value)
-		{
-			int sameKeyNum = -1;
-			for (int i = 0; i < newValues.Count; i++) {
-				sectKeyVal s = (sectKeyVal)newValues [i];
-				if ((s.section == section) && (s.key == key))
-					sameKeyNum = i;
-			}
-			if (sameKeyNum != -1)
-				newValues.RemoveAt (sameKeyNum);
+        public void WriteString(String section, String key, String value)
+        {
+            int sameKeyNum = -1;
+            for (int i = 0; i < newValues.Count; i++)
+            {
+                sectKeyVal s = (sectKeyVal)newValues[i];
+                if ((s.section == section) && (s.key == key))
+                    sameKeyNum = i;
+            }
+            if (sameKeyNum != -1)
+                newValues.RemoveAt(sameKeyNum);
 
-			newValues.Add (new sectKeyVal (section, key, value));
-		}
+            newValues.Add(new sectKeyVal(section, key, value));
+        }
 
-		public void Flush ()
-		{
-			/* This is where all the magic is done
+        public void Flush()
+        {
+            /* This is where all the magic is done
                We read our INI file, parse the
                new values and add them to the file
                before we write it */
 
-			// First we read our file
-			FileStream fileStream = new FileStream (iniFilePath, FileMode.OpenOrCreate, FileAccess.Read);
-			TextReader reader = new StreamReader (fileStream);
+            // First we read our file
+            FileStream fileStream = new FileStream(iniFilePath, FileMode.OpenOrCreate, FileAccess.Read);
+            TextReader reader = new StreamReader(fileStream);
 
-			String[] lines = reader.ReadToEnd ().Replace ('\r', '\0').Split ('\n');
-			fileStream.Close ();
+            String[] lines = reader.ReadToEnd().Replace('\r', '\0').Split('\n');
+            fileStream.Close();
 
-			// Create our work list and fill it
-			List<String> linesList = new List<String> ();
-			foreach (String s in lines)
-				linesList.Add (s);
+            // Create our work list and fill it
+            List<String> linesList = new List<String>();
+            foreach (String s in lines)
+                linesList.Add(s);
 
-			foreach (sectKeyVal s in newValues) {
-				String section = s.section;
-				String key = s.key;
-				String value = s.value;
+            foreach (sectKeyVal s in newValues)
+            {
+                String section = s.section;
+                String key = s.key;
+                String value = s.value;
 
-				bool sectionFound = false, keyFound = false;
-				String keyval = "";
+                bool sectionFound = false, keyFound = false;
+                String keyval = "";
 
-				List<String> tempList = new List<String> ();
-				for (int i = 0; i < linesList.Count; i++) {
-					String line = linesList [i];
+                List<String> tempList = new List<String>();
+                for (int i = 0; i < linesList.Count; i++)
+                {
+                    String line = linesList[i];
 
-					// Did we find our section yet?
-					if (!sectionFound)
-						sectionFound = isThisTheSection (linesList [i], ref section);
-					else {
-						// Did we find our key?
-						if (isThisTheKey (linesList [i], ref key, ref keyval)) {
-							if (value != keyval)
-								line = key + "=" + value;
-							keyFound = true;
-						} else if (keyval == "Section" && !keyFound) {
-							/* We found the beginning of 
+                    // Did we find our section yet?
+                    if (!sectionFound)
+                        sectionFound = isThisTheSection(linesList[i], ref section);
+                    else
+                    {
+                        // Did we find our key?
+                        if (isThisTheKey(linesList[i], ref key, ref keyval))
+                        {
+                            if (value != keyval)
+                                line = key + "=" + value;
+                            keyFound = true;
+                        }
+                        else if (keyval == "Section" && !keyFound)
+                        {
+                            /* We found the beginning of 
                                the next section. */
-							keyval = "";
-							keyFound = true;
+                            keyval = "";
+                            keyFound = true;
 
-							if (linesList [i - 1].Trim () == "")
-								tempList [tempList.Count - 1] = key + "=" + value;
-							else
-								tempList.Add (key + "=" + value);
-							tempList.Add ("");
-						} else if (i == linesList.Count - 1 && !keyFound) {   /* Looks like we're at the end of file
+                            if (linesList[i - 1].Trim() == "")
+                                tempList[tempList.Count - 1] = key + "=" + value;
+                            else
+                                tempList.Add(key + "=" + value);
+                            tempList.Add("");
+                        }
+                        else if (i == linesList.Count - 1 && !keyFound)
+                        {   /* Looks like we're at the end of file
                                and we found our section */
-							tempList.Add (key + "=" + value);
-						}
-					}
-					tempList.Add (line.TrimEnd ('\0'));
-				}
-				linesList = tempList;
+                            tempList.Add(key + "=" + value);
+                        }
+                    }
+                    tempList.Add(line.TrimEnd('\0'));
+                }
+                linesList = tempList;
 
-				/* The section or the key weren't found
+                /* The section or the key weren't found
                    so we add them */
-				if (!sectionFound && !keyFound) {
-					if (linesList.Count == 1 && linesList [linesList.Count - 1].Trim () == "")
-						linesList.RemoveAt (0);
-					else
-						linesList.Add ("");
+                if (!sectionFound && !keyFound)
+                {
+                    if (linesList.Count == 1 && linesList[linesList.Count - 1].Trim() == "")
+                        linesList.RemoveAt(0);
+                    else
+                        linesList.Add("");
 
-					linesList.Add ("[" + section + "]");
-					linesList.Add (key + "=" + value);
-				}
-			}
+                    linesList.Add("[" + section + "]");
+                    linesList.Add(key + "=" + value);
+                }
+            }
 
-			// Finally write our file
-			fileStream = new FileStream (iniFilePath, FileMode.Create, FileAccess.Write);
-			TextWriter writer = new StreamWriter (fileStream);
+            // Finally write our file
+            fileStream = new FileStream(iniFilePath, FileMode.Create, FileAccess.Write);
+            TextWriter writer = new StreamWriter(fileStream);
 
-			for (int i = 0; i < linesList.Count; i++)
-				if (!((i == linesList.Count - 1) && (linesList [i].Trim () == "")))
-					writer.WriteLine (linesList [i]);
+            for (int i = 0; i < linesList.Count; i++)
+                if (!((i == linesList.Count - 1) && (linesList[i].Trim() == "")))
+                    writer.WriteLine(linesList[i]);
 
-			writer.Flush ();
-			fileStream.Close ();
-		}
+            writer.Flush();
+            fileStream.Close();
+        }
 
-		public void WriteInt (String section, String key, int value)
-		{
-			WriteString (section, key, value.ToString ());
-		}
+        public void WriteInt(String section, String key, int value)
+        {
+            WriteString(section, key, value.ToString());
+        }
 
-		public void WriteDouble (String section, String key, Double value)
-		{
-			WriteString (section, key, value.ToString ());
-		}
+        public void WriteDouble(String section, String key, Double value)
+        {
+            WriteString(section, key, value.ToString());
+        }
 
         public static int GetPrivateProfileInt(string section, string key, int defval, string file)
         {
-            throw new NotImplementedException();
+            MultiplatformIni inifile = new MultiplatformIni(file);
+            return inifile.ReadInt(section, key, defval);
         }
-	}
+        public static string GetPrivateProfileString(string section, string key, string defval, string file)
+        {
+            MultiplatformIni inifile = new MultiplatformIni(file);
+            return inifile.ReadString(section, key, defval);
+        }
+    }
 }

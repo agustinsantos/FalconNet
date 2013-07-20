@@ -104,8 +104,10 @@ namespace FalconNet.Campaign
 		{ throw new NotImplementedException ();	}
  
 		// constructors and serial functions
-		public PackageClass(ushort type) : base(type)	
+        public PackageClass(ushort type)
+            : base(type, IdNamespace.GetIdFromNamespace(IdNamespace.PackageNS))	
 		{ throw new NotImplementedException ();	}
+#if TODO
 		public PackageClass(byte[] stream, ref int pos)	: base(stream, ref pos)
 		{ throw new NotImplementedException ();	}
 		//TODO public virtual ~PackageClass();
@@ -117,9 +119,10 @@ namespace FalconNet.Campaign
 		// event Handlers
 		public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)	
 		{ throw new NotImplementedException ();	}
+#endif
 
 		// required virtuals
-		public virtual int Reaction (CampEntity e, int p, float f)	{	return 0; }
+        public override int Reaction(CampBaseClass e, int p, float f) { return 0; }
 		public override int MoveUnit (CampaignTime c)	
 		{ throw new NotImplementedException ();	}
 		public override int ChooseTactic ()									{	return 0; }

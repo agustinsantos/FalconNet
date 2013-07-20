@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Campbase.cs" />
     <Compile Include="camplist.cs" />
     <Compile Include="Campwp.cs" />
     <Compile Include="Division.cs" />
@@ -46,14 +45,11 @@
     <Compile Include="Objectiv.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Name.cs" />
-    <Compile Include="Cmpclass.cs" />
     <Compile Include="MissEval.cs" />
     <Compile Include="persist.cs" />
     <Compile Include="Simbase.cs" />
     <Compile Include="Supply.cs" />
-    <Compile Include="Team.cs" />
     <Compile Include="Atm.cs" />
-    <Compile Include="Manager.cs" />
     <Compile Include="Gtm.cs" />
     <Compile Include="ACSelect.cs" />
     <Compile Include="AIInput.cs" />
@@ -79,6 +75,10 @@
     <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
       <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
       <Name>CampaignBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\FalcLib\FalcLib.csproj">
       <Project>{12899D19-7F1A-49FE-82E2-3535B3CED5C3}</Project>

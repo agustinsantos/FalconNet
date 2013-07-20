@@ -208,9 +208,10 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Other Functions
-		public FlightClass (int type, Unit parent, Unit squadron):base(type)
+        public FlightClass(ushort type, Unit parent, Unit squadron)
+            : base(type, IdNamespace.GetIdFromNamespace(IdNamespace.FlightNS))
 		{throw new NotImplementedException();}
-		
+#if TODO
 		public FlightClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~FlightClass();
@@ -219,8 +220,8 @@ namespace FalconNet.Campaign
 
 		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-
-		public virtual VU_ERRCODE RemovalCallback ()
+#endif
+		public override VU_ERRCODE RemovalCallback ()
 		{throw new NotImplementedException();}
 
 		// event Handlers
@@ -228,13 +229,13 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 		
 		// virtuals handled by flight.h
-		public override int GetDeaggregationPoint (int slot, CampEntity ent)
+        public override int GetDeaggregationPoint(int slot, CampBaseClass ent)
 		{throw new NotImplementedException();}
 
 		public override bool	ShouldDeaggregate ()
 		{throw new NotImplementedException();}
 
-		public override int Reaction (CampEntity what, int zone, float range)
+        public override int Reaction(CampBaseClass what, int zone, float range)
 		{throw new NotImplementedException();}
 
 		public override int MoveUnit (CampaignTime time)
@@ -405,9 +406,9 @@ namespace FalconNet.Campaign
 			return (int)mission_id;
 		}
 
-		public override CampEntity GetUnitMissionTarget ()
+        public override CampBaseClass GetUnitMissionTarget()
 		{
-			return (CampEntity)VuDatabase.vuDatabase.Find (mission_target);
+            return (CampBaseClass)VUSTATIC.vuDatabase.Find(mission_target);
 		}
 
 		public override VU_ID GetUnitMissionTargetID ()
@@ -433,7 +434,7 @@ namespace FalconNet.Campaign
 			return squadron;
 		}
 
-		public override CampEntity GetUnitAirbase ()
+        public override CampBaseClass GetUnitAirbase()
 		{throw new NotImplementedException();}
 
 		public override VU_ID GetUnitAirbaseID ()
@@ -459,7 +460,7 @@ namespace FalconNet.Campaign
 
 		public override Unit GetUnitParent ()
 		{
-			return (Unit)VuDatabase.vuDatabase.Find (package);
+            return (Unit)VUSTATIC.vuDatabase.Find(package);
 		}
 
 		public override VU_ID GetUnitParentID ()
@@ -484,15 +485,17 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Core functions
+#if TODO
 		public int DetectVs (AircraftClass ac, ref float d, ref int combat, ref int spotted, ref int estr)
 		{throw new NotImplementedException();}
+#endif
 
-		public int DetectVs (CampEntity e, ref float d, ref int combat, ref int spotted, ref int estr)
+        public int DetectVs(CampBaseClass e, ref float d, ref int combat, ref int spotted, ref int estr)
 		{throw new NotImplementedException();}
 
 		public PackageClass GetUnitPackage ()
 		{
-			return (PackageClass)VuDatabase.vuDatabase.Find (package);
+            return (PackageClass)VUSTATIC.vuDatabase.Find(package);
 		}
 
 		public int PickRandomPilot (int seed)
@@ -577,7 +580,9 @@ namespace FalconNet.Campaign
 		public FlightClass ecmFlightPtr;
 // 2001-06-25 ADDED BY S.G. NEED SOMETHING TO HOLD WHO FIRED AT IT SO ONLY ONE SIM PLANE WILL LAUNCH HARMS AT AN AGGREGATED TARGET
 		public FalconEntity shotAt;
+#if TODO
 		public AircraftClass whoShot;
+#endif
 		// 2001-10-11 ADDED by M.N. 
 		public uint	refuel;									// How much fuel has to be taken from a tanker
 
@@ -590,9 +595,10 @@ namespace FalconNet.Campaign
 
 		public static int RegroupFlight (Flight flight)
 		{throw new NotImplementedException();}
-
+#if TODO
 		public static void RegroupAircraft (AircraftClass ac)
 		{throw new NotImplementedException();}
+#endif
 
 		public static void CancelFlight (Flight flight)
 		{throw new NotImplementedException();}

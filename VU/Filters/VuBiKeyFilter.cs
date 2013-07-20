@@ -85,6 +85,9 @@ namespace FalconNet.VU
             factor_ = rhs.factor_;
         }
 
+        protected VuBiKeyFilter()
+        { }
+
         // DATA
         /// <summary>
         /// grid resolution.

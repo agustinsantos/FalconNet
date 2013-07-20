@@ -53,14 +53,30 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestAIInput.cs" />
     <Compile Include="TestEncoding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCollections.cs" />
+    <Compile Include="TestVuStatic.cs" />
+    <Compile Include="TestNames.cs" />
+    <Compile Include="TestEntity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Campaign\Campaign.csproj">
+      <Project>{b822ed47-038a-4e04-8ba8-5742c69adf6e}</Project>
+      <Name>Campaign</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63b80e09-c6e2-4077-ab8c-e6ead52eae47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FalcLib\FalcLib.csproj">
+      <Project>{12899d19-7f1a-49fe-82e2-3535b3ced5c3}</Project>
+      <Name>FalcLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{eda4023d-884d-4f58-9e25-0f77a34cf43c}</Project>

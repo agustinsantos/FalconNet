@@ -12,9 +12,6 @@ namespace FalconNet.CampaignBase
         public const float GRID_SIZE_FT = Phyconst.FEET_PER_KM;		// Grid size, in feet (standard sim unit)
         public const float GRID_SIZE_KM = 1.0F;			// Grid size, in km (standard campaign unit)
 
-        public const float DEG_TO_RADIANS = 0.017453F;		// PI / 180
-        public const float RADIANS_TO_DEG = 57.29578F;		// 180 / PI
-
         public const int HALF_CHANCE = 16000;			// Half of RAND_MAX
 
         public const int TOD_SUNUP = 300;				// Sun up, in minutes since midnight
@@ -34,7 +31,18 @@ namespace FalconNet.CampaignBase
         public const int DETECTED_VISUAL = 1;
         public const int DETECTED_RADAR = 2;
 
-        public static CampaignTime[] ReconLossTime = new CampaignTime[(int)MoveType.MOVEMENT_TYPES];
+        public static CampaignTime[] ReconLossTime = new CampaignTime[(int)MoveType.MOVEMENT_TYPES]
+        {
+            CampaignTime.CampaignHours, 
+            20 * CampaignTime.CampaignMinutes, 
+            10 * CampaignTime.CampaignMinutes,
+            10 * CampaignTime.CampaignMinutes, 
+            1 * CampaignTime.CampaignMinutes,
+            1 * CampaignTime.CampaignMinutes,
+            10 * CampaignTime.CampaignMinutes,
+            10 * CampaignTime.CampaignMinutes
+        };
+
 
 
         public const int ALT_LEVELS = 5;

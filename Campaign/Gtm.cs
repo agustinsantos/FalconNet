@@ -4,7 +4,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
-using Team = System.Int32;
+using Team = System.SByte;
 
 namespace FalconNet.Campaign
 {
@@ -35,6 +35,7 @@ namespace FalconNet.Campaign
             //TODO memset(objList,0,sizeof(void*)*GORD_LAST);
         }
 
+#if TODO  
         public GroundTaskingManagerClass(VU_BYTE[] stream)
             : base(stream)
         { throw new NotImplementedException(); }
@@ -49,12 +50,12 @@ namespace FalconNet.Campaign
 
         public virtual int Save(byte[] stream)
         {
-#if TODO
+
 	        base.Save(stream);
 	        memcpy(*stream, &flags, sizeof(short));
             *stream += sizeof(short);
 	        return this.SaveSize();
-#endif
+
             throw new NotImplementedException();
         }
 
@@ -72,9 +73,9 @@ namespace FalconNet.Campaign
             throw new NotImplementedException();
         }
 
-
+#endif
         // Required pure virtuals
-        public virtual int Task()
+        public override int Task()
         {
 #if TODO
             int done = 0;

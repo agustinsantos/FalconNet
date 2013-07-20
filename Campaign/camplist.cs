@@ -34,7 +34,7 @@ namespace FalconNet.Campaign
         }
         //TODO public virtual ~UnitFilter( )			{}
 
-        public virtual bool Test(VuEntity e)
+        public override bool Test(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != CLASS_UNIT)
@@ -53,7 +53,7 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual bool RemoveTest(VuEntity e)
+        public override bool RemoveTest(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != CLASS_UNIT)
@@ -72,8 +72,8 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new UnitFilter(parent, real, host, inactive); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new UnitFilter(parent, real, host, inactive); }
     }
 
     public class AirUnitFilter : VuFilter
@@ -92,7 +92,7 @@ namespace FalconNet.Campaign
         }
         //TODO public virtual ~AirUnitFilter()		{}
 
-        public virtual bool Test(VuEntity e)
+        public override bool Test(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != CLASS_UNIT)
@@ -111,7 +111,7 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual bool RemoveTest(VuEntity e)
+        public override bool RemoveTest(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != CLASS_UNIT)
@@ -130,8 +130,8 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new AirUnitFilter(parent, real, host); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new AirUnitFilter(parent, real, host); }
     }
 
     public class GroundUnitFilter : VuFilter
@@ -150,7 +150,7 @@ namespace FalconNet.Campaign
         }
         // TODO public virtual ~GroundUnitFilter( )		{}
 
-        public virtual bool Test(VuEntity e)
+        public override bool Test(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != CLASS_UNIT)
@@ -169,7 +169,7 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual bool RemoveTest(VuEntity e)
+        public override bool RemoveTest(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != Classtable_Classes.CLASS_UNIT)
@@ -188,8 +188,8 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new GroundUnitFilter(parent, real, host); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new GroundUnitFilter(parent, real, host); }
     }
 
     public class NavalUnitFilter : VuFilter
@@ -208,7 +208,7 @@ namespace FalconNet.Campaign
         }
         //TODO public virtual ~NavalUnitFilter()		{}
 
-        public virtual bool Test(VuEntity e)
+        public override bool Test(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != Classtable_Classes.CLASS_UNIT)
@@ -227,7 +227,7 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual bool RemoveTest(VuEntity e)
+        public override bool RemoveTest(VuEntity e)
         {
 #if TODO
             if (!(e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] || (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] != Classtable_Classes.CLASS_UNIT)
@@ -246,8 +246,8 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new NavalUnitFilter(parent, real, host); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new NavalUnitFilter(parent, real, host); }
     }
 
 
@@ -261,17 +261,17 @@ namespace FalconNet.Campaign
         public byte real;					// Set if real only
 
 
-        public UnitProxFilter(int r)
+        public UnitProxFilter(int r) : base()
         { throw new NotImplementedException(); }
-        public UnitProxFilter(UnitProxFilter other, int r)
+        public UnitProxFilter(UnitProxFilter other, int r): base(other)
         { throw new NotImplementedException(); }
         // TODO public virtual ~UnitProxFilter()					{}
 
-        public virtual bool Test(VuEntity ent)
+        public override bool Test(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual bool RemoveTest(VuEntity ent)
+        public override bool RemoveTest(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual VuFilter Copy() { return new UnitProxFilter(real); }
+        public override VuFilter Copy() { return new UnitProxFilter(real); }
 
 #if VU_GRID_TREE_Y_MAJOR
 		public virtual VU_KEY CoordToKey1(BIG_SCALAR coord)	{ return (VU_KEY)(yStep * coord); }
@@ -281,8 +281,8 @@ namespace FalconNet.Campaign
 #else
         public virtual VU_KEY CoordToKey1(BIG_SCALAR coord) { return (VU_KEY)(xStep * coord); }
         public virtual VU_KEY CoordToKey2(BIG_SCALAR coord) { return (VU_KEY)(yStep * coord); }
-        public virtual VU_KEY Distance1(BIG_SCALAR dist) { return (VU_KEY)(xStep * dist); }
-        public virtual VU_KEY Distance2(BIG_SCALAR dist) { return (VU_KEY)(yStep * dist); }
+        public override VU_KEY Distance1(BIG_SCALAR dist) { return (VU_KEY)(xStep * dist); }
+        public override VU_KEY Distance2(BIG_SCALAR dist) { return (VU_KEY)(yStep * dist); }
 #endif
     }
 
@@ -309,12 +309,12 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
         // TODO  public virtual ~ObjFilter( )			{}
 
-        public virtual bool Test(VuEntity ent)
+        public override bool Test(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual bool RemoveTest(VuEntity ent)
+        public override bool RemoveTest(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new ObjFilter(host); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new ObjFilter(host); }
     }
 
 
@@ -332,11 +332,11 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
         //TODO public virtual ~ObjProxFilter( )					{}
 
-        public virtual bool Test(VuEntity ent)
+        public override bool Test(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual bool RemoveTest(VuEntity ent)
+        public override bool RemoveTest(VuEntity ent)
         { throw new NotImplementedException(); }
-        public virtual VuFilter Copy() { return new ObjProxFilter(); }
+        public override VuFilter Copy() { return new ObjProxFilter(); }
 
 #if  VU_GRID_TREE_Y_MAJOR
 		public virtual VU_KEY CoordToKey1(BIG_SCALAR coord)	{ return (VU_KEY)(yStep * coord); }
@@ -346,8 +346,8 @@ namespace FalconNet.Campaign
 #else
         public virtual VU_KEY CoordToKey1(BIG_SCALAR coord) { return (VU_KEY)(xStep * coord); }
         public virtual VU_KEY CoordToKey2(BIG_SCALAR coord) { return (VU_KEY)(yStep * coord); }
-        public virtual VU_KEY Distance1(BIG_SCALAR dist) { return (VU_KEY)(xStep * dist); }
-        public virtual VU_KEY Distance2(BIG_SCALAR dist) { return (VU_KEY)(yStep * dist); }
+        public override VU_KEY Distance1(BIG_SCALAR dist) { return (VU_KEY)(xStep * dist); }
+        public override VU_KEY Distance2(BIG_SCALAR dist) { return (VU_KEY)(yStep * dist); }
 #endif
     }
 
@@ -365,25 +365,25 @@ namespace FalconNet.Campaign
 
         // TODO public virtual ~CampBaseFilter( )		{}
 
-        public virtual bool Test(VuEntity e)
+        public override bool Test(VuEntity e)
         {
-            if ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] != 0 &&
-                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
-                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
+            if ((e.EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN] != 0 &&
+                ((e.EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
+                 (e.EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
                 return true;
             return false;
         }
 
-        public virtual bool RemoveTest(VuEntity e)
+        public override bool RemoveTest(VuEntity e)
         {
-            if ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_DOMAIN] != 0 &&
-                ((e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
-                 (e.EntityType()).classInfo_[(int)VU_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
+            if ((e.EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN] != 0 &&
+                ((e.EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT ||
+                 (e.EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_OBJECTIVE))
                 return true;
             return false;
         }
-        public virtual int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
-        public virtual VuFilter Copy() { return new CampBaseFilter(); }
+        public override int Compare(VuEntity ent1, VuEntity ent2) { return (VuEntity.SimCompare(ent1, ent2)); }
+        public override VuFilter Copy() { return new CampBaseFilter(); }
     }
 
     public static class CampListStatic

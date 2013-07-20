@@ -10,6 +10,8 @@ using VU_BOOL = System.Boolean;
 using BIG_SCALAR = System.Single;
 using SM_SCALAR = System.Single;
 using System.Diagnostics;
+using System.Reflection;
+using System.Globalization;
 
 namespace FalconNet.VU
 {
@@ -29,6 +31,10 @@ namespace FalconNet.VU
         public const int VU_PATCH = 0;
         public const string VU_REVISION_DATE = @"28/01/2007";
         public const string VU_PATCH_DATE = @"28/01/2007";
+
+        public static readonly Version v = Assembly.GetExecutingAssembly().GetName().Version;
+        public static readonly string About = string.Format(CultureInfo.InvariantCulture, @"FalconNet Version {0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
+
         public static VuReleaseInfo vuReleaseInfo = new VuReleaseInfo
         {
             version_ = VU_VERSION,

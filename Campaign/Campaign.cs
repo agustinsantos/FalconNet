@@ -8,84 +8,75 @@ using GridIndex = System.Int16;
 using Control = System.Byte;
 using System.Diagnostics;
 using FalconNet.CampaignBase;
+using FalconNet.F4Common;
 
 namespace FalconNet.Campaign
 {
-	public static class CampaignStatic
-	{
-		// ============
-		// Map Deltas
-		// ============
+    public static class CampaignStatic
+    {
+        // ============
+        // Placeholders
+        // ============
+        //TODO typedef UnitClass* Unit;
+        //TODOtypedef ObjectiveClass* Objective;
 
-		public static GridIndex[] dx = new GridIndex[17];     // dx per direction
-		public static GridIndex[] dy = new GridIndex[17];     // dy per direction
+        // =====================
+        // Campaign wide globals
+        // =====================
 
-		// ============
-		// Placeholders
-		// ============
-		//TODO typedef UnitClass* Unit;
-		//TODOtypedef ObjectiveClass* Objective;
+        public static F4CSECTIONHANDLE campCritical;
+        public static int[] VisualDetectionRange = new int[(int)DamageDataType.OtherDam] { 12, 4, 5, 5, 8, 16, 10, 5, 0, 0 };
+        public static byte[] DefaultDamageMods = new byte[(int)DamageDataType.OtherDam + 1] { 0, 100, 100, 0, 0, 100, 100, 0, 0, 0, 0 };
 
-		// =====================
-		// Campaign wide globals
-		// =====================
+        // ================
+        // Defines & macros
+        // ================
 
-		public static F4CSECTIONHANDLE campCritical;
-		public static int[] VisualDetectionRange = new int[(int)DamageDataType.OtherDam];
-		public static byte[] DefaultDamageMods = new byte[(int)DamageDataType.OtherDam + 1];
+        public const int InfiniteCost = 32000;
 
-		// ================
-		// Defines & macros
-		// ================
+        // TODO #define CampEnterCriticalSection()	F4EnterCriticalSection(campCritical)
+        // TODO #define CampLeaveCriticalSection()	F4LeaveCriticalSection(campCritical)
 
-		private const int MAX_WCH_FILES = 4;
-		private static int next_wch_file = 0;
-		private static FileStream[] wch_fp = new FileStream[MAX_WCH_FILES];
-		private static string[] wch_filename = new string[MAX_WCH_FILES];
-		public const int InfiniteCost = 32000;
+        // ======================
+        // public static al functions
+        // ======================
 
-		// TODO #define CampEnterCriticalSection()	F4EnterCriticalSection(campCritical)
-		// TODO #define CampLeaveCriticalSection()	F4LeaveCriticalSection(campCritical)
+        public static Objective AddObjectiveToCampaign(GridIndex x, GridIndex y)
+        {
+            Objective o;
 
-		// ======================
-		// public static al functions
-		// ======================
+            o = ObjectivStatic.NewObjective();
+            o.SetLocation(x, y);
+            o.UpdateObjectiveLists();
+            CampListStatic.RebuildObjectiveLists();
+            CampListStatic.RebuildParentsList();
+            return o;
+        }
 
-		public static Objective AddObjectiveToCampaign (GridIndex x, GridIndex y)
-		{
-			Objective o;
+        public static void RemoveObjective(Objective O)
+        {
+            throw new NotImplementedException();
+        }
 
-			o = ObjectivStatic.NewObjective ();
-			o.SetLocation (x, y);
-			o.UpdateObjectiveLists ();
-			CampListStatic.RebuildObjectiveLists ();
-			CampListStatic.RebuildParentsList ();
-			return o;
-		}
+        public static bool LoadTheater(string theater)
+        {
+            // This assumes the Class Table was loaded elsewhere
+            CampEnterCriticalSection();
+            if (!CampTerrStatic.LoadTheaterTerrain(theater))
+            {
+                Debug.WriteLine("Failed to open theater: {0}, using default theater.", theater);
+                CampTerrStatic.Map_Max_X = CampTerrStatic.Map_Max_Y = 500;
+                CampTerrStatic.InitTheaterTerrain();
+                CampLeaveCriticalSection();
+                return false;
+            }
+            Name.LoadNames(theater);
+            CampLeaveCriticalSection();
+            return true;
+        }
 
-		public static void RemoveObjective (Objective O)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public static bool LoadTheater (string theater)
-		{
-			// This assumes the Class Table was loaded elsewhere
-			CampEnterCriticalSection ();
-			if (!CampTerrStatic.LoadTheaterTerrain (theater)) {
-				Debug.WriteLine ("Failed to open theater: {0}, using default theater.", theater);
-				CampTerrStatic.Map_Max_X = CampTerrStatic.Map_Max_Y = 500;
-				CampTerrStatic.InitTheaterTerrain ();
-				CampLeaveCriticalSection ();
-				return false;
-			}
-			Name.LoadNames (theater);
-			CampLeaveCriticalSection ();
-			return true;
-		}
-
-		public static int SaveTheater (string filename)
-		{
+        public static int SaveTheater(string filename)
+        {
 #if TODO
             CampEnterCriticalSection();
             SaveTheaterTerrain(theater);
@@ -93,11 +84,11 @@ namespace FalconNet.Campaign
             CampLeaveCriticalSection();
             return 1;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static int LinkCampaignObjectives (Path p, Objective O1, Objective O2)
-		{
+        public static int LinkCampaignObjectives(Path p, Objective O1, Objective O2)
+        {
 #if TODO
             int i = 0, cost = 0, found = 0;
             byte[] costs = new byte[MOVEMENT_TYPES]; // TODO={254};
@@ -142,11 +133,11 @@ namespace FalconNet.Campaign
             else
                 return 0;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static int UnLinkCampaignObjectives (Objective O1, Objective O2)
-		{
+        public static int UnLinkCampaignObjectives(Objective O1, Objective O2)
+        {
 #if TODO
             int i, unlinked = 0;
 
@@ -168,11 +159,11 @@ namespace FalconNet.Campaign
             }
             return unlinked;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static int RecalculateLinks (Objective o)
-		{
+        public static int RecalculateLinks(Objective o)
+        {
 #if TODO
             PathClass path;
             Objective n;
@@ -186,16 +177,16 @@ namespace FalconNet.Campaign
             }
             return 1;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static UnitClass GetUnitByXY (GridIndex I, GridIndex J)
-		{
-			throw new NotImplementedException ();
-		}
+        public static UnitClass GetUnitByXY(GridIndex I, GridIndex J)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static UnitClass AddUnit (GridIndex I, GridIndex J, char Side)
-		{
+        public static UnitClass AddUnit(GridIndex I, GridIndex J, char Side)
+        {
 #if TODO
             Unit nu;
 
@@ -206,21 +197,21 @@ namespace FalconNet.Campaign
             nu.SetUnitOrders(GORD_DEFEND);
             return nu;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static UnitClass CreateUnit (Control who, int Domain, UnitType Type, byte SType, byte SPType, Unit Parent)
-		{
-			throw new NotImplementedException ();
-		}
+        public static UnitClass CreateUnit(Control who, int Domain, UnitType Type, byte SType, byte SPType, Unit Parent)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static void RemoveUnit (UnitClass u)
-		{
-			u.Remove ();
-		}
+        public static void RemoveUnit(UnitClass u)
+        {
+            u.Remove();
+        }
 
-		public static int TimeOfDayGeneral (CampaignTime time)
-		{
+        public static int TimeOfDayGeneral(CampaignTime time)
+        {
 #if TODO
             // 2001-04-10 MODIFIED BY S.G. SO IT USES MILISECOND AND NOT MINUTES! I COULD CHANGE THE .H FILE BUT IT WOULD TAKE TOO LONG TO RECOMPILE :-(
             /*	if (time < TOD_SUNUP)
@@ -248,39 +239,39 @@ namespace FalconNet.Campaign
             else
                 return TOD_NIGHT;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static int TimeOfDayGeneral ()
-		{
+        public static int TimeOfDayGeneral()
+        {
 #if TODO
             return TimeOfDayGeneral(TheCampaign.TimeOfDay);
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static CampaignTime TimeOfDay ()
-		{
+        public static CampaignTime TimeOfDay()
+        {
 #if TODO
             return TheCampaign.TimeOfDay;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
 
-		// Bubble rebuilding stuff
-		public static void CampaignRequestSleep ()
-		{
-			throw new NotImplementedException ();
-		}
+        // Bubble rebuilding stuff
+        public static void CampaignRequestSleep()
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int CampaignAllAsleep ()
-		{
-			throw new NotImplementedException ();
-		}
+        public static int CampaignAllAsleep()
+        {
+            throw new NotImplementedException();
+        }
 
-		private static void ResizeBubble (int moversInBubble)
-		{
+        private static void ResizeBubble(int moversInBubble)
+        {
 #if TODO
             float br, new_ratio;
 
@@ -299,37 +290,44 @@ namespace FalconNet.Campaign
 
             ((FalconSessionEntity*)vuLocalSessionEntity).SetBubbleRatio(new_ratio);
 #endif
+            throw new NotImplementedException();
+        }
+
+        public static void CampEnterCriticalSection()
+        {
+#if !DEBUG
 			throw new NotImplementedException ();
-		}
+#endif
+        }
 
-		private static void CampEnterCriticalSection ()
-		{
+        public static void CampLeaveCriticalSection()
+        {
+#if !DEBUG
 			throw new NotImplementedException ();
-		}
+#endif
+        }
 
-		private static void CampLeaveCriticalSection ()
-		{
-			throw new NotImplementedException ();
-		}
+        private static void GetCampFilePath(FalconGameType type, string filename, out string path)
+        {
+            if (type == FalconGameType.game_TacticalEngagement)
+            {
+                path = F4File.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".tac";
+                if (!File.Exists(path))
+                    path = F4File.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".trn";
+            }
+            else
+            {
+                path = F4File.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".cam";
+            }
+        }
 
-		private static void GetCampFilePath (FalconGameType type, string filename, out string path)
-		{
-			if (type == FalconGameType.game_TacticalEngagement) {
-				path = F4Find.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".tac";
-				if (!File.Exists (path))
-					path = F4Find.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".trn";
-			} else {
-				path = F4Find.FalconCampUserSaveDirectory + System.IO.Path.DirectorySeparatorChar + filename + ".cam";
-			}
-		}
+        private static bool IsCampFile(FalconGameType type, string filename)
+        {
+            string path;
 
-		private static bool IsCampFile (FalconGameType type, string filename)
-		{
-			string path;
-
-			GetCampFilePath (type, filename, out path);
-			return File.Exists (path);
-		}
-	}
+            GetCampFilePath(type, filename, out path);
+            return File.Exists(path);
+        }
+    }
 }
 

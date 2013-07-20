@@ -179,9 +179,10 @@ namespace FalconNet.Campaign
 		{throw new NotImplementedException();}
 
 		// Other Functions
-		public SquadronClass (int type):base(type)
+        public SquadronClass(ushort type)
+            : base(type, IdNamespace.GetIdFromNamespace(IdNamespace.NonVolatileNS))
 		{throw new NotImplementedException();}
-		
+#if TODO
 		public SquadronClass (byte[] stream, ref int offset):base(stream, ref offset)
 		{throw new NotImplementedException();}
 		//TODO public virtual ~SquadronClass();
@@ -190,13 +191,13 @@ namespace FalconNet.Campaign
 
 		public override int Save (VU_BYTE[] stream)
 		{throw new NotImplementedException();}
-
+#endif
 		// event Handlers
 		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
 		{throw new NotImplementedException();}
 
 		// Required pure virtuals
-		public override int Reaction (CampEntity c, int i, float f)
+        public override int Reaction(CampBaseClass c, int i, float f)
 		{
 			return 0;
 		}
@@ -294,7 +295,7 @@ namespace FalconNet.Campaign
 			return last_resupply;
 		}
 
-		public override CampEntity GetUnitAirbase ()
+        public override CampBaseClass GetUnitAirbase()
 		{
 			return FindStatic.FindEntity (airbase_id);
 		}

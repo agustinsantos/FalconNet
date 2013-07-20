@@ -4,6 +4,7 @@ using FalconNet.VU;
 //using FalconNet.Sim;
 using FalconNet.FalcLib;
 using FalconNet.CampaignBase;
+using FalconNet.F4Common;
 
 namespace FalconNet.Campaign
 {
@@ -48,8 +49,11 @@ namespace FalconNet.Campaign
 
 		public bool InSim ()
 		{
+#if TODO
 			return SimulationLoopControl.InSim ();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
 		public bool RunningInstantAction ()
 		{
@@ -111,6 +115,7 @@ namespace FalconNet.Campaign
 			throw new NotImplementedException ();
 		}
 
+#if TODO
 		public SimBaseClass FindNearestThreat (AircraftClass aircraft, ref short x, ref short y, ref float alt)
 		{
 			throw new NotImplementedException ();
@@ -130,6 +135,7 @@ namespace FalconNet.Campaign
 		{
 			throw new NotImplementedException ();
 		}
+#endif
 
 		public void UpdateRemoteData ()
 		{
@@ -276,7 +282,9 @@ namespace FalconNet.Campaign
 			doGraphicsExit = true;
 		}
 
+#if TODO
 		public AircraftClass playerEntity;
+#endif
 		public FalconPrivateOrderedList objectList;		// List of locally deaggregated sim vehicles
 		public FalconPrivateOrderedList featureList;		// List of locally deaggregated sim features
 		public FalconPrivateOrderedList campUnitList;		// List of nearby aggregated campaign units

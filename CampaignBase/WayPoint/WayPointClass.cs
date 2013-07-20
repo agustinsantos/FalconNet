@@ -8,6 +8,7 @@ using BIG_SCALAR = System.Single;
 using FalconNet.Common.Maths;
 using log4net;
 using FalconNet.F4Common;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.CampaignBase
 {
@@ -27,18 +28,18 @@ namespace FalconNet.CampaignBase
       public static MEM_POOL	pool;
 #endif
 
-        private GridIndex GridX;					// Waypoint's X,Y and Z coordinates (in km from southwest corner)
-        private GridIndex GridY;
-        private short GridZ;					// Z is in 10s of feet
-        private CampaignTime Arrive;
-        private CampaignTime Depart;					// This is only used for loiter waypoints 
-        private VU_ID TargetID;
-        private WPAction Action;
-        private WPAction RouteAction;
-        private byte Formation;
-        private byte TargetBuilding;
-        private WPFlags Flags;					// Various wp flags
-        private short Tactic;					// Tactic to use here
+        internal GridIndex GridX;		// Waypoint's X,Y and Z coordinates (in km from southwest corner)
+        internal GridIndex GridY;
+        internal GridIndex GridZ;			// Z is in 10s of feet
+        internal CampaignTime Arrive;
+        internal CampaignTime Depart;	// This is only used for loiter waypoints 
+        internal VU_ID TargetID;
+        internal WPAction Action;
+        internal WPAction RouteAction;
+        internal byte Formation;
+        internal byte TargetBuilding;
+        internal WPFlags Flags;			// Various wp flags
+        internal short Tactic;			// Tactic to use here
 
         protected float Speed;
         protected WayPointClass PrevWP;					// Make this one public for kicks..
@@ -65,7 +66,9 @@ namespace FalconNet.CampaignBase
             Tactic = 0;
         }
 
-        public WayPointClass(GridIndex x, GridIndex y, int alt, int speed, CampaignTime arr, CampaignTime station, WPAction action, WPFlags flags)
+        public WayPointClass(GridIndex x, GridIndex y, int alt, int speed,
+                             CampaignTime arr, CampaignTimeInterval station,
+                             WPAction action, WPFlags flags)
         {
             GridX = x;
             GridY = y;
@@ -617,4 +620,112 @@ namespace FalconNet.CampaignBase
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }
 
+
+    public static class WayPointClassEncodingLE
+    {
+        public const byte WP_HAVE_DEPTIME = 0x01;
+        public const byte WP_HAVE_TARGET = 0x02;
+        private const int version = 71; //TODO fix that
+        private const int FLAGS_WIDENED_AT_VERSION = 73;
+
+        public static void Encode(ByteWrapper buffer, WayPointClass val)
+        {
+            throw new NotImplementedException();
+        }
+        public static void Encode(Stream stream, WayPointClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static WayPointClass Decode(ByteWrapper buffer)
+        {
+            WayPointClass rst = new WayPointClass();
+            byte haves = buffer.GetByte();
+            rst.GridX = Int16EncodingLE.Decode(buffer);
+            rst.GridY = Int16EncodingLE.Decode(buffer);
+            rst.GridZ = Int16EncodingLE.Decode(buffer);
+            rst.Arrive = UInt32EncodingLE.Decode(buffer);
+            rst.Action = (WPAction)buffer.GetByte();
+            rst.RouteAction = (WPAction)buffer.GetByte();
+            rst.Formation = buffer.GetByte();
+
+            if (version < FLAGS_WIDENED_AT_VERSION)
+            {
+                rst.Flags = (WPFlags)UInt16EncodingLE.Decode(buffer);
+            }
+            else
+            {
+                rst.Flags = (WPFlags)UInt32EncodingLE.Decode(buffer);
+                //TODO: SOME NEW FIELD, 2 BYTES LONG, COMES HERE, OR ELSE FLAGS IS EXPANDED IN AT LATEST V73 (PROBABLY EARLIER?) TO BE 4 BYTES LONG INSTEAD OF 2 BYTES LONG
+            }
+            if ((haves & WP_HAVE_TARGET) != 0)
+            {
+                rst.TargetID = VU_IDEncodingLE.Decode(buffer);
+                rst.TargetBuilding = buffer.GetByte();
+            }
+            else
+            {
+                rst.TargetID = new VU_ID();
+                rst.TargetBuilding = 255;
+            }
+            if ((haves & WP_HAVE_DEPTIME) != 0)
+            {
+                rst.Depart = UInt32EncodingLE.Decode(buffer);
+            }
+            else
+            {
+                rst.Depart = rst.Arrive;
+            }
+            return rst;
+        }
+        public static WayPointClass Decode(Stream stream)
+        {
+            WayPointClass rst = new WayPointClass();
+            byte haves = (byte)stream.ReadByte();
+            rst.GridX = Int16EncodingLE.Decode(stream);
+            rst.GridY = Int16EncodingLE.Decode(stream);
+            rst.GridZ = Int16EncodingLE.Decode(stream);
+            rst.Arrive = UInt32EncodingLE.Decode(stream);
+            rst.Action = (WPAction)stream.ReadByte();
+            rst.RouteAction = (WPAction)stream.ReadByte();
+            rst.Formation = (byte)stream.ReadByte();
+
+            if (version < FLAGS_WIDENED_AT_VERSION)
+            {
+                rst.Flags = (WPFlags)UInt16EncodingLE.Decode(stream);
+            }
+            else
+            {
+                rst.Flags = (WPFlags)UInt32EncodingLE.Decode(stream);
+                //TODO: SOME NEW FIELD, 2 BYTES LONG, COMES HERE, OR ELSE FLAGS IS EXPANDED IN AT LATEST V73 (PROBABLY EARLIER?) TO BE 4 BYTES LONG INSTEAD OF 2 BYTES LONG
+            }
+            if ((haves & WP_HAVE_TARGET) != 0)
+            {
+                rst.TargetID = VU_IDEncodingLE.Decode(stream);
+                rst.TargetBuilding = (byte)stream.ReadByte();
+            }
+            else
+            {
+                rst.TargetID = new VU_ID();
+                rst.TargetBuilding = 255;
+            }
+            if ((haves & WP_HAVE_DEPTIME) != 0)
+            {
+                rst.Depart = UInt32EncodingLE.Decode(stream);
+            }
+            else
+            {
+                rst.Depart = rst.Arrive;
+            }
+            return rst;
+        }
+
+        public static int Size
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
 }

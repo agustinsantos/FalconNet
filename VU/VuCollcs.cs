@@ -714,6 +714,7 @@ namespace FalconNet.VU
             }
             return VU_ERRCODE.VU_NO_OP;
         }
+
         public override VU_ERRCODE Remove(VuEntity entity)
         {
             if (base.Remove(entity) != VU_ERRCODE.VU_ERROR)
@@ -730,6 +731,7 @@ namespace FalconNet.VU
 
             return VU_ERRCODE.VU_NO_OP;
         }
+
         public override VU_ERRCODE Remove(VU_ID entityId)
         {
             VuEntity ent = Find(entityId);

@@ -3,6 +3,7 @@ using FalconNet.Common;
 using FalconNet.VU;
 using Objective=FalconNet.Campaign.ObjectiveClass;
 using Unit=FalconNet.Campaign.UnitClass;
+using FalconNet.FalcLib;
 
 namespace FalconNet.Campaign
 {

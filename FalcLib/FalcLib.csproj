@@ -34,10 +34,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Campbase.cs" />
+    <Compile Include="Cmpclass.cs" />
+    <Compile Include="Entities\CampBaseClass.cs" />
+    <Compile Include="Entities\CBC_ENUM.cs" />
+    <Compile Include="Entities\Manager.cs" />
+    <Compile Include="Entities\Transmittable.cs" />
     <Compile Include="EntityEnum.cs" />
     <Compile Include="FEC_FLAGS.cs" />
     <Compile Include="FEC_RADAR.cs" />
+    <Compile Include="IdNamespace.cs" />
     <Compile Include="Messages\CampWeaponsFireMsg.cs" />
+    <Compile Include="F4Globals.cs" />
     <Compile Include="Messages\FalcMesg.cs" />
     <Compile Include="mddriver.cs" />
     <Compile Include="F4Find.cs" />
@@ -45,7 +53,26 @@
     <Compile Include="Messages\FalconATCMessage.cs" />
     <Compile Include="Messages\FalconAWACSMessage.cs" />
     <Compile Include="Messages\FalconCampDataMessage.cs" />
+    <Compile Include="Messages\FalconFlightPlanMessage.cs" />
+    <Compile Include="Messages\FalconUnitMessage.cs" />
     <Compile Include="Messages\FalconWeaponsFire.cs" />
+    <Compile Include="MissionEval\FlightDataClass.cs" />
+    <Compile Include="MissionEval\FlightStatus.cs" />
+    <Compile Include="MissionEval\MissionEvaluationClass.cs" />
+    <Compile Include="MissionEval\PilotDataClass.cs" />
+    <Compile Include="MissionEval\PilotSortClass.cs" />
+    <Compile Include="MissionEval\RatingType.cs" />
+    <Compile Include="MissionEval\SuccessType.cs" />
+    <Compile Include="MissionEval\WeaponDataClass.cs" />
+    <Compile Include="Mission\MissionContext.cs" />
+    <Compile Include="Mission\MissionDataFlagEnum.cs" />
+    <Compile Include="Mission\MissionEscortConditionEnum.cs" />
+    <Compile Include="Mission\MissionRequestClass.cs" />
+    <Compile Include="Mission\MissionRequestFlagEnum.cs" />
+    <Compile Include="Mission\MissionRollEnum.cs" />
+    <Compile Include="Mission\MissionTargetTypeEnum.cs" />
+    <Compile Include="Mission\MissionTypeEnum.cs" />
+    <Compile Include="Mission\TankerConditionalModeEnum.cs" />
     <Compile Include="SoundFX.cs" />
     <Compile Include="Camplib.cs" />
     <Compile Include="entity.cs" />
@@ -54,6 +81,20 @@
     <Compile Include="dispcfg.cs" />
     <Compile Include="dirtybits.cs" />
     <Compile Include="FalcDmg.cs" />
+    <Compile Include="Team.cs" />
+    <Compile Include="Team\AirActionTypeEnum.cs" />
+    <Compile Include="Team\AirTacticTypeEnum.cs" />
+    <Compile Include="Team\CountryListEnum.cs" />
+    <Compile Include="Team\GroundActionTypeEnum.cs" />
+    <Compile Include="Team\ROEAllowedEnum.cs" />
+    <Compile Include="Team\ROEEngagementQueryTypeEnum.cs" />
+    <Compile Include="Team\table_of_equipment_manufacturers.cs" />
+    <Compile Include="Team\TeamAirActionType.cs" />
+    <Compile Include="Team\TeamDataEnum.cs" />
+    <Compile Include="Team\TeamDoctrine.cs" />
+    <Compile Include="Team\TeamFlagEnum.cs" />
+    <Compile Include="Team\TeamGndActionType.cs" />
+    <Compile Include="Team\TeamStatusType.cs" />
     <Compile Include="TheaterDef.cs" />
     <Compile Include="F4VU.cs" />
     <Compile Include="FalcSess.cs" />
@@ -62,6 +103,7 @@
     <Compile Include="Messages\Mesg.cs" />
     <Compile Include="mesgr.cs" />
     <Compile Include="Messages\ObjectiveMsg.cs" />
+    <Compile Include="VuConsts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

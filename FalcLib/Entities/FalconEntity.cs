@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Control = System.Byte;
 using VU_TIME = System.UInt64;
 using VU_ID_NUMBER = System.UInt64;
+using Team = System.SByte;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
 
@@ -135,22 +136,22 @@ namespace FalconNet.FalcLib
 
         public bool IsCampaign()
         {
-            return (falconType.IsFlagSet(EntityEnum.FalconCampaignEntity)) ? true : false;
+            return falconType.HasFlag(EntityEnum.FalconCampaignEntity);
         }
 
         public bool IsSim()
         {
-            return (falconType.IsFlagSet(EntityEnum.FalconSimEntity)) ? true : false;
+            return falconType.HasFlag(EntityEnum.FalconSimEntity);
         }
 
         public bool IsSimObjective()
         {
-            return (falconType.IsFlagSet(EntityEnum.FalconSimObjective)) ? true : false;
+            return falconType.HasFlag(EntityEnum.FalconSimObjective);
         }
 
         public bool IsPersistant()
         {
-            return (falconType.IsFlagSet(EntityEnum.FalconPersistantEntity)) ? true : false;
+            return falconType.HasFlag(EntityEnum.FalconPersistantEntity);
         }
 
         public void SetTypeFlag(EntityEnum flag)
@@ -197,7 +198,7 @@ namespace FalconNet.FalcLib
 
         public abstract short GetCampID();
 
-        public abstract byte GetTeam();
+        public abstract Team GetTeam();
 
         public abstract Control GetCountry();
 
@@ -429,10 +430,7 @@ namespace FalconNet.FalcLib
             v.x = XPos();
             v.y = YPos();
             v.z = 0.0F;
-#if TODO
-			ConvertSimToGrid (v, x, y);
-#endif
-            throw new NotImplementedException();
+            GridIndexMath.ConvertSimToGrid(v, out x, out y);
         }
 
         public int GetAltitude()
@@ -480,7 +478,7 @@ namespace FalconNet.FalcLib
 
         public void MakeDirty(Dirty_Class bits, Dirtyness score)
         {
-#if TODO
+
             dirty_classes |= bits;
 
             // sfr: for player entities, always send reliable and immediatelly
@@ -488,6 +486,7 @@ namespace FalconNet.FalcLib
             {
                 score = Dirtyness.SEND_RELIABLEANDOOB;
             }
+#if TODO
 
             // send only local units which are active (in DB) and if the unit is more dirty than currently is
             if (
@@ -502,7 +501,6 @@ namespace FalconNet.FalcLib
 
             dirty_score = score;
             int bin = calc_dirty_bucket((int)score);
-
             if (IsSimBase())
             {
                 lock (simDirtyMutexes[bin])

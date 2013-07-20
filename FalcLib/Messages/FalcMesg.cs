@@ -2,6 +2,7 @@
 using System.IO;
 using FalconNet.VU;
 using VU_MSG_TYPE = System.Byte;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.FalcLib
 {
@@ -160,4 +161,32 @@ namespace FalconNet.FalcLib
         private HandlingThread filterThread;
         private bool processVu;
     }
+
+    public static class FalconEventEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, FalconEvent val)
+        {
+            throw new NotImplementedException();
+        }
+        public static void Encode(Stream stream, FalconEvent val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static FalconEvent Decode(ByteWrapper buffer)
+        {
+            throw new NotImplementedException();
+        }
+        public static FalconEvent Decode(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
+
 }

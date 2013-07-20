@@ -13,38 +13,7 @@ namespace FalconNet.FalcLib
 	
 		}
 		
-		// Returns path of file data is in, an offset and a length.
-		public static  string  F4FindFile (string filename, string buffer, int bufLen, out int offset, out int len)
-		{
-			string path, tmp;
-			string tmpStr;
 
-            path = F4File.FalconDataDirectory + Path.DirectorySeparatorChar + "files.dir";
-			throw new NotImplementedException ();
-#if TODO
-	   if (GetPrivateProfileString ("Files", filename, "", tmpStr, 1024, path))
-			{
-		   if (strchr(tmpStr, ','))
-		      *(strchr(tmpStr, ',')) = ' ';
-		   if (strchr(tmpStr, ','))
-		      *(strchr(tmpStr, ',')) = ' ';
-		   sscanf (tmpStr, "%s %d %d", tmp, fileOffset, fileLen);
-			sprintf(path,"%s\\%s",FalconDataDirectory,tmp);
-		   strncpy (buffer, path, min (strlen(path) + 1, (size_t)bufSize - 1));
-		   buffer[bufSize-1] = 0;
-			}
-		else
-			{
-	//		sprintf(buffer,"");
-	      strncpy (buffer, filename, bufSize);
-		  buffer[bufSize - 1] = 0;
-		   *fileLen = 0;
-	   	*fileOffset = 0;
-	//		return null;
-			}
-	   return (buffer);
-#endif
-		}
 
 		// Returns a FileStream to a file created with passed name, path and mode
 		public static  FileStream F4CreateFile (string  filename, string  path, FileMode  mode)

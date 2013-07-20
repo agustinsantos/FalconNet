@@ -3,12 +3,12 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Objective = FalconNet.Campaign.ObjectiveClass;
-using ObjectiveType=System.Byte;
-using PriorityLevel=System.Byte;
+using ObjectiveType = System.Byte;
+using PriorityLevel = System.Byte;
 using Unit = FalconNet.Campaign.UnitClass;
 using Flight = FalconNet.Campaign.FlightClass;
-using WayPoint=FalconNet.Campaign.WayPointClass;
-using Team = System.Int32;
+using WayPoint = FalconNet.CampaignBase.WayPointClass;
+using Team = System.SByte;
 using GridIndex = System.Int16;
 using VU_BYTE = System.Byte;
 using Control = System.Byte;
@@ -22,41 +22,41 @@ using FalconNet.Campaign;
 namespace FalconNet.Campaign
 {
 
-	// =======================
-	// Campaign Objectives ADT
-	// =======================
-	public struct CampObjectiveTransmitDataType
-	{
-		public CampaignTime last_repair;	// Last time this objective got something repaired
-		public short aiscore;		// Used for scoring junque
-		public O_FLAGS obj_flags;		// Transmitable flags
-		public byte supply;			// Amount of supply going through here
-		public byte fuel;			// Amount of fuel going through here 
-		public byte losses;			// Amount of supply/fuel losses (in percentage)
-		public byte status;			// % operational
-		public byte priority;		// Target's general priority
-		public byte[] fstatus;		// Array of feature statuses (was [((FEATURES_PER_OBJ*2)+7)/8])
-	};
+    // =======================
+    // Campaign Objectives ADT
+    // =======================
+    public struct CampObjectiveTransmitDataType
+    {
+        public CampaignTime last_repair;	// Last time this objective got something repaired
+        public short aiscore;		// Used for scoring junque
+        public O_FLAGS obj_flags;		// Transmitable flags
+        public byte supply;			// Amount of supply going through here
+        public byte fuel;			// Amount of fuel going through here 
+        public byte losses;			// Amount of supply/fuel losses (in percentage)
+        public byte status;			// % operational
+        public byte priority;		// Target's general priority
+        public byte[] fstatus;		// Array of feature statuses (was [((FEATURES_PER_OBJ*2)+7)/8])
+    };
 
-	public struct CampObjectiveStaticDataType
-	{
-		public short nameid;			// Index into name table
-		public short local_data;		// Local AI data dump
-		public VU_ID parent;			// ID of parent SO or PO
-		public Control first_owner;	// Origional objective owner
-		public byte links;			// Number of links
-		public RadarRangeClass radar_data;		// Data on what a radar stationed here can see
-		public ObjClassDataType class_data;		// Pointer to class data
-	};
+    public struct CampObjectiveStaticDataType
+    {
+        public short nameid;			// Index into name table
+        public short local_data;		// Local AI data dump
+        public VU_ID parent;			// ID of parent SO or PO
+        public Control first_owner;	// Origional objective owner
+        public byte links;			// Number of links
+        public RadarRangeClass radar_data;		// Data on what a radar stationed here can see
+        public ObjClassDataType class_data;		// Pointer to class data
+    };
 
-	public class CampObjectiveLinkDataType
-	{
-		public byte[] costs = new byte[(int)MoveType.MOVEMENT_TYPES];	// Cost to go here, depending on movement type
-		public VU_ID id;
-	};
+    public class CampObjectiveLinkDataType
+    {
+        public byte[] costs = new byte[(int)MoveType.MOVEMENT_TYPES];	// Cost to go here, depending on movement type
+        public VU_ID id;
+    };
 
-	public class ObjectiveClass : CampBaseClass
-	{
+    public class ObjectiveClass : CampBaseClass
+    {
 #if USE_SH_POOLS
 	public:
 		// Overload new/delete to use a SmartHeap fixed size pool
@@ -67,84 +67,89 @@ namespace FalconNet.Campaign
 		static MEM_POOL	pool;
 #endif
 
-		private CampObjectiveTransmitDataType obj_data;
-		private int dirty_objective;
-		public CampObjectiveStaticDataType static_data;
-		public CampObjectiveLinkDataType[] link_data;		// The actual link data (was [OBJ_MAX_NEIGHBORS])
-		public ATCBrain brain;
+        private CampObjectiveTransmitDataType obj_data;
+        private int dirty_objective;
+        public CampObjectiveStaticDataType static_data;
+        public CampObjectiveLinkDataType[] link_data;		// The actual link data (was [OBJ_MAX_NEIGHBORS])
+        public ATCBrain brain;
 
-		// access functions
-		public ulong GetObjFlags ()
-		{
-			throw new NotSupportedException ();
-		}
+        // access functions
+        public ulong GetObjFlags()
+        {
+            throw new NotSupportedException();
+        }
 
-		public void ClearObjFlags (O_FLAGS flags)
-		{
-			obj_data.obj_flags &= ~(flags);
-		}
+        public void ClearObjFlags(O_FLAGS flags)
+        {
+            obj_data.obj_flags &= ~(flags);
+        }
 
-		public void SetObjFlags (O_FLAGS flags)
-		{
-			obj_data.obj_flags |= (flags);
-		}
+        public void SetObjFlags(O_FLAGS flags)
+        {
+            obj_data.obj_flags |= (flags);
+        }
 
-		// constructors
-		public ObjectiveClass (int typeindex)
-            : base(typeindex)
-		{
-			int size;
+        // constructors
+        public ObjectiveClass(ushort typeindex)
+            : base(typeindex, 0 ) // Review this implementation for FreeFalcon. it has a second parameter
+        {
+            int size;
 
-			dirty_objective = 0;
-			static_data.first_owner = 0;
-			static_data.nameid = 0;
-			static_data.class_data = (ObjClassDataType)EntityDB.Falcon4ClassTable [typeindex - VU_LAST_ENTITY_TYPE].dataPtr;
-			static_data.links = 0;
-			//TODO static_data.radar_data = 0;
-			obj_data.priority = 10;
-			obj_data.status = 100;
-			obj_data.obj_flags = 0;
-			obj_data.fuel = 0;
-			obj_data.supply = 0;
-			obj_data.losses = 0;
-			obj_data.last_repair = new CampaignTime (0);
-			size = ((static_data.class_data.Features * 2) + 7) / 8;
+            dirty_objective = 0;
+            static_data.first_owner = 0;
+            static_data.nameid = 0;
+            static_data.class_data = (ObjClassDataType)EntityDB.Falcon4ClassTable[typeindex - VU_LAST_ENTITY_TYPE].dataPtr;
+            static_data.links = 0;
+            //TODO static_data.radar_data = 0;
+            obj_data.priority = 10;
+            obj_data.status = 100;
+            obj_data.obj_flags = 0;
+            obj_data.fuel = 0;
+            obj_data.supply = 0;
+            obj_data.losses = 0;
+            obj_data.last_repair = new CampaignTime(0);
+            size = ((static_data.class_data.Features * 2) + 7) / 8;
 #if USE_SH_POOLS
 	obj_data.fstatus = (byte *)MemAllocPtr(gObjMemPool, sizeof(byte)*size, 0 );
 #else
-			obj_data.fstatus = new byte[size];
+            obj_data.fstatus = new byte[size];
 #endif
-			obj_data.fstatus = new Control[size];
-			//	for (i=0; i<size; i++)
-			//		obj_data.fstatus[i] = 0xFF;
+            obj_data.fstatus = new Control[size];
+            //	for (i=0; i<size; i++)
+            //		obj_data.fstatus[i] = 0xFF;
 
-			link_data = null;
+            link_data = null;
 
-			if (GetFalconType () == ClassTypes.TYPE_AIRBASE ||
-                GetFalconType () == ClassTypes.TYPE_AIRSTRIP) {
+            if (GetFalconType() == ClassTypes.TYPE_AIRBASE ||
+                GetFalconType() == ClassTypes.TYPE_AIRSTRIP)
+            {
 
-				if (GetFalconType () == ClassTypes.TYPE_AIRBASE) {
-					SetTacan (1);
-				}
-				brain = new ATCBrain (this);
-			} else {
-				brain = null;
-			}
+                if (GetFalconType() == ClassTypes.TYPE_AIRBASE)
+                {
+                    SetTacan(1);
+                }
+                brain = new ATCBrain(this);
+            }
+            else
+            {
+                brain = null;
+            }
 #if DEBUG_COUNT
 	myolist.AddObj(Id().num_);
 	gObjectiveCount++;
 #endif
-		}
-
-		public ObjectiveClass (byte[] stream, ref int offset)
+        }
+ #if TODO 
+        public ObjectiveClass(byte[] stream, ref int offset)
             : base(stream, ref offset)
-		{
-			throw new NotImplementedException ();
-		}
-		//public virtual ~ObjectiveClass();
-		public override int SaveSize ()
-		{
-#if TODO
+        {
+            throw new NotImplementedException();
+        }
+        //public virtual ~ObjectiveClass();
+
+        public override int SaveSize()
+        {
+
 			int size = base.SaveSize ()
                 + sizeof(ulong) //(CampaignTime)
                 + sizeof(ulong)
@@ -163,70 +168,70 @@ namespace FalconNet.Campaign
 			if (static_data.radar_data != null)
 				size += sizeof(RadarRangeClass);
 			return size;
-		#endif 
-			throw new NotImplementedException();
-		}
 
-		public virtual int SaveSize (int toDisk)
-		{
-			return sizeof(ulong) //(CampaignTime)
+            throw new NotImplementedException();
+        }
+
+        public virtual int SaveSize(int toDisk)
+        {
+            return sizeof(ulong) //(CampaignTime)
                 + sizeof(byte)
                 + sizeof(byte)
                 + sizeof(byte)
                 + sizeof(byte)
                 + sizeof(byte)
                 + ((static_data.class_data.Features * 2) + 7) / 8;
-		}
+        }
 
-		public virtual int Save (VU_BYTE[] stream)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual int Save(VU_BYTE[] stream)
+        {
+            throw new NotImplementedException();
+        }
 
-		public virtual int Save (VU_BYTE[] stream, int toDisk)
-		{
-			throw new NotImplementedException ();
-		}
+        public virtual int Save(VU_BYTE[] stream, int toDisk)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void UpdateFromData (VU_BYTE[] stream)
-		{
-			throw new NotImplementedException ();
-		}
+        public void UpdateFromData(VU_BYTE[] stream)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+        // event Handlers
+        public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)
+        {
+            throw new NotImplementedException();
+        }
 
-		// event Handlers
-		public override VU_ERRCODE Handle (VuFullUpdateEvent evnt)
-		{
-			throw new NotImplementedException ();
-		}
+        // Required pure virtuals handled by objective.h
+        public override void SendDeaggregateData(VuTargetEntity p)
+        {
+            throw new NotImplementedException();
+        }
 
-		// Required pure virtuals handled by objective.h
-		public override void SendDeaggregateData (VuTargetEntity p)
-		{
-			throw new NotImplementedException ();
-		}
+        public override int RecordCurrentState(FalconSessionEntity f, int i)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override int RecordCurrentState (FalconSessionEntity f, int i)
-		{
-			throw new NotImplementedException ();
-		}
+        public override int Deaggregate(FalconSessionEntity session)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override int Deaggregate (FalconSessionEntity session)
-		{
-			throw new NotImplementedException ();
-		}
+        public override int Reaggregate(FalconSessionEntity session)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override int Reaggregate (FalconSessionEntity session)
-		{
-			throw new NotImplementedException ();
-		}
+        public override int TransferOwnership(FalconSessionEntity session)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override int TransferOwnership (FalconSessionEntity session)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public override int Wake ()
-		{
+        public override int Wake()
+        {
 #if TODO
 #if ! NDEBUG
 			//	MonoPrint ("Waking Objective #%d!\n",GetCampID());
@@ -246,64 +251,64 @@ namespace FalconNet.Campaign
 			//	RemoveFromSimLists();
 
 			return 1;
-		#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public override int Sleep ()
-		{
+        public override int Sleep()
+        {
 #if !NDEBUG
-			//	MonoPrint ("Sleeping objective #%d!\n",GetCampID());
+            //	MonoPrint ("Sleeping objective #%d!\n",GetCampID());
 #endif
 
-			//	OTWDriver.LockObject ();
-			// 2002-04-14 put back in by MN - we need to sleep our features, and this does it, 
-			//while a more general function name could have been chosen ;)
-			SimulationDriver.SimDriver.SleepCampaignFlight (GetComponents ()); //2002-02-11 REMOVED BY S.G. MPS original Cut and paste bug from UnitClass. Objectives have no flights!
+            //	OTWDriver.LockObject ();
+            // 2002-04-14 put back in by MN - we need to sleep our features, and this does it, 
+            //while a more general function name could have been chosen ;)
+            SimulationDriver.SimDriver.SleepCampaignFlight(GetComponents()); //2002-02-11 REMOVED BY S.G. MPS original Cut and paste bug from UnitClass. Objectives have no flights!
 
-			SetAwake (0);
-			AwakeCampaignEntities--;
+            SetAwake(0);
+            AwakeCampaignEntities--;
 
-			//	InsertInSimLists(XPos(),YPos());
-			//	OTWDriver.UnLockObject ();
+            //	InsertInSimLists(XPos(),YPos());
+            //	OTWDriver.UnLockObject ();
 
-			return 1;
-		}
+            return 1;
+        }
 
-		public override void InsertInSimLists (float cameraX, float cameraY)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void InsertInSimLists(float cameraX, float cameraY)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void RemoveFromSimLists ()
-		{
-			throw new NotImplementedException ();
-		}
+        public override void RemoveFromSimLists()
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void DeaggregateFromData (int size, byte[] data)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void DeaggregateFromData(int size, byte[] data)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void ReaggregateFromData (int size, byte[] data)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void ReaggregateFromData(int size, byte[] data)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void TransferOwnershipFromData (int size, byte[] data)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void TransferOwnershipFromData(int size, byte[] data)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override MoveType GetMovementType ()
-		{
-			return MoveType.NoMove;
-		}
+        public override MoveType GetMovementType()
+        {
+            return MoveType.NoMove;
+        }
 
-		private Random rand = new Random ();
+        private Random rand = new Random();
 
-		public override int ApplyDamage (FalconCampWeaponsFire cwfm, byte bonusToHit)
-		{
+        public override int ApplyDamage(FalconCampWeaponsFire cwfm, byte bonusToHit)
+        {
 #if TODO
 			Int32 i, hc, range, shot, losses = 0, totalShots = 0;
 			GridIndex sx, sy, tx, ty;
@@ -403,17 +408,17 @@ namespace FalconNet.Campaign
 			FalcMesgStatic.FalconSendMessage (cwfm, false);
 
 			return losses;
-		#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		// This Apply damage is called only for local entities, and resolves the number and type
-		// of weapon shots vs this objective.
-		// HOWEVER, it them broadcasts a FalconWeaponFireMessage which will generate visual effects,
-		// update remote copies of this entity, call the mission evaluation/event storage routines,
-		// and add any craters we require.
-		public virtual int ApplyDamage (DamageDataType d, ref int str, int f, WEAP_FLAGS flags)
-		{
+        // This Apply damage is called only for local entities, and resolves the number and type
+        // of weapon shots vs this objective.
+        // HOWEVER, it them broadcasts a FalconWeaponFireMessage which will generate visual effects,
+        // update remote copies of this entity, call the mission evaluation/event storage routines,
+        // and add any craters we require.
+        public virtual int ApplyDamage(DamageDataType d, ref int str, int f, WEAP_FLAGS flags)
+        {
 #if TODO			
 			int fid, hp, lost = 0, count = 0, this_pass;
 			VIS_TYPES s;
@@ -476,12 +481,12 @@ namespace FalconNet.Campaign
 			ResetObjectiveStatus ();
 
 			return lost;
-#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public virtual int DecodeDamageData (byte[] data, Unit shooter, FalconDeathMessage dtm)
-		{
+        public virtual int DecodeDamageData(byte[] data, Unit shooter, FalconDeathMessage dtm)
+        {
 #if TODO
 			int lost, f, i;
 			VIS_TYPES s;
@@ -549,22 +554,22 @@ namespace FalconNet.Campaign
 			ResetObjectiveStatus ();
 
 			return lost;
-		#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public override byte[] GetDamageModifiers ()
-		{
-			ObjClassDataType oc;
+        public override byte[] GetDamageModifiers()
+        {
+            ObjClassDataType oc;
 
-			oc = GetObjectiveClassData ();
-			if (oc == null)
-				return null;
-			return oc.DamageMod;
-		}
+            oc = GetObjectiveClassData();
+            if (oc == null)
+                return null;
+            return oc.DamageMod;
+        }
 
-		public override string GetName (string buffer, int size, int obj)
-		{
+        public override string GetName(string buffer, int size, int obj)
+        {
 #if TODO
             int nid, pnid = 0;
             Objective p;
@@ -607,57 +612,57 @@ namespace FalconNet.Campaign
 
             return name;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public override string GetFullName (string name, int size, int obj)
-		{
-			return GetName (name, size, obj);
-		}
+        public override string GetFullName(string name, int size, int obj)
+        {
+            return GetName(name, size, obj);
+        }
 
-		// Returns best hitchance of the objective at a given range
-		public override int GetHitChance (int mt, int range)
-		{
-			return 0;
-			// Commented out body removed ny leonr
-		}
+        // Returns best hitchance of the objective at a given range
+        public override int GetHitChance(int mt, int range)
+        {
+            return 0;
+            // Commented out body removed ny leonr
+        }
 
-		// Quicker, aproximate version of the above
-		public override int GetAproxHitChance (int mt, int range)
-		{
-			return 0;
-			// Commented out body removed ny leonr
-		}
+        // Quicker, aproximate version of the above
+        public override int GetAproxHitChance(int mt, int range)
+        {
+            return 0;
+            // Commented out body removed ny leonr
+        }
 
-		// Returns strength of the objective at a given range
-		public override int GetCombatStrength (int mt, int range)
-		{
-			return 0;
-			// Commented out body removed ny leonr
-		}
+        // Returns strength of the objective at a given range
+        public override int GetCombatStrength(int mt, int range)
+        {
+            return 0;
+            // Commented out body removed ny leonr
+        }
 
-		// Quicker, aproximate version of the above
-		public override int GetAproxCombatStrength (int mt, int range)
-		{
-			// Commented out body removed ny leonr
-			return 0;
-		}
+        // Quicker, aproximate version of the above
+        public override int GetAproxCombatStrength(int mt, int range)
+        {
+            // Commented out body removed ny leonr
+            return 0;
+        }
 
-		public override int GetWeaponRange (int mt, FalconEntity target = null)
-		{
-			// Commented out body removed ny leonr
-			return 0;
-		} // 2008-03-08 ADDED SECOND DEFAULT PARM
+        public override int GetWeaponRange(int mt, FalconEntity target = null)
+        {
+            // Commented out body removed ny leonr
+            return 0;
+        } // 2008-03-08 ADDED SECOND DEFAULT PARM
 
-		// Returns the maximum range of the objective (this is precalculated)
-		public override int GetAproxWeaponRange (int mt)
-		{
-			// Commented out body removed ny leonr
-			return 0;
-		}
+        // Returns the maximum range of the objective (this is precalculated)
+        public override int GetAproxWeaponRange(int mt)
+        {
+            // Commented out body removed ny leonr
+            return 0;
+        }
 
-		public override int GetDetectionRange (int mt)
-		{
+        public override int GetDetectionRange(int mt)
+        {
 #if TODO
 			ObjClassDataType oc = GetObjectiveClassData ();
 			int dr = 0;
@@ -673,24 +678,25 @@ namespace FalconNet.Campaign
 			if (!dr)
 				dr = CampbaseStatic.GetVisualDetectionRange (mt);
 			return dr;
-		#endif 
-			throw new NotImplementedException();
-		}						// Takes into account emitter status
+#endif
+            throw new NotImplementedException();
+        }						// Takes into account emitter status
 
-		public override int GetElectronicDetectionRange (int mt)
-		{
-			if (static_data.class_data.RadarFeature < 255 && GetFeatureStatus (static_data.class_data.RadarFeature) != VIS_TYPES.VIS_DESTROYED) {
-            // 2001-04-21 MODIFIED BY S.G. ABOVE 250 HAS A NEW MEANING SO USE THE UNIT ELECTRONIC DETECTION RANGE INSTEAD...
-            //		return static_data.class_data.Detection[mt];
-				if (static_data.class_data.Detection [mt] > 250)
-					return 250 + (static_data.class_data.Detection [mt] - 250) * 50;
-				return static_data.class_data.Detection [mt];
-			}
-			return 0;
-		}		// Max Electronic detection range, even if turned off
+        public override int GetElectronicDetectionRange(MoveType mt)
+        {
+            if (static_data.class_data.RadarFeature < 255 && GetFeatureStatus(static_data.class_data.RadarFeature) != VIS_TYPES.VIS_DESTROYED)
+            {
+                // 2001-04-21 MODIFIED BY S.G. ABOVE 250 HAS A NEW MEANING SO USE THE UNIT ELECTRONIC DETECTION RANGE INSTEAD...
+                //		return static_data.class_data.Detection[mt];
+                if (static_data.class_data.Detection[(int)mt] > 250)
+                    return 250 + (static_data.class_data.Detection[(int)mt] - 250) * 50;
+                return static_data.class_data.Detection[(int)mt];
+            }
+            return 0;
+        }		// Max Electronic detection range, even if turned off
 
-		public override int CanDetect (FalconEntity ent)
-		{
+        public override int CanDetect(FalconEntity ent)
+        {
 #if TODO			
 			float ds, mrs, vdr, dx, dy;
 			MoveType mt;
@@ -778,99 +784,105 @@ namespace FalconNet.Campaign
 				return static_data.radar_data.CanDetect (dx, dy, AGLz); // GetMEA returns a positive number that we must substract from our target altitude
 			}
 			return 1;
-	#endif 
-		throw new NotImplementedException();
-		}					// Nonzero if this entity can see ent
+#endif
+            throw new NotImplementedException();
+        }					// Nonzero if this entity can see ent
 
-		public override bool OnGround ()
-		{
-			return true;
-		}
+        public override bool OnGround()
+        {
+            return true;
+        }
 
-		public override FEC_RADAR GetRadarMode ()
-		{
-			if (IsEmitting ())
-				return FEC_RADAR.FEC_RADAR_SEARCH_100;
-			else
-				return FEC_RADAR.FEC_RADAR_OFF;
-		}
+        public override FEC_RADAR GetRadarMode()
+        {
+            if (IsEmitting())
+                return FEC_RADAR.FEC_RADAR_SEARCH_100;
+            else
+                return FEC_RADAR.FEC_RADAR_OFF;
+        }
 
-		public override Radar_types GetRadarType ()
-		{
-			ObjClassDataType data = GetObjectiveClassData ();
-			Debug.Assert (data != null);
-			if (data.RadarFeature < 255) {
-				return FeatureStatic.GetFeatureClassData (GetFeatureID (data.RadarFeature)).RadarType;
-			} else {
-				return Radar_types.RDR_NO_RADAR;
-			}
-		}
+        public override Radar_types GetRadarType()
+        {
+            ObjClassDataType data = GetObjectiveClassData();
+            Debug.Assert(data != null);
+            if (data.RadarFeature < 255)
+            {
+                return FeatureStatic.GetFeatureClassData(GetFeatureID(data.RadarFeature)).RadarType;
+            }
+            else
+            {
+                return Radar_types.RDR_NO_RADAR;
+            }
+        }
 
-		// These are only really relevant for sam/airdefense/radar entities
-		public override int GetNumberOfArcs ()
-		{
-			if (!HasRadarRanges ())
-				return 1;
-			return static_data.radar_data.GetNumberOfArcs ();
-		}
+        // These are only really relevant for sam/airdefense/radar entities
+        public override int GetNumberOfArcs()
+        {
+            if (!HasRadarRanges())
+                return 1;
+            return static_data.radar_data.GetNumberOfArcs();
+        }
 
-		public override float GetArcRatio (int anum)
-		{
-			if (!HasRadarRanges ())
-				return 0.0F;
-			return static_data.radar_data.GetArcRatio (anum);
-		}
+        public override float GetArcRatio(int anum)
+        {
+            if (!HasRadarRanges())
+                return 0.0F;
+            return static_data.radar_data.GetArcRatio(anum);
+        }
 
-		public override float GetArcRange (int anum)
-		{
-			if (!HasRadarRanges ())
-				return 0.0F;
-			return static_data.radar_data.GetArcRange (anum);
-		}
+        public override float GetArcRange(int anum)
+        {
+            if (!HasRadarRanges())
+                return 0.0F;
+            return static_data.radar_data.GetArcRange(anum);
+        }
 
-		public override void GetArcAngle (int anum, ref float a1, ref float a2)
-		{
-			if (!HasRadarRanges ()) {
-				a1 = 0.0F;
-				a2 = (float)(2.0F * Math.PI);
-				return;
-			}
-			static_data.radar_data.GetArcAngle (anum, ref a1, ref a2);
-		}
+        public override void GetArcAngle(int anum, ref float a1, ref float a2)
+        {
+            if (!HasRadarRanges())
+            {
+                a1 = 0.0F;
+                a2 = (float)(2.0F * Math.PI);
+                return;
+            }
+            static_data.radar_data.GetArcAngle(anum, ref a1, ref a2);
+        }
 
-		public int SiteCanDetect (FalconEntity ent)
-		{
-			float dx, dy;
+        public int SiteCanDetect(FalconEntity ent)
+        {
+            float dx, dy;
 
-			if (!HasRadarRanges ())
-				return 0;
-			dx = ent.XPos () - XPos ();
-			dy = ent.YPos () - YPos ();
-			// Stealth aircraft act as if they're flying at double their range
-			if (ent.IsFlight ()) {
-				UnitClassDataType uc = ((Flight)ent).GetUnitClassData ();
-				if (((VEH_FLAGS)uc.Flags).IsFlagSet(VEH_FLAGS.VEH_STEALTH)) {
-					dx *= 2.0F;
-					dy *= 2.0F;
-				}
-			}
-			return static_data.radar_data.CanDetect (dx, dy, ent.ZPos () - ZPos ());
-		}
+            if (!HasRadarRanges())
+                return 0;
+            dx = ent.XPos() - XPos();
+            dy = ent.YPos() - YPos();
+            // Stealth aircraft act as if they're flying at double their range
+            if (ent.IsFlight())
+            {
+                UnitClassDataType uc = ((Flight)ent).GetUnitClassData();
+                if (((VEH_FLAGS)uc.Flags).IsFlagSet(VEH_FLAGS.VEH_STEALTH))
+                {
+                    dx *= 2.0F;
+                    dy *= 2.0F;
+                }
+            }
+            return static_data.radar_data.CanDetect(dx, dy, ent.ZPos() - ZPos());
+        }
 
-		public float GetSiteRange (FalconEntity ent)
-		{
-			float dx, dy;
+        public float GetSiteRange(FalconEntity ent)
+        {
+            float dx, dy;
 
-			if (!HasRadarRanges ())
-				return 0.0F;
-			dx = ent.XPos () - XPos ();
-			dy = ent.YPos () - YPos ();
-			return static_data.radar_data.GetRadarRange (dx, dy, ent.ZPos () - ZPos ());
-		}
+            if (!HasRadarRanges())
+                return 0.0F;
+            dx = ent.XPos() - XPos();
+            dy = ent.YPos() - YPos();
+            return static_data.radar_data.GetRadarRange(dx, dy, ent.ZPos() - ZPos());
+        }
 
-		// core functions
-		public void SendObjMessage (VU_ID from, short mes, short d1, short d2, short d3)
-		{
+        // core functions
+        public void SendObjMessage(VU_ID from, short mes, short d1, short d2, short d3)
+        {
 #if TODO
 			FalconObjectiveMessage message = new FalconObjectiveMessage (Id (), FalconSessionEntity.FalconLocalGame);
 
@@ -881,21 +893,21 @@ namespace FalconNet.Campaign
 			message.dataBlock.data3 = d3;
 			FalcMesgStatic.FalconSendMessage (message, true);
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void DisposeObjective ()
-		{
-			throw new NotImplementedException ();
-		}
+        public void DisposeObjective()
+        {
+            throw new NotImplementedException();
+        }
 
-		public void DamageObjective (int loss)
-		{
-			throw new NotImplementedException ();
-		}
+        public void DamageObjective(int loss)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void AddObjectiveNeighbor (Objective o, byte[] c)
-		{
+        public void AddObjectiveNeighbor(Objective o, byte[] c)
+        {
 #if TODO
 			int i;
 			Objective n;
@@ -923,11 +935,11 @@ namespace FalconNet.Campaign
 			link_data [static_data.links - 1].id = o.Id ();
 			SetNeighborCosts (i, c);
 #endif
-			throw new NotImplementedException();
-		} //TODO[MOVEMENT_TYPES]);
+            throw new NotImplementedException();
+        } //TODO[MOVEMENT_TYPES]);
 
-		public void RemoveObjectiveNeighbor (int n)
-		{
+        public void RemoveObjectiveNeighbor(int n)
+        {
 #if TODO
 			CampObjectiveLinkDataType[] tmp_link;
 			int nn;
@@ -950,112 +962,114 @@ namespace FalconNet.Campaign
 			}
 			tmp_link = null;
 #endif
-		throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void SetNeighborCosts (int num, byte[] c)
-		{
-			int j;
+        public void SetNeighborCosts(int num, byte[] c)
+        {
+            int j;
 
-			if (num >= static_data.links)
-				return;
+            if (num >= static_data.links)
+                return;
 
-			for (j = 0; j < (int)MoveType.MOVEMENT_TYPES; j++) {
-				if (c [j] < 255)
-					link_data [num].costs [j] = (byte)c [j];
-				else
-					link_data [num].costs [j] = 255;
-			}
-		}// TODO [MOVEMENT_TYPES]);
+            for (j = 0; j < (int)MoveType.MOVEMENT_TYPES; j++)
+            {
+                if (c[j] < 255)
+                    link_data[num].costs[j] = (byte)c[j];
+                else
+                    link_data[num].costs[j] = 255;
+            }
+        }// TODO [MOVEMENT_TYPES]);
 
-		public override bool IsObjective ()
-		{
-			return true;
-		}
+        public override bool IsObjective()
+        {
+            return true;
+        }
 
-		public bool IsFrontline ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_FRONTLINE);
-		}
+        public bool IsFrontline()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_FRONTLINE);
+        }
 
-		public bool IsSecondline ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_SECONDLINE);
-		}
+        public bool IsSecondline()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_SECONDLINE);
+        }
 
-		public bool IsThirdline ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_THIRDLINE);
-		}
+        public bool IsThirdline()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_THIRDLINE);
+        }
 
-		public bool IsNearfront ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_THIRDLINE | O_FLAGS.O_SECONDLINE | O_FLAGS.O_FRONTLINE);
-		}
+        public bool IsNearfront()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_THIRDLINE | O_FLAGS.O_SECONDLINE | O_FLAGS.O_FRONTLINE);
+        }
 
-		public bool IsBeach ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_BEACH);
-		}
+        public bool IsBeach()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_BEACH);
+        }
 
-		public bool IsPrimary ()
-		{
-			if (GetFalconType () == ClassTypes.TYPE_CITY && obj_data.priority > AIInput.PRIMARY_OBJ_PRIORITY)
-				return true;
-			return false;
-		}
+        public bool IsPrimary()
+        {
+            if (GetFalconType() == ClassTypes.TYPE_CITY && obj_data.priority > AIInput.PRIMARY_OBJ_PRIORITY)
+                return true;
+            return false;
+        }
 
-		public bool IsSecondary ()
-		{
-			// Only cities and towns can be secondary objectives, and ALL automatically are
-			if ((GetFalconType () == ClassTypes.TYPE_CITY || GetFalconType () == ClassTypes.TYPE_TOWN) && obj_data.priority > AIInput.SECONDARY_OBJ_PRIORITY)
-				return true;
-			return false;
-		}
+        public bool IsSecondary()
+        {
+            // Only cities and towns can be secondary objectives, and ALL automatically are
+            if ((GetFalconType() == ClassTypes.TYPE_CITY || GetFalconType() == ClassTypes.TYPE_TOWN) && obj_data.priority > AIInput.SECONDARY_OBJ_PRIORITY)
+                return true;
+            return false;
+        }
 
-		public bool IsSupplySource ()
-		{
-			if (GetFalconType () == ClassTypes.TYPE_CITY || GetFalconType () == ClassTypes.TYPE_PORT || GetFalconType () == ClassTypes.TYPE_DEPOT || GetFalconType () == ClassTypes.TYPE_ARMYBASE) {
-				if (!IsFrontline () && !IsSecondline ())
-					return true;
-			}
-			return false;
-		}
+        public bool IsSupplySource()
+        {
+            if (GetFalconType() == ClassTypes.TYPE_CITY || GetFalconType() == ClassTypes.TYPE_PORT || GetFalconType() == ClassTypes.TYPE_DEPOT || GetFalconType() == ClassTypes.TYPE_ARMYBASE)
+            {
+                if (!IsFrontline() && !IsSecondline())
+                    return true;
+            }
+            return false;
+        }
 
-		public bool IsGCI ()
-		{
-			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_IS_GCI);
-		}	// 2002-02-13 ADDED BY S.G.
-		public bool HasNCTR ()
-		{
-			return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_HAS_NCTR);
-		}	// 2002-02-13 ADDED BY S.G.
+        public bool IsGCI()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_IS_GCI);
+        }	// 2002-02-13 ADDED BY S.G.
+        public bool HasNCTR()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_HAS_NCTR);
+        }	// 2002-02-13 ADDED BY S.G.
 
-		public bool HasRadarRanges ()
-		{
-			if (static_data.radar_data != null)
-				return true;
+        public bool HasRadarRanges()
+        {
+            if (static_data.radar_data != null)
+                return true;
 
-			return false;
-		}
+            return false;
+        }
 
-		public void UpdateObjectiveLists ()
-		{
-			throw new NotImplementedException ();
-		}
+        public void UpdateObjectiveLists()
+        {
+            throw new NotImplementedException();
+        }
 
-		public void ResetLinks ()
-		{
-			throw new NotImplementedException ();
-		}
+        public void ResetLinks()
+        {
+            throw new NotImplementedException();
+        }
 
-		public void Dump ()
-		{
-			throw new NotImplementedException ();
-		}
+        public void Dump()
+        {
+            throw new NotImplementedException();
+        }
 
-		public void Repair ()
-		{
+        public void Repair()
+        {
 #if TODO
 			int repair, bf;
 			CampaignTime time;
@@ -1083,195 +1097,195 @@ namespace FalconNet.Campaign
 			// JB 000811
 
 			ResetObjectiveStatus ();
-#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		// Flag setting stuff
-		public void SetManual (int s)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_MANUAL_SET;
-			if (s == 0)
-				obj_data.obj_flags ^= O_FLAGS.O_MANUAL_SET;
-		}
+        // Flag setting stuff
+        public void SetManual(int s)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_MANUAL_SET;
+            if (s == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_MANUAL_SET;
+        }
 
-		public bool ManualSet ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_MANUAL_SET);
-		}
+        public bool ManualSet()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_MANUAL_SET);
+        }
 
-		public override void SetJammed (int j)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_JAMMED;
-			if (j == 0)
-				obj_data.obj_flags ^= O_FLAGS.O_JAMMED;
-		}
+        public override void SetJammed(int j)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_JAMMED;
+            if (j == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_JAMMED;
+        }
 
-		public bool Jammed ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_JAMMED);
-		}
+        public bool Jammed()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_JAMMED);
+        }
 
-		public void SetSamSite (int s)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_SAM_SITE;
-			if (s == 0)
-				obj_data.obj_flags ^= O_FLAGS.O_SAM_SITE;
-		}
+        public void SetSamSite(int s)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_SAM_SITE;
+            if (s == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_SAM_SITE;
+        }
 
-		public bool SamSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_SAM_SITE);
-		}
+        public bool SamSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_SAM_SITE);
+        }
 
-		public void SetArtillerySite (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_ARTILLERY_SITE;
-			if (a== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_ARTILLERY_SITE;
-		}
+        public void SetArtillerySite(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_ARTILLERY_SITE;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_ARTILLERY_SITE;
+        }
 
-		public bool ArtillerySite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_ARTILLERY_SITE);
-		}
+        public bool ArtillerySite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_ARTILLERY_SITE);
+        }
 
-		public void SetAmbushCAPSite (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_AMBUSHCAP_SITE;
-			if (a == 0)
-				obj_data.obj_flags ^= O_FLAGS.O_AMBUSHCAP_SITE;
-		}
+        public void SetAmbushCAPSite(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_AMBUSHCAP_SITE;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_AMBUSHCAP_SITE;
+        }
 
-		public bool AmbushCAPSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_AMBUSHCAP_SITE);
-		}
+        public bool AmbushCAPSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_AMBUSHCAP_SITE);
+        }
 
-		public void SetBorderSite (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_BORDER_SITE;
-			if (a== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_BORDER_SITE;
-		}
+        public void SetBorderSite(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_BORDER_SITE;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_BORDER_SITE;
+        }
 
-		public bool BorderSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_BORDER_SITE);
-		}
+        public bool BorderSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_BORDER_SITE);
+        }
 
-		public void SetMountainSite (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_MOUNTAIN_SITE;
-			if (a== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_MOUNTAIN_SITE;
-		}
+        public void SetMountainSite(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_MOUNTAIN_SITE;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_MOUNTAIN_SITE;
+        }
 
-		public bool MountainSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_MOUNTAIN_SITE);
-		}
+        public bool MountainSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_MOUNTAIN_SITE);
+        }
 
-		public void SetCommandoSite (int c)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_COMMANDO_SITE;
-			if (c== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_COMMANDO_SITE;
-		}
+        public void SetCommandoSite(int c)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_COMMANDO_SITE;
+            if (c == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_COMMANDO_SITE;
+        }
 
-		public bool CommandoSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_COMMANDO_SITE);
-		}
+        public bool CommandoSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_COMMANDO_SITE);
+        }
 
-		public void SetFlatSite (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_FLAT_SITE;
-			if (a== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_FLAT_SITE;
-		}
+        public void SetFlatSite(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_FLAT_SITE;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_FLAT_SITE;
+        }
 
-		public bool FlatSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_FLAT_SITE);
-		}
+        public bool FlatSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_FLAT_SITE);
+        }
 
-		public void SetRadarSite (int r)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_RADAR_SITE;
-			if (r== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_RADAR_SITE;
-		}
+        public void SetRadarSite(int r)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_RADAR_SITE;
+            if (r == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_RADAR_SITE;
+        }
 
-		public bool RadarSite ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_RADAR_SITE);
-		}
+        public bool RadarSite()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_RADAR_SITE);
+        }
 
-		public void SetAbandoned (int a)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_ABANDONED;
-			if (a== 0)
-				obj_data.obj_flags ^= O_FLAGS.O_ABANDONED;
-		}
+        public void SetAbandoned(int a)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_ABANDONED;
+            if (a == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_ABANDONED;
+        }
 
-		public bool Abandoned ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_ABANDONED);
-		}
+        public bool Abandoned()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_ABANDONED);
+        }
 
-		public void SetNeedRepair (int r)
-		{
-			obj_data.obj_flags |= O_FLAGS.O_NEED_REPAIR;
-			if (r==0)
-				obj_data.obj_flags ^= O_FLAGS.O_NEED_REPAIR;
-		}
+        public void SetNeedRepair(int r)
+        {
+            obj_data.obj_flags |= O_FLAGS.O_NEED_REPAIR;
+            if (r == 0)
+                obj_data.obj_flags ^= O_FLAGS.O_NEED_REPAIR;
+        }
 
-		public bool NeedRepair ()
-		{
-			return obj_data.obj_flags.IsFlagSet (O_FLAGS.O_NEED_REPAIR);
-		}
+        public bool NeedRepair()
+        {
+            return obj_data.obj_flags.IsFlagSet(O_FLAGS.O_NEED_REPAIR);
+        }
 
-		// Dirty Functions
-		public void MakeObjectiveDirty (Dirty_Objective bits, Dirtyness score)
-		{
-			throw new NotImplementedException ();
-		}
+        // Dirty Functions
+        public void MakeObjectiveDirty(Dirty_Objective bits, Dirtyness score)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void WriteDirty (byte[] stream, ref int pos)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void WriteDirty(byte[] stream, ref int pos)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override void ReadDirty (byte[] stream, ref int pos)
-		{
-			throw new NotImplementedException ();
-		}
+        public override void ReadDirty(byte[] stream, ref int pos)
+        {
+            throw new NotImplementedException();
+        }
 
-		// Objective data stuff
-		public override void SetOwner (Control c)
-		{
-			base.SetOwner (c);
-			SetDelta (1);
-		}
+        // Objective data stuff
+        public override void SetOwner(Control c)
+        {
+            base.SetOwner(c);
+            SetDelta(1);
+        }
 
-		public void SetObjectiveOldown (Control c)
-		{
-			static_data.first_owner = c;
-		}
+        public void SetObjectiveOldown(Control c)
+        {
+            static_data.first_owner = c;
+        }
 
-		public void SetObjectiveParent (VU_ID p)
-		{
-			static_data.parent = p;
-		}
+        public void SetObjectiveParent(VU_ID p)
+        {
+            static_data.parent = p;
+        }
 
-		public void SetObjectiveNameID (short n)
-		{
-			static_data.nameid = n;
-		}
+        public void SetObjectiveNameID(short n)
+        {
+            static_data.nameid = n;
+        }
 
-		public void SetObjectiveName (string name)
-		{
+        public void SetObjectiveName(string name)
+        {
 #if TODO
 			int nid;
 
@@ -1288,55 +1302,55 @@ namespace FalconNet.Campaign
 			} else
 				SetName (nid, name);
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void SetObjectivePriority (PriorityLevel p)
-		{
+        public void SetObjectivePriority(PriorityLevel p)
+        {
 #if TODO		
 			obj_data.priority = p;
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void SetObjectiveScore (short score)
-		{
-			obj_data.aiscore = score;
-		}
+        public void SetObjectiveScore(short score)
+        {
+            obj_data.aiscore = score;
+        }
 
-		public void SetObjectiveRepairTime (CampaignTime t)
-		{
-			obj_data.last_repair = t;
-		}
-		// JB 000811
-		// Set the last repair time to now if some damage has been taken
-		//void SetObjectiveStatus (byte s)						{	obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
-		public void SetObjectiveStatus (byte s)
-		{
-			if (obj_data.status > s)
-				obj_data.last_repair = Camplib.Camp_GetCurrentTime ();
-			obj_data.status = s;
-			MakeObjectiveDirty (Dirty_Objective.DIRTY_STATUS, EntityDB.DDP [180].priority);
-		}
-		//void SetObjectiveStatus (byte s)						{	if (obj_data.status > s) obj_data.last_repair = Camp_GetCurrentTime(); obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
-		// JB 000811
-		public void SetObjectiveSupply (byte s)
-		{
-			obj_data.supply = s;
-		}
+        public void SetObjectiveRepairTime(CampaignTime t)
+        {
+            obj_data.last_repair = t;
+        }
+        // JB 000811
+        // Set the last repair time to now if some damage has been taken
+        //void SetObjectiveStatus (byte s)						{	obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
+        public void SetObjectiveStatus(byte s)
+        {
+            if (obj_data.status > s)
+                obj_data.last_repair = Camplib.Camp_GetCurrentTime();
+            obj_data.status = s;
+            MakeObjectiveDirty(Dirty_Objective.DIRTY_STATUS, EntityDB.DDP[180].priority);
+        }
+        //void SetObjectiveStatus (byte s)						{	if (obj_data.status > s) obj_data.last_repair = Camp_GetCurrentTime(); obj_data.status = s; MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW); }
+        // JB 000811
+        public void SetObjectiveSupply(byte s)
+        {
+            obj_data.supply = s;
+        }
 
-		public void SetObjectiveFuel (byte f)
-		{
-			obj_data.fuel = f;
-		}
+        public void SetObjectiveFuel(byte f)
+        {
+            obj_data.fuel = f;
+        }
 
-		public void SetObjectiveSupplyLosses (byte l)
-		{
-			obj_data.losses = l;
-		}
+        public void SetObjectiveSupplyLosses(byte l)
+        {
+            obj_data.losses = l;
+        }
 
-		public void SetObjectiveType (ObjectiveType t)
-		{
+        public void SetObjectiveType(ObjectiveType t)
+        {
 #if TODO
 			byte type, stype;
 			int dindex;
@@ -1349,11 +1363,11 @@ namespace FalconNet.Campaign
 			SetObjectiveClass (dindex + VU_LAST_ENTITY_TYPE);
 			UpdateObjectiveLists ();
 #endif
-		throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		void SetObjectiveSType (byte s)
-		{
+        void SetObjectiveSType(byte s)
+        {
 #if TODO
 			byte type, stype;
 			int dindex;
@@ -1365,12 +1379,12 @@ namespace FalconNet.Campaign
 				return;
 			SetObjectiveClass (dindex + VU_LAST_ENTITY_TYPE);
 			UpdateObjectiveLists ();
-#endif 
-			throw new NotImplementedException();
-		}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public void SetObjectiveClass (int dindex)
-		{
+        public void SetObjectiveClass(int dindex)
+        {
 #if TODO
 			int nsize;
 
@@ -1385,11 +1399,12 @@ namespace FalconNet.Campaign
 			obj_data.fstatus = new byte[nsize];
 #endif
 			memset (obj_data.fstatus, 0, nsize);
-		#endif 
-			throw new NotImplementedException();}
+#endif
+            throw new NotImplementedException();
+        }
 
-		public void SetFeatureStatus (int f, VIS_TYPES n)
-		{
+        public void SetFeatureStatus(int f, VIS_TYPES n)
+        {
 #if TODO
 			int i = f / 4;
 
@@ -1410,11 +1425,11 @@ namespace FalconNet.Campaign
 			MakeObjectiveDirty (DIRTY_STATUS, SEND_NOW);
 			SetDelta (1);
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void SetFeatureStatus (int f, VIS_TYPES n, int from)
-		{
+        public void SetFeatureStatus(int f, VIS_TYPES n, int from)
+        {
 #if TODO
 			int i = f / 4;
 
@@ -1434,191 +1449,193 @@ namespace FalconNet.Campaign
 			ResetObjectiveStatus ();
 			SetDelta (1);
 #endif
-			throw new NotImplementedException ();
-		}
+            throw new NotImplementedException();
+        }
 
-		public VU_ID GetNeighborId (int n)
-		{
-			return link_data [n].id;
-		}
+        public VU_ID GetNeighborId(int n)
+        {
+            return link_data[n].id;
+        }
 
-		public Objective GetNeighbor (int num)
-		{
-			Objective n;
+        public Objective GetNeighbor(int num)
+        {
+            Objective n;
 
-			if (num >= static_data.links)
-				return null;
-			n = (Objective)VuDatabase.vuDatabase.Find (link_data [num].id);
-			if (n == null) {
-				// Better axe this, since we couldn't find it.
-				RemoveObjectiveNeighbor (num);
-			}
-			return n;
-		}
+            if (num >= static_data.links)
+                return null;
+            n = (Objective)VUSTATIC.vuDatabase.Find(link_data[num].id);
+            if (n == null)
+            {
+                // Better axe this, since we couldn't find it.
+                RemoveObjectiveNeighbor(num);
+            }
+            return n;
+        }
 
-		public float GetNeighborCost (int n, MoveType t)
-		{
-			return link_data [n].costs [(int)t];
-		}
+        public float GetNeighborCost(int n, MoveType t)
+        {
+            return link_data[n].costs[(int)t];
+        }
 
-		public Control GetObjectiveOldown ()
-		{
-			return static_data.first_owner;
-		}
+        public Control GetObjectiveOldown()
+        {
+            return static_data.first_owner;
+        }
 
-		public ObjectiveClass GetObjectiveParent ()
-		{
-			return FindStatic.FindObjective (static_data.parent);
-		}
+        public ObjectiveClass GetObjectiveParent()
+        {
+            return FindStatic.FindObjective(static_data.parent);
+        }
 
-		public ObjectiveClass GetObjectiveSecondary ()
-		{
-			if (IsSecondary ())
-				return this;
-			else
-				return (Objective)VuDatabase.vuDatabase.Find (static_data.parent);
-		}
+        public ObjectiveClass GetObjectiveSecondary()
+        {
+            if (IsSecondary())
+                return this;
+            else
+                return (Objective)VUSTATIC.vuDatabase.Find(static_data.parent);
+        }
 
-		public ObjectiveClass GetObjectivePrimary ()
-		{
-			if (IsPrimary ())
-				return this;
-			else if (IsSecondary ())
-				return (Objective)VuDatabase.vuDatabase.Find (static_data.parent);
-			else {
-				Objective so = (Objective)VuDatabase.vuDatabase.Find (static_data.parent);
-				if (so != null)
-					return so.GetObjectivePrimary ();
-			}
-			return null;
-		}
+        public ObjectiveClass GetObjectivePrimary()
+        {
+            if (IsPrimary())
+                return this;
+            else if (IsSecondary())
+                return (Objective)VUSTATIC.vuDatabase.Find(static_data.parent);
+            else
+            {
+                Objective so = (Objective)VUSTATIC.vuDatabase.Find(static_data.parent);
+                if (so != null)
+                    return so.GetObjectivePrimary();
+            }
+            return null;
+        }
 
-		public VU_ID GetObjectiveParentID ()
-		{
-			return static_data.parent;
-		}
+        public VU_ID GetObjectiveParentID()
+        {
+            return static_data.parent;
+        }
 
-		public int GetObjectiveNameID ()
-		{
-			return static_data.nameid;
-		}
+        public int GetObjectiveNameID()
+        {
+            return static_data.nameid;
+        }
 
-		public int NumLinks ()
-		{
-			return static_data.links;
-		}
+        public int NumLinks()
+        {
+            return static_data.links;
+        }
 
-		public short GetObjectivePriority ()
-		{
-			return obj_data.priority;
-		}
+        public short GetObjectivePriority()
+        {
+            return obj_data.priority;
+        }
 
-		public byte GetObjectiveStatus ()
-		{
-			return obj_data.status;
-		}
+        public byte GetObjectiveStatus()
+        {
+            return obj_data.status;
+        }
 
-		public int GetObjectiveScore ()
-		{
-			return obj_data.aiscore;
-		}
+        public int GetObjectiveScore()
+        {
+            return obj_data.aiscore;
+        }
 
-		public CampaignTime GetObjectiveRepairTime ()
-		{
-			return obj_data.last_repair;
-		}
+        public CampaignTime GetObjectiveRepairTime()
+        {
+            return obj_data.last_repair;
+        }
 
-		public short GetObjectiveSupply ()
-		{
-			return obj_data.supply;
-		}
+        public short GetObjectiveSupply()
+        {
+            return obj_data.supply;
+        }
 
-		public short GetObjectiveFuel ()
-		{
-			return obj_data.fuel;
-		}
+        public short GetObjectiveFuel()
+        {
+            return obj_data.fuel;
+        }
 
-		public short GetObjectiveSupplyLosses ()
-		{
-			return obj_data.losses;
-		}
+        public short GetObjectiveSupplyLosses()
+        {
+            return obj_data.losses;
+        }
 
-		public short GetObjectiveDataRate ()
-		{
-			if (static_data.class_data == null)
-				return 0;
-			return (short)(static_data.class_data.DataRate * GetObjectiveStatus () / 100);
-		}
+        public short GetObjectiveDataRate()
+        {
+            if (static_data.class_data == null)
+                return 0;
+            return (short)(static_data.class_data.DataRate * GetObjectiveStatus() / 100);
+        }
 
-		public short GetAdjustedDataRate ()
-		{
-			int almost;
+        public short GetAdjustedDataRate()
+        {
+            int almost;
 
-			if (static_data.class_data == null)
-				return 0;
+            if (static_data.class_data == null)
+                return 0;
 
-			if (static_data.class_data.DataRate == 0)
-				static_data.class_data.DataRate = 1;
-			almost = (100 / static_data.class_data.DataRate) - 1;
-			return (short)((GetObjectiveStatus () + almost) * static_data.class_data.DataRate / 100);
-		}
+            if (static_data.class_data.DataRate == 0)
+                static_data.class_data.DataRate = 1;
+            almost = (100 / static_data.class_data.DataRate) - 1;
+            return (short)((GetObjectiveStatus() + almost) * static_data.class_data.DataRate / 100);
+        }
 
-		public short GetTotalFeatures ()
-		{
-			return static_data.class_data.Features;
-		}
+        public short GetTotalFeatures()
+        {
+            return static_data.class_data.Features;
+        }
 
-		public VIS_TYPES GetFeatureStatus (int f)
-		{
-			int i = f / 4;
-			f -= i * 4;
-			return (VIS_TYPES)((obj_data.fstatus [i] >> (f * 2)) & 0x03);
-		}
+        public VIS_TYPES GetFeatureStatus(int f)
+        {
+            int i = f / 4;
+            f -= i * 4;
+            return (VIS_TYPES)((obj_data.fstatus[i] >> (f * 2)) & 0x03);
+        }
 
-		public int GetFeatureValue (int f)
-		{
-			if (static_data.class_data == null)
-				return 0;
-			return EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Value;
-		}
+        public int GetFeatureValue(int f)
+        {
+            if (static_data.class_data == null)
+                return 0;
+            return EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Value;
+        }
 
-		public int GetFeatureRepairTime (int f)
-		{
-			if (static_data.class_data == null)
-				return 0;
-			return GetFeatureRepairTime (EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Index);
-		}
+        public int GetFeatureRepairTime(int f)
+        {
+            if (static_data.class_data == null)
+                return 0;
+            return GetFeatureRepairTime(EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Index);
+        }
 
-		public int GetFeatureID (int f)
-		{
-			Debug.Assert (static_data.class_data != null);
-			return EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Index;
-		}
+        public int GetFeatureID(int f)
+        {
+            Debug.Assert(static_data.class_data != null);
+            return EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Index;
+        }
 
-		public int GetFeatureOffset (int f, ref float x, ref float y, ref float z)
-		{
-			if (static_data.class_data == null)
-				return 0;
+        public int GetFeatureOffset(int f, ref float x, ref float y, ref float z)
+        {
+            if (static_data.class_data == null)
+                return 0;
 
-			x = EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Offset.x;
-			y = EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Offset.y;
-			z = EntityDB.FeatureEntryDataTable [static_data.class_data.FirstFeature + f].Offset.z;
-			return 1;
-		}
+            x = EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Offset.x;
+            y = EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Offset.y;
+            z = EntityDB.FeatureEntryDataTable[static_data.class_data.FirstFeature + f].Offset.z;
+            return 1;
+        }
 
-		public ObjClassDataType GetObjectiveClassData ()
-		{
-			return static_data.class_data;
-		}
+        public ObjClassDataType GetObjectiveClassData()
+        {
+            return static_data.class_data;
+        }
 
-		public string GetObjectiveClassName ()
-		{
-			throw new NotImplementedException ();
-		}
-		//		int RoE (VuEntity  e, int type);
+        public string GetObjectiveClassName()
+        {
+            throw new NotImplementedException();
+        }
+        //		int RoE (VuEntity  e, int type);
 
-		public byte GetExpectedStatus (int hours)
-		{
+        public byte GetExpectedStatus(int hours)
+        {
 #if TODO
 			int bf, s;
 
@@ -1633,11 +1650,11 @@ namespace FalconNet.Campaign
 				s = 100;
 			return (byte)s;
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public int GetRepairTime (int status)
-		{
+        public int GetRepairTime(int status)
+        {
 #if TODO		
 			int s, hours = 2400, f;
 
@@ -1651,25 +1668,27 @@ namespace FalconNet.Campaign
 			}
 			return 2400 - hours;
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public byte GetBestTarget ()
-		{
-			int i, v, bv = 0, f = 0;
+        public byte GetBestTarget()
+        {
+            int i, v, bv = 0, f = 0;
 
-			for (i = 0; i < static_data.class_data.Features; i++) {
-				v = GetFeatureValue (i);
-				if (v > bv && GetFeatureStatus (i) != VIS_TYPES.VIS_DESTROYED) {
-					bv = v;
-					f = i;
-				}
-			}
-			return (byte)f;
-		}
+            for (i = 0; i < static_data.class_data.Features; i++)
+            {
+                v = GetFeatureValue(i);
+                if (v > bv && GetFeatureStatus(i) != VIS_TYPES.VIS_DESTROYED)
+                {
+                    bv = v;
+                    f = i;
+                }
+            }
+            return (byte)f;
+        }
 
-		public void ResetObjectiveStatus ()
-		{
+        public void ResetObjectiveStatus()
+        {
 #if TODO
 			int f, s;
 
@@ -1723,11 +1742,11 @@ namespace FalconNet.Campaign
 				SetObjectiveStatus ((byte)s);
 			}
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void RepairFeature (int f)
-		{
+        public void RepairFeature(int f)
+        {
 #if TODO
 			VIS_TYPES cur;
 
@@ -1746,11 +1765,11 @@ namespace FalconNet.Campaign
 			//			CleanupLinkedPersistantObjects (this, f, VIS_RWYPATCH, 2);
 			//		}
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public void RecalculateParent ()
-		{
+        public void RecalculateParent()
+        {
 #if TODO	
 			Objective n, s = null, bp = null;
 			Int32 i, j, d, bd = 9999;
@@ -1843,173 +1862,173 @@ namespace FalconNet.Campaign
 					SetObjectiveParent (VU_ID.FalconNullId);
 			}
 #endif
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public static int AwakeCampaignEntities = 0; // TODO this variable is defined as extern in Campaign.cpp (??)
-	}
+        public static int AwakeCampaignEntities = 0; // TODO this variable is defined as extern in Campaign.cpp (??)
+    }
 
-	// =======================
-	// Transmitable flags
-	// =======================
-	[Flags]
+    // =======================
+    // Transmitable flags
+    // =======================
+    [Flags]
     public enum O_FLAGS : ulong
-	{
-		O_FRONTLINE = 0x1,
-		O_SECONDLINE = 0x2,
-		O_THIRDLINE = 0x4,
-		O_B3 = 0x8,
-		O_JAMMED = 0x10,
-		O_BEACH = 0x20,
-		O_B1 = 0x40,
-		O_B2 = 0x80,
-		O_MANUAL_SET = 0x100,
-		O_MOUNTAIN_SITE = 0x200,
-		O_SAM_SITE = 0x400,
-		O_ARTILLERY_SITE = 0x800,
-		O_AMBUSHCAP_SITE = 0x1000,
-		O_BORDER_SITE = 0x2000,
-		O_COMMANDO_SITE = 0x4000,
-		O_FLAT_SITE = 0x8000,
-		O_RADAR_SITE = 0x10000,
-		O_NEED_REPAIR = 0x20000,
-		O_EMPTY1 = 0x40000,
-		O_EMPTY2 = 0x80000,
-		O_ABANDONED = 0x100000,
-		// 2002-02-13 ADDED BY MN for Sylvain's new Identify
-		O_HAS_NCTR = 0x200000,
-		O_IS_GCI = 0x400000
-	}
+    {
+        O_FRONTLINE = 0x1,
+        O_SECONDLINE = 0x2,
+        O_THIRDLINE = 0x4,
+        O_B3 = 0x8,
+        O_JAMMED = 0x10,
+        O_BEACH = 0x20,
+        O_B1 = 0x40,
+        O_B2 = 0x80,
+        O_MANUAL_SET = 0x100,
+        O_MOUNTAIN_SITE = 0x200,
+        O_SAM_SITE = 0x400,
+        O_ARTILLERY_SITE = 0x800,
+        O_AMBUSHCAP_SITE = 0x1000,
+        O_BORDER_SITE = 0x2000,
+        O_COMMANDO_SITE = 0x4000,
+        O_FLAT_SITE = 0x8000,
+        O_RADAR_SITE = 0x10000,
+        O_NEED_REPAIR = 0x20000,
+        O_EMPTY1 = 0x40000,
+        O_EMPTY2 = 0x80000,
+        O_ABANDONED = 0x100000,
+        // 2002-02-13 ADDED BY MN for Sylvain's new Identify
+        O_HAS_NCTR = 0x200000,
+        O_IS_GCI = 0x400000
+    }
 
-	public static class ObjectivStatic
-	{
+    public static class ObjectivStatic
+    {
 
-		// =======================
-		// Random public static als
-		// =======================
+        // =======================
+        // Random public static als
+        // =======================
 
-		public static ObjectiveClass FindObjective (VU_ID id)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass FindObjective(VU_ID id)
+        {
+            throw new NotImplementedException();
+        }
 
-		// ================================
-		// Objective public static als
-		// ================================
+        // ================================
+        // Objective public static als
+        // ================================
 
-		// ================================
-		// Inline functions
-		// ================================
+        // ================================
+        // Inline functions
+        // ================================
 
-		// ---------------------------------------
-		// public static al Function Declarations
-		// ---------------------------------------
+        // ---------------------------------------
+        // public static al Function Declarations
+        // ---------------------------------------
 
-		public static ObjectiveClass NewObjective ()
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass NewObjective()
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass NewObjective (short tid, VU_BYTE[] stream)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass NewObjective(short tid, VU_BYTE[] stream)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass NewObjective (short tid, VU_BYTE[] stream, int fromDisk)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass NewObjective(short tid, VU_BYTE[] stream, int fromDisk)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int LoadBaseObjectives (string scenario)
-		{
-			throw new NotImplementedException ();
-		}
+        public static int LoadBaseObjectives(string scenario)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int LoadObjectiveDeltas (string savefile)
-		{
-			throw new NotImplementedException ();
-		}
+        public static int LoadObjectiveDeltas(string savefile)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static void SaveBaseObjectives (string scenario)
-		{
-			throw new NotImplementedException ();
-		}
+        public static void SaveBaseObjectives(string scenario)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static void SaveObjectiveDeltas (string savefile)
-		{
-			throw new NotImplementedException ();
-		}
+        public static void SaveObjectiveDeltas(string savefile)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass GetObjectiveByID (int ID)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass GetObjectiveByID(int ID)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int BestRepairFeature (ObjectiveClass o, int[] hours)
-		{
-			throw new NotImplementedException ();
-		}
+        public static int BestRepairFeature(ObjectiveClass o, int[] hours)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int BestTargetFeature (ObjectiveClass o, byte[] targeted)
-		{
-			throw new NotImplementedException ();
-		}
+        public static int BestTargetFeature(ObjectiveClass o, byte[] targeted)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static void RepairObjectives ()
-		{
-			throw new NotImplementedException ();
-		}
+        public static void RepairObjectives()
+        {
+            throw new NotImplementedException();
+        }
 
-		public static DamageDataType GetDamageType (ObjectiveClass o, int f)
-		{
-			throw new NotImplementedException ();
-		}
+        public static DamageDataType GetDamageType(ObjectiveClass o, int f)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static F4PFList GetChildObjectives (ObjectiveClass o, int maxdist, int flags)
-		{
-			throw new NotImplementedException ();
-		}
+        public static F4PFList GetChildObjectives(ObjectiveClass o, int maxdist, int flags)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass GetFirstObjective (F4LIt l)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass GetFirstObjective(F4LIt l)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass GetNextObjective (F4LIt l)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass GetNextObjective(F4LIt l)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass GetFirstObjective (VuGridIterator l)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass GetFirstObjective(VuGridIterator l)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static ObjectiveClass GetNextObjective (VuGridIterator l)
-		{
-			throw new NotImplementedException ();
-		}
+        public static ObjectiveClass GetNextObjective(VuGridIterator l)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static void CaptureObjective (ObjectiveClass co, Control who, Unit u = null)
-		{
-			throw new NotImplementedException ();
-		}
+        public static void CaptureObjective(ObjectiveClass co, Control who, Unit u = null)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int EncodeObjectiveDeltas (VU_BYTE[] stream, FalconSessionEntity owner)
-		{
-			throw new NotImplementedException ();
-		}
+        public static int EncodeObjectiveDeltas(VU_BYTE[] stream, FalconSessionEntity owner)
+        {
+            throw new NotImplementedException();
+        }
 
-		public static int DecodeObjectiveDeltas (VU_BYTE[] stream, FalconSessionEntity owner)
-		{
-			throw new NotImplementedException ();
-		}
-		
-		public static int EvaluateKill (FalconDeathMessage dtm, SimBaseClass simShooter, CampBaseClass campShooter, SimBaseClass simTarget, CampBaseClass campTarget) //TODO This function is defined as extern in DeathMessage.cpp (??)
-		{
-			throw new NotImplementedException ();
-		}	
-		
-		}
+        public static int DecodeObjectiveDeltas(VU_BYTE[] stream, FalconSessionEntity owner)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int EvaluateKill(FalconDeathMessage dtm, SimBaseClass simShooter, CampBaseClass campShooter, SimBaseClass simTarget, CampBaseClass campTarget) //TODO This function is defined as extern in DeathMessage.cpp (??)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
 
 }

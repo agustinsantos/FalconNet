@@ -1,5 +1,5 @@
 ﻿using System;
-using Team = System.Int32;
+using Team = System.SByte;
 using FalconNet.VU;
 using FalconNet.Common;
 using System.IO;
@@ -32,11 +32,11 @@ namespace FalconNet.Campaign
             topPriority = 0;
             done = 0;
         }
-
+#if TOD
         public NavalTaskingManagerClass(byte[] stream)
             : base(stream)
         {
-#if TOD
+
             memcpy(&flags, *stream, sizeof(short)); *stream += sizeof(short);
             //	unitList = new FalconPrivateList(&AllNavalFilter);	
             //	unitList.Init();
@@ -44,14 +44,14 @@ namespace FalconNet.Campaign
             tod = 0;
             topPriority = 0;
             done = 0;
-#endif
+ 
             throw new NotImplementedException();
         }
 
         public NavalTaskingManagerClass(FileStream file)
             : base(file)
         {
-#if TODO
+ 
             fread(&flags, sizeof(short), 1, file);
             //	unitList = new FalconPrivateList(&AllNavalFilter);	
             //	unitList.Init();
@@ -59,7 +59,7 @@ namespace FalconNet.Campaign
             tod = 0;
             topPriority = 0;
             done = 0;
-#endif
+ 
             throw new NotImplementedException();
         }
 
@@ -72,16 +72,16 @@ namespace FalconNet.Campaign
         }
         public override int Save(byte[] stream)
         {
-#if TODO
+ 
             base.Save(stream);
             memcpy(*stream, &flags, sizeof(short)); *stream += sizeof(short);
             return SaveSize();
-#endif
+ 
             throw new NotImplementedException();
         }
         public override int Save(FileStream file)
         {
-#if TODO
+ 
             int retval = 0;
 
             if (!file)
@@ -89,11 +89,11 @@ namespace FalconNet.Campaign
             retval += base.Save(file);
             retval += fwrite(&flags, sizeof(short), 1, file);
             return retval;
-#endif
+
             throw new NotImplementedException();
         }
-
-        public override int Handle(VuFullUpdateEvent evnt)
+#endif
+        public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)
         {
 #if TODO
             NavalTaskingManagerClass tmpGTM = (NavalTaskingManagerClass)(evnt.expandedData_);

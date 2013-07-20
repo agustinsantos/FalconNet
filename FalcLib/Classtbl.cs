@@ -1,6 +1,8 @@
 using FalconNet.CampaignBase;
 using FalconNet.Common;
+using FalconNet.Common.Encoding;
 using FalconNet.F4Common;
+using FalconNet.VU;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -4400,23 +4402,62 @@ namespace FalconNet.FalcLib
 
             fileName = F4File.FalconObjectDataDir + Path.DirectorySeparatorChar + name + ".ini";
 
-            gLangIDNum = MultiplatformIni.GetPrivateProfileInt("Lang", "Id", 0, fileName);
+            gLangIDNum = MultiplatformIni.GetPrivateProfileInt("LANG", "Id", 0, fileName);
 
             filePtr = F4File.OpenCampFile(name, "ct", FileAccess.Read);
-#if TODO        
-            if (filePtr)
+        
+            if (filePtr != null)
             {
-                fread(&NumEntities, sizeof(short), 1, filePtr);
-                Falcon4ClassTable = new Falcon4EntityClassType[NumEntities];
-                fread(Falcon4ClassTable, sizeof(Falcon4EntityClassType), NumEntities, filePtr);
-                fclose(filePtr);
+                F4VUStatic.NumEntities = Int16EncodingLE.Decode(filePtr);
+                EntityDB.Falcon4ClassTable = new Falcon4EntityClassType[F4VUStatic.NumEntities];
+                for (int i = 0; i < F4VUStatic.NumEntities; i++)
+                {
+                    var thisClass = new Falcon4EntityClassType();
+                    thisClass.vuClassData = new VuEntityType();
+                    thisClass.vuClassData.id_ = UInt16EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.collisionType_ = UInt16EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.collisionRadius_ = SingleEncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.classInfo_ = new byte[8];
+                    for (var j = 0; j < 8; j++)
+                    {
+                        thisClass.vuClassData.classInfo_[j] = (byte)filePtr.ReadByte();
+                    }
+                    thisClass.vuClassData.updateRate_ = UInt32EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.updateTolerance_ = UInt32EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.fineUpdateRange_ = SingleEncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.fineUpdateForceRange_ = SingleEncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.fineUpdateMultiplier_ = SingleEncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.damageSeed_ = UInt32EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.hitpoints_ = Int32EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.majorRevisionNumber_ = UInt16EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.minorRevisionNumber_ = UInt16EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.createPriority_ = UInt16EncodingLE.Decode(filePtr);
+                    thisClass.vuClassData.managementDomain_ = (byte)filePtr.ReadByte();
+                    thisClass.vuClassData.transferable_ = (filePtr.ReadByte()!=0);
+                    thisClass.vuClassData.private_ = (filePtr.ReadByte() != 0);
+                    thisClass.vuClassData.tangible_ = (filePtr.ReadByte() != 0);
+                    thisClass.vuClassData.collidable_ = (filePtr.ReadByte() != 0);
+                    thisClass.vuClassData.global_ = (filePtr.ReadByte() != 0);
+                    thisClass.vuClassData.persistent_ = (filePtr.ReadByte() != 0);
+                    filePtr.Position += 3; //align on int32 boundary
+                    thisClass.visType = new short[7];
+                    for (var j = 0; j < 7; j++)
+                    {
+                        thisClass.visType[j] = Int16EncodingLE.Decode(filePtr); ;
+                    }
+                    thisClass.vehicleDataIndex = Int16EncodingLE.Decode(filePtr);
+                    thisClass.dataType = (Data_Types)filePtr.ReadByte();
+                    //skip dataPtr
+                    filePtr.Position += 4;
+                    EntityDB.Falcon4ClassTable[i] = thisClass;
+                }
+                F4File.CloseCampFile(filePtr);
             }
             else
             {
-                Falcon4ClassTable = null;
+                EntityDB.Falcon4ClassTable = null;
             }
-#endif
-            throw new NotImplementedException();
+
         }
     }
 }

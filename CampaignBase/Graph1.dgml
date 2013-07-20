@@ -21,15 +21,35 @@
     <Node Id="@7" Category="CodeSchema_Class" Bounds="-9584.35478515625,-10057.482252903,121.900000000001,26" CodeSchemaProperty_IsAbstract="True" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" CommonLabel="CampTerrStatic" Icon="Microsoft.VisualStudio.Class.Public" Label="CampTerrStatic" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=&quot;file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/CampLib/Campterr.cs&quot; StartLineNumber=20 StartCharacterOffset=1 EndLineNumber=20 EndCharacterOffset=1)" UseManualLocation="True" />
     <Node Id="@8" Category="CodeSchema_Enum" Bounds="-9666.09078125,-10001.482152903,97.0800000000017,26" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" CommonLabel="CoverType" Icon="Microsoft.VisualStudio.Enum.Public" Label="CoverType" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=&quot;file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/CampLib/Campglobl.cs&quot; StartLineNumber=7 StartCharacterOffset=4 EndLineNumber=7 EndCharacterOffset=4)" UseManualLocation="True" />
     <Node Id="@9" Category="CodeSchema_Enum" Bounds="-9480.60162760417,-10001.482152903,82.7833333333328,26" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" CommonLabel="RelType" Icon="Microsoft.VisualStudio.Enum.Public" Label="RelType" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=&quot;file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/CampLib/Campglobl.cs&quot; StartLineNumber=48 StartCharacterOffset=4 EndLineNumber=48 EndCharacterOffset=4)" UseManualLocation="True" />
+    <Node Id="Campaign" Bounds="-8843.10731770833,-10229.569425,73.7966666666689,25.9599999999991" UseManualLocation="True" />
+    <Node Id="CampaignBase" Bounds="-8786.17799696181,-10079.8291210937,98.1533333333355,25.9599999999991" UseManualLocation="True" />
+    <Node Id="Common" Bounds="-8922.87705729167,-9955.33637578125,68.9533333333311,25.9599999999991" Label="Common" UseManualLocation="True" />
+    <Node Id="F4Common" Bounds="-8897.46133029514,-10038.9834179687,81.2833333333328,25.9599999999991" UseManualLocation="True" />
+    <Node Id="FalcLib" Bounds="-8950.4244133152,-10115.9253814897,56.0266666666648,25.9599999999991" UseManualLocation="True" />
+    <Node Id="Sim" Bounds="-8954.25344011227,-10203.8383692285,50,25.9599999999991" UseManualLocation="True" />
+    <Node Id="VU" Bounds="-8977.46133029514,-10011.2969640625,50,25.9599999999991" UseManualLocation="True" />
   </Nodes>
   <Links>
-    <Link Source="@5" Target="@7" Bounds="-9526.27015867865,-10135.0606800812,2.16956409340855,68.5829270448794" />
+    <Link Source="@5" Target="@7" Bounds="-9526.27015867866,-10135.0606800812,2.16956409341219,68.5829270448485" />
     <Link Source="@5" Target="@8" Bounds="-9611.244140625,-10135.060546875,75.96875,124.9375" />
     <Link Source="@5" Target="@9" Bounds="-9514.6640625,-10135.060546875,71.8291015625,124.69921875" />
-    <Link Source="@6" Target="(@3 @4 Type=CampaignTime)" Bounds="-9237.71773318025,-10096.7939453125,45.059117165385,82.6487854825991" />
-    <Link Source="@6" Target="(@3 @4 Type=MoveType)" Bounds="-9306.49765269951,-10096.7939453125,53.3566804397087,83.2118259485851" />
-    <Link Source="@7" Target="@8" Bounds="-9587.9604492263,-10031.4822777344,42.7003825755764,25.3991225701102" />
-    <Link Source="@7" Target="@9" Bounds="-9503.8595930076,-10031.4822777344,37.6106601506053,25.0157981686316" />
+    <Link Source="@6" Target="(@3 @4 Type=CampaignTime)" Bounds="-9237.7174705484,-10096.7938987597,45.0588982751251,82.6487313209418" />
+    <Link Source="@6" Target="(@3 @4 Type=MoveType)" Bounds="-9306.49764369268,-10096.7938987597,53.3569574755729,83.2121943650909" />
+    <Link Source="@7" Target="@8" Bounds="-9587.9604492263,-10031.482252903,42.7003825755764,25.3991225701138" />
+    <Link Source="@7" Target="@9" Bounds="-9503.8595930076,-10031.482252903,37.6106601506053,25.0157981686352" />
+    <Link Source="Campaign" Target="CampaignBase" Bounds="-8800.21849733473,-10203.609425,53.3553028607566,115.608601851065" />
+    <Link Source="Campaign" Target="F4Common" Bounds="-8851.0628679427,-10203.609425,41.4070060820795,155.92748543798" />
+    <Link Source="Campaign" Target="FalcLib" Bounds="-8902.70407455343,-10203.6093554688,83.2229116287908,81.390812284626" />
+    <Link Source="CampaignBase" Target="Common" Bounds="-8865.67563647544,-10053.8691210938,112.79933470888,92.8138201183519" />
+    <Link Source="CampaignBase" Target="F4Common" Bounds="-8810.31568073316,-10053.8691210938,35.17010470889,11.999395713392" />
+    <Link Source="F4Common" Target="Common" Bounds="-8880.32087206621,-10013.0234179688,18.6006140047139,49.2666702133101" />
+    <Link Source="FalcLib" Target="CampaignBase" Bounds="-8894.39731119792,-10097.4890415003,99.3853506510059,19.3594217477294" />
+    <Link Source="FalcLib" Target="Common" Bounds="-8919.66168121707,-10089.9658007813,26.6476261724147,125.824228331345" />
+    <Link Source="FalcLib" Target="F4Common" Bounds="-8911.34559948069,-10089.9658007813,37.6222444016876,44.1332800817654" />
+    <Link Source="FalcLib" Target="VU" Bounds="-8946.24884720768,-10089.9658007813,20.1101874040851,70.0185523491109" />
+    <Link Source="Sim" Target="CampaignBase" Bounds="-8909.14126924563,-10177.8779101563,144.365591386666,93.1685574493131" />
+    <Link Source="Sim" Target="FalcLib" Bounds="-8928.24351601206,-10177.8779101563,4.12401543781743,52.9792533347445" />
+    <Link Source="VU" Target="Common" Bounds="-8937.60233260003,-9985.3369640625,27.5648682084302,24.0791469712021" />
   </Links>
   <Categories>
     <Category Id="CodeSchema_Class" Label="Class" BasedOn="CodeSchema_Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="Classes" />
@@ -69,7 +89,9 @@
     <Alias n="9" Id="(@1 @2 Type=RelType)" />
   </IdentifierAliases>
   <Paths>
+    <Path Id="12899d19-7f1a-49fe-82e2-3535b3ced5c3.OutputPath" Value="C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\FalcLib\bin\Debug\FalcLib.dll" />
     <Path Id="12899d19-7f1a-49fe-82e2-3535b3ced5c3.OutputPathUri" Value="file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/FalcLib/bin/Debug/FalcLib.dll" />
-    <Path Id="5446161e-db85-46e2-92ad-473b72766618.OutputPathUri" Value="file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/CampLib/bin/Debug/CampLib.dll" />
+    <Path Id="5446161e-db85-46e2-92ad-473b72766618.OutputPath" Value="C:\Users\Agustin\Documents\Visual Studio 2012\Projects\falconnet\CampaignBase\bin\Debug\CampLib.dll" />
+    <Path Id="5446161e-db85-46e2-92ad-473b72766618.OutputPathUri" Value="file:///C:/Users/Agustin/Documents/Visual Studio 2012/Projects/falconnet/CampaignBase/bin/Debug/CampLib.dll" />
   </Paths>
 </DirectedGraph>

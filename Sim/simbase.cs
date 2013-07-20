@@ -7,6 +7,7 @@ using System.IO;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using Control = System.Byte;
+using Team = System.SByte;
 using FalconNet.Common.Encoding;
 namespace FalconNet.SimBase
 {
@@ -658,7 +659,7 @@ namespace FalconNet.SimBase
             throw new NotImplementedException();
         }
 
-        public override Control GetTeam()
+        public override Team GetTeam()
         {
             throw new NotImplementedException();
         }

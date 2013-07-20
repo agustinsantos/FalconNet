@@ -7,6 +7,8 @@ using System.Diagnostics;
 using DWORD = System.UInt32;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
+using FalconNet.F4Common;
+using FalconNet.Common.Encoding;
  
 namespace FalconNet.FalcLib
 {
@@ -53,6 +55,31 @@ namespace FalconNet.FalcLib
         public short IconIndex;					// Index to this unit's icon type
     }
 
+    public static class UnitClassDataTypeEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, UnitClassDataType val)
+        {
+            throw new NotImplementedException();
+        }
+        public static void Encode(Stream stream, UnitClassDataType val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static UnitClassDataType Decode(ByteWrapper buffer)
+        {
+            throw new NotImplementedException();
+        }
+        public static UnitClassDataType Decode(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
     public class FeatureEntry
     {
         public short Index;						// Entity class index of feature
@@ -266,11 +293,6 @@ namespace FalconNet.FalcLib
 
         public static int LoadClassTable(string filename)
         {
-#if TODO 
-            int i;
-            string objSet;
-            string newstr;
-
             // dbgMemSetSafetyLevel( MEM_SAFETY_DEBUG );
 
 #if NOTHING // not required JPO?
@@ -283,24 +305,30 @@ namespace FalconNet.FalcLib
 	RegQueryValueEx(theKey, "objectdir", 0, &type, (LPBYTE)FalconObjectDataDir, &size);
 	RegCloseKey(theKey);
 #endif
+#if TODO
             objSet = newstr = strchr(FalconObjectDataDir, '\\');
             while (newstr != null)
             {
                 objSet = newstr + 1;
                 newstr = strchr(objSet, '\\');
             }
-
+#endif
+            string[] entries = F4File.FalconObjectDataDir.Split(new char[]{'\\','/'}, StringSplitOptions.RemoveEmptyEntries);
+            string objSet = entries[entries.Length-1];
             // Check file integrity
             //	FileVerify();
 
             ClassTableStatic.InitClassTableAndData(filename, objSet);
             ReadClassTable();
+
 #if !MISSILE_TEST_PROG
 #if !ACMI
 #if !IACONVERT
-
-            if (!LoadUnitData(filename)) throw new ApplicationException("Failed to load unit data");
-            if (!LoadFeatureEntryData(filename)) throw new ApplicationException("Failed to load feature entries");
+#if TODO
+            if (!LoadUnitData(filename)) 
+                throw new ApplicationException("Failed to load unit data");
+            if (!LoadFeatureEntryData(filename)) 
+                throw new ApplicationException("Failed to load feature entries");
             if (!LoadObjectiveData(filename)) throw new ApplicationException("Failed to load objective data");
             if (!LoadWeaponData(filename)) throw new ApplicationException("Failed to load weapon data");
             if (!LoadFeatureData(filename)) throw new ApplicationException("Failed to load feature data");
@@ -442,9 +470,10 @@ namespace FalconNet.FalcLib
 #endif
 #endif
 #endif
+#endif
             ReadClassTable();
             return 1;
-#endif
+
             throw new NotImplementedException();
         }
 
@@ -483,21 +512,18 @@ namespace FalconNet.FalcLib
 
         public static bool LoadUnitData(string filename)
         {
-#if TODO 
+
             FileStream fp;
             //	int			i,j;
             short entries;
 
-            if ((fp = OpenCampFile(filename, "UCD", "rb")) == null)
-                return 0;
-            fseek(fp, 0, SEEK_END); // JPO - work out if the file looks the right size.
-            uint size = ftell(fp);
-            fseek(fp, 0, SEEK_SET);
-            if (fread(&entries, sizeof(short), 1, fp) < 1)
-                return 0;
-            if (size != sizeof(UnitClassDataType) * entries + 2)
-                return 0;
+            if ((fp = F4File.OpenCampFile(filename, "UCD", FileAccess.Read)) == null)
+                return false;
+            entries = Int16EncodingLE.Decode(fp);
             UnitDataTable = new UnitClassDataType[entries];
+            for (int i = 0; i < entries; i++)
+                UnitDataTable[i] = UnitClassDataTypeEncodingLE.Decode(fp);
+#if TODO    
             fread(UnitDataTable, sizeof(UnitClassDataType), entries, fp);
             fclose(fp);
             /*

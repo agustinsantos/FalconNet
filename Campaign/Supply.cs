@@ -1,11 +1,11 @@
 ﻿using System;
 using FalconNet.FalcLib;
-using Team = System.Int32;
+using Team = System.SByte;
 using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign
 {
-    class Supply
+    public class Supply
     {
         public const int SUPPLY_PT_FUEL = 10000;			// How many lbs of fuel each point of supply fuel is worth
 

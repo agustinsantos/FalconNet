@@ -447,7 +447,7 @@ namespace FalconNet.VU
 
         // getters
         public VU_ID Id() { return share_.id_; }
-        public VU_BYTE Domain() { return domain_; }
+        public virtual VU_BYTE Domain() { return domain_; }
 
         public bool IsPrivate() { return (bool)share_.flags_.private_; }
         public bool IsTransferrable() { return (bool)share_.flags_.transfer_; }
@@ -774,7 +774,7 @@ namespace FalconNet.VU
         }
 
         protected internal ShareData share_;
-        internal PositionData pos_;
+        internal protected PositionData pos_;
         internal OrientationData orient_;
 
         // local data

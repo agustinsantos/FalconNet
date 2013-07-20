@@ -4,6 +4,8 @@ namespace FalconNet.CampaignBase
     public struct CampaignTime
     {
         public ulong time;
+
+        //TODO this must be defined as time interval
         public const ulong CampaignSeconds = 1000;
         public const ulong CampaignMinutes = 60000;
         public const ulong CampaignHours = 3600000;
@@ -15,14 +17,14 @@ namespace FalconNet.CampaignBase
             time = t;
         }
 
-        public static CampaignTime operator +(CampaignTime c1, CampaignTime c2)
+        public static CampaignTime operator +(CampaignTime c1, CampaignTimeInterval c2)
         {
-            return new CampaignTime(c1.time + c2.time);
+            return new CampaignTime(c1.time + c2.interval);
         }
 
-        public static CampaignTime operator -(CampaignTime c1, CampaignTime c2)
+        public static CampaignTime operator -(CampaignTime c1, CampaignTimeInterval c2)
         {
-            return new CampaignTime(c1.time - c2.time);
+            return new CampaignTime(c1.time - c2.interval);
         }
 
         public static implicit operator ulong(CampaignTime t)
@@ -36,5 +38,23 @@ namespace FalconNet.CampaignBase
         }
     }
 
+    public struct CampaignTimeInterval
+    {
+        public ulong interval;
 
+        public CampaignTimeInterval(ulong i)
+        {
+            interval = i;
+        }
+
+        public static implicit operator ulong(CampaignTimeInterval t)
+        {
+            return t.interval;
+        }
+
+        public static implicit operator CampaignTimeInterval(ulong t)
+        {
+            return new CampaignTimeInterval(t);
+        }
+    }
 }

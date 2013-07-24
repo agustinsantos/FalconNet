@@ -63,16 +63,16 @@ namespace FalconNet.Sim
 
                 for (j = 0; j < num4Slots; j++)
                 {
-                    positionData[i][j].relAz = (float)float.Parse(formFile.GetNext()) * Phyconst.DTR;
-                    positionData[i][j].relEl = (float)float.Parse(formFile.GetNext()) * Phyconst.DTR;
-                    positionData[i][j].range = (float)float.Parse(formFile.GetNext()) * Phyconst.NM_TO_FT;
+                    positionData[i][j].relAz = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.DTR;
+                    positionData[i][j].relEl = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.DTR;
+                    positionData[i][j].range = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.NM_TO_FT;
                     positionData[i][j].formNum = formNum;
                 }
                 if (num2Slots != 0)
                 {
-                    twoposData[i].relAz = (float)float.Parse(formFile.GetNext()) * Phyconst.DTR;
-                    twoposData[i].relEl = (float)float.Parse(formFile.GetNext()) * Phyconst.DTR;
-                    twoposData[i].range = (float)float.Parse(formFile.GetNext()) * Phyconst.NM_TO_FT;
+                    twoposData[i].relAz = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.DTR;
+                    twoposData[i].relEl = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.DTR;
+                    twoposData[i].range = (float)float.Parse(formFile.GetNext(),CultureInfo.InvariantCulture) * Phyconst.NM_TO_FT;
                     twoposData[i].formNum = formNum;
                 }
                 else

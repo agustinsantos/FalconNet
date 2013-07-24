@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using log4net;
 using DWORD = System.UInt64;
+using FalconNet.Common.Encoding;
+using System.Globalization;
 
 namespace FalconNet.F4Common
 {
@@ -13,16 +15,31 @@ namespace FalconNet.F4Common
     {
         private void EncryptPwd()
         {
-            char[] ptr = Pilot.Password.ToCharArray();
-            ;
+            char[] ptr = new char[(int)LB_PILOT.PASSWORD_LEN];
+            Pilot.Password.ToCharArray().CopyTo(ptr, ptr.Length);
 
-            for (int i = 0; i < (int)LEN_ENUM.PASSWORD_LEN; i++)
+            for (int i = 0; i < ptr.Length; i++)
             {
                 ptr[i] ^= PwdMask[i % PwdMask.Length];
                 ptr[i] ^= PwdMask2[i % PwdMask2.Length];
             }
 
-            Pilot.Password = ptr.ToString();
+            Pilot.Password = new string(ptr);
+        }
+
+        private void EncryptASCIIPwd()
+        {
+            byte[] ptr = Encoding.ASCII.GetBytes(Pilot.Password);
+            byte[] PwdMaskAcii = Encoding.ASCII.GetBytes(PwdMask);
+            byte[] PwdMask2Acii = Encoding.ASCII.GetBytes(PwdMask2);
+
+            for (int i = 0; i < (int)LB_PILOT.PASSWORD_LEN; i++)
+            {
+                ptr[i] ^= PwdMaskAcii[i % PwdMask.Length];
+                ptr[i] ^= PwdMask2Acii[i % PwdMask2.Length];
+            }
+
+            Pilot.Password = Encoding.ASCII.GetString(ptr);
         }
 
         private void CalcRank()
@@ -175,11 +192,10 @@ namespace FalconNet.F4Common
         // public ~LogBookData();
         public void Initialize()
         {
+            Pilot = new LB_PILOT();
             Pilot.Name = "Joe Pilot";
-#if TODO		
-			string path;
-			if (gStringMgr != null)
-				Pilot.Name = gStringMgr.GetString (TXT_JOE_PILOT);
+            //if (gStringMgr != null)
+            //    Pilot.Name = gStringMgr.GetString (TXT_JOE_PILOT);
 
 
             Pilot.Callsign = "Viper";
@@ -191,30 +207,30 @@ namespace FalconNet.F4Common
             Pilot.FlightHours = 0.0F;
 
             Pilot.Picture = null;
-            Pilot.PictureResource = NOFACE;
-            Pilot.Patch[0] = 0;
-            Pilot.PatchResource = NOPATCH;
-            Pilot.Personal[0] = 0;
-            Pilot.Squadron[0] = 0;
+            Pilot.PictureResource = LB_PILOT.NOFACE;
+            Pilot.Patch = "";
+            Pilot.PatchResource = LB_PILOT.NOPATCH;
+            Pilot.Personal = "";
+            Pilot.Squadron = "";
             Pilot.voice = 0;
 
             DateTime systime = DateTime.Now;
-            if (gLangIDNum != F4LANG_ENGLISH)
+            if (F4Config.gLangIDNum != F4LANGUAGE.F4LANG_ENGLISH)
             {
-                Pilot.Commissioned = systime.ToString("d");
+                Pilot.Commissioned = systime.ToString("u");
             }
             else
             {
                 Pilot.Commissioned = systime.ToString("d");
             }
             Pilot.CheckSum = 0;
+#if TODO
             if (gCommsMgr != 0)
             {
                 path = FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".plc";
                 gCommsMgr.SetStatsFile(path);
             }
 #endif
-            throw new NotImplementedException();
         }
 
         public void Cleanup()
@@ -227,11 +243,11 @@ namespace FalconNet.F4Common
             return false;
         }
 
-        public bool LoadData(string PilotName)
-        {   
-            Debug.Assert(!string.IsNullOrEmpty(PilotName));
+        public bool LoadData(string PilotCallsign)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(PilotCallsign));
 
-            string path = F4File.FalconDataDirectory + "config" + Path.DirectorySeparatorChar + Pilot.Callsign + ".lbk";
+            string path = F4File.F4FindFile(PilotCallsign, "lbk");
 
             if (!File.Exists(path))
             {
@@ -240,26 +256,16 @@ namespace FalconNet.F4Common
                 Initialize();
                 return false;
             }
-            
+
             FileStream fp = File.OpenRead(path);
             try
             {
-#if TODO
+                byte[] pilotBuf = new byte[LB_PILOTEncodingLE.Size];
+                fp.Read(pilotBuf, 0, pilotBuf.Length);
+                Encrypter.DecryptBuffer(0x58, pilotBuf, pilotBuf.Length);
+                Pilot = LB_PILOTEncodingLE.Decode(new ByteWrapper(pilotBuf));
+                fp.Close();
 
-                size_t success = 0;
-                success = fread(&Pilot, sizeof(LB_PILOT), 1, fp);
-                fclose(fp);
-                if (success != 1)
-                {
-                    MonoPrint(_T("Failed to read %s's logbook.\n"), PilotName);
-                    Initialize();
-                    return false;
-                }
-
-                byte[] buff = Pilot.
-                Encrypter.DecryptBuffer(0x58, (uchar*)&Pilot, sizeof(LB_PILOT));
-
-#endif
                 if (Pilot.CheckSum != 0)
                 {
                     log.Warn("Failed checksum, somebody changed the data ...");
@@ -269,7 +275,7 @@ namespace FalconNet.F4Common
             }
             catch (Exception e)
             {
-                log.WarnFormat("Failed to read {0}'s logbook.", PilotName);
+                log.WarnFormat("Failed to read {0}'s logbook.", PilotCallsign);
                 log.Warn(e);
                 fp.Close();
 
@@ -281,23 +287,22 @@ namespace FalconNet.F4Common
 				sprintf (path, "%s\\config\\%s.plc", FalconDataDirectory, PilotName);
 				gCommsMgr. SetStatsFile (path);
 			}	
-		
-			if (this == LogBook) { // TODO its must be a equals?
-
+#endif
+            if (this == LogBook)
+            {
+#if TODO
 				FalconLocalSession. SetPlayerName (NameWRank ());
 				FalconLocalSession. SetPlayerCallsign (Callsign ());
 				FalconLocalSession. SetAceFactor (AceFactor ());
 				FalconLocalSession. SetInitAceFactor (AceFactor ());
 				FalconLocalSession. SetVoiceID (static_cast<uchar> (Voice ()));
-				PlayerOptions.LoadOptions ();
-				LoadAllRules (Callsign ());
-				LogState |= LB_ENUM.LB_LOADED_ONCE;
-
-			}
-		
-			return true;
+                LogState |= LB_ENUM.LB_LOADED_ONCE;
 #endif
-            throw new NotImplementedException();
+                PlayerOptionsClass.PlayerOptions.LoadOptions();
+                RulesClass.LoadAllRules(Callsign());
+
+            }
+            return true;
         }
 
         public bool LoadData(LB_PILOT NewPilot)
@@ -852,7 +857,7 @@ namespace FalconNet.F4Common
             throw new NotImplementedException();
         }
 
-        public static LogBookData LogBook;
+        public static LogBookData LogBook = new LogBookData();
         public static LogBookData UI_logbk;
         private string nameWrank;
 
@@ -860,15 +865,7 @@ namespace FalconNet.F4Common
 
     }
 
-    public enum LEN_ENUM
-    {
-        FILENAME_LEN = 32,
-        PASSWORD_LEN = 10,
-        PERSONAL_TEXT_LEN = 120,
-        COMM_LEN = 12,
-        _NAME_LEN_ = 20,
-        _CALLSIGN_LEN_ = 12,
-    }
+
 
     [Flags]
     public enum LB_ENUM

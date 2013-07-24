@@ -28,32 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theathersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.ClassData = new System.Windows.Forms.TabPage();
-            this.CTdataGridView = new System.Windows.Forms.DataGridView();
-            this.ObjectiveData = new System.Windows.Forms.TabPage();
-            this.bindingSourceClassData = new System.Windows.Forms.BindingSource(this.components);
+            this.selectTheaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCampDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.campaignToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startNewCampaignToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCampDataToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.StripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.ClassData.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CTdataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceClassData)).BeginInit();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.theathersToolStripMenuItem});
+            this.logbookToolStripMenuItem,
+            this.theathersToolStripMenuItem,
+            this.campaignToolStripMenuItem,
+            this.setupToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(955, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1140, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,72 +76,110 @@
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
             this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
+            // logbookToolStripMenuItem
+            // 
+            this.logbookToolStripMenuItem.Name = "logbookToolStripMenuItem";
+            this.logbookToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.logbookToolStripMenuItem.Text = "Logbook";
+            this.logbookToolStripMenuItem.Click += new System.EventHandler(this.logbookToolStripMenuItem_Click);
             // 
             // theathersToolStripMenuItem
             // 
+            this.theathersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectTheaterToolStripMenuItem,
+            this.viewCampDataToolStripMenuItem});
             this.theathersToolStripMenuItem.Name = "theathersToolStripMenuItem";
             this.theathersToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
             this.theathersToolStripMenuItem.Text = "Theathers";
             // 
-            // statusStrip1
+            // selectTheaterToolStripMenuItem
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 330);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(955, 22);
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
+            this.selectTheaterToolStripMenuItem.Name = "selectTheaterToolStripMenuItem";
+            this.selectTheaterToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.selectTheaterToolStripMenuItem.Text = "Select Theater";
+            this.selectTheaterToolStripMenuItem.Click += new System.EventHandler(this.selectTheaterToolStripMenuItem_Click);
             // 
-            // tabControl1
+            // viewCampDataToolStripMenuItem
             // 
-            this.tabControl1.Controls.Add(this.ClassData);
-            this.tabControl1.Controls.Add(this.ObjectiveData);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 24);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(955, 306);
-            this.tabControl1.TabIndex = 2;
+            this.viewCampDataToolStripMenuItem.Name = "viewCampDataToolStripMenuItem";
+            this.viewCampDataToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.viewCampDataToolStripMenuItem.Text = "View Camp Data";
             // 
-            // ClassData
+            // campaignToolStripMenuItem
             // 
-            this.ClassData.Controls.Add(this.CTdataGridView);
-            this.ClassData.Location = new System.Drawing.Point(4, 22);
-            this.ClassData.Name = "ClassData";
-            this.ClassData.Padding = new System.Windows.Forms.Padding(3);
-            this.ClassData.Size = new System.Drawing.Size(947, 280);
-            this.ClassData.TabIndex = 0;
-            this.ClassData.Text = "Class Data";
-            this.ClassData.UseVisualStyleBackColor = true;
+            this.campaignToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startNewCampaignToolStripMenuItem,
+            this.viewCampDataToolStripMenuItem1});
+            this.campaignToolStripMenuItem.Name = "campaignToolStripMenuItem";
+            this.campaignToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
+            this.campaignToolStripMenuItem.Text = "Campaign";
             // 
-            // CTdataGridView
+            // startNewCampaignToolStripMenuItem
             // 
-            this.CTdataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.CTdataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CTdataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CTdataGridView.Location = new System.Drawing.Point(3, 3);
-            this.CTdataGridView.Name = "CTdataGridView";
-            this.CTdataGridView.ReadOnly = true;
-            this.CTdataGridView.RowHeadersVisible = false;
-            this.CTdataGridView.Size = new System.Drawing.Size(941, 274);
-            this.CTdataGridView.TabIndex = 0;
+            this.startNewCampaignToolStripMenuItem.Name = "startNewCampaignToolStripMenuItem";
+            this.startNewCampaignToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.startNewCampaignToolStripMenuItem.Text = "Start new Campaign";
             // 
-            // ObjectiveData
+            // viewCampDataToolStripMenuItem1
             // 
-            this.ObjectiveData.Location = new System.Drawing.Point(4, 22);
-            this.ObjectiveData.Name = "ObjectiveData";
-            this.ObjectiveData.Padding = new System.Windows.Forms.Padding(3);
-            this.ObjectiveData.Size = new System.Drawing.Size(947, 280);
-            this.ObjectiveData.TabIndex = 1;
-            this.ObjectiveData.Text = "Objectives";
-            this.ObjectiveData.UseVisualStyleBackColor = true;
+            this.viewCampDataToolStripMenuItem1.Name = "viewCampDataToolStripMenuItem1";
+            this.viewCampDataToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
+            this.viewCampDataToolStripMenuItem1.Text = "View CampData";
+            this.viewCampDataToolStripMenuItem1.Click += new System.EventHandler(this.viewCampDataToolStripMenuItem1_Click);
+            // 
+            // setupToolStripMenuItem
+            // 
+            this.setupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewSetupToolStripMenuItem});
+            this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.setupToolStripMenuItem.Text = "Setup";
+            // 
+            // viewSetupToolStripMenuItem
+            // 
+            this.viewSetupToolStripMenuItem.Name = "viewSetupToolStripMenuItem";
+            this.viewSetupToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.viewSetupToolStripMenuItem.Text = "View Setup";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StripStatusLabel});
+            this.statusBar.Location = new System.Drawing.Point(0, 499);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(1140, 22);
+            this.statusBar.TabIndex = 1;
+            this.statusBar.Text = "statusStrip1";
+            // 
+            // StripStatusLabel
+            // 
+            this.StripStatusLabel.Name = "StripStatusLabel";
+            this.StripStatusLabel.Size = new System.Drawing.Size(113, 17);
+            this.StripStatusLabel.Text = "No Theater Selected";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 352);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(1140, 521);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -143,10 +187,8 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.ClassData.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.CTdataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceClassData)).EndInit();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,12 +200,18 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem theathersToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage ClassData;
-        private System.Windows.Forms.TabPage ObjectiveData;
-        private System.Windows.Forms.DataGridView CTdataGridView;
-        private System.Windows.Forms.BindingSource bindingSourceClassData;
+        private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logbookToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem campaignToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectTheaterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewCampDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel StripStatusLabel;
+        private System.Windows.Forms.ToolStripMenuItem startNewCampaignToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewCampDataToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewSetupToolStripMenuItem;
     }
 }
 

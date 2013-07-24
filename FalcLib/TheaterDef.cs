@@ -8,6 +8,15 @@ namespace FalconNet.FalcLib
 {
     public class TheaterDef
     {
+        public string Name {
+            get { return m_name; }
+            set { m_name = value; }
+        }
+        public string Description
+        {
+            get { return m_description; }
+            set { m_description = value; }
+        }
         public string m_name;
         public string m_description;
         public string m_terrain;
@@ -22,6 +31,10 @@ namespace FalconNet.FalcLib
         public int m_mintacan;
         public string m_sounddir;
 
+        public string m_cockpitdir;
+        public string m_zipsdir;
+        public string m_tacrefdir;
+        public string m_splashdir;
         //TODO TheaterDef *m_next; // link
 
         public static TheaterList g_theaters;
@@ -29,9 +42,10 @@ namespace FalconNet.FalcLib
 
     public class TheaterList
     {
-        public static void LoadTheaterList()
+        public void LoadTheaterList()
         {
-            string tlist = F4File.FalconDataDirectory + THEATERLIST;
+            string tlist = F4File.F4FindFile(THEATERLIST);
+
             string[] lines = System.IO.File.ReadAllLines(tlist);
 
             foreach (string line in lines)
@@ -76,6 +90,7 @@ namespace FalconNet.FalcLib
         {
             theaterlist.Add(ntheater.m_name, ntheater);
         }
+
         public void DoSoundSetup()
         {
             throw new NotImplementedException();
@@ -87,7 +102,10 @@ namespace FalconNet.FalcLib
             //return theaterlist.Values[n];
         }
 
-        public int Count() { return theaterlist.Count; }
+        public int Count() 
+        { 
+            return theaterlist.Count;
+        }
 
         private void SetPathName(string dest, string src, string reldir)
         {
@@ -99,19 +117,17 @@ namespace FalconNet.FalcLib
                 dest = reldir + Path.DirectorySeparatorChar + src;
         }
 
-        private static void LoadTheaterDef(string name)
+        private void LoadTheaterDef(string name)
         {
-#if TODO
-            SimlibFileClass theaterfile;
-
-            theaterfile = SimlibFileClass.Open(name, SIMLIB_READ);
+            string fname = F4File.F4FindFile(name);
+            SimlibFileClass theaterfile = SimlibFileClass.Open(fname, FileMode.Open, FileAccess.Read);
 
             if (theaterfile == null) return;
 
             TheaterDef theater = new TheaterDef();
             // memset(theater, 0, sizeof * theater);
 
-            if (ParseSimlibFile(theater, theaterdesc, theaterfile) == false)
+            if (FileReader.ParseSimlibFile(theater, theaterdesc, theaterfile) == false)
             {
                 // delete theater;
             }
@@ -121,14 +137,37 @@ namespace FalconNet.FalcLib
             }
 
             theaterfile.Close();
-#endif
-            throw new NotImplementedException();
+        }
+
+        public IEnumerator<TheaterDef> GetEnumerator()
+        {
+            return theaterlist.Values.GetEnumerator();
         }
 
         private Dictionary<string, TheaterDef> theaterlist = new Dictionary<string, TheaterDef>();
         private TheaterDef actualTheater;
 
-        private const string THEATERLIST = "theater.lst";
+        private const string THEATERLIST = @"Terrdata\theaterdefinition\theater.lst";
+        private static readonly InputDataDesc[] theaterdesc = new InputDataDesc[]
+{
+        new InputDataDesc{ name = "name", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_name = (string)v },
+        new InputDataDesc{ name = "desc", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_description = (string)v },
+        new InputDataDesc{ name = "campaigndir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_campaign = (string)v },
+        new InputDataDesc{ name = "terraindir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_terrain = (string)v },
+        new InputDataDesc{ name = "artdir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_artdir = (string)v },
+        new InputDataDesc{ name = "moviedir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_moviedir = (string)v },
+        new InputDataDesc{ name = "uisounddir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_uisounddir = (string)v },
+        new InputDataDesc{ name = "objectdir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_objectdir = (string)v },
+        new InputDataDesc{ name = "3ddatadir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_3ddatadir = (string)v },
+        new InputDataDesc{ name = "misctexdir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_misctexdir = (string)v },
+        new InputDataDesc{ name = "bitmap", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_bitmap = (string)v },
+        new InputDataDesc{ name = "mintacan", defvalue = 70, type = format.ID_INT, action = (o, v) => (o as TheaterDef).m_mintacan = (int)v },
+        new InputDataDesc{ name = "sounddir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_sounddir = (string)v },
+        new InputDataDesc{ name = "cockpitdir", defvalue = "art\\ckptart", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_cockpitdir = (string)v },
+        new InputDataDesc{ name = "zipsdir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_zipsdir = (string)v },
+        new InputDataDesc{ name = "tacrefdir", defvalue = "", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_tacrefdir = (string)v },
+        new InputDataDesc{ name = "splashdir", defvalue = "art\\splash", type = format.ID_STRING, action = (o, v) => (o as TheaterDef).m_splashdir = (string)v }
+};
     }
 }
 

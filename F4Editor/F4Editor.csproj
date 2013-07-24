@@ -44,6 +44,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutF4Net.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutF4Net.Designer.cs">
+      <DependentUpon>AboutF4Net.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Background.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Background.Designer.cs">
+      <DependentUpon>Background.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CampDataViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CampDataViewer.Designer.cs">
+      <DependentUpon>CampDataViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Logbook.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Logbook.Designer.cs">
+      <DependentUpon>Logbook.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -52,6 +76,24 @@
     </Compile>
     <Compile Include="CampEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TheatherSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TheatherSelection.Designer.cs">
+      <DependentUpon>TheatherSelection.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AboutF4Net.resx">
+      <DependentUpon>AboutF4Net.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Background.resx">
+      <DependentUpon>Background.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CampDataViewer.resx">
+      <DependentUpon>CampDataViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Logbook.resx">
+      <DependentUpon>Logbook.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -64,6 +106,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TheatherSelection.resx">
+      <DependentUpon>TheatherSelection.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -78,6 +123,14 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{63b80e09-c6e2-4077-ab8c-e6ead52eae47}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\F4Common\F4Common.csproj">
+      <Project>{28daf802-4d24-475b-b3eb-2be45dc2cfe0}</Project>
+      <Name>F4Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FalcLib\FalcLib.csproj">
+      <Project>{12899d19-7f1a-49fe-82e2-3535b3ced5c3}</Project>
+      <Name>FalcLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

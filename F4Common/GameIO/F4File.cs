@@ -12,41 +12,49 @@ namespace FalconNet.F4Common
 {
     public static class F4File
     {
-        public static string falconDataDirectory;
+        public static string falconDirectory;
+        public static string FalconDataDirectory;
         public static string FalconTerrainDataDir;
         public static string FalconObjectDataDir;
         public static string Falcon3DDataDir;
         public static string FalconMiscTexDataDir;
         public static string FalconCampaignSaveDirectory;
         public static string FalconCampUserSaveDirectory;
+        public static string FalconUserConfigDirectory;
 
         public static readonly char Sep = Path.DirectorySeparatorChar;
 
-        public static string FalconDataDirectory
+        public static string FalconDirectory
         {
-            get { return falconDataDirectory; }
+            get { return falconDirectory; }
             set
             {
-                falconDataDirectory = value;
+                falconDirectory = value;
                 InitDirectories();
             }
         }
 
         public static void InitDirectories()
         {
-            //falconDataDirectory = ".";
-            FalconTerrainDataDir = FalconDataDirectory + "theater";
-            FalconObjectDataDir = FalconDataDirectory + "terrdata" + Sep + "objects";
+            FalconDataDirectory = FalconDirectory + "Data";
+            FalconTerrainDataDir = FalconDataDirectory + +Sep + "theater";
+            FalconObjectDataDir = FalconDataDirectory + +Sep + "terrdata" + Sep + "objects";
             FalconMiscTexDataDir = FalconDataDirectory + "FalconMiscTexData";
-            string campaignDir = FalconDataDirectory + "Campaign";
+            string campaignDir = FalconDataDirectory + Sep + "Campaign";
             FalconCampaignSaveDirectory = campaignDir + Sep + "Save";
             FalconCampUserSaveDirectory = campaignDir + Sep + "Save";
+            FalconUserConfigDirectory = FalconDirectory + "User" + Sep + "Config";
         }
 
         // Returns path of file data is in.
+        public static string F4FindFile(string filename, string ext)
+        {
+            string path = GetPathForExtension(ext);
+            return (path + Sep + filename + "." + ext).GetOSPath();
+        }
         public static string F4FindFile(string filename)
         {
-            string path = FalconDataDirectory + "files.dir";
+            string path = FalconDataDirectory + Sep + "files.dir";
             string location = MultiplatformIni.GetPrivateProfileString("Files", filename, "", path);
             if (!string.IsNullOrEmpty(location))
             {
@@ -61,10 +69,13 @@ namespace FalconNet.F4Common
 		   buffer[bufSize-1] = 0;
 #endif
                 throw new NotImplementedException();
-			}
-		else
-			{
-                return filename;
+            }
+            switch (filename)
+            {
+                case "atc.ini":
+                    return (FalconCampaignSaveDirectory + Sep + filename).GetOSPath();
+                default:
+                    return (FalconDataDirectory + Sep + filename).GetOSPath();
             }
         }
 
@@ -146,50 +157,8 @@ namespace FalconNet.F4Common
                 camp_size[camp_num_files] = 0;
                 return camp_fp;
             }
+            path = GetPathForExtension(ext);
 
-            switch (ext)
-            {
-                case "cmp":
-                case "obj":
-                case "obd":
-                case "uni":
-                case "tea":
-                case "wth":
-                case "plt":
-                case "mil":
-                case "tri":
-                case "evl":
-                case "smd":
-                case "sqd":
-                case "pol":
-                    path = FalconCampUserSaveDirectory;
-                    break;
-                case "ct":
-                case "ini":
-                case "ucd":
-                case "ocd":
-                case "fcd":
-                case "vcd":
-                case "wcd":
-                case "rcd":
-                case "icd":
-                case "rwd":
-                case "vsd":
-                case "swd":
-                case "acd":
-                case "wld":
-                case "phd":
-                case "pd":
-                case "fed":
-                case "ssd":
-                case "rkt":
-                case "ddp":
-                    path = FalconObjectDataDir;
-                    break;
-                default:
-                    path = FalconCampUserSaveDirectory;
-                    break;
-            }
 
             // Outdated by resmgr:
             // if (!ResExistFile(filename))
@@ -425,6 +394,57 @@ namespace FalconNet.F4Common
             }
         }
 
+        private static string GetPathForExtension(string ext)
+        {
+            switch (ext)
+            {
+                case "cmp":
+                case "obj":
+                case "obd":
+                case "uni":
+                case "tea":
+                case "wth":
+                case "plt":
+                case "mil":
+                case "tri":
+                case "evl":
+                case "smd":
+                case "sqd":
+                case "pol":
+                    return FalconCampUserSaveDirectory;
+
+                case "ct":
+                case "ini":
+                case "ucd":
+                case "ocd":
+                case "fcd":
+                case "vcd":
+                case "wcd":
+                case "rcd":
+                case "icd":
+                case "rwd":
+                case "vsd":
+                case "swd":
+                case "acd":
+                case "wld":
+                case "phd":
+                case "pd":
+                case "fed":
+                case "ssd":
+                case "rkt":
+                case "ddp":
+                    return FalconObjectDataDir;
+
+                case "rul":
+                case "lbk":
+                case "plc":
+                case "pop":
+                    return FalconUserConfigDirectory;
+
+                default:
+                    return FalconCampUserSaveDirectory;
+            }
+        }
         #region Private
         static void GetCampFilePath(FalconGameType type, string filename, out string path)
         {

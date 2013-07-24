@@ -44,9 +44,14 @@
   <ItemGroup>
     <Compile Include="Encrypter.cs" />
     <Compile Include="F4Config.cs" />
-    <Compile Include="F4File.cs" />
+    <Compile Include="GameConfManager.cs" />
+    <Compile Include="GameIO\F4File.cs" />
     <Compile Include="F4Globals.cs" />
     <Compile Include="FalconGameType.cs" />
+    <Compile Include="GameIO\FileReader.cs" />
+    <Compile Include="GameIO\InputDataDesc.cs" />
+    <Compile Include="GameIO\IOFormat.cs" />
+    <Compile Include="GameIO\Simfile.cs" />
     <Compile Include="LogBook\CampaignMissionRst.cs" />
     <Compile Include="LogBook\CampaignStats.cs" />
     <Compile Include="LogBook\DogfightStats.cs" />
@@ -54,6 +59,7 @@
     <Compile Include="LogBook\Medals.cs" />
     <Compile Include="LogBook\Pilot.cs" />
     <Compile Include="LogBook\Ranks.cs" />
+    <Compile Include="PlayerManager.cs" />
     <Compile Include="PlayerOptions\AutoPilotModeType.cs" />
     <Compile Include="PlayerOptions\AvionicsType.cs" />
     <Compile Include="PlayerOptions\FlightModelType.cs" />

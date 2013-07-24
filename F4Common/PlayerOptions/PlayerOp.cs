@@ -1,5 +1,7 @@
 using System;
 using FalconNet.Common;
+using System.IO;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.F4Common
 {
@@ -171,51 +173,30 @@ namespace FalconNet.F4Common
             UIComms = true;
 
             keyfile = "keystrokes";
-            joystick = new Guid("");
+            //Retro_dead_15Jan2004 memset(&joystick, 0,sizeof(GUID));
             ApplyOptions();
         }
 
         //filename should be callsign of player
-        public int LoadOptions()
+        public void LoadOptions()
         {
-#if TODO
-			return LoadOptions (LogBookData.LogBook.OptionsFile ());
-#endif
-            throw new NotImplementedException();
+            LoadOptions(LogBookData.LogBook.OptionsFile());
         }
 
-        public int LoadOptions(string filename)
+        public void LoadOptions(string filename)
         {
+
+            FileStream fp;
+
+            string path = F4File.F4FindFile(filename, "pop");
+
+            fp = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            // OW - dont break compatibility with 1.03 - 1.08 options
+
+            PlayerOptionsClass playerOptions = PlayerOptionsClassEncodingLE.Decode(fp);
+            fp.Close();
 #if TODO
-			size_t		success = 0;
-			_TCHAR		path[_MAX_PATH];
-			long		size;
-			FILE *fp;
-		
-			_stprintf(path,_T("%s\\config\\%s.pop"),FalconDataDirectory,filename);
-			
-			fp = _tfopen(path,_T("rb"));
-			if(!fp)
-			{
-				MonoPrint(_T("Couldn't open %s's player options\n"),filename);
-				_stprintf(path,_T("%s\\Config\\default.pop"),FalconDataDirectory);
-				fp = _tfopen(path,"rb");
-				if(!fp)
-				{
-					MonoPrint(_T("Couldn't open default player options\n"),filename);
-					Initialize();
-					return false;
-				}
-			}
-			
-			fseek(fp,0,SEEK_END);
-			size = ftell(fp);
-			fseek(fp,0,SEEK_SET);
-		
-		// OW - dont break compatibility with 1.03 - 1.08 options
-		
-			success = fread(this, 1, size, fp);
-			fclose(fp);
 			if(success != size)
 			{
 				MonoPrint(_T("Failed to read %s's player options\n"),filename);
@@ -256,7 +237,6 @@ namespace FalconNet.F4Common
 			else g_bRealisticAvionics = false;
 			return true;
 #endif
-            throw new NotImplementedException();
         }
 
         public int SaveOptions()
@@ -774,7 +754,7 @@ namespace FalconNet.F4Common
         // Our global player options instance
         // ==================================
 
-        public static PlayerOptionsClass PlayerOptions;
+        public static PlayerOptionsClass PlayerOptions = new PlayerOptionsClass();
 
 #if TODO
 		private int CheckNumberPlayers ()
@@ -808,20 +788,122 @@ namespace FalconNet.F4Common
 
     public struct SkyColorDataType
     {
-        string name;			// To display in UI
-        string todname;	// Filename of tod file
-        string image1;	// screenshot 5:00
-        string image2;   // screenshot 10:00
-        string image3;	// screenshot 15:00
-        string image4;   // screenshot 20:00
+        public string name;			// To display in UI
+        public string todname;	// Filename of tod file
+        public string image1;	// screenshot 5:00
+        public string image2;   // screenshot 10:00
+        public string image3;	// screenshot 15:00
+        public string image4;   // screenshot 20:00
     }
 
     public struct WeatherPatternDataType
     {
-        string name;			// To display in UI
-        string filename; // accompagnied filename
-        string picfname;	// picture of weather distribution
+        public string name;			// To display in UI
+        public string filename; // accompagnied filename
+        public string picfname;	// picture of weather distribution
     }
 
+
+
+    public static class PlayerOptionsClassEncodingLE
+    {
+        public static void Encode(ByteWrapper buffer, PlayerOptionsClass val)
+        {
+            throw new NotImplementedException();
+        }
+        public static void Encode(Stream stream, PlayerOptionsClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static PlayerOptionsClass Decode(ByteWrapper buffer)
+        {
+            PlayerOptionsClass rst = new PlayerOptionsClass();
+            return rst;
+        }
+
+
+        //TODO Check the structure of this data. 
+        public static PlayerOptionsClass Decode(Stream stream)
+        {
+            PlayerOptionsClass rst = new PlayerOptionsClass();
+            rst.DispFlags = (PO_DISP_FLAGS)Int32EncodingLE.Decode(stream);
+            //rst.DispTextureLevel = Int32EncodingLE.Decode(stream);
+            rst.DispTerrainDist = SingleEncodingLE.Decode(stream);
+            rst.DispMaxTerrainLevel = Int32EncodingLE.Decode(stream);
+
+            rst.ObjFlags = (PO_OBJ_FLAGS)Int32EncodingLE.Decode(stream);
+            rst.ObjDetailLevel = SingleEncodingLE.Decode(stream);
+            rst.ObjMagnification = SingleEncodingLE.Decode(stream);
+            rst.ObjDeaggLevel = Int32EncodingLE.Decode(stream);
+            rst.BldDeaggLevel = Int32EncodingLE.Decode(stream);
+            rst.ACMIFileSize = Int32EncodingLE.Decode(stream);
+            rst.SfxLevel = SingleEncodingLE.Decode(stream);
+            rst.PlayerBubble = SingleEncodingLE.Decode(stream);
+
+            rst.SimFlags = (PO_SIM_FLAGS)Int32EncodingLE.Decode(stream);
+            rst.SimFlightModel = (FlightModelType)Int32EncodingLE.Decode(stream);
+            rst.SimWeaponEffect = (WeaponEffectType)Int32EncodingLE.Decode(stream);
+            rst.SimAvionicsType = (AvionicsType)Int32EncodingLE.Decode(stream);
+            rst.SimAutopilotType = (AutopilotModeType)Int32EncodingLE.Decode(stream);
+            rst.SimAirRefuelingMode = (RefuelModeType)Int32EncodingLE.Decode(stream);
+            rst.SimPadlockMode = (PadlockModeType)Int32EncodingLE.Decode(stream);
+            rst.SimVisualCueMode = (VisualCueType)Int32EncodingLE.Decode(stream);
+
+            rst.GeneralFlags = (PO_GEN_FLAGS)Int32EncodingLE.Decode(stream);
+
+            rst.CampGroundRatio = Int32EncodingLE.Decode(stream);
+            rst.CampAirRatio = Int32EncodingLE.Decode(stream);
+            rst.CampAirDefenseRatio = Int32EncodingLE.Decode(stream);
+            rst.CampNavalRatio = Int32EncodingLE.Decode(stream);
+            rst.CampEnemyAirExperience = Int32EncodingLE.Decode(stream);
+            rst.CampEnemyGroundExperience = Int32EncodingLE.Decode(stream);
+            rst.CampEnemyStockpile = Int32EncodingLE.Decode(stream);
+            rst.CampFriendlyStockpile = Int32EncodingLE.Decode(stream);
+#if TODO
+        public int[] GroupVol = new int[SoundGroups.NUM_SOUND_GROUPS];		// Values are 0 to -3600 in dBs
+
+        public float Realism;							// stores last realism value saved less the value
+        // from UnlimitedAmmo (this is used to modify scores in
+        // Instant Action.)
+        public string keyfile; //[PL_FNAME_LEN];			// name of keystrokes file to use
+        public Guid joystick;						// unique identifier for which joystick to use
+
+        public SimStartFlags SimStart;
+        public const int RAMP_MINUTES = 15;  // how long before take off MI increased from 8
+        // OW - Start of new stuff
+        public bool bFast2DCockpit;
+        public bool bHQFiltering;
+        public bool bDXMultiThreaded;
+        public bool bAllowProcessorExtensions;
+        public bool bFilteredObjects;
+        public bool bFastGMRadar;
+
+        public enum TexMode
+        {
+            TEX_MODE_LOW,
+            TEX_MODE_MED,
+            TEX_MODE_HIGH,
+            TEX_MODE_COMPRESS,
+        };
+        public TexMode m_eTexMode;
+        // OW - End of new stuff
+
+        // M.N.
+        public byte skycol;	// ID of chosen skyfix (256 should be enough)
+        public bool PlayerRadioVoice; // Turn on/off all player radio voices
+        public bool UIComms;	// Turn on/off random UI radio chatter
+#endif
+            return rst;
+        }
+
+        public static int Size
+        {
+            get
+            {
+                return -1;
+            }
+        }
+    }
 }
 

@@ -11,5 +11,12 @@ namespace FalconNet.Common.Maths
         public float x;
         public float y;
         public float z;
+
+        public vector(float px, float py, float pz)
+        {
+            x = px;
+            y = py;
+            z = pz;
+        }
     }
 }

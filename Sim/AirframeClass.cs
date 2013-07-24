@@ -459,17 +459,17 @@ public:
             /*-----------------*/
             /* Read in Weight */
             /*-----------------*/
-            inputData[AeroDataSet.EmptyWeight] = float.Parse(inputFile.GetNext());
+            inputData[AeroDataSet.EmptyWeight] = float.Parse(inputFile.GetNext(),CultureInfo.InvariantCulture);
 
             /*------------------*/
             /* Read in Ref Area */
             /*------------------*/
-            inputData[AeroDataSet.Area] = (float)atof(inputFile.GetNext());
+            inputData[AeroDataSet.Area] = (float)atof(inputFile.GetNext(),CultureInfo.InvariantCulture);
 
             /*--------------*/
             /* Read in Fuel */
             /*--------------*/
-            inputData[AeroDataSet.InternalFuel] = (float)atof(inputFile.GetNext());
+            inputData[AeroDataSet.InternalFuel] = (float)atof(inputFile.GetNext(),CultureInfo.InvariantCulture);
 
             /*--------------------------------*/
             /* read in angle of attack limits */
@@ -1928,11 +1928,11 @@ public:
             num_sets = atoi(aclist.GetNext());
 
             /*
-            #if USE_SH_POOLS
+#if USE_SH_POOLS
             aeroDataset = (AeroDataSet *)MemAllocPtr(AirFrameDataPool, sizeof(AeroDataSet)*num_sets,0);
-            #else
+#else
             aeroDataset = new AeroDataSet[num_sets];
-            #endif
+#endif
             */
 
             aeroDataset = new AeroDataSet[num_sets];

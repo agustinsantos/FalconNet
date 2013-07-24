@@ -32,8 +32,8 @@ namespace FalconNet.F4Common
             Int16EncodingLE.Encode(buffer, val.GamesLost);
             Int16EncodingLE.Encode(buffer, val.GamesTied);
             Int16EncodingLE.Encode(buffer, val.Missions);
-            Int64EncodingLE.Encode(buffer, val.TotalScore);
-            Int64EncodingLE.Encode(buffer, val.TotalMissionScore);
+            Int32EncodingLE.Encode(buffer, (int)val.TotalScore);
+            Int32EncodingLE.Encode(buffer, (int)val.TotalMissionScore);
             Int16EncodingLE.Encode(buffer, val.ConsecMissions);
             Int16EncodingLE.Encode(buffer, val.Kills);
             Int16EncodingLE.Encode(buffer, val.Killed);
@@ -52,8 +52,8 @@ namespace FalconNet.F4Common
             Int16EncodingLE.Encode(stream, val.GamesLost);
             Int16EncodingLE.Encode(stream, val.GamesTied);
             Int16EncodingLE.Encode(stream, val.Missions);
-            Int64EncodingLE.Encode(stream, val.TotalScore);
-            Int64EncodingLE.Encode(stream, val.TotalMissionScore);
+            Int32EncodingLE.Encode(stream, (int)val.TotalScore);
+            Int32EncodingLE.Encode(stream, (int)val.TotalMissionScore);
             Int16EncodingLE.Encode(stream, val.ConsecMissions);
             Int16EncodingLE.Encode(stream, val.Kills);
             Int16EncodingLE.Encode(stream, val.Killed);
@@ -74,8 +74,8 @@ namespace FalconNet.F4Common
             rst.GamesLost = Int16EncodingLE.Decode(buffer);
             rst.GamesTied = Int16EncodingLE.Decode(buffer);
             rst.Missions = Int16EncodingLE.Decode(buffer);
-            rst.TotalScore = Int64EncodingLE.Decode(buffer);
-            rst.TotalMissionScore = Int64EncodingLE.Decode(buffer);
+            rst.TotalScore = Int32EncodingLE.Decode(buffer);
+            rst.TotalMissionScore = Int32EncodingLE.Decode(buffer);
             rst.ConsecMissions = Int16EncodingLE.Decode(buffer);
             rst.Kills = Int16EncodingLE.Decode(buffer);
             rst.Killed = Int16EncodingLE.Decode(buffer);
@@ -97,8 +97,8 @@ namespace FalconNet.F4Common
             rst.GamesLost = Int16EncodingLE.Decode(stream);
             rst.GamesTied = Int16EncodingLE.Decode(stream);
             rst.Missions = Int16EncodingLE.Decode(stream);
-            rst.TotalScore = Int64EncodingLE.Decode(stream);
-            rst.TotalMissionScore = Int64EncodingLE.Decode(stream);
+            rst.TotalScore = Int32EncodingLE.Decode(stream);
+            rst.TotalMissionScore = Int32EncodingLE.Decode(stream);
             rst.ConsecMissions = Int16EncodingLE.Decode(stream);
             rst.Kills = Int16EncodingLE.Decode(stream);
             rst.Killed = Int16EncodingLE.Decode(stream);
@@ -115,7 +115,7 @@ namespace FalconNet.F4Common
 
         public static int Size
         {
-            get { return Int64EncodingLE.Size * 15 + Int64EncodingLE.Size * 2; }
+            get { return Int16EncodingLE.Size * 15 + Int32EncodingLE.Size * 2; }
         }
     }
 }

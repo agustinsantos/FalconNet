@@ -60,6 +60,9 @@
     <Compile Include="TestVuStatic.cs" />
     <Compile Include="TestNames.cs" />
     <Compile Include="TestEntity.cs" />
+    <Compile Include="TestFileReader.cs" />
+    <Compile Include="TestTheaterList.cs" />
+    <Compile Include="TestLogbook.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Campaign\Campaign.csproj">

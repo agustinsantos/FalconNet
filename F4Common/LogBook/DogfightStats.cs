@@ -70,7 +70,7 @@ namespace FalconNet.F4Common
 
         public static int Size
         {
-            get { return Int64EncodingLE.Size * 8; }
+            get { return Int16EncodingLE.Size * 8; }
         }
     }
 }

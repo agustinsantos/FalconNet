@@ -17,7 +17,18 @@ namespace FalconNet.F4Common
 		{
 			return str.Substring (3).ToLower ().Equals (Name);
 		}
-	};
+	}
+
+    public enum F4LANGUAGE
+    { 
+     F4LANG_ENGLISH = 1,
+ F4LANG_UK = 2,
+ F4LANG_GERMAN = 3,
+ F4LANG_FRENCH = 4,
+ F4LANG_SPANISH = 5,
+ F4LANG_ITALIAN = 6,
+ F4LANG_PORTUGESE = 7
+    }
 
 	public static class F4Config
 	{
@@ -491,6 +502,10 @@ bool g_b3dHUD = true;
 
         // Wombat778 11-5-03 Allow waypoints to be placed with greater precision.  Needs testing, so disabled by default.
         public static bool g_bPrecisionWaypoints = false;
+
+        // Which langauge should we use? 
+        //TODO it was defined in classtbl.
+        public static F4LANGUAGE gLangIDNum = F4LANGUAGE.F4LANG_ENGLISH;
 
 		private static readonly IDictionary<string, Action<bool> > BoolOpts = 
             new Dictionary<string, Action<bool> > (){

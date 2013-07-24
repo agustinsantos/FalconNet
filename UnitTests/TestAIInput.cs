@@ -8,12 +8,12 @@ namespace UnitTestVU
     [TestClass]
     public class TestAIInput
     {
-        public static string FalconDirectory = @"C:\Falcon BMS 4.32\data\";
+        public static string FalconDirectory = @"C:\Falcon BMS 4.32\";
 
         [TestMethod]
         public void TestReadCampAIInputs()
         {
-            F4File.FalconDataDirectory = FalconDirectory;
+            F4File.FalconDirectory = FalconDirectory;
             AIInput.ReadCampAIInputs("Falcon4");
         }
     }

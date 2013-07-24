@@ -8,12 +8,12 @@ namespace UnitTestVU
     [TestClass]
     public class TestNames
     {
-        public static string FalconDirectory = @"C:\Falcon BMS 4.32\data\";
+        public static string FalconDirectory = @"C:\Falcon BMS 4.32\";
 
         [TestMethod]
         public void TestLoadNames()
         {
-            F4File.FalconDataDirectory = FalconDirectory;
+            F4File.FalconDirectory = FalconDirectory;
             Name.LoadNames("Strings");
             for (int i = 0; i < Name.NameEntries - 1; i++)
             {

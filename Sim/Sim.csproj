@@ -39,7 +39,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Brains\AtcBrain.cs" />
     <Compile Include="Caution.cs" />
-    <Compile Include="DataFile.cs" />
     <Compile Include="Brains\Digi.cs" />
     <Compile Include="DofsnSwitches.cs" />
     <Compile Include="Fack.cs" />
@@ -53,7 +52,6 @@
     <Compile Include="simbase.cs" />
     <Compile Include="Brains\SimBrain.cs" />
     <Compile Include="Simdrive.cs" />
-    <Compile Include="Simfile.cs" />
     <Compile Include="Simloop.cs" />
     <Compile Include="Simmover.cs" />
     <Compile Include="SimVeh.cs" />

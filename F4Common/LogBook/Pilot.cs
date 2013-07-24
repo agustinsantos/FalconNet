@@ -36,6 +36,12 @@ namespace FalconNet.F4Common
 
         public const long PATCHES_RESOURCE = 59998;
         public const long PILOTS_RESOURCE = 59999;
+        public const int _NAME_LEN_ = 20;
+        public const int _CALLSIGN_LEN_ = 12;
+        public const int PASSWORD_LEN = 10;
+        public const int PERSONAL_TEXT_LEN = 120;
+        public const int COMM_LEN = 12;
+        public const int FILENAME_LEN = 32;
     }
 
     public static class LB_PILOTEncodingLE
@@ -88,56 +94,75 @@ namespace FalconNet.F4Common
         public static LB_PILOT Decode(ByteWrapper buffer)
         {
             LB_PILOT rst = new LB_PILOT();
-            rst.Name = StringEncodingLE.Decode(buffer);
-            rst.Callsign = StringEncodingLE.Decode(buffer);
-            rst.Password = StringEncodingLE.Decode(buffer);
-            rst.Commissioned = StringEncodingLE.Decode(buffer);
-            rst.OptionsFile = StringEncodingLE.Decode(buffer);
+            rst.Name = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._NAME_LEN_+1);
+            rst.Callsign = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._CALLSIGN_LEN_+1);
+            rst.Password = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.PASSWORD_LEN+1);
+            rst.Commissioned = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.COMM_LEN+1);
+            rst.OptionsFile = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._CALLSIGN_LEN_+1);
+            buffer.GetByte();
             rst.FlightHours = SingleEncodingLE.Decode(buffer);
             rst.AceFactor = SingleEncodingLE.Decode(buffer);
-            rst.Rank = (LB_RANK)Int16EncodingLE.Decode(buffer);
+            rst.Rank = (LB_RANK)Int32EncodingLE.Decode(buffer);
             rst.Dogfight = DF_STATSEncodingLE.Decode(buffer);
             rst.Campaign = CAMP_STATSEncodingLE.Decode(buffer);
+            buffer.GetBytes(2);
             buffer.GetBytes(rst.Medals);
-            rst.PictureResource = Int64EncodingLE.Decode(buffer);
-            rst.Picture = StringEncodingLE.Decode(buffer);
-            rst.PatchResource = Int64EncodingLE.Decode(buffer);
-            rst.Patch = StringEncodingLE.Decode(buffer);
-            rst.Personal = StringEncodingLE.Decode(buffer);
-            rst.Squadron = StringEncodingLE.Decode(buffer);
+            buffer.GetBytes(2);
+            rst.PictureResource = Int32EncodingLE.Decode(buffer);
+            rst.Picture = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.FILENAME_LEN + 1);
+            buffer.GetBytes(3);
+            rst.PatchResource = Int32EncodingLE.Decode(buffer);
+            rst.Patch = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.FILENAME_LEN+1);
+            rst.Personal = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.PERSONAL_TEXT_LEN+1);
+            rst.Squadron = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._NAME_LEN_);
             rst.voice = Int16EncodingLE.Decode(buffer);
-            rst.CheckSum = Int64EncodingLE.Decode(buffer);
+            rst.CheckSum = Int32EncodingLE.Decode(buffer);
             return rst;
         }
 
         public static LB_PILOT Decode(Stream stream)
         {
             LB_PILOT rst = new LB_PILOT();
-            rst.Name = StringEncodingLE.Decode(stream);
-            rst.Callsign = StringEncodingLE.Decode(stream);
-            rst.Password = StringEncodingLE.Decode(stream);
-            rst.Commissioned = StringEncodingLE.Decode(stream);
-            rst.OptionsFile = StringEncodingLE.Decode(stream);
+            rst.Name = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._NAME_LEN_ + 1);
+            rst.Callsign = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._CALLSIGN_LEN_ + 1);
+            rst.Password = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.PASSWORD_LEN + 1);
+            rst.Commissioned = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.COMM_LEN + 1);
+            rst.OptionsFile = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._CALLSIGN_LEN_ + 1);
+            stream.ReadByte();
             rst.FlightHours = SingleEncodingLE.Decode(stream);
             rst.AceFactor = SingleEncodingLE.Decode(stream);
-            rst.Rank = (LB_RANK)Int16EncodingLE.Decode(stream);
+            rst.Rank = (LB_RANK)Int32EncodingLE.Decode(stream);
             rst.Dogfight = DF_STATSEncodingLE.Decode(stream);
             rst.Campaign = CAMP_STATSEncodingLE.Decode(stream);
-            stream.Read(rst.Medals, 0, rst.Medals.Length);
-            rst.PictureResource = Int64EncodingLE.Decode(stream);
-            rst.Picture = StringEncodingLE.Decode(stream);
-            rst.PatchResource = Int64EncodingLE.Decode(stream);
-            rst.Patch = StringEncodingLE.Decode(stream);
-            rst.Personal = StringEncodingLE.Decode(stream);
-            rst.Squadron = StringEncodingLE.Decode(stream);
+            stream.Position += 2;
+            stream.Read(rst.Medals, 0, (int)LB_MEDAL.NUM_MEDALS);
+            stream.Position += 2;
+            rst.PictureResource = Int32EncodingLE.Decode(stream);
+            rst.Picture = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.FILENAME_LEN + 1);
+            stream.Position += 3;
+            rst.PatchResource = Int32EncodingLE.Decode(stream);
+            rst.Patch = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.FILENAME_LEN + 1);
+            rst.Personal = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.PERSONAL_TEXT_LEN + 1);
+            rst.Squadron = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._NAME_LEN_);
             rst.voice = Int16EncodingLE.Decode(stream);
-            rst.CheckSum = Int64EncodingLE.Decode(stream);
+            rst.CheckSum = Int32EncodingLE.Decode(stream);
             return rst;
         }
 
         public static int Size
         {
-            get { return -1; } //Size not defined
+            get
+            {
+                return 372;
+                        //LB_PILOT._NAME_LEN_ + 1 + LB_PILOT._CALLSIGN_LEN_ + 1 +
+                        // LB_PILOT.PASSWORD_LEN + 1 + LB_PILOT.COMM_LEN + 1 +
+                        // LB_PILOT._CALLSIGN_LEN_ + 1 + SingleEncodingLE.Size * 2 +
+                        // Int16EncodingLE.Size * 2 + DF_STATSEncodingLE.Size +
+                        // CAMP_STATSEncodingLE.Size + (int)LB_MEDAL.NUM_MEDALS +
+                        // Int64EncodingLE.Size * 2 + 27 + 1 +
+                        // LB_PILOT.FILENAME_LEN + 1 + LB_PILOT.PERSONAL_TEXT_LEN + 1 +
+                        // LB_PILOT._NAME_LEN_ + 1 + Int32EncodingLE.Size -2;
+            } 
         }
     }
 }

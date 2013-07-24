@@ -36,6 +36,8 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Encoding\ByteWrapper.cs" />
     <Compile Include="Encoding\ByteWrapperCompression.cs" />
+    <Compile Include="Encoding\StringFixedUnicodeEncoding.cs" />
+    <Compile Include="Encoding\StringFixedASCIIEncoding.cs" />
     <Compile Include="Encoding\StringASCIIEncoding.cs" />
     <Compile Include="Encoding\StringEncoding.cs" />
     <Compile Include="Encoding\DoubleEncoding.cs" />

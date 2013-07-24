@@ -1,20 +1,20 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FalconNet.F4Common;
-using FalconNet.FalcLib;
 
 namespace UnitTestVU
 {
     [TestClass]
-    public class TestEntity
+    public class TestLogbook
     {
         public static string FalconDirectory = @"C:\Falcon BMS 4.32\";
 
         [TestMethod]
-        public void TestLoadClassTable()
+        public void TestLoadLogbook()
         {
             F4File.FalconDirectory = FalconDirectory;
-            EntityDB.LoadClassTable("Falcon4");
+            //pilot.LoadData("Viper");
+            LogBookData.LogBook.LoadData("Auphim");
         }
     }
 }

@@ -51,20 +51,12 @@ namespace FalconNet.FalcLib
     }
     public static class FalconFlightPlanMessageEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, FalconFlightPlanMessage val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, FalconFlightPlanMessage val)
         {
             throw new NotImplementedException();
         }
 
-        public static FalconFlightPlanMessage Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-        public static FalconFlightPlanMessage Decode(Stream stream)
+        public static void  Decode(Stream stream, ref FalconFlightPlanMessage rst)
         {
             throw new NotImplementedException();
         }

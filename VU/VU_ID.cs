@@ -135,30 +135,16 @@ namespace FalconNet.VU
 
     public static class VU_IDEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VU_ID val)
-        {
-            UInt64EncodingLE.Encode(buffer, val.num_);
-            VU_SESSION_IDEncodingLE.Encode(buffer, val.creator_);
-        }
         public static void Encode(Stream stream, VU_ID val)
         {
             UInt64EncodingLE.Encode(stream, val.num_);
             VU_SESSION_IDEncodingLE.Encode(stream, val.creator_);
         }
 
-        public static VU_ID Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, VU_ID rst)
         {
-            VU_ID rst = new VU_ID();
-            rst.num_ = UInt64EncodingLE.Decode(buffer);
-            rst.creator_ = VU_SESSION_IDEncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static VU_ID Decode(Stream stream)
-        {
-            VU_ID rst = new VU_ID();
             rst.num_ = UInt64EncodingLE.Decode(stream);
-            rst.creator_ = VU_SESSION_IDEncodingLE.Decode(stream);
-            return rst;
+            VU_SESSION_IDEncodingLE.Decode(stream, rst.creator_);
         }
 
         public static int Size

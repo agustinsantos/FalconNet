@@ -45,7 +45,7 @@ namespace FalconNet.Campaign
 
 		public static bool LoadTheaterTerrain (string name)
 		{
-            ByteWrapper data;
+            MemoryStream data;
 	
 			FreeTheaterTerrain ();
 			data = F4File.ReadCampFile (name, "thr");
@@ -64,7 +64,7 @@ namespace FalconNet.Campaign
 	
 			TheaterCells = new CellDataType[sizeof(CellDataType) * Map_Max_X * Map_Max_Y];
 			//copy data to TheaterCells
-            TheaterCells = data.GetBytes(Map_Max_X * Map_Max_Y);
+             data.Read(TheaterCells, 0, Map_Max_X * Map_Max_Y);
 			return true;
 		}
 

@@ -38,6 +38,7 @@ namespace FalconNet.FalcLib
     public static class Camplib
     {
         public const int VEHICLES_PER_UNIT = 16;
+        public const int VEHICLE_GROUPS_PER_UNIT = 16;
         public const int FEATURES_PER_OBJ = 32;
         public const int MAXIMUM_ROLES = 16;
         public const int MAXIMUM_OBJTYPES = 32;

@@ -108,7 +108,9 @@ namespace FalconNet.F4Common
 
             for (int i = 0; i < (int)RulesModes.rNUM_MODES; i++)
             {
-                tempRules[i] = RulesClassEncodingLE.Decode(fp);
+                if (tempRules[i] == null)
+                    tempRules[i] = new RulesClass();
+                 RulesClassEncodingLE.Decode(fp, ref tempRules[i]);
             }
             fp.Close();
 
@@ -404,42 +406,14 @@ namespace FalconNet.F4Common
     {
         public const int RUL_PW_LEN = 20;
 
-        public static void Encode(ByteWrapper buffer, RulesClass val)
-        {
-            throw new NotImplementedException();
 
-        }
         public static void Encode(Stream stream, RulesClass val)
         {
             throw new NotImplementedException();
 
         }
-
-        public static RulesClass Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, ref RulesClass rst)
         {
-            RulesClass rst = new RulesClass();
-            rst.Password = StringFixedASCIIEncoding.Decode(buffer, RUL_PW_LEN);
-            rst.MaxPlayers = Int32EncodingLE.Decode(buffer);
-            rst.ObjMagnification = SingleEncodingLE.Decode(buffer);
-            rst.SimFlags = (PO_SIM_FLAGS)Int32EncodingLE.Decode(buffer);		 // Sim flags
-            rst.SimFlightModel = (FlightModelType)Int32EncodingLE.Decode(buffer);// Flight model type
-            rst.SimWeaponEffect = (WeaponEffectType)Int32EncodingLE.Decode(buffer);
-            rst.SimAvionicsType = (AvionicsType)Int32EncodingLE.Decode(buffer);
-            rst.SimAutopilotType = (AutopilotModeType)Int32EncodingLE.Decode(buffer);
-            rst.SimAirRefuelingMode = (RefuelModeType)Int32EncodingLE.Decode(buffer);
-            rst.SimPadlockMode = (PadlockModeType)Int32EncodingLE.Decode(buffer);
-            rst.BumpTimer = UInt32EncodingLE.Decode(buffer);
-            rst.AiPullTime = UInt32EncodingLE.Decode(buffer);
-            rst.AiPatience = UInt32EncodingLE.Decode(buffer);
-            rst.AtcPatience = UInt32EncodingLE.Decode(buffer);
-            rst.GeneralFlags = (PO_GEN_FLAGS)Int16EncodingLE.Decode(buffer);
-            buffer.GetBytes(2);
-            return rst;
-        }
-
-        public static RulesClass Decode(Stream stream)
-        {
-            RulesClass rst = new RulesClass();
             rst.Password = StringFixedASCIIEncoding.Decode(stream, RUL_PW_LEN);
             rst.MaxPlayers = Int32EncodingLE.Decode(stream);
             rst.ObjMagnification = SingleEncodingLE.Decode(stream);
@@ -456,7 +430,6 @@ namespace FalconNet.F4Common
             rst.AtcPatience = UInt32EncodingLE.Decode(stream);
             rst.GeneralFlags = (PO_GEN_FLAGS)Int16EncodingLE.Decode(stream);
             stream.ReadBytes(0, 2);
-            return rst;
         }
 
         public static int Size

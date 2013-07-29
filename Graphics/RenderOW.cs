@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using FalconNet.Common;
 using DWORD = System.UInt32;
+using FalconNet.CampaignBase;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {
@@ -37,7 +39,7 @@ namespace FalconNet.Graphics
 
         public Tpost post;
         public int RenderingStateHandle;
-    };
+    }
 
 
     public struct SpanMinMax
@@ -49,7 +51,7 @@ namespace FalconNet.Graphics
         public int stopDraw;
         public int startXform;
         public int stopXform;
-    };
+    }
 
 
     public class SpanListEntry
@@ -60,7 +62,7 @@ namespace FalconNet.Graphics
         public SpanMinMax Rsector;
         public SpanMinMax Bsector;
         public SpanMinMax Lsector;
-    };
+    }
 
 
     // Used to construct the set of visible terrain posts
@@ -68,7 +70,7 @@ namespace FalconNet.Graphics
     {
         public Edge edge;
         public float end;
-    };
+    }
 
 
     // Hold the rotated axes vectors and viewer location in units of level posts at each LOD
@@ -84,7 +86,7 @@ namespace FalconNet.Graphics
         public bool glueOnLeft;
 
         //	int		RenderingStateHandle;
-    } ;
+    } 
 
 
     // Used to pass information for drawing the sky among the various helper routines
@@ -105,7 +107,7 @@ namespace FalconNet.Graphics
         public float lhazescale;		// Strength of sun effect at left edge
         public Tpoint sunEffectPos;	// Sun position with respect to horizon
         public Tcolor sunEffectColor;	// Color of sun at horizon
-    };
+    }
 
 
     public class RenderOTW : Render3D

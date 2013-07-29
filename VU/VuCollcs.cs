@@ -88,7 +88,7 @@ namespace FalconNet.VU
 
             CriticalSection.VuEnterCriticalSection();
             Debug.Assert(Find(entity) == null); // should not be in already
-            entry = new VuLinkNode(entity, entry);
+            table_[index] = new VuLinkNode(entity, entry);
             count_++;
             CriticalSection.VuExitCriticalSection();
 
@@ -249,7 +249,8 @@ namespace FalconNet.VU
         {
             int index = (int)((VU_KEY)entityId * key_) % capacity_;
             VuLinkNode ptr = table_[index];
-
+            if (ptr == null)
+                return null;
             while (ptr.entity_ != null && ptr.entity_.Id() != entityId)
             {
                 ptr = ptr.next_;
@@ -261,7 +262,8 @@ namespace FalconNet.VU
         {
             int index = (int)((VU_KEY)ent.Id() * key_) % capacity_;
             VuLinkNode ptr = table_[index];
-
+            if (ptr == null)
+                return null;
             while (ptr.entity_ != null && ptr.entity_.Id() != ent.Id())
             {
                 ptr = ptr.next_;
@@ -1683,7 +1685,7 @@ namespace FalconNet.VU
         {
             VU_KEY key = Key(entity);
 
-            
+
             //if (key == 0x90da || key == 0x90db)
             //{
             //    int i = 0;
@@ -2538,7 +2540,7 @@ namespace FalconNet.VU
         internal VuLinkNode last_;
     }
 
-     //-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     public class VuDatabaseIterator : VuHashIterator
     {
 

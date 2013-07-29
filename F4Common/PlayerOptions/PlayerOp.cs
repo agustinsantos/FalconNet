@@ -194,7 +194,9 @@ namespace FalconNet.F4Common
 
             // OW - dont break compatibility with 1.03 - 1.08 options
 
-            PlayerOptionsClass playerOptions = PlayerOptionsClassEncodingLE.Decode(fp);
+            PlayerOptionsClass playerOptions = new PlayerOptionsClass();
+
+            PlayerOptionsClassEncodingLE.Decode(fp, ref playerOptions);
             fp.Close();
 #if TODO
 			if(success != size)
@@ -807,26 +809,14 @@ namespace FalconNet.F4Common
 
     public static class PlayerOptionsClassEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, PlayerOptionsClass val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, PlayerOptionsClass val)
         {
             throw new NotImplementedException();
         }
 
-        public static PlayerOptionsClass Decode(ByteWrapper buffer)
-        {
-            PlayerOptionsClass rst = new PlayerOptionsClass();
-            return rst;
-        }
-
-
         //TODO Check the structure of this data. 
-        public static PlayerOptionsClass Decode(Stream stream)
+        public static void Decode(Stream stream, ref PlayerOptionsClass rst)
         {
-            PlayerOptionsClass rst = new PlayerOptionsClass();
             rst.DispFlags = (PO_DISP_FLAGS)Int32EncodingLE.Decode(stream);
             //rst.DispTextureLevel = Int32EncodingLE.Decode(stream);
             rst.DispTerrainDist = SingleEncodingLE.Decode(stream);
@@ -894,7 +884,6 @@ namespace FalconNet.F4Common
         public bool PlayerRadioVoice; // Turn on/off all player radio voices
         public bool UIComms;	// Turn on/off random UI radio chatter
 #endif
-            return rst;
         }
 
         public static int Size

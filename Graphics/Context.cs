@@ -2,6 +2,7 @@ using System;
 using FalconNet.Common;
 using DWORD = System.UInt32;
 using WORD = System.UInt16;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {

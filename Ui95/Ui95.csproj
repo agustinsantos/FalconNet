@@ -57,9 +57,17 @@
       <Project>{63B80E09-C6E2-4077-AB8C-E6EAD52EAE47}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FalcLib\FalcLib.csproj">
+      <Project>{12899d19-7f1a-49fe-82e2-3535b3ced5c3}</Project>
+      <Name>FalcLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{C3E4D4BD-C1F5-447A-A87E-EABF2974D246}</Project>
       <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VU\VU.csproj">
+      <Project>{eda4023d-884d-4f58-9e25-0f77a34cf43c}</Project>
+      <Name>VU</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

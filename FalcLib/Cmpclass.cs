@@ -454,16 +454,12 @@ namespace FalconNet.Campaign
         private const int version = 71; //TODO fix that
         private const int FLAGS_WIDENED_AT_VERSION = 73;
 
-        public static void Encode(ByteWrapper buffer, CampaignClass val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, CampaignClass val)
         {
             throw new NotImplementedException();
         }
 
-        public static CampaignClass Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream,ref CampaignClass rst)
         {
 #if TODO
             CampaignClass rst = new CampaignClass();
@@ -749,12 +745,7 @@ namespace FalconNet.Campaign
 #endif
             throw new NotImplementedException();
         }
-        public static CampaignClass Decode(Stream stream)
-        {
-            CampaignClass rst = new CampaignClass();
-            return rst;
-        }
-
+ 
         public static int Size
         {
             get

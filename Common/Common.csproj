@@ -20,6 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -28,12 +29,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Encoding\ByteStream.cs" />
     <Compile Include="Encoding\ByteWrapper.cs" />
     <Compile Include="Encoding\ByteWrapperCompression.cs" />
     <Compile Include="Encoding\StringFixedUnicodeEncoding.cs" />
@@ -51,6 +54,9 @@
     <Compile Include="Encoding\Int16Encoding.cs" />
     <Compile Include="EnumSupport.cs" />
     <Compile Include="ConvertionSupport.cs" />
+    <Compile Include="Graphics\Tcolor.cs" />
+    <Compile Include="Graphics\Tpoint.cs" />
+    <Compile Include="Graphics\Trotation.cs" />
     <Compile Include="Maths\Constants.cs" />
     <Compile Include="FileMemMap.cs" />
     <Compile Include="Maths\Angle.cs" />

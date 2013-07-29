@@ -17,18 +17,6 @@ namespace FalconNet.F4Common
 
     public static class DF_STATSEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, DF_STATS val)
-        {
-            Int16EncodingLE.Encode(buffer, val.MatchesWon);
-            Int16EncodingLE.Encode(buffer, val.MatchesLost);
-            Int16EncodingLE.Encode(buffer, val.MatchesWonVHum);
-            Int16EncodingLE.Encode(buffer, val.MatchesLostVHum);
-            Int16EncodingLE.Encode(buffer, val.Kills);
-            Int16EncodingLE.Encode(buffer, val.Killed);
-            Int16EncodingLE.Encode(buffer, val.HumanKills);
-            Int16EncodingLE.Encode(buffer, val.KilledByHuman);
-
-        }
         public static void Encode(Stream stream, DF_STATS val)
         {
             Int16EncodingLE.Encode(stream, val.MatchesWon);
@@ -41,31 +29,16 @@ namespace FalconNet.F4Common
             Int16EncodingLE.Encode(stream, val.KilledByHuman);
         }
 
-        public static DF_STATS Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, ref DF_STATS rst)
         {
-            DF_STATS rst = new DF_STATS();
-            rst.MatchesWon = Int16EncodingLE.Decode(buffer);
-            rst.MatchesLost = Int16EncodingLE.Decode(buffer);
-            rst.MatchesWonVHum = Int16EncodingLE.Decode(buffer);
-            rst.MatchesLostVHum = Int16EncodingLE.Decode(buffer);
-            rst.Kills = Int16EncodingLE.Decode(buffer);
-            rst.Killed = Int16EncodingLE.Decode(buffer);
-            rst.HumanKills = Int16EncodingLE.Decode(buffer);
-            rst.KilledByHuman = Int16EncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static DF_STATS Decode(Stream stream)
-        {
-            DF_STATS rst = new DF_STATS();
-            rst.MatchesWon = Int16EncodingLE.Decode(stream);
-            rst.MatchesLost = Int16EncodingLE.Decode(stream);
-            rst.MatchesWonVHum = Int16EncodingLE.Decode(stream);
-            rst.MatchesLostVHum = Int16EncodingLE.Decode(stream);
-            rst.Kills = Int16EncodingLE.Decode(stream);
-            rst.Killed = Int16EncodingLE.Decode(stream);
-            rst.HumanKills = Int16EncodingLE.Decode(stream);
-            rst.KilledByHuman = Int16EncodingLE.Decode(stream);
-            return rst;
+            Int16EncodingLE.Decode(stream, ref rst.MatchesWon);
+            Int16EncodingLE.Decode(stream, ref rst.MatchesLost);
+            Int16EncodingLE.Decode(stream, ref rst.MatchesWonVHum);
+            Int16EncodingLE.Decode(stream, ref rst.MatchesLostVHum);
+            Int16EncodingLE.Decode(stream, ref rst.Kills);
+            Int16EncodingLE.Decode(stream, ref rst.Killed);
+            Int16EncodingLE.Decode(stream, ref rst.HumanKills);
+            Int16EncodingLE.Decode(stream, ref rst.KilledByHuman);
         }
 
         public static int Size

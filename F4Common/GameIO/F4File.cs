@@ -37,8 +37,8 @@ namespace FalconNet.F4Common
         public static void InitDirectories()
         {
             FalconDataDirectory = FalconDirectory + "Data";
-            FalconTerrainDataDir = FalconDataDirectory + +Sep + "theater";
-            FalconObjectDataDir = FalconDataDirectory + +Sep + "terrdata" + Sep + "objects";
+            FalconTerrainDataDir = FalconDataDirectory + Sep + "theater";
+            FalconObjectDataDir = FalconDataDirectory + Sep + "terrdata" + Sep + "objects";
             FalconMiscTexDataDir = FalconDataDirectory + "FalconMiscTexData";
             string campaignDir = FalconDataDirectory + Sep + "Campaign";
             FalconCampaignSaveDirectory = campaignDir + Sep + "Save";
@@ -258,7 +258,7 @@ namespace FalconNet.F4Common
             }
         }
 
-        public static ByteWrapper ReadCampFile(string filename, string ext)
+        public static MemoryStream ReadCampFile(string filename, string ext)
         {
             int index;
 
@@ -283,7 +283,7 @@ namespace FalconNet.F4Common
                     {
                         camp_fp.Seek(camp_offset[index], SeekOrigin.Begin);
                         data = camp_fp.ReadBytes((int)camp_size[index]);
-                        return new ByteWrapper(data);
+                        return new MemoryStream(data);
                     }
                 }
 
@@ -302,7 +302,7 @@ namespace FalconNet.F4Common
                 data = fp.ReadBytes((int)fp.Length);
                 fp.Close();
 
-                return new ByteWrapper(data);
+                return new MemoryStream(data);
             }
 
             return null;

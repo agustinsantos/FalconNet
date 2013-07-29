@@ -23,7 +23,7 @@ namespace FalconNet.Campaign
 
         public static void LoadNames(string filename)
         {
-            ByteWrapper buf = F4File.ReadCampFile(filename, "idx");
+            MemoryStream buf = F4File.ReadCampFile(filename, "idx");
             NameFile = filename;
             NameEntries = Int16EncodingLE.Decode(buf);
             NameIndex = new ushort[NameEntries];

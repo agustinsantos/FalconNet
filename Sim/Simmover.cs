@@ -248,13 +248,14 @@ namespace FalconNet.Sim
 #endif
         public SimMoverClass(int type) :base(type)
         { throw new NotImplementedException(); }
+#if TODO
         public SimMoverClass(ByteWrapper buf)
             : base(buf)
         { throw new NotImplementedException(); }
         public SimMoverClass(FileStream stream)
             : base(stream)
         { throw new NotImplementedException(); }
-#if TODO
+
         //TODO virtual ~SimMoverClass (void);
         public virtual void Init(SimInitDataClass* initData)
         {

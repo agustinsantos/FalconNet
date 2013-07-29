@@ -1,6 +1,7 @@
+using FalconNet.Common.Graphics;
 using System;
 using System.Diagnostics;
-using Pmatrix = FalconNet.Graphics.Trotation;
+using Pmatrix = FalconNet.Common.Graphics.Trotation;
 
 namespace FalconNet.Graphics
 {

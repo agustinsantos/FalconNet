@@ -30,6 +30,10 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -43,7 +47,6 @@
     <Compile Include="EntityEnum.cs" />
     <Compile Include="FEC_FLAGS.cs" />
     <Compile Include="FEC_RADAR.cs" />
-    <Compile Include="IdNamespace.cs" />
     <Compile Include="Messages\CampWeaponsFireMsg.cs" />
     <Compile Include="F4Globals.cs" />
     <Compile Include="Messages\FalcMesg.cs" />

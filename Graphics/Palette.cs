@@ -3,6 +3,7 @@ using System;
 using DWORD = System.UInt32;
 using BYTE = System.Byte;
 using System.Diagnostics;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {

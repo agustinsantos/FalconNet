@@ -45,12 +45,6 @@ namespace FalconNet.VU
 
     public static class VuErrorMessageEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuErrorMessage val)
-        {
-            VuMessageEncodingLE.Encode(buffer, val);
-            VU_IDEncodingLE.Encode(buffer, val.srcmsgid_);
-            Int16EncodingLE.Encode(buffer, (short)val.etype_);
-        }
         public static void Encode(Stream stream, VuErrorMessage val)
         {
             VuMessageEncodingLE.Encode(stream, val);
@@ -58,21 +52,11 @@ namespace FalconNet.VU
             Int16EncodingLE.Encode(stream, (short)val.etype_);
         }
 
-        public static VuErrorMessage Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, VuErrorMessage rst)
         {
-            VuErrorMessage rst = new VuErrorMessage();
-            VuMessageEncodingLE.Decode(buffer, rst);
-            rst.srcmsgid_ = VU_IDEncodingLE.Decode(buffer);
-            rst.etype_ = (VUERROR)Int16EncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static VuErrorMessage Decode(Stream stream)
-        {
-            VuErrorMessage rst = new VuErrorMessage();
             VuMessageEncodingLE.Decode(stream, rst);
-            rst.srcmsgid_ = VU_IDEncodingLE.Decode(stream);
+            VU_IDEncodingLE.Decode(stream, rst.srcmsgid_);
             rst.etype_ = (VUERROR)Int16EncodingLE.Decode(stream);
-            return rst;
         }
 
         public static int Size

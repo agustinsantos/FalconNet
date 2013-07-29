@@ -82,12 +82,13 @@ namespace FalconNet.Sim
 #endif
         public SimVehicleClass(int type): base(type)
         { throw new NotImplementedException(); }
+#if TODO
         public SimVehicleClass(ByteWrapper buf) : base(buf)
         { throw new NotImplementedException(); }
         public SimVehicleClass(FileStream stream)
             : base(stream)
         { throw new NotImplementedException(); }
-#if TODO
+
         //TODO public virtual ~SimVehicleClass ();
         public virtual void Init(SimInitDataClass initData)
         { throw new NotImplementedException(); }

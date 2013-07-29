@@ -3,6 +3,7 @@ using TextureID = System.Int16;
 
 namespace FalconNet.Graphics
 {
+#if TODO //delete all this
 /***************************************************************************\
     Tpost.h
     Scott Randolph
@@ -36,5 +37,6 @@ namespace FalconNet.Graphics
 		public float		phi;
 
 	};
+#endif
 }
 

@@ -164,20 +164,12 @@ namespace FalconNet.FalcLib
 
     public static class FalconEventEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, FalconEvent val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, FalconEvent val)
         {
             throw new NotImplementedException();
         }
 
-        public static FalconEvent Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-        public static FalconEvent Decode(Stream stream)
+        public static void Decode(Stream stream, ref vuEventTypes rst)
         {
             throw new NotImplementedException();
         }

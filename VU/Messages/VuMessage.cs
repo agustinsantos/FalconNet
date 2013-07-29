@@ -213,22 +213,14 @@ public:
 
     public static class VuMessageEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuMessage val)
-        {
-            VU_IDEncodingLE.Encode(buffer, val.entityId_);
-        }
         public static void Encode(Stream stream, VuMessage val)
         {
             VU_IDEncodingLE.Encode(stream, val.entityId_);
         }
 
-        public static void Decode(ByteWrapper buffer, VuMessage rst)
-        {
-            rst.entityId_ = VU_IDEncodingLE.Decode(buffer);
-        }
         public static void Decode(Stream stream, VuMessage rst)
         {
-            rst.entityId_ = VU_IDEncodingLE.Decode(stream);
+             VU_IDEncodingLE.Decode(stream, rst.entityId_);
         }
 
         public static int Size

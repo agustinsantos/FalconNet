@@ -502,6 +502,7 @@ bool g_b3dHUD = true;
 
         // Wombat778 11-5-03 Allow waypoints to be placed with greater precision.  Needs testing, so disabled by default.
         public static bool g_bPrecisionWaypoints = false;
+        public static bool g_bCheckFeatureIndex = false; 
 
         // Which langauge should we use? 
         //TODO it was defined in classtbl.

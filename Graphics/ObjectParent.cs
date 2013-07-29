@@ -1,5 +1,5 @@
 ﻿using System;
-using Ppoint = FalconNet.Graphics.Tpoint;
+using Ppoint = FalconNet.Common.Graphics.Tpoint;
 
 namespace FalconNet.Graphics
 {

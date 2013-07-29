@@ -4,6 +4,8 @@ using System.IO;
 using FalconNet.Graphics;
 using WORD = System.UInt16;
 using COLORREF = System.Int32;
+using FalconNet.FalcLib;
+using FalconNet.VU;
 
 namespace FalconNet.Ui95
 {

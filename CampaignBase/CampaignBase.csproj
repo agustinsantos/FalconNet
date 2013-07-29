@@ -59,6 +59,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terrain\ReliefType.cs" />
     <Compile Include="RelType.cs" />
+    <Compile Include="Terrain\TerrainBlock.cs" />
+    <Compile Include="Terrain\TerrainMap.cs" />
+    <Compile Include="Terrain\TerrainMapInfo.cs" />
+    <Compile Include="Terrain\TerrainPost.cs" />
     <Compile Include="WayPoint\WPAction.cs" />
     <Compile Include="WayPoint\WayPointClass.cs" />
     <Compile Include="WayPoint\WPFlags.cs" />

@@ -628,59 +628,14 @@ namespace FalconNet.CampaignBase
         private const int version = 71; //TODO fix that
         private const int FLAGS_WIDENED_AT_VERSION = 73;
 
-        public static void Encode(ByteWrapper buffer, WayPointClass val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, WayPointClass val)
         {
             throw new NotImplementedException();
         }
 
-        public static WayPointClass Decode(ByteWrapper buffer)
+      
+        public static void Decode(Stream stream, ref WayPointClass rst)
         {
-            WayPointClass rst = new WayPointClass();
-            byte haves = buffer.GetByte();
-            rst.GridX = Int16EncodingLE.Decode(buffer);
-            rst.GridY = Int16EncodingLE.Decode(buffer);
-            rst.GridZ = Int16EncodingLE.Decode(buffer);
-            rst.Arrive = UInt32EncodingLE.Decode(buffer);
-            rst.Action = (WPAction)buffer.GetByte();
-            rst.RouteAction = (WPAction)buffer.GetByte();
-            rst.Formation = buffer.GetByte();
-
-            if (version < FLAGS_WIDENED_AT_VERSION)
-            {
-                rst.Flags = (WPFlags)UInt16EncodingLE.Decode(buffer);
-            }
-            else
-            {
-                rst.Flags = (WPFlags)UInt32EncodingLE.Decode(buffer);
-                //TODO: SOME NEW FIELD, 2 BYTES LONG, COMES HERE, OR ELSE FLAGS IS EXPANDED IN AT LATEST V73 (PROBABLY EARLIER?) TO BE 4 BYTES LONG INSTEAD OF 2 BYTES LONG
-            }
-            if ((haves & WP_HAVE_TARGET) != 0)
-            {
-                rst.TargetID = VU_IDEncodingLE.Decode(buffer);
-                rst.TargetBuilding = buffer.GetByte();
-            }
-            else
-            {
-                rst.TargetID = new VU_ID();
-                rst.TargetBuilding = 255;
-            }
-            if ((haves & WP_HAVE_DEPTIME) != 0)
-            {
-                rst.Depart = UInt32EncodingLE.Decode(buffer);
-            }
-            else
-            {
-                rst.Depart = rst.Arrive;
-            }
-            return rst;
-        }
-        public static WayPointClass Decode(Stream stream)
-        {
-            WayPointClass rst = new WayPointClass();
             byte haves = (byte)stream.ReadByte();
             rst.GridX = Int16EncodingLE.Decode(stream);
             rst.GridY = Int16EncodingLE.Decode(stream);
@@ -701,7 +656,7 @@ namespace FalconNet.CampaignBase
             }
             if ((haves & WP_HAVE_TARGET) != 0)
             {
-                rst.TargetID = VU_IDEncodingLE.Decode(stream);
+                VU_IDEncodingLE.Decode(stream, rst.TargetID);
                 rst.TargetBuilding = (byte)stream.ReadByte();
             }
             else
@@ -717,7 +672,6 @@ namespace FalconNet.CampaignBase
             {
                 rst.Depart = rst.Arrive;
             }
-            return rst;
         }
 
         public static int Size

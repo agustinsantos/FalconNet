@@ -46,28 +46,6 @@ namespace FalconNet.F4Common
 
     public static class LB_PILOTEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, LB_PILOT val)
-        {
-            StringEncodingLE.Encode(buffer, val.Name);
-            StringEncodingLE.Encode(buffer, val.Callsign);
-            StringEncodingLE.Encode(buffer, val.Password);
-            StringEncodingLE.Encode(buffer, val.Commissioned);
-            StringEncodingLE.Encode(buffer, val.OptionsFile);
-            SingleEncodingLE.Encode(buffer, val.FlightHours);
-            SingleEncodingLE.Encode(buffer, val.AceFactor);
-            Int16EncodingLE.Encode(buffer, (Int16)val.Rank);
-            DF_STATSEncodingLE.Encode(buffer, val.Dogfight);
-            CAMP_STATSEncodingLE.Encode(buffer, val.Campaign);
-            buffer.Put(val.Medals);
-            Int64EncodingLE.Encode(buffer, val.PictureResource);
-            StringEncodingLE.Encode(buffer, val.Picture);
-            Int64EncodingLE.Encode(buffer, val.PatchResource);
-            StringEncodingLE.Encode(buffer, val.Patch);
-            StringEncodingLE.Encode(buffer, val.Personal);
-            StringEncodingLE.Encode(buffer, val.Squadron);
-            SingleEncodingLE.Encode(buffer, val.voice);
-            Int64EncodingLE.Encode(buffer, val.CheckSum);
-        }
         public static void Encode(Stream stream, LB_PILOT val)
         {
             StringEncodingLE.Encode(stream, val.Name);
@@ -91,38 +69,8 @@ namespace FalconNet.F4Common
             Int64EncodingLE.Encode(stream, val.CheckSum);
         }
 
-        public static LB_PILOT Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, ref LB_PILOT rst)
         {
-            LB_PILOT rst = new LB_PILOT();
-            rst.Name = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._NAME_LEN_+1);
-            rst.Callsign = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._CALLSIGN_LEN_+1);
-            rst.Password = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.PASSWORD_LEN+1);
-            rst.Commissioned = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.COMM_LEN+1);
-            rst.OptionsFile = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._CALLSIGN_LEN_+1);
-            buffer.GetByte();
-            rst.FlightHours = SingleEncodingLE.Decode(buffer);
-            rst.AceFactor = SingleEncodingLE.Decode(buffer);
-            rst.Rank = (LB_RANK)Int32EncodingLE.Decode(buffer);
-            rst.Dogfight = DF_STATSEncodingLE.Decode(buffer);
-            rst.Campaign = CAMP_STATSEncodingLE.Decode(buffer);
-            buffer.GetBytes(2);
-            buffer.GetBytes(rst.Medals);
-            buffer.GetBytes(2);
-            rst.PictureResource = Int32EncodingLE.Decode(buffer);
-            rst.Picture = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.FILENAME_LEN + 1);
-            buffer.GetBytes(3);
-            rst.PatchResource = Int32EncodingLE.Decode(buffer);
-            rst.Patch = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.FILENAME_LEN+1);
-            rst.Personal = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT.PERSONAL_TEXT_LEN+1);
-            rst.Squadron = StringFixedASCIIEncoding.Decode(buffer, LB_PILOT._NAME_LEN_);
-            rst.voice = Int16EncodingLE.Decode(buffer);
-            rst.CheckSum = Int32EncodingLE.Decode(buffer);
-            return rst;
-        }
-
-        public static LB_PILOT Decode(Stream stream)
-        {
-            LB_PILOT rst = new LB_PILOT();
             rst.Name = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._NAME_LEN_ + 1);
             rst.Callsign = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._CALLSIGN_LEN_ + 1);
             rst.Password = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.PASSWORD_LEN + 1);
@@ -132,8 +80,8 @@ namespace FalconNet.F4Common
             rst.FlightHours = SingleEncodingLE.Decode(stream);
             rst.AceFactor = SingleEncodingLE.Decode(stream);
             rst.Rank = (LB_RANK)Int32EncodingLE.Decode(stream);
-            rst.Dogfight = DF_STATSEncodingLE.Decode(stream);
-            rst.Campaign = CAMP_STATSEncodingLE.Decode(stream);
+            DF_STATSEncodingLE.Decode(stream, ref rst.Dogfight);
+            CAMP_STATSEncodingLE.Decode(stream, ref rst.Campaign);
             stream.Position += 2;
             stream.Read(rst.Medals, 0, (int)LB_MEDAL.NUM_MEDALS);
             stream.Position += 2;
@@ -144,9 +92,8 @@ namespace FalconNet.F4Common
             rst.Patch = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.FILENAME_LEN + 1);
             rst.Personal = StringFixedASCIIEncoding.Decode(stream, LB_PILOT.PERSONAL_TEXT_LEN + 1);
             rst.Squadron = StringFixedASCIIEncoding.Decode(stream, LB_PILOT._NAME_LEN_);
-            rst.voice = Int16EncodingLE.Decode(stream);
+            Int16EncodingLE.Decode(stream, ref rst.voice);
             rst.CheckSum = Int32EncodingLE.Decode(stream);
-            return rst;
         }
 
         public static int Size

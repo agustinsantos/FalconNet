@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using FalconNet.Common;
 using DWORD = System.UInt32;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {

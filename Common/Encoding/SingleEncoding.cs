@@ -24,14 +24,6 @@ namespace FalconNet.Common.Encoding
             return buf;
         }
 
-        public static void Encode(ByteWrapper buffer, Single val)
-        {
-            byte[] buf = BitConverter.GetBytes(val);
-            if (EncodingHelpers.Endian != EndianTypes.LittleEndian)
-                EncodingHelpers.ReverseBytes(buf);
-            buffer.Put(buf, 0, buf.Length);
-        }
-
         public static void Encode(Stream stream, Single val)
         {
             byte[] buf = BitConverter.GetBytes(val);
@@ -63,13 +55,7 @@ namespace FalconNet.Common.Encoding
                 EncodingHelpers.ReverseBytes(buffer, startPos, Size);
             return BitConverter.ToSingle(buffer, startPos);
         }
-        public static Single Decode(ByteWrapper buffer)
-        {
-            Debug.Assert(buffer != null, "Buffer is null");
-            Single val = Decode(buffer.Buffer, buffer.Position);
-            buffer.Advance(Size);
-            return val;
-        }
+
         public static Single Decode(Stream stream)
         {
             byte[] buffer = new byte[Size];
@@ -106,14 +92,6 @@ namespace FalconNet.Common.Encoding
             return buf;
         }
 
-        public static void Encode(ByteWrapper buffer, Single val)
-        {
-            byte[] buf = BitConverter.GetBytes(val);
-            if (EncodingHelpers.Endian != EndianTypes.BigEndian)
-                EncodingHelpers.ReverseBytes(buf);
-            buffer.Put(buf, 0, buf.Length);
-        }
-
         public static void Encode(Stream stream, Single val)
         {
             byte[] buf = BitConverter.GetBytes(val);
@@ -145,13 +123,7 @@ namespace FalconNet.Common.Encoding
                 EncodingHelpers.ReverseBytes(buffer, startPos, Size);
             return BitConverter.ToSingle(buffer, startPos);
         }
-        public static Single DecodeShortLE(ByteWrapper buffer)
-        {
-            Debug.Assert(buffer != null, "Buffer is null");
-            Single val = Decode(buffer.Buffer, buffer.Position);
-            buffer.Advance(Size);
-            return val;
-        }
+
         public static Single Decode(Stream stream)
         {
             byte[] buffer = new byte[Size];

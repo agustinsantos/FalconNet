@@ -10,7 +10,8 @@ namespace FalconNet.FalcLib
     public class FlightClass : CampBaseClass
     {
         // It is already defined in Campaign :-(
-        public FlightClass(): base(0,0)
+        public FlightClass()
+            : base(0, 0)
         { throw new NotImplementedException(); }
     }
 
@@ -24,7 +25,7 @@ namespace FalconNet.FalcLib
     // ==========================================
     // Fly states
     // ==========================================
-    public enum FLYSTATE
+    public enum FLYSTATE : byte
     {
         FLYSTATE_IN_UI = 0,					// Sitting in the UI
         FLYSTATE_LOADING = 1,					// Loading the sim data
@@ -84,7 +85,7 @@ namespace FalconNet.FalcLib
         private byte country;			// Country or Team player is on
         private byte aircraftNum;		// Which aircraft in a flight we're using (0-3)
         private byte pilotSlot;			// Which pilot slot we've been assigned to
-        private byte flyState;			// What we're doing (sitting in UI, waiting to load, flying)
+        private FLYSTATE flyState;			// What we're doing (sitting in UI, waiting to load, flying)
         private short reqCompression;		// Requested compression rate
         private ulong latency;			// Current latency estimate for this session
         private byte samples;			// # of samples in current latency calculation
@@ -112,8 +113,51 @@ namespace FalconNet.FalcLib
         public FalconSessionEntity(ulong domainMask, string callsign)
             : base(domainMask, callsign)
         {
-            throw new NotImplementedException();
+            //name = new _TCHAR[_NAME_LEN_];
+            //_stprintf(name,"Kevin");
+            name = LogBookData.LogBook.NameWRank();
+            //callSign = new _TCHAR[_CALLSIGN_LEN_];
+            //_stprintf(callSign,"DeathPup");
+            callSign = LogBookData.LogBook.Callsign();
+            playerSquadron = VU_ID.FalconNullId;
+            playerFlight = VU_ID.FalconNullId;
+            playerEntity = VU_ID.FalconNullId;
+            // sfr: smartpointers
+            //playerEntityPtr = NULL;
+            //playerSquadronPtr = NULL;
+            //playerFlightPtr = NULL;
+            AceFactor = LogBookData.LogBook.AceFactor();
+            initAceFactor = LogBookData.LogBook.AceFactor();
+            //memset(kills, 0, sizeof(kills));
+            rating = 0;
+            voiceID = 0;
+            missions = 0;
+            country = 255;
+            aircraftNum = 255;
+            pilotSlot = 255;
+            assignedPlayerFlightPtr = null;
+            assignedPilotSlot = 255;
+            assignedAircraftNum = 255;
+            latency = 10;
+            samples = 10;
+            bubbleRatio = 1.0F;
+            reqCompression = 0;
+            unitDataSendBuffer = null;
+            unitDataSendSet = 0;
+            unitDataSendSize = 0;
+            unitDataReceiveBuffer = null;
+            unitDataReceiveSet = 0;
+            //memset(unitDataReceived, 0, FS_MAXBLK / 8);
+            objDataSendBuffer = null;
+            objDataSendSet = 0;
+            objDataSendSize = 0;
+            objDataReceiveBuffer = null;
+            objDataReceiveSet = 0;
+            //memset(objDataReceived, 0, FS_MAXBLK / 8);
+            SetEntityType((ushort)(EntityDB.F4SessionType + VU_LAST_ENTITY_TYPE));
+            flyState = FLYSTATE.FLYSTATE_IN_UI;
         }
+
 
 #if TODO
 		public FalconSessionEntity (VU_BYTE[] stream)
@@ -224,7 +268,7 @@ namespace FalconNet.FalcLib
             return pilotSlot;
         }
 
-        public byte GetFlyState()
+        public FLYSTATE GetFlyState()
         {
             return flyState;
         }

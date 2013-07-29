@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using DWORD = System.UInt32;
 using BOOL = System.Boolean;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {
@@ -152,7 +153,7 @@ namespace FalconNet.Graphics
             Debug.Assert(id >= 0);
             Debug.Assert(slotNumber >= 0);
             Debug.Assert(slotNumber < instance.ParentObject.nSlots);
-            offset = null;
+            offset = new Tpoint();
 
             // THIS IS A HACK TO TOLERATE OBJECTS WHICH DON'T YET HAVE SLOTS
             // THIS SHOULD BE REMOVED IN THE LATE BETA AND SHIPPING VERSIONS

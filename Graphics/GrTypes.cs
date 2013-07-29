@@ -2,6 +2,7 @@ using System;
 
 namespace FalconNet.Graphics
 {
+#if TODO // TODO delete all this
     // Three by three rotation matrix
     public struct Trotation
     {
@@ -27,5 +28,6 @@ namespace FalconNet.Graphics
         public float g;
         public float b;
     }
+#endif
 }
 

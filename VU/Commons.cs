@@ -15,17 +15,24 @@ namespace FalconNet.VU
     {
         public static void VuEnterCriticalSection()
         {
+#if !DEBUG
             throw new NotImplementedException();
+#endif
         }
         
         public static void VuExitCriticalSection()
         {
+#if !DEBUG
             throw new NotImplementedException();
+#endif
         }
         
         public static bool VuHasCriticalSection()
         {
+#if !DEBUG
             throw new NotImplementedException();
+#endif
+            return true;
         }
     }
 }

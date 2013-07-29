@@ -9,6 +9,7 @@ using Control = System.Byte;
 using System.Diagnostics;
 using FalconNet.CampaignBase;
 using FalconNet.F4Common;
+using FalconNet.VU;
 
 namespace FalconNet.Campaign
 {

@@ -1,3 +1,5 @@
+using FalconNet.CampaignBase;
+using FalconNet.Common.Graphics;
 using System;
 using System.Diagnostics;
 

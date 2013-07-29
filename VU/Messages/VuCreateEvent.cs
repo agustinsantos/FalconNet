@@ -1,4 +1,5 @@
 ﻿using FalconNet.Common.Encoding;
+using System.IO;
 using VU_BOOL = System.Boolean;
 using VU_BYTE = System.Byte;
 using VU_MSG_TYPE = System.Byte;
@@ -93,7 +94,7 @@ namespace FalconNet.VU
             }
             if (vutype_ < VuEntity.VU_LAST_ENTITY_TYPE)
             {
-                expandedData_ = VuCreateEntity(vutype_, size_, new ByteWrapper(data_));
+                expandedData_ = VuCreateEntity(vutype_, size_, new MemoryStream(data_));
             }
             else
             {
@@ -191,27 +192,29 @@ namespace FalconNet.VU
 
         protected static VuEntity VuCreateEntity(ushort type,
                ushort p,
-               ByteWrapper data)
+               Stream data)
         {
-            VuEntity retval = null;
 
             switch (type)
             {
                 case VuEntity.VU_SESSION_ENTITY_TYPE:
-                    retval = VuSessionEntityEncodingLE.Decode(data);
-                    break;
+                    VuSessionEntity retval = new VuSessionEntity();
+                    VuSessionEntityEncodingLE.Decode(data, ref retval);
+                    return retval;
                 case VuEntity.VU_GROUP_ENTITY_TYPE:
-                    retval = VuGroupEntityEncodingLE.Decode(data);
-                    break;
+                    VuGroupEntity retval2 = new VuGroupEntity();
+                    VuGroupEntityEncodingLE.Decode(data, ref retval2);
+                    return retval2;
                 case VuEntity.VU_GAME_ENTITY_TYPE:
-                    retval = VuGameEntityEncodingLE.Decode(data);
-                    break;
+                    VuGameEntity retval3 = new VuGameEntity();
+                    VuGameEntityEncodingLE.Decode(data, ref retval3);
+                    return retval3;
                 case VuEntity.VU_GLOBAL_GROUP_ENTITY_TYPE:
                 case VuEntity.VU_PLAYER_POOL_GROUP_ENTITY_TYPE:
-                    retval = null;
-                    break;
+                    return null;
+                default:
+                    return null;
             }
-            return retval;
         }
 
         protected static VuEntity ResolveWinner(VuEntity ent1, VuEntity ent2)

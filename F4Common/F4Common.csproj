@@ -59,6 +59,7 @@
     <Compile Include="LogBook\Medals.cs" />
     <Compile Include="LogBook\Pilot.cs" />
     <Compile Include="LogBook\Ranks.cs" />
+    <Compile Include="LogBook\UI_Logbook.cs" />
     <Compile Include="PlayerManager.cs" />
     <Compile Include="PlayerOptions\AutoPilotModeType.cs" />
     <Compile Include="PlayerOptions\AvionicsType.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="PlayerOptions\WeaponEffectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundGroups.cs" />
+    <Compile Include="TextIds.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

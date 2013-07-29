@@ -24,14 +24,6 @@ namespace FalconNet.Common.Encoding
             return buf;
         }
 
-        public static void Encode(ByteWrapper buffer, UInt64 val)
-        {
-            byte[] buf = BitConverter.GetBytes(val);
-            if (EncodingHelpers.Endian != EndianTypes.LittleEndian)
-                EncodingHelpers.ReverseBytes(buf);
-            buffer.Put(buf, 0, buf.Length);
-        }
-
         public static void Encode(Stream stream, UInt64 val)
         {
             byte[] buf = BitConverter.GetBytes(val);
@@ -63,13 +55,7 @@ namespace FalconNet.Common.Encoding
                 EncodingHelpers.ReverseBytes(buffer, startPos, Size);
             return BitConverter.ToUInt64(buffer, startPos);
         }
-        public static UInt64 Decode(ByteWrapper buffer)
-        {
-            Debug.Assert(buffer != null, "Buffer is null");
-            UInt64 val = Decode(buffer.Buffer, buffer.Position);
-            buffer.Advance(Size);
-            return val;
-        }
+
         public static UInt64 Decode(Stream stream)
         {
             byte[] buffer = new byte[Size];
@@ -106,13 +92,6 @@ namespace FalconNet.Common.Encoding
             return buf;
         }
 
-        public static void Encode(ByteWrapper buffer, UInt64 val)
-        {
-            byte[] buf = BitConverter.GetBytes(val);
-            if (EncodingHelpers.Endian != EndianTypes.BigEndian)
-                EncodingHelpers.ReverseBytes(buf);
-            buffer.Put(buf, 0, buf.Length);
-        }
 
         public static void Encode(Stream stream, UInt64 val)
         {
@@ -145,13 +124,7 @@ namespace FalconNet.Common.Encoding
                 EncodingHelpers.ReverseBytes(buffer, startPos, Size);
             return BitConverter.ToUInt64(buffer, startPos);
         }
-        public static UInt64 DecodeShortLE(ByteWrapper buffer)
-        {
-            Debug.Assert(buffer != null, "Buffer is null");
-            UInt64 val = Decode(buffer.Buffer, buffer.Position);
-            buffer.Advance(Size);
-            return val;
-        }
+
         public static UInt64 Decode(Stream stream)
         {
             byte[] buffer = new byte[Size];

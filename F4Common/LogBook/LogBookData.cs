@@ -263,7 +263,7 @@ namespace FalconNet.F4Common
                 byte[] pilotBuf = new byte[LB_PILOTEncodingLE.Size];
                 fp.Read(pilotBuf, 0, pilotBuf.Length);
                 Encrypter.DecryptBuffer(0x58, pilotBuf, pilotBuf.Length);
-                Pilot = LB_PILOTEncodingLE.Decode(new ByteWrapper(pilotBuf));
+                LB_PILOTEncodingLE.Decode(new MemoryStream(pilotBuf), ref Pilot);
                 fp.Close();
 
                 if (Pilot.CheckSum != 0)
@@ -846,15 +846,16 @@ namespace FalconNet.F4Common
 
         public string NameWRank()
         {
+            if (UI_Logbook.gStringMgr != null)
+            {
 #if TODO
-			if (gStringMgr != null) {
-				string rank = gStringMgr. GetString (gRanksTxt [Rank ()]);
+                string rank = UI_Logbook.gStringMgr.GetString(UI_Logbook.gRanksTxt[Rank()]);
 				nameWrank = rank + " " + Pilot.Name;
 				return nameWrank;
-			}
-			return Name ();
 #endif
-            throw new NotImplementedException();
+                throw new NotImplementedException();
+                }
+			return Name ();
         }
 
         public static LogBookData LogBook = new LogBookData();

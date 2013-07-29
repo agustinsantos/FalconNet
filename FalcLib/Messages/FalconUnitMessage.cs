@@ -87,20 +87,12 @@ namespace FalconNet.FalcLib
 
     public static class FalconUnitMessageEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, FalconUnitMessage val)
-        {
-            throw new NotImplementedException();
-        }
         public static void Encode(Stream stream, FalconUnitMessage val)
         {
             throw new NotImplementedException();
         }
 
-        public static FalconUnitMessage Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-        public static FalconUnitMessage Decode(Stream stream)
+        public static void Decode(Stream stream, ref FalconUnitMessage rst)
         {
             throw new NotImplementedException();
         }

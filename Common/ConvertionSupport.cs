@@ -14,7 +14,6 @@ namespace FalconNet.Common
     public class SOUND_RES { }
     public struct POINT { }
     public struct CONTROLLIST { }
-    public struct F4CSECTIONHANDLE { }
     public struct F4THREADHANDLE { }
     public struct HCURSOR { }
 

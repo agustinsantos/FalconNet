@@ -1,6 +1,15 @@
 using System;
 using FalconNet.VU;
 using FalconNet.Common;
+using log4net;
+using FalconNet.F4Common;
+using VU_BYTE = System.Byte;
+using VU_TIME = System.UInt64;
+using VU_ID_NUMBER = System.UInt64;
+using VU_KEY = System.UInt64;
+using VU_BOOL = System.Boolean;
+using BIG_SCALAR = System.Single;
+using SM_SCALAR = System.Single;
 
 namespace FalconNet.FalcLib
 {
@@ -68,6 +77,7 @@ namespace FalconNet.FalcLib
         // ========================
 
         public const int F4_EVENT_QUEUE_SIZE = 2000;		// How many events we can have on the queue at one heading
+        public const int F4_ENTITY_TABLE_SIZE = 10529; // Size of vu's hash table  - this is a prime number // JB 010718
 
         public static VuMainThread gMainThread;
         public static int NumEntities;
@@ -76,7 +86,6 @@ namespace FalconNet.FalcLib
 
         public static void InitVU()
         {
-#if TODO
 
 #if USE_SH_POOLS
     gVuMsgMemPool = MemPoolInit(0);
@@ -102,11 +111,11 @@ namespace FalconNet.FalcLib
 #if NDEBUG // Differentiate Debug & Release versions so they can't be seen by each other (PJW)
     sprintf(tmpStr, "R%5d.%2d.%02d.%s.%d_\0", BuildNumber, gLangIDNum, MinorVersion, "EBS", MajorVersion);
 #else
-            //string tmpStr = string.Format("K%5d.%2d.%02d.%s.%d_\0", BuildNumber, gLangIDNum, MinorVersion, "EBS", MajorVersion);
+            //TODO string tmpStr = string.Format("K%5d.%2d.%02d.%s.%d_\0", BuildNumber, gLangIDNum, MinorVersion, "EBS", MajorVersion);
             string tmpStr = VUSTATIC.About;
 #endif
 
-            log.Debug("Version %s %s %s\n", tmpStr, __DATE__, __TIME__);
+            log.Debug(VUSTATIC.About);
 
             // Change this to stop different versions taking to each other
 
@@ -114,16 +123,15 @@ namespace FalconNet.FalcLib
             // strcpy (tmpStr, "F527");
             // strcpy(tmpStr, "F552"); //  according to REVISOR this will allow connections to 1.08 servers. we'll see
             //strcpy(tmpStr, "E109newmp"); //me123 we are not interested in 108 conections anymore since they'll ctd us
-            strcpy(tmpStr, g_strWorldName);
+            tmpStr = F4Config.g_strWorldName;
+            VUSTATIC.vuxWorldName = F4Config.g_strWorldName;
 
-            vuxWorldName = new char[strlen(tmpStr) + 1];
-            strcpy(vuxWorldName, tmpStr);
-#if VU_USE_ENUM_FOR_TYPES
-    FalconMessageFilter falconFilter(FalconEvent::SimThread, true);
-#else
-            FalconMessageFilter falconFilter = new FalconMessageFilter(FalconEvent.SimThread, VU_VU_MESSAGE_BITS);
-#endif
-            vuCritical = F4CreateCriticalSection("Vu");
+            // TODO #if VU_USE_ENUM_FOR_TYPES
+            FalconMessageFilter falconFilter = new FalconMessageFilter(HandlingThread.SimThread, true);
+            //#else
+            //  FalconMessageFilter falconFilter = new FalconMessageFilter(HandlingThread.SimThread, VUBITS.VU_VU_MESSAGE_BITS);
+            //#endif
+            vuCritical = F4CriticalSection.F4CreateCriticalSection("Vu");
             //VU_ID_NUMBER low = FIRST_VOLATILE_VU_ID_NUMBER;
             //VU_ID_NUMBER hi = LAST_VOLATILE_VU_ID_NUMBER;
             gMainThread = new VuMainThread(
@@ -134,9 +142,8 @@ namespace FalconNet.FalcLib
             /*vuAssignmentId = FIRST_VOLATILE_VU_ID_NUMBER;
             vuLowWrapNumber = FIRST_VOLATILE_VU_ID_NUMBER;
             vuHighWrapNumber = LAST_VOLATILE_VU_ID_NUMBER;*/
-#endif 
-            throw new NotImplementedException();
         }
+
         public static void ExitVU()
         {
 #if TODO
@@ -152,9 +159,39 @@ namespace FalconNet.FalcLib
     MemPoolFree(gVuMsgMemPool);
     MemPoolFree(gVuFilterMemPool);
 #endif
-#endif 
+#endif
             throw new NotImplementedException();
         }
+
+        public static VuSessionEntity vuxCreateSession()
+        {
+            return (VuSessionEntity)new FalconSessionEntity(vuxLocalDomain, "Falcon 4.0");
+        }
+        
+
+
+
+
+ 
+
+        public static VuDriverSettings vuxDriverSettings;
+#if VU_AUTO_COLLISION
+public static VuGridTree *vuxCollisionGrid;
+#endif // VU_AUTO_COLLISION
+
+        public static ulong vuxVersion = 1;
+        public static SM_SCALAR vuxTicsPerSec = 1000.0F;
+        public static VU_TIME vuxTargetGameTime = 0;
+        public static VU_TIME vuxLastTargetGameTime = 0;
+        public static VU_TIME vuxDeadReconTime = 0;
+        public static VU_TIME vuxCurrentTime = 0;
+        public static VU_TIME lastTimingMessage = 0;
+        public static VU_TIME vuxTransmitTime = 0;
+        public static VU_BYTE vuxLocalSession = 1;
+        //ulong vuxLocalDomain = 1; // range = 1-31
+        public static ulong vuxLocalDomain = 0xffffffff; // range = 1-31 // JB 010718
+
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }
 }
 

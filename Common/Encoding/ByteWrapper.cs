@@ -5,7 +5,7 @@ namespace FalconNet.Common.Encoding
     /// <summary>
     /// Utility class for managing data in byte arrays.
     /// </summary>
-    public class ByteWrapper
+    internal class ByteWrapper
     {
 
         private static readonly byte[] ZERO_LENGTH_BUFFER = new byte[0];

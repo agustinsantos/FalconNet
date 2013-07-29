@@ -4,6 +4,7 @@ using DWORD = System.UInt32;
 using System.Diagnostics;
 using FalconNet.GrLib;
 using System.IO;
+using FalconNet.Common.Graphics;
 
 namespace FalconNet.Graphics
 {
@@ -99,7 +100,7 @@ namespace FalconNet.Graphics
         {
             float sH, cH, sC, cC;
 
-            Debug.Assert(LightDirection != null);
+            //Debug.Assert(LightDirection != null);
 
             // See if the sun is up
             if (ThereIsASun())

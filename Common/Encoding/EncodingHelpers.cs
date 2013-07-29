@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -34,12 +35,12 @@ namespace FalconNet.Common.Encoding
         {
             return BitConverter.GetBytes(val);
         }
-        public static void EncodeBoolean(this ByteWrapper buffer, bool val)
+        public static void EncodeBoolean(this MemoryStream buffer, bool val)
         {
             byte[] buf = BitConverter.GetBytes(val);
             if (Endian != EndianTypes.LittleEndian)
                 ReverseBytes(buf);
-            buffer.Put(buf);
+            buffer.Write(buf);
         }
 
         /// <summary> 
@@ -67,14 +68,7 @@ namespace FalconNet.Common.Encoding
                 throw new Exception();
             return BitConverter.ToBoolean(buffer, startPos);
         }
-        public static bool DecodeBoolean(this ByteWrapper buffer)
-        {
-            if (buffer == null)
-                throw new ArgumentException("Buffer is null");
-            bool val = DecodeBoolean(buffer.Buffer, buffer.Position);
-            buffer.Advance(sizeof(bool));
-            return val;
-        }
+
 
         public static int BoolSize
         {
@@ -96,9 +90,9 @@ namespace FalconNet.Common.Encoding
         {
             return new byte[] { val };
         }
-        public static void EncodeByte(this ByteWrapper buffer, byte val)
+        public static void EncodeByte(this MemoryStream buffer, byte val)
         {
-            buffer.Put(val);
+            buffer.WriteByte(val);
         }
 
         /// <summary> 
@@ -126,11 +120,11 @@ namespace FalconNet.Common.Encoding
                 throw new Exception();
             return buffer[startPos];
         }
-        public static byte DecodeByte(this ByteWrapper buffer)
+        public static byte DecodeByte(this MemoryStream buffer)
         {
             if (buffer == null)
                 throw new ArgumentException("Buffer is null");
-            return buffer.GetByte();
+            return (byte)buffer.ReadByte();
         }
 
         public static int ByteSize

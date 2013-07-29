@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using VU_ID_NUMBER = System.UInt64;
 
-namespace FalconNet.FalcLib
+namespace FalconNet.VU
 {
     // ===================================
     // Name space shit
@@ -61,7 +61,7 @@ namespace FalconNet.FalcLib
             lowWrap = low;
             hiWrap = hi;
             curId = low;
-            //TODO m = VuxCreateMutex("namespace mutex");
+            m = VuxMutex.VuxCreateMutex("namespace mutex");
         }
 
         /** destructor destroy mutex */
@@ -112,18 +112,21 @@ namespace FalconNet.FalcLib
         private VU_ID_NUMBER curId;
         /** mutex for this trait */
         private object m;
-
+        public const int MAX_NUMBER_OF_OBJECTIVES = 8000;
+        public const int MAX_NUMBER_OF_UNITS = 4000;	// Max # of NON volitile units only
+        public const int MAX_NUMBER_OF_VOLATILE_UNITS = 16000;
+        public const int MAX_CAMP_ENTITIES = (MAX_NUMBER_OF_OBJECTIVES + MAX_NUMBER_OF_UNITS + MAX_NUMBER_OF_VOLATILE_UNITS);
         private const ulong FIRST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID;
-        private const ulong LAST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID + Camplib.MAX_NUMBER_OF_OBJECTIVES;
+        private const ulong LAST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID + MAX_NUMBER_OF_OBJECTIVES;
         private const ulong FIRST_NON_VOLATILE_VU_ID_NUMBER = LAST_OBJECTIVE_VU_ID_NUMBER + 1;
-        private const ulong LAST_NON_VOLATILE_VU_ID_NUMBER = FIRST_NON_VOLATILE_VU_ID_NUMBER + Camplib.MAX_NUMBER_OF_UNITS;
+        private const ulong LAST_NON_VOLATILE_VU_ID_NUMBER = FIRST_NON_VOLATILE_VU_ID_NUMBER + MAX_NUMBER_OF_UNITS;
         // divided low volatilies in 2 halfs
         //#define FIRST_LOW_VOLATILE_VU_ID_NUMBER (LAST_NON_VOLATILE_VU_ID_NUMBER+1)
         //#define LAST_LOW_VOLATILE_VU_ID_NUMBER (FIRST_LOW_VOLATILE_VU_ID_NUMBER+(MAX_NUMBER_OF_VOLITILE_UNITS))
         private const ulong FIRST_PACKAGE_ID_NUMBER = LAST_NON_VOLATILE_VU_ID_NUMBER + 1;
-        private const ulong LAST_PACKAGE_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + (Camplib.MAX_NUMBER_OF_VOLATILE_UNITS / 2);
+        private const ulong LAST_PACKAGE_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + (MAX_NUMBER_OF_VOLATILE_UNITS / 2);
         private const ulong FIRST_FLIGHT_ID_NUMBER = LAST_PACKAGE_ID_NUMBER + 1;
-        private const ulong LAST_FLIGHT_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + Camplib.MAX_NUMBER_OF_VOLATILE_UNITS;
+        private const ulong LAST_FLIGHT_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + MAX_NUMBER_OF_VOLATILE_UNITS;
         private const ulong FIRST_VOLATILE_VU_ID_NUMBER = LAST_FLIGHT_ID_NUMBER + 1;
         private const ulong LAST_VOLATILE_VU_ID_NUMBER = ~((VU_ID_NUMBER)0);
 

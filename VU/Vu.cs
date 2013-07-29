@@ -65,14 +65,6 @@ namespace FalconNet.VU
 
         //   app provided globals
         public static int SGpfSwitchVal;
-        public static string vuxWorldName = null;
-        public static ulong vuxLocalDomain = 0xffffffff;
-        public static VU_TIME vuxGameTime = 0;
-        public static VU_TIME vuxRealTime;
-        public static VuDriverSettings vuxDriverSettings;
-#if VU_AUTO_COLLISION
-public static VuGridTree *vuxCollisionGrid;
-#endif // VU_AUTO_COLLISION
 
         public static VuCollectionManager vuCollectionManager = null;
         public static VuDatabase vuDatabase = null;
@@ -82,12 +74,7 @@ public static VuGridTree *vuxCollisionGrid;
         // VU required globals
         // =========================
 
-        public static ulong vuxVersion = 1;
-
         public static VuEntity VuxCreateEntity(ushort type, ushort size, VU_BYTE[] data)
-        { throw new NotImplementedException(); }
-
-        public static VuEntityType VuxType(ushort id)
         { throw new NotImplementedException(); }
 
         public static void VuxRetireEntity(VuEntity theEntity)
@@ -95,21 +82,32 @@ public static VuGridTree *vuxCollisionGrid;
             //F4Assert(theEntity);
             Console.WriteLine("You dropped an entity, better find it!!!\n");
         }
-        public static VU_ID_NUMBER VuxGetId()
+
+        public static VuEntityType VuxType(ushort id)
         {
-            throw new NotImplementedException(); 
-            //TODO return GetIdFromNamespace(VolatileNS);
+                VuEntityType retval = null;
+#if TODO
+                Debug.Assert(id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities);
+
+                if (id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities)
+                    retval = (VuEntityType)(Falcon4ClassTable[id - VuEntity.VU_LAST_ENTITY_TYPE]);
+#endif
+                return retval;
         }
 
+        public static VU_ID_NUMBER VuxGetId()
+        {
+            return IdNamespace.GetIdFromNamespace(IdNamespace.VolatileNS);
+        }
+        // TODO. These const are also defined at F4VU
+        public static VU_TIME vuxGameTime = 0;
+        public static VU_TIME vuxRealTime;
+        public static ulong vuxLocalDomain = 0xffffffff;
+        public static string vuxWorldName = null;
+
+
         public const int VU_TICS_PER_SECOND = 1000;
-        public static SM_SCALAR vuxTicsPerSec = 1000.0F;
-        public static VU_TIME vuxTargetGameTime = 0;
-        public static VU_TIME vuxLastTargetGameTime = 0;
-        public static VU_TIME vuxDeadReconTime = 0;
-        public static VU_TIME vuxCurrentTime = 0;
-        public static VU_TIME lastTimingMessage = 0;
-        public static VU_TIME vuxTransmitTime = 0;
-        public static VU_BYTE vuxLocalSession = 1;
+
 
         public static VuListIterator vuTargetListIter = null;
 
@@ -258,7 +256,7 @@ public static VuGridTree *vuxCollisionGrid;
   static int BytesPending();
 #endif
 
-        protected void Init(int dbSize, SessionCtorFunc sessionCtorFunc)
+        public void Init(int dbSize, SessionCtorFunc sessionCtorFunc)
         {
             // set global, for sneaky internal use...
             vuMainThread = this;

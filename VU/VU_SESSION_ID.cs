@@ -71,22 +71,14 @@ namespace FalconNet.VU
 
     public static class VU_SESSION_IDEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VU_SESSION_ID val)
-        {
-            UInt64EncodingLE.Encode(buffer, val.value_);
-        }
         public static void Encode(Stream stream, VU_SESSION_ID val)
         {
             UInt64EncodingLE.Encode(stream, val.value_);
         }
 
-        public static VU_SESSION_ID Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, VU_SESSION_ID rst)
         {
-            return (VU_SESSION_ID)UInt64EncodingLE.Decode(buffer);
-        }
-        public static VU_SESSION_ID Decode(Stream stream)
-        {
-            return (VU_SESSION_ID)UInt64EncodingLE.Decode(stream);
+            rst.value_ = UInt64EncodingLE.Decode(stream);
         }
 
         public static int Size

@@ -22,16 +22,6 @@ namespace FalconNet.Common.Encoding
             return buf;
         }
 
-        public static void Encode(ByteWrapper buffer, String val, int maxSize)
-        {
-            byte[] buf = new byte[maxSize];
-            if (val != null)
-            {
-                System.Text.Encoding.ASCII.GetBytes(val).CopyTo(buf, 0);
-            }
-            buffer.Put(buf, 0, buf.Length);
-        }
-
         public static void Encode(Stream stream, String val, int maxSize)
         {
             byte[] buf = new byte[maxSize];
@@ -57,14 +47,10 @@ namespace FalconNet.Common.Encoding
         {
             throw new NotImplementedException();
         }
-        public static String Decode(ByteWrapper buffer, int maxSize)
-        {
-            byte[] buf = buffer.GetBytes(maxSize);
-            return Decode(buf);
-        }
+
         public static String Decode(Stream stream, int maxSize)
         {
-            byte[] buf = stream.ReadBytes(0, maxSize);
+            byte[] buf = stream.ReadBytes(maxSize);
             return Decode(buf);
         }
 

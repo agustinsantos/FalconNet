@@ -167,7 +167,7 @@ namespace FalconNet.SimBase
         public SimBaseClass(int type)
             : base((ushort)type,0)
         { throw new NotImplementedException(); }
-
+#if TODO
         public SimBaseClass(ByteWrapper buf)
             : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
         { throw new NotImplementedException(); }
@@ -175,7 +175,7 @@ namespace FalconNet.SimBase
         public SimBaseClass(FileStream filePtr)
             : base(FalconEntity.VU_LAST_ENTITY_TYPE,0)
         { throw new NotImplementedException(); }
-#if TODO
+
         //TODO public virtual ~SimBaseClass();
         public int GetCallsignIdx()
         {

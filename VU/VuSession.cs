@@ -98,13 +98,6 @@ protected:
 
     public static class VuTargetEntityEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuTargetEntity val)
-        {
-            UInt16EncodingLE.Encode(buffer, val.share_.entityType_);
-            UInt16EncodingLE.Encode(buffer, (UInt16)val.share_.flags_);
-            UInt16EncodingLE.Encode(buffer, (UInt16)val.share_.id_.creator_);
-            UInt64EncodingLE.Encode(buffer, val.share_.id_.num_);
-        }
 
         public static void Encode(Stream stream, VuTargetEntity val)
         {
@@ -114,23 +107,7 @@ protected:
             UInt64EncodingLE.Encode(stream, val.share_.id_.num_);
         }
 
-        public static VuTargetEntity Decode(ByteWrapper buffer, VuTargetEntity rst)
-        {
-#if VU_USE_COMMS
-  Init(&bestEffortComms_);
-  Init(&reliableComms_);
-  reliableComms_.reliable_ = true;
-#endif //VU_USE_COMMS
-            rst.share_.entityType_ = UInt16EncodingLE.Decode(buffer);
-            rst.share_.flags_ = (VuFlagBits)UInt16EncodingLE.Decode(buffer);
-            rst.share_.id_.creator_ = new VU_SESSION_ID(UInt16EncodingLE.Decode(buffer));
-            rst.share_.id_.num_ = UInt64EncodingLE.Decode(buffer);
-            rst.SetEntityType(rst.share_.entityType_);
-            rst.dirty = 0;
-            return rst;
-        }
-
-        public static VuTargetEntity Decode(Stream stream, VuTargetEntity rst)
+        public static void Decode(Stream stream, ref VuTargetEntity rst)
         {
 #if VU_USE_COMMS
   Init(&bestEffortComms_);
@@ -143,7 +120,6 @@ protected:
             rst.share_.id_.num_ = UInt64EncodingLE.Decode(stream);
             rst.SetEntityType(rst.share_.entityType_);
             rst.dirty = 0;
-            return rst;
         }
 
         public static int Size
@@ -219,6 +195,7 @@ protected:
         }
 
         //TODO public virtual ~VuSessionEntity();
+        public VuSessionEntity() { }
 
         public VuSessionEntity(ulong domainMask, string callsign)
             : base(VU_SESSION_ENTITY_TYPE, VU_ID.VU_SESSION_ENTITY_ID)
@@ -1161,54 +1138,6 @@ protected:
 
     public static class VuSessionEntityEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuSessionEntity val)
-        {
-            VuTargetEntityEncodingLE.Encode(buffer, val);
-            UInt64EncodingLE.Encode(buffer, val.lastCollisionCheckTime_);
-            VU_SESSION_IDEncodingLE.Encode(buffer, val.sessionId_);
-            UInt64EncodingLE.Encode(buffer, val.domainMask_);
-            buffer.Put(val.loadMetric_);
-            VU_IDEncodingLE.Encode(buffer, val.gameId_);
-            buffer.Put(val.groupCount_);
-
-            VuGroupNode gnode = val.groupHead_;
-
-            while (gnode != null)
-            {
-                VU_IDEncodingLE.Encode(buffer, gnode.gid_);
-                gnode = gnode.next_;
-            }
-            Int32EncodingLE.Encode(buffer, val.bandwidth_);
-
-#if VU_SIMPLE_LATENCY
-  memcpy(*stream, &vuxRealTime, sizeof(VU_TIME)); *stream += sizeof(VU_TIME);
-  memcpy(*stream, &vuxGameTime, sizeof(VU_TIME)); *stream += sizeof(VU_TIME);
-#endif
-
-#if VU_TRACK_LATENCY
-  if (TimeSyncState() == VU_MASTER_SYNC) {
-    masterTime_ = vuxRealTime;
-  }
-  responseTime_ = vuxRealTime;
-  memcpy(*stream, &timeSyncState_,      sizeof(timeSyncState_));      *stream += sizeof(timeSyncState_);
-  memcpy(*stream, &latency_,            sizeof(latency_));            *stream += sizeof(latency_);
-  memcpy(*stream, &masterTime_,         sizeof(masterTime_));         *stream += sizeof(masterTime_);
-  memcpy(*stream, &masterTimePostTime_, sizeof(masterTimePostTime_)); *stream += sizeof(masterTimePostTime_);
-  memcpy(*stream, &responseTime_,       sizeof(responseTime_));       *stream += sizeof(responseTime_);
-  memcpy(*stream, &masterTimeOwner_,    sizeof(masterTimeOwner_));    *stream += sizeof(masterTimeOwner_);
-#endif
-            StringEncodingLE.Encode(buffer, val.callsign_);
-
-#if VU_MAX_SESSION_CAMERAS 
-  memcpy(*stream, &cameraCount_, sizeof(cameraCount_)); *stream += sizeof(cameraCount_);
-  if (cameraCount_ > 0 && cameraCount_ <= VU_MAX_SESSION_CAMERAS) {
-    memcpy(*stream, &cameras_, sizeof(VU_ID) * cameraCount_); *stream += sizeof(VU_ID) * cameraCount_;
-  }
-#else
-            Int32EncodingLE.Encode(buffer, 0);
-#endif
-        }
-
         public static void Encode(Stream stream, VuSessionEntity val)
         {
             VuTargetEntityEncodingLE.Encode(stream, val);
@@ -1257,12 +1186,7 @@ protected:
 #endif
         }
 
-        public static VuSessionEntity Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static VuSessionEntity Decode(Stream stream)
+        public static void Decode(Stream stream, ref VuSessionEntity rst)
         {
             throw new NotImplementedException();
         }
@@ -1284,6 +1208,8 @@ protected:
         public const string VU_GAME_GROUP_NAME = "Vu2 Game";
         public const int VU_DEFAULT_GROUP_SIZE = 6;
         // constructors & destructor
+        public VuGroupEntity() { }
+
         public VuGroupEntity(string groupname)
             : base(VU_GROUP_ENTITY_TYPE, VU_ID.VU_SESSION_ENTITY_ID)
         {
@@ -1512,22 +1438,13 @@ protected:
 
     public static class VuGroupEntityEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuGroupEntity val)
-        {
-            throw new NotImplementedException();
-        }
 
         public static void Encode(Stream stream, VuGroupEntity val)
         {
             throw new NotImplementedException();
         }
 
-        public static VuGroupEntity Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static VuGroupEntity Decode(Stream stream)
+        public static void Decode(Stream stream, ref VuGroupEntity rst)
         {
             throw new NotImplementedException();
         }
@@ -1544,6 +1461,8 @@ protected:
     //-----------------------------------------
     public class VuGameEntity : VuGroupEntity
     {
+        public VuGameEntity() { }
+
         // constructors & destructor
         public VuGameEntity(ulong domainMask, string gamename)
             : base(VuEntity.VU_GAME_ENTITY_TYPE, VU_GAME_GROUP_NAME)
@@ -1849,22 +1768,12 @@ protected:
 
     public static class VuGameEntityEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuGameEntity val)
-        {
-            throw new NotImplementedException();
-        }
-
         public static void Encode(Stream stream, VuGameEntity val)
         {
             throw new NotImplementedException();
         }
 
-        public static VuGameEntity Decode(ByteWrapper buffer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static VuGameEntity Decode(Stream stream)
+        public static void Decode(Stream stream, ref VuGameEntity rst)
         {
             throw new NotImplementedException();
         }

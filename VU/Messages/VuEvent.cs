@@ -43,28 +43,16 @@ namespace FalconNet.VU
     }
     public static class VuEventEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuEvent val)
-        {
-            VuMessageEncodingLE.Encode(buffer, val);
-            UInt64EncodingLE.Encode(buffer, val.updateTime_);
-        }
         public static void Encode(Stream stream, VuEvent val)
         {
             VuMessageEncodingLE.Encode(stream, val);
             UInt64EncodingLE.Encode(stream, val.updateTime_);
         }
 
-        public static VuEvent Decode(ByteWrapper buffer, VuEvent rst)
-        {
-            VuMessageEncodingLE.Decode(buffer, rst);
-            rst.updateTime_ = UInt64EncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static VuEvent Decode(Stream stream, VuEvent rst)
+        public static void Decode(Stream stream, VuEvent rst)
         {
             VuMessageEncodingLE.Decode(stream, rst);
             rst.updateTime_ = UInt64EncodingLE.Decode(stream);
-            return rst;
         }
 
         public static int Size

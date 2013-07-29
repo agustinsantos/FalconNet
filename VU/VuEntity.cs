@@ -122,7 +122,7 @@ namespace FalconNet.VU
 #else // !VU_USE_QUATERNION
         public SM_SCALAR yaw_, pitch_, roll_;
         public SM_SCALAR dyaw_, dpitch_, droll_;
-        public OrientationData(ByteWrapper buffer)
+        public OrientationData(Stream buffer)
         {
             yaw_ = SingleEncodingLE.Decode(buffer);
             pitch_ = SingleEncodingLE.Decode(buffer);
@@ -136,15 +136,6 @@ namespace FalconNet.VU
 
     public static class OrientationDataEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, OrientationData val)
-        {
-            SingleEncodingLE.Encode(buffer, val.yaw_);
-            SingleEncodingLE.Encode(buffer, val.pitch_);
-            SingleEncodingLE.Encode(buffer, val.roll_);
-            SingleEncodingLE.Encode(buffer, val.dyaw_);
-            SingleEncodingLE.Encode(buffer, val.dpitch_);
-            SingleEncodingLE.Encode(buffer, val.droll_);
-        }
         public static void Encode(Stream stream, OrientationData val)
         {
             SingleEncodingLE.Encode(stream, val.yaw_);
@@ -155,27 +146,14 @@ namespace FalconNet.VU
             SingleEncodingLE.Encode(stream, val.droll_);
         }
 
-        public static OrientationData Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, ref OrientationData rst)
         {
-            OrientationData rst = new OrientationData();
-            rst.yaw_ = SingleEncodingLE.Decode(buffer);
-            rst.pitch_ = SingleEncodingLE.Decode(buffer);
-            rst.roll_ = SingleEncodingLE.Decode(buffer);
-            rst.dyaw_ = SingleEncodingLE.Decode(buffer);
-            rst.dpitch_ = SingleEncodingLE.Decode(buffer);
-            rst.droll_ = SingleEncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static OrientationData Decode(Stream stream)
-        {
-            OrientationData rst = new OrientationData();
             rst.yaw_ = SingleEncodingLE.Decode(stream);
             rst.pitch_ = SingleEncodingLE.Decode(stream);
             rst.roll_ = SingleEncodingLE.Decode(stream);
             rst.dyaw_ = SingleEncodingLE.Decode(stream);
             rst.dpitch_ = SingleEncodingLE.Decode(stream);
             rst.droll_ = SingleEncodingLE.Decode(stream);
-            return rst;
         }
 
         public static int Size
@@ -192,15 +170,6 @@ namespace FalconNet.VU
 
     public static class PositionDataEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, PositionData val)
-        {
-            SingleEncodingLE.Encode(buffer, val.x_);
-            SingleEncodingLE.Encode(buffer, val.y_);
-            SingleEncodingLE.Encode(buffer, val.z_);
-            SingleEncodingLE.Encode(buffer, val.dx_);
-            SingleEncodingLE.Encode(buffer, val.dy_);
-            SingleEncodingLE.Encode(buffer, val.dz_);
-        }
         public static void Encode(Stream stream, PositionData val)
         {
             SingleEncodingLE.Encode(stream, val.x_);
@@ -211,27 +180,14 @@ namespace FalconNet.VU
             SingleEncodingLE.Encode(stream, val.dz_);
         }
 
-        public static PositionData Decode(ByteWrapper buffer)
+        public static void Decode(Stream stream, ref PositionData rst)
         {
-            PositionData rst = new PositionData();
-            rst.x_ = SingleEncodingLE.Decode(buffer);
-            rst.y_ = SingleEncodingLE.Decode(buffer);
-            rst.z_ = SingleEncodingLE.Decode(buffer);
-            rst.dx_ = SingleEncodingLE.Decode(buffer);
-            rst.dy_ = SingleEncodingLE.Decode(buffer);
-            rst.dz_ = SingleEncodingLE.Decode(buffer);
-            return rst;
-        }
-        public static PositionData Decode(Stream stream)
-        {
-            PositionData rst = new PositionData();
             rst.x_ = SingleEncodingLE.Decode(stream);
             rst.y_ = SingleEncodingLE.Decode(stream);
             rst.z_ = SingleEncodingLE.Decode(stream);
             rst.dx_ = SingleEncodingLE.Decode(stream);
             rst.dy_ = SingleEncodingLE.Decode(stream);
             rst.dz_ = SingleEncodingLE.Decode(stream);
-            return rst;
         }
 
         public static int Size
@@ -288,8 +244,7 @@ namespace FalconNet.VU
             SetEntityType(typeindex);
             share_.assoc_ = VU_ID.vuNullId;
             share_.ownerId_ = VUSTATIC.vuLocalSession; // need to fill in from id structure
-            share_.id_.creator_ = share_.ownerId_.creator_;
-            share_.id_.num_ = eid;
+            share_.id_ = new VU_ID(share_.ownerId_.creator_, eid);
 
             lastUpdateTime_ = vuxGameTime;
             lastTransmissionTime_ = VUSTATIC.vuTransmitTime - VuRandomTime(UpdateRate());
@@ -779,7 +734,7 @@ namespace FalconNet.VU
 
         // local data
         internal ushort refcount_;	// entity reference count
-        internal VU_MEM_STATE vuState_;
+        public VU_MEM_STATE vuState_;
         protected VU_BYTE domain_;
         internal VU_TIME lastUpdateTime_;
         internal VU_TIME lastCollisionCheckTime_;
@@ -898,20 +853,6 @@ namespace FalconNet.VU
 
     public static class VuEntityEncodingLE
     {
-        public static void Encode(ByteWrapper buffer, VuEntity val)
-        {
-            UInt16EncodingLE.Encode(buffer, val.share_.entityType_);
-            UInt16EncodingLE.Encode(buffer, (UInt16)val.share_.flags_);
-            UInt16EncodingLE.Encode(buffer, (UInt16)val.share_.id_.creator_);
-            UInt64EncodingLE.Encode(buffer, val.share_.id_.num_);
-            UInt64EncodingLE.Encode(buffer, (UInt64)val.share_.ownerId_.creator_);
-            UInt64EncodingLE.Encode(buffer, val.share_.ownerId_.num_);
-            UInt64EncodingLE.Encode(buffer, (UInt64)val.share_.assoc_.creator_);
-            UInt64EncodingLE.Encode(buffer, val.share_.assoc_.num_);
-            PositionDataEncodingLE.Encode(buffer, val.pos_);
-            OrientationDataEncodingLE.Encode(buffer, val.orient_);
-        }
-
         public static void Encode(Stream stream, VuEntity val)
         {
             UInt16EncodingLE.Encode(stream, val.share_.entityType_);
@@ -926,37 +867,9 @@ namespace FalconNet.VU
             OrientationDataEncodingLE.Encode(stream, val.orient_);
         }
 
-        public static VuEntity Decode(ByteWrapper buffer)
-        {
-            VuEntity rst = new VuEntity();
-            rst.refcount_ = 0;
-            //driver_ = 0;
-            rst.share_.entityType_ = UInt16EncodingLE.Decode(buffer);
-            rst.share_.flags_ = (VuFlagBits)UInt16EncodingLE.Decode(buffer);
-            rst.share_.id_.creator_ = new VU_SESSION_ID(UInt16EncodingLE.Decode(buffer));
-            rst.share_.id_.num_ = UInt64EncodingLE.Decode(buffer);
-            rst.share_.ownerId_.creator_ = new VU_SESSION_ID(UInt64EncodingLE.Decode(buffer));
-            rst.share_.ownerId_.num_ = UInt64EncodingLE.Decode(buffer);
-            rst.share_.assoc_.creator_ = new VU_SESSION_ID(UInt64EncodingLE.Decode(buffer));
-            rst.share_.assoc_.num_ = UInt64EncodingLE.Decode(buffer);
-            rst.pos_ = PositionDataEncodingLE.Decode(buffer);
-            rst.orient_ = OrientationDataEncodingLE.Decode(buffer);
 
-            rst.vuState_ = VU_MEM_STATE.VU_MEM_CREATED;
-            rst.SetEntityType(rst.share_.entityType_);
-            rst.lastUpdateTime_ = VUSTATIC.vuxGameTime;
-            rst.lastCollisionCheckTime_ = VUSTATIC.vuxGameTime;
-#if _DEBUG
-                      vuentitycount ++;
-                      if (vuentitycount > vuentitypeak)
-                          vuentitypeak = vuentitycount;
-#endif
-            return rst;
-        }
-
-        public static VuEntity Decode(Stream stream)
+        public static void Decode(Stream stream, ref VuEntity rst)
         {
-            VuEntity rst = new VuEntity();
             rst.refcount_ = 0;
             //driver_ = 0;
             rst.share_.entityType_ = UInt16EncodingLE.Decode(stream);
@@ -967,8 +880,8 @@ namespace FalconNet.VU
             rst.share_.ownerId_.num_ = UInt64EncodingLE.Decode(stream);
             rst.share_.assoc_.creator_ = new VU_SESSION_ID(UInt64EncodingLE.Decode(stream));
             rst.share_.assoc_.num_ = UInt64EncodingLE.Decode(stream);
-            rst.pos_ = PositionDataEncodingLE.Decode(stream);
-            rst.orient_ = OrientationDataEncodingLE.Decode(stream);
+            PositionDataEncodingLE.Decode(stream, ref rst.pos_);
+            OrientationDataEncodingLE.Decode(stream, ref rst.orient_);
 
             rst.vuState_ = VU_MEM_STATE.VU_MEM_CREATED;
             rst.SetEntityType(rst.share_.entityType_);
@@ -979,7 +892,6 @@ namespace FalconNet.VU
                       if (vuentitycount > vuentitypeak)
                           vuentitypeak = vuentitycount;
 #endif
-            return rst;
         }
 
         public static int Size

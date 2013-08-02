@@ -247,6 +247,7 @@ protected:
         public string Callsign() { return callsign_; }
         public VU_BYTE LoadMetric() { return loadMetric_; }
         public VU_ID GameId() { return gameId_; }
+        
         public VuGameEntity Game()
         {
             if (game_ == null)
@@ -263,6 +264,7 @@ protected:
             }
             return game_;
         }
+
         public int LastMessageReceived() { return lastMsgRecvd_; }
         public VU_TIME KeepaliveTime()
         {
@@ -1217,7 +1219,10 @@ protected:
             groupName_ = groupname;
             VuSessionFilter filter = new VuSessionFilter(Id());
             sessionCollection_ = new VuOrderedList(filter);
-            sessionCollection_.Init();
+#if TODO
+		            sessionCollection_.Init();  
+#endif
+            throw new NotImplementedException();
         }
         //TODO public virtual ~VuGroupEntity();
 
@@ -1290,10 +1295,13 @@ protected:
   VuxGroupAddSession(this, session);
 #endif
 
-            if (sessionCollection_.Find(session.Id()) == null)
+#if TODO
+		            if (sessionCollection_.Find(session.Id()) == null)
             {
                 return sessionCollection_.Insert(session);
-            }
+            }  
+#endif
+            throw new NotImplementedException();
             return VU_ERRCODE.VU_NO_OP;
         }
 
@@ -1384,7 +1392,7 @@ protected:
             if (filter == null) filter = sfilter;
 
             sessionCollection_ = new VuOrderedList(filter);
-            sessionCollection_.Init();
+            sessionCollection_.Register();  
         }
 
         public virtual VU_ERRCODE Distribute(VuSessionEntity ent)
@@ -1515,10 +1523,13 @@ protected:
   VuxGroupAddSession(this, session);
 #endif
 
-            if (sessionCollection_.Find(session.Id()) == null)
+#if TODO
+		            if (sessionCollection_.Find(session.Id()) == null)
             {
                 return sessionCollection_.Insert(session);
-            }
+            }  
+#endif
+            throw new NotImplementedException();
             return VU_ERRCODE.VU_NO_OP;
         }
         public override VU_ERRCODE RemoveSession(VuSessionEntity session)
@@ -1803,11 +1814,14 @@ protected:
             sessionMax_ = 255;
 
             // hack, hack, hack up a lung
-            sessionCollection_.DeInit();
+#if TODO
+		            sessionCollection_.DeInit();
             //delete sessionCollection_;
             VuSessionFilter filter = new VuSessionFilter(Id());
             sessionCollection_ = new VuOrderedList(filter);
-            sessionCollection_.Init();
+            sessionCollection_.Init();  
+#endif
+            throw new NotImplementedException();
         }
 
         //TODO public virtual ~VuPlayerPoolGame();
@@ -1982,38 +1996,34 @@ protected:
           (VUSTATIC.vuLocalSessionEntity.Game() != null ?
            VUSTATIC.vuLocalSessionEntity.Game().sessionCollection_ : null))
         {
-            curr_ = VuTailNode.vuTailNode;
-            VUSTATIC.vuCollectionManager.Register(this);
+            throw new NotImplementedException();
         }
+
         //TODO public virtual ~VuSessionsIterator();
 
         public VuSessionEntity GetFirst()
         {
-            if (collection_ != null)
-                curr_ = ((VuLinkedList)collection_).head_;
-            return (VuSessionEntity)curr_.entity_;
+            throw new NotImplementedException();
         }
 
         public VuSessionEntity GetNext()
-        { curr_ = curr_.next_; return (VuSessionEntity)curr_.entity_; }
+        {
+            throw new NotImplementedException();
+        }
+
         public override VuEntity CurrEnt()
         {
-            return curr_.entity_;
+            throw new NotImplementedException();
         }
 
-        public override VU_BOOL IsReferenced(VuEntity ent)
-        {
-            // 2002-02-04 MODIFIED BY S.G. If ent is false, then it can't be a valid entity, right? That's what I think too :-)
-            //return static_cast<VU_BOOL>((curr_->entity_ == ent) ? TRUE : FALSE);
-            return ((ent != null && curr_.entity_ == ent) ? true : false);
-        }
+        //public override VU_BOOL IsReferenced(VuEntity ent)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         public override VU_ERRCODE Cleanup()
         {
-            curr_ = VuTailNode.vuTailNode;
-            return VU_ERRCODE.VU_SUCCESS;
+            throw new NotImplementedException();
         }
-
-
-        internal VuLinkNode curr_;
     }
 }

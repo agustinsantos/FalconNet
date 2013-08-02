@@ -6,8 +6,9 @@ using System.Text;
 namespace FalconNet.FalcLib
 {
     // Mission rolls
-    public enum MissionRollEnum
+    public enum MissionRollEnum :byte
     {
+        ARO_NOTHING = 0,
         ARO_CA = 1,
         ARO_TACTRANS = 2,     // AMIS_SAR | AMIS_AIRCAV
         ARO_S = 3,     // AMIS_OCASTRIKE | AMIS_INTSTRIKE | 																// Strike target

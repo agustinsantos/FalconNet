@@ -12,7 +12,7 @@ namespace FalconNet.VU
     public class VU_SESSION_ID
     {
         public VU_SESSION_ID() { }
-        public VU_SESSION_ID(ulong value) { value_ = value; }
+        public VU_SESSION_ID(uint value) { value_ = value; }
         
         public static bool operator ==(VU_SESSION_ID lhs, VU_SESSION_ID rhs)
         { return (lhs.value_ == rhs.value_ ? true : false); }
@@ -61,29 +61,32 @@ namespace FalconNet.VU
         {
             return (int)this.value_;
         }
-
-        public static explicit operator ulong(VU_SESSION_ID id) { return id.value_; }
-        public static implicit operator VU_SESSION_ID(ulong id) { return new VU_SESSION_ID(id); }
+        public override string ToString()
+        {
+            return String.Format("VU_SESSION_ID({0})", value_);
+        }
+        public static explicit operator uint(VU_SESSION_ID id) { return id.value_; }
+        public static implicit operator VU_SESSION_ID(uint id) { return new VU_SESSION_ID(id); }
 
         // DATA
-        public ulong value_ = 0;
+        public uint value_ = 0;
     }
 
     public static class VU_SESSION_IDEncodingLE
     {
         public static void Encode(Stream stream, VU_SESSION_ID val)
         {
-            UInt64EncodingLE.Encode(stream, val.value_);
+            UInt32EncodingLE.Encode(stream, val.value_);
         }
 
         public static void Decode(Stream stream, VU_SESSION_ID rst)
         {
-            rst.value_ = UInt64EncodingLE.Decode(stream);
+            rst.value_ = UInt32EncodingLE.Decode(stream);
         }
 
         public static int Size
         {
-            get { return UInt64EncodingLE.Size; }
+            get { return UInt32EncodingLE.Size; }
         }
 
     }

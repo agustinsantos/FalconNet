@@ -5,6 +5,8 @@ using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.CampaignBase;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {

@@ -1,4 +1,5 @@
-﻿using VU_BOOL = System.Boolean;
+﻿using System;
+using VU_BOOL = System.Boolean;
 
 
 namespace FalconNet.VU
@@ -30,10 +31,16 @@ namespace FalconNet.VU
                 if (Entity().Id().creator_ == VUSTATIC.vuLocalSession.creator_)
                 {
                     // anti db will check for presense in db prior to insert
-                    VUSTATIC.vuAntiDB.Insert(Entity());
+#if TODO
+		                    VUSTATIC.vuAntiDB.Insert(Entity());  
+#endif
+                    throw new NotImplementedException();
                 }
                 Entity().share_.ownerId_ = VU_ID.vuNullId;
-                VUSTATIC.vuDatabase.DeleteRemove(Entity());
+#if TODO
+		                VUSTATIC.vuDatabase.DeleteRemove(Entity());  
+#endif
+                throw new NotImplementedException();
                 return VU_ERRCODE.VU_SUCCESS;
             }
             return VU_ERRCODE.VU_NO_OP;

@@ -41,7 +41,10 @@ namespace FalconNet.Common.Encoding
         /// </returns>
         public static String Decode(byte[] buffer)
         {
-            return System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length - 1).TrimEnd(new char[] { (char)0 });
+            string rst =  System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+            int nullLoc = rst.IndexOf('\0');
+            if (nullLoc > -1) rst = rst.Substring(0, nullLoc);
+            return rst;
         }
         public static String Decode(byte[] buffer, int startPos)
         {

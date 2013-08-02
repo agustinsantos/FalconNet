@@ -2,6 +2,7 @@
 
 namespace F4Utils.Campaign
 {
+#if TODO //DELETEME
     public class PltFile
     {
         #region Public Fields
@@ -54,4 +55,5 @@ namespace F4Utils.Campaign
             }
         }
     }
+#endif
 }

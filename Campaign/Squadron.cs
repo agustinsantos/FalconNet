@@ -353,10 +353,10 @@ namespace FalconNet.Campaign
 		public void ShiftSchedule ()
 		{throw new NotImplementedException();}
 
-		public int FindAvailableAircraft (MissionRequest mis)
+        public int FindAvailableAircraft(MissionRequestClass mis)
 		{throw new NotImplementedException();}
 
-		public void ScheduleAircraft (Flight fl, MissionRequest mis)
+        public void ScheduleAircraft(Flight fl, MissionRequestClass mis)
 		{throw new NotImplementedException();}
 
 		public int AssignPilots (Flight fl)

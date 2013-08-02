@@ -7,8 +7,9 @@ namespace FalconNet.FalcLib
 {
     // flags for mission data
     [Flags]
-    public enum MissionDataFlagEnum
+    public enum MissionDataFlagEnum : ulong
     {
+        NOTHING = 0,
         AMIS_ADDAWACS = 0x01,				// Request AWACS
         AMIS_ADDJSTAR = 0x02,				// Request JSTAR
         AMIS_ADDECM = 0x04,				// Request ECM

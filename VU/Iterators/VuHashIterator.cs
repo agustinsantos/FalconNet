@@ -1,4 +1,5 @@
-﻿using VU_BOOL = System.Boolean;
+﻿using System;
+using VU_BOOL = System.Boolean;
 
 namespace FalconNet.VU
 {
@@ -7,143 +8,244 @@ namespace FalconNet.VU
         public VuHashIterator(VuHashTable coll)
             : base(coll)
         {
-            curr_ = VuTailNode.vuTailNode;
-            entry_ = 0;
+            idx_ = coll.capacity_;
+            curr_ = null;
+#if NOTHING
+    curr_ = vuTailNode;
+    entry_ = 0;
+#endif
 
-            VUSTATIC.vuCollectionManager.Register(this);
+            // vuCollectionManager->Register(this);
         }
+
+
         //TODO public virtual ~VuHashIterator();
 
         public VuEntity GetFirst()
         {
-            if (collection_ != null)
             {
-                table_ = ((VuHashTable)collection_).table_;
-                entry_ = 0;
+                VuHashTable h = (VuHashTable)collection_;
 
-                while (table_[entry_] == VuTailNode.vuTailNode)
+                if (h == null || h.capacity_ <= 0)
                 {
-                    entry_++;
+                    return null;
                 }
 
-                if (table_[entry_] == null)
-                {
-                    curr_ = VuTailNode.vuTailNode;
-                }
-                else
-                {
-                    curr_ = table_[entry_];
-                }
+                idx_ = 0;
+                VuEntity ret;
 
-                return curr_.entity_;
+                do
+                {
+                    curr_ = new VuListIterator(h.table_[idx_]);
+                    ret = curr_.GetFirst();
+                }
+                while (ret == null && ++idx_ < h.capacity_);
+
+                return ret;
+
+#if NOTHING
+
+    if (collection_)
+    {
+        entry_ = ((VuHashTable*)collection_)->table_;
+
+        while (*entry_ == vuTailNode)
+        {
+            entry_++;
+        }
+
+        if (*entry_ == 0)
+        {
+            curr_ = vuTailNode;
+        }
+        else
+        {
+            curr_ = *entry_;
+        }
+
+        // sfr: smartpointer
+        return curr_->entity_.get();
+    }
+
+    return 0;
+#endif
             }
-
-            return null;
         }
 
         public VuEntity GetNext()
         {
-            curr_ = curr_.next_;
+            VuHashTable h = (VuHashTable)collection_;
+            VuEntity ret;
 
-            if (curr_ != VuTailNode.vuTailNode)
+            do
             {
-                return curr_.entity_;
-            }
+                // try next
+                ret = curr_.GetNext();
 
-            entry_++;
-
-            while (table_[entry_] == VuTailNode.vuTailNode)
-            {
-                entry_++;
+                while (ret == null && ++idx_ < h.capacity_)
+                {
+                    // here we couldnt find a valid next, so try next entry until we find a valid one
+                    curr_ = new VuListIterator(h.table_[idx_]);
+                    ret = curr_.GetFirst();
+                }
             }
+            while (ret == null && idx_ < h.capacity_);
 
-            if (table_[entry_] == null)
-            {
-                curr_ = VuTailNode.vuTailNode;
-            }
-            else
-            {
-                curr_ = table_[entry_];
-            }
+            return ret;
 
-            return curr_.entity_;
+#if NOTHING
+    curr_ = curr_->next_;
+
+    if (curr_ != vuTailNode)
+    {
+        // sfr: smartpointer
+        return curr_->entity_.get();
+    }
+
+    entry_++;
+
+    while (*entry_ == vuTailNode)
+    {
+        entry_++;
+    }
+
+    if (*entry_ == 0)
+    {
+        curr_ = vuTailNode;
+    }
+    else
+    {
+        curr_ = *entry_;
+    }
+
+    // sfr: smartpointer
+    return curr_->entity_.get();
+#endif
         }
 
         public VuEntity GetFirst(VuFilter filter)
         {
-            GetFirst();
-
-            if (filter != null)
+            if (filter == null)
             {
-                if (curr_.entity_ == null)
-                {
-                    return curr_.entity_;
-                }
+                return GetFirst();
+            }
 
-                if (filter.Test(curr_.entity_))
-                {
-                    return curr_.entity_;
-                }
+            VuEntity ret = GetFirst();
 
+            if (ret == null)
+            {
+                return null;
+            }
+
+            if (filter.Test(ret))
+            {
+                return ret;
+            }
+            else
+            {
                 return GetNext(filter);
             }
 
-            return curr_.entity_;
+#if NOTHING
+        // sfr: smartpointer
+        GetFirst();
+
+        if (filter)
+        {
+            if (curr_->entity_.get() == 0)
+            {
+                return curr_->entity_.get();
+            }
+
+            if (filter->Test(curr_->entity_.get()))
+            {
+                return curr_->entity_.get();
+            }
+
+            return GetNext(filter);
         }
+
+        return curr_->entity_.get();
+#endif
+        }
+
         public VuEntity GetNext(VuFilter filter)
         {
+            if (filter == null)
+            {
+                return GetNext();
+            }
+
+            VuEntity ret;
+
+            do
+            {
+                ret = GetNext();
+
+                if (ret == null || filter.Test(ret))
+                {
+                    return ret;
+                }
+            }
+            while (true);
+
+#if NOTHING
+            // sfr: smartpointer
             GetNext();
 
-            if (filter != null)
+            if (filter)
             {
-                if (curr_.entity_ == null)
+                if (curr_->entity_.get() == 0)
                 {
-                    return curr_.entity_;
+                    return curr_->entity_.get();
                 }
 
-                if (filter.Test(curr_.entity_))
+                if (filter->Test(curr_->entity_.get()))
                 {
-                    return curr_.entity_;
+                    return curr_->entity_.get();
                 }
 
                 return GetNext(filter);
             }
 
-            return curr_.entity_;
+            return curr_->entity_.get();
+#endif
         }
 
         public override VuEntity CurrEnt()
         {
-            return curr_.entity_;
+            return curr_.CurrEnt();
+#if NOTHING
+            // sfr: smartpointer
+            return curr_->entity_.get();
+#endif
         }
 
 
-        public override VU_BOOL IsReferenced(VuEntity ent)
-        {
-            // 2002-02-04 MODIFIED BY S.G. If ent is false, then it can't be a valid entity, right? That's what I think too :-)
-            //	if (curr_.entity_ == ent)
-            if (ent != null && curr_.entity_ == ent)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //public override VU_BOOL IsReferenced(VuEntity ent)
+        //{
+        //    // 2002-02-04 MODIFIED BY S.G. If ent is false, then it can't be a valid entity, right? That's what I think too :-)
+        //    //	if (curr_.entity_ == ent)
+        //    if (ent != null && curr_.entity_ == ent)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public override VU_ERRCODE Cleanup()
         {
-            curr_ = VuTailNode.vuTailNode;
-
+#if NOTHING
+    curr_ = vuTailNode;
+#endif
             return VU_ERRCODE.VU_SUCCESS;
         }
 
-
-
-        internal VuLinkNode[] table_;
-        internal int entry_;
-        internal VuLinkNode curr_;
+        protected int idx_;
+        protected VuListIterator curr_;
     }
 
 

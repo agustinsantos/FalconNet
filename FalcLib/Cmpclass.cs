@@ -47,21 +47,132 @@ namespace FalconNet.Campaign
 
         CAMP_NEED_MASK = 0x1FF00000,
 
-        CAMP_NAME_SIZE = 40,						// Size of name string arrays for scenario name and such
 
         // wParam values for FM_JOIN_CAMPAIGN messages:
         JOIN_NOT_JOINING = 0,
         JOIN_PRELOAD_ONLY = 1,
         JOIN_REQUEST_ALL_DATA = 2,
         JOIN_CAMP_DATA_ONLY = 3,
-    };
+    }
 
+    public struct EventNode
+    {
+        public byte Team;
+        public string eventText;
+        public byte flags;
+        public uint time;
+        public short x;
+        public short y;
+    }
+    public static class EventNodeEncodingLE
+    {
+        public static void Encode(Stream stream, EventNode val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ref EventNode rst)
+        {
+            rst.x = Int16EncodingLE.Decode(stream);
+            rst.y = Int16EncodingLE.Decode(stream);
+            rst.time = UInt32EncodingLE.Decode(stream);
+
+            rst.flags = (byte)stream.ReadByte();
+            rst.Team = (byte)stream.ReadByte();
+            stream.ReadBytes(2); //align on int32 boundary
+            //skip EventText pointer
+            stream.ReadBytes(4);
+            //skip UiEventNode pointer
+            stream.ReadBytes(4);
+            var eventTextSize = UInt16EncodingLE.Decode(stream);
+            var eventText = StringFixedASCIIEncoding.Decode(stream, eventTextSize);
+            rst.eventText = eventText;
+        }
+
+        public static int Size
+        {
+            get { return -1; }
+        }
+    }
+
+    public struct SquadInfo
+    {
+        public short airbaseIcon;
+        public string airbaseName;
+        public byte country;
+        public byte currentStrength;
+        public short descriptionIndex;
+        public VU_ID id;
+        public short nameId;
+        public byte specialty;
+        public short squadronPath;
+        public float x;
+        public float y;
+    }
+    public static class SquadInfoEncodingLE
+    {
+        public static void Encode(Stream stream, SquadInfo val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ref SquadInfo rst)
+        {
+            rst.x = SingleEncodingLE.Decode(stream);
+            rst.y = SingleEncodingLE.Decode(stream);
+
+            rst.id = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.id);
+            rst.descriptionIndex = Int16EncodingLE.Decode(stream);
+            rst.nameId = Int16EncodingLE.Decode(stream);
+            rst.airbaseIcon = Int16EncodingLE.Decode(stream);
+            rst.squadronPath = Int16EncodingLE.Decode(stream);
+            rst.specialty = (byte)stream.ReadByte();
+            rst.currentStrength = (byte)stream.ReadByte();
+            rst.country = (byte)stream.ReadByte();
+            rst.airbaseName = StringFixedASCIIEncoding.Decode(stream, 40);
+
+            if (CampaignClass.gCampDataVersion < 42)
+            {
+                stream.ReadBytes(40);
+                //skip additional string length for squad name in older versions that had 80 bytes
+            }
+
+            stream.ReadByte(); ; //align on int32 boundary
+        }
+
+        public static int Size
+        {
+            get { return -1; }
+        }
+    }
     public struct TeamBasicInfo
     {
         public byte teamColor;  // Colour
         public byte teamFlag;   // Flags
         public string teamMotto;// Motto
         public string teamName; // Name
+    }
+
+    public static class TeamBasicInfoEncodingLE
+    {
+        public static void Encode(Stream stream, TeamBasicInfo val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ref TeamBasicInfo rst)
+        {
+            rst.teamFlag = (byte)stream.ReadByte();
+            rst.teamColor = (byte)stream.ReadByte();
+            rst.teamName = StringFixedASCIIEncoding.Decode(stream, 20);
+            rst.teamMotto = StringFixedASCIIEncoding.Decode(stream, 200);
+        }
+
+        public static int Size
+        {
+            get { return 2 + 20 + 200; }
+        }
     }
 
     // =====================
@@ -119,9 +230,9 @@ namespace FalconNet.Campaign
         public CampUIEventElement PriorityEventQueue;	// Queue of last few priority events
 
         // JPO - upgraded the next 3 to long, to allow bigger campaigns.
-        public long CampMapSize;						// Size of currently allocated map data
-        public long SamMapSize; 							// Size of currently allocated map data
-        public long RadarMapSize;						// Size of currently allocated map data
+        public int CampMapSize;						// Size of currently allocated map data
+        public int SamMapSize; 							// Size of currently allocated map data
+        public int RadarMapSize;						// Size of currently allocated map data
         public byte[] CampMapData;						// Data for tiny occupation map.
         public byte[] SamMapData;							// Data for other maps
         public byte[] RadarMapData;
@@ -137,14 +248,14 @@ namespace FalconNet.Campaign
         public long CreatorIP;							// IP Address when started
         public long CreationTime;						// Time when started
         public long CreationRand;						// Random Number to pretty much guarantee we are unique to the universe
-        public long TE_VictoryPoints;					// TE Points required to win
-        public long TE_type;							// Type of tacitcal engagement
-        public long TE_number_teams;					// Number of teams
-        public long[] TE_number_aircraft = new long[8];				// Number of Aircraft per team
-        public long[] TE_number_f16s = new long[8];					// Number of F16s per team
-        public long TE_team;							// Number of teams
-        public long[] TE_team_pts = new long[8];						// Points per team
-        public long TE_flags;							// Various TE Flags
+        public int TE_VictoryPoints;					// TE Points required to win
+        public int TE_type;							// Type of tacitcal engagement
+        public int TE_number_teams;					// Number of teams
+        public int[] TE_number_aircraft = new int[8];				// Number of Aircraft per team
+        public int[] TE_number_f16s = new int[8];					// Number of F16s per team
+        public int TE_team;							// Number of teams
+        public int[] TE_team_pts = new int[8];						// Points per team
+        public int TE_flags;							// Various TE Flags
 
         //public byte[] team_flags = new byte[8];						// Flags
         //public byte[] team_colour = new byte[8];						// Colour
@@ -158,7 +269,50 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
 
         public CampaignClass()
-        { throw new NotImplementedException(); }
+        {
+            Flags = 0;
+            Processor = 1;
+            MissionEvaluator = null;
+            vuThread = null;
+            EndgameResult = 0;
+            //TODO StandardEventQueue = null;
+            //TODO PriorityEventQueue = null;
+            TheaterSizeX = 0;
+            TheaterSizeY = 0;
+            CampMapSize = SamMapSize = RadarMapSize = 0;
+            CampMapData = null;
+            SamMapData = null;
+            RadarMapData = null;
+            LastIndexNum = 0;
+            NumAvailSquadrons = 0;
+            //TODO CampaignSquadronData = null;
+            NumberOfValidTypes = 0;
+            ValidAircraftTypes = null;
+            BullseyeName = 0;
+            BullseyeX = 0;
+            BullseyeY = 0;
+            //TODO  CurrentGame.reset();
+            last_victory_time = 0;
+
+            CreatorIP = 0;
+            CreationTime = 0;
+            CreationRand = 0;
+
+#if USE_SH_POOLS
+    // Initialize our Smart Heap pools
+    ObjectiveClass::InitializeStorage();
+    BattalionClass::InitializeStorage();
+    BrigadeClass::InitializeStorage();
+    FlightClass::InitializeStorage();
+    SquadronClass::InitializeStorage();
+    PackageClass::InitializeStorage();
+    TaskForceClass::InitializeStorage();
+    runwayQueueStruct::InitializeStorage();
+    //LoadoutStruct::InitializeStorage();
+#endif
+            //TODO SimPersistantClass.InitPersistantDatabase();
+        }
+
         // public ~CampaignClass ();
         public void Reset()
         { throw new NotImplementedException(); }
@@ -343,7 +497,7 @@ namespace FalconNet.Campaign
             return (CreationRand);
         }
 
-        public void SetTEVictoryPoints(long points)
+        public void SetTEVictoryPoints(int points)
         {
             TE_VictoryPoints = points;
         }
@@ -379,6 +533,7 @@ namespace FalconNet.Campaign
         public int SaveData(FileStream fp)
         { throw new NotImplementedException(); }
 
+#if TODO
         public int Decode(ref VU_BYTE[] stream)
         { throw new NotImplementedException(); }
 
@@ -387,6 +542,7 @@ namespace FalconNet.Campaign
 
         public long SaveSize()
         { throw new NotImplementedException(); }
+#endif
 
         // The Campaign Event manipulation functions
         public CampUIEventElement GetRecentEventlist()
@@ -432,7 +588,7 @@ namespace FalconNet.Campaign
         public static CampaignClass TheCampaign;
 
         // Current data version
-        public static int gCampDataVersion;
+        public static int gCampDataVersion = 71;
     }
 
     // ======================
@@ -451,31 +607,28 @@ namespace FalconNet.Campaign
     {
         public const byte WP_HAVE_DEPTIME = 0x01;
         public const byte WP_HAVE_TARGET = 0x02;
-        private const int version = 71; //TODO fix that
+        //private const int version = 73; //TODO fix that CampaignClass.gCampDataVersion
         private const int FLAGS_WIDENED_AT_VERSION = 73;
+        private const int CAMP_NAME_SIZE = 40; // Size of name string arrays for scenario name and such
 
         public static void Encode(Stream stream, CampaignClass val)
         {
             throw new NotImplementedException();
         }
 
-        public static void Decode(Stream stream,ref CampaignClass rst)
+        public static void Decode(Stream stream, CampaignClass rst)
         {
-#if TODO
-            CampaignClass rst = new CampaignClass();
-            var expanded = buffer.ExpandLE();
-            if (expanded != null) Decode(expanded);
+            var expanded = stream.ExpandLE();
+            if (expanded != null)
             {
-                var curByte = 0;
-                var nullLoc = 0;
                 rst.CurrentTime = UInt32EncodingLE.Decode(expanded);
-                if (rst.CurrentTime == 0) 
+                if (rst.CurrentTime == 0)
                     rst.CurrentTime = 1;
-                if (version >= 48)
+                if (CampaignClass.gCampDataVersion >= 48)
                 {
                     rst.TE_StartTime = UInt32EncodingLE.Decode(expanded);
                     rst.TE_TimeLimit = UInt32EncodingLE.Decode(expanded);
-                    if (version >= 49)
+                    if (CampaignClass.gCampDataVersion >= 49)
                     {
                         rst.TE_VictoryPoints = Int32EncodingLE.Decode(expanded);
                     }
@@ -490,7 +643,7 @@ namespace FalconNet.Campaign
                     rst.TE_TimeLimit = rst.CurrentTime + (60 * 60 * 5 * 1000);
                     rst.TE_VictoryPoints = 0;
                 }
-                if (version >= 52)
+                if (CampaignClass.gCampDataVersion >= 52)
                 {
                     rst.TE_type = Int32EncodingLE.Decode(expanded);
                     rst.TE_number_teams = Int32EncodingLE.Decode(expanded);
@@ -514,22 +667,10 @@ namespace FalconNet.Campaign
 
                     rst.TE_flags = Int32EncodingLE.Decode(expanded);
 
-                    nullLoc = 0;
                     for (var i = 0; i < 8; i++)
                     {
                         var info = new TeamBasicInfo();
-                        info.teamFlag = bytes[curByte];
-                        curByte++;
-                        info.teamColor = bytes[curByte];
-                        curByte++;
-                        info.teamName = Encoding.ASCII.GetString(bytes, curByte, 20);
-                        curByte += 20;
-                        nullLoc = info.teamName.IndexOf('\0');
-                        if (nullLoc > -1) info.teamName = info.teamName.Substring(0, nullLoc);
-                        info.teamMotto = Encoding.ASCII.GetString(bytes, curByte, 200);
-                        curByte += 200;
-                        nullLoc = info.teamMotto.IndexOf('\0');
-                        if (nullLoc > -1) info.teamMotto = info.teamMotto.Substring(0, nullLoc);
+                        TeamBasicInfoEncodingLE.Decode(expanded, ref info);
                         rst.TeamBasicInfo[i] = info;
                     }
                 }
@@ -543,7 +684,7 @@ namespace FalconNet.Campaign
                     rst.TE_team_pts = new int[8];
                     rst.TE_flags = 0;
                 }
-                if (version >= 19)
+                if (CampaignClass.gCampDataVersion >= 19)
                 {
                     rst.lastMajorEvent = UInt32EncodingLE.Decode(expanded);
                 }
@@ -559,193 +700,113 @@ namespace FalconNet.Campaign
                 rst.Brief = Int16EncodingLE.Decode(expanded);
                 rst.TheaterSizeX = Int16EncodingLE.Decode(expanded);
                 rst.TheaterSizeY = Int16EncodingLE.Decode(expanded);
-                rst.CurrentDay = bytes[curByte];
-                curByte++;
-
-                rst.ActiveTeams = bytes[curByte];
-                curByte++;
-
-                rst.DayZero = bytes[curByte];
-                curByte++;
-
-                rst.EndgameResult = bytes[curByte];
-                curByte++;
-
-                rst.Situation = bytes[curByte];
-                curByte++;
-
-                rst.EnemyAirExp = bytes[curByte];
-                curByte++;
-
-                rst.EnemyADExp = bytes[curByte];
-                curByte++;
-
-                rst.BullseyeName = bytes[curByte];
-                curByte++;
+                rst.CurrentDay = (byte)expanded.ReadByte();
+                rst.ActiveTeams = (byte)expanded.ReadByte();
+                rst.DayZero = (byte)expanded.ReadByte();
+                rst.EndgameResult = (byte)expanded.ReadByte();
+                rst.Situation = (byte)expanded.ReadByte();
+                rst.EnemyAirExp = (byte)expanded.ReadByte();
+                rst.EnemyADExp = (byte)expanded.ReadByte();
+                rst.BullseyeName = (byte)expanded.ReadByte();
 
                 rst.BullseyeX = Int16EncodingLE.Decode(expanded);
                 rst.BullseyeY = Int16EncodingLE.Decode(expanded);
-                rst.TheaterName = Encoding.ASCII.GetString(bytes, curByte, 40);
-                curByte += 40;
-                nullLoc = rst.TheaterName.IndexOf('\0');
-                if (nullLoc > -1) rst.TheaterName = rst.TheaterName.Substring(0, nullLoc);
-
-                rst.Scenario = Encoding.ASCII.GetString(bytes, curByte, 40);
-                curByte += 40;
-                nullLoc = rst.Scenario.IndexOf('\0');
-                if (nullLoc > -1) rst.Scenario = rst.Scenario.Substring(0, nullLoc);
-
-                rst.SaveFile = Encoding.ASCII.GetString(bytes, curByte, 40);
-                curByte += 40;
-                nullLoc = rst.SaveFile.IndexOf('\0');
-                if (nullLoc > -1) rst.SaveFile = rst.SaveFile.Substring(0, nullLoc);
-
-                rst.UIName = Encoding.ASCII.GetString(bytes, curByte, 40);
-                curByte += 40;
-                nullLoc = rst.UIName.IndexOf('\0');
-                if (nullLoc > -1) rst.UIName = rst.UIName.Substring(0, nullLoc);
-
-                var squadronId = new VU_ID();
-                squadronId.num_ = UInt32EncodingLE.Decode(expanded);
-                curByte += 4;
-                squadronId.creator_ = UInt32EncodingLE.Decode(expanded);
-                curByte += 4;
-                rst.PlayerSquadronID = squadronId;
-
-                rst.NumRecentEventEntries = Int16EncodingLE.Decode(expanded);
-                curByte += 2;
-                if (rst.NumRecentEventEntries > 0)
+                rst.TheaterName = StringFixedASCIIEncoding.Decode(expanded, CAMP_NAME_SIZE);
+                rst.Scenario = StringFixedASCIIEncoding.Decode(expanded, CAMP_NAME_SIZE);
+                rst.SaveFile = StringFixedASCIIEncoding.Decode(expanded, CAMP_NAME_SIZE);
+                rst.UIName = StringFixedASCIIEncoding.Decode(expanded, CAMP_NAME_SIZE);
+                rst.PlayerSquadronID = new VU_ID();
+                VU_IDEncodingLE.Decode(expanded, rst.PlayerSquadronID);
+#if TODO
+                FalconLocalSession.SetPlayerSquadronID(rst.PlayerSquadronID);
+                // Load the recent event queues
+                DisposeEventLists();
+#endif
+                int NumRecentEventEntries = Int16EncodingLE.Decode(expanded);
+                EventNode[] RecentEventEntries;
+                if (NumRecentEventEntries > 0)
                 {
-                    rst.RecentEventEntries = new EventNode[NumRecentEventEntries];
-                    for (var i = 0; i < rst.NumRecentEventEntries; i++)
+                    RecentEventEntries = new EventNode[NumRecentEventEntries];
+                    for (var i = 0; i < NumRecentEventEntries; i++)
                     {
-                        var thisNode = new EventNode();
-                        thisNode.x = Int16EncodingLE.Decode(expanded);
-                        thisNode.y = Int16EncodingLE.Decode(expanded);
-                        thisNode.time = UInt32EncodingLE.Decode(expanded);
-
-                        thisNode.flags = bytes[curByte];
-                        curByte++;
-
-                        thisNode.Team = bytes[curByte];
-                        curByte++;
-
-                        curByte += 2; //align on int32 boundary
-                        //skip EventText pointer
-                        curByte += 4;
-                        //skip UiEventNode pointer
-                        curByte += 4;
-                        var eventTextSize = UInt16EncodingLE.Decode(expanded);
-                        var eventText = Encoding.ASCII.GetString(bytes, curByte, eventTextSize);
-                        curByte += eventTextSize;
-                        nullLoc = eventText.IndexOf('\0');
-                        if (nullLoc > -1) eventText = eventText.Substring(0, nullLoc);
-                        thisNode.eventText = eventText;
-                        RecentEventEntries[i] = thisNode;
+                        var thisEvent = new EventNode(); //TODO CampUIEventElement();
+                        EventNodeEncodingLE.Decode(expanded, ref thisEvent);
+                        RecentEventEntries[i] = thisEvent;
+#if TODO
+                        if (!StandardEventQueue)
+                        {
+                            StandardEventQueue = thisEvent;
+                            last = thisEvent;
+                        }
+                        else
+                        {
+                            last.next = thisEvent;
+                            last = thisEvent;
+                        }
+#endif
                     }
                 }
 
 
-                NumPriorityEventEntries = Int16EncodingLE.Decode(expanded);
-                curByte += 2;
+                int NumPriorityEventEntries = Int16EncodingLE.Decode(expanded);
+                EventNode[] PriorityEventEntries;
                 if (NumPriorityEventEntries > 0)
                 {
                     PriorityEventEntries = new EventNode[NumPriorityEventEntries];
                     for (var i = 0; i < NumPriorityEventEntries; i++)
                     {
-                        var thisNode = new EventNode();
-                        thisNode.x = Int16EncodingLE.Decode(expanded);
-                        thisNode.y = Int16EncodingLE.Decode(expanded);
-                        thisNode.time = UInt32EncodingLE.Decode(expanded);
-                        thisNode.flags = bytes[curByte];
-                        curByte++;
+                        var thisEvent = new EventNode();
+                        EventNodeEncodingLE.Decode(expanded, ref thisEvent);
+                        PriorityEventEntries[i] = thisEvent;
+#if TODO
+                        if (!PriorityEventQueue)
+                        {
+                            PriorityEventQueue = thisEvent;
+                            last = thisEvent;
+                        }
+                        else
+                        {
+                            if (last != null)
+                                last.next = thisEvent;
 
-                        thisNode.Team = bytes[curByte];
-                        curByte++;
-
-                        curByte += 2; //align on int32 boundary
-                        //skip EventText pointer
-                        curByte += 4;
-                        //skip UiEventNode pointer
-                        curByte += 4;
-
-                        var eventTextSize = UInt16EncodingLE.Decode(expanded);
-                        curByte += 2;
-                        var eventText = Encoding.ASCII.GetString(bytes, curByte, eventTextSize);
-                        curByte += eventTextSize;
-                        nullLoc = eventText.IndexOf('\0');
-                        if (nullLoc > -1) eventText = eventText.Substring(0, nullLoc);
-                        thisNode.eventText = eventText;
-                        PriorityEventEntries[i] = thisNode;
+                            last = thisEvent;
+                        }
+#endif
                     }
                 }
-                CampMapSize = Int16EncodingLE.Decode(expanded);
-                curByte += 2;
-                if (CampMapSize > 0)
-                {
-                    CampMap = new byte[CampMapSize];
-                    Array.Copy(bytes, CampMap, CampMapSize);
-                }
-                curByte += CampMapSize;
 
-                LastIndexNum = Int16EncodingLE.Decode(expanded);
-                NumAvailableSquadrons = Int16EncodingLE.Decode(expanded);
+                rst.CampMapSize = Int16EncodingLE.Decode(expanded);
+                if (rst.CampMapSize > 0)
+                {
+                    rst.CampMapData = expanded.ReadBytes(rst.CampMapSize);
+                }
+                rst.LastIndexNum = Int16EncodingLE.Decode(expanded);
+
+                int NumAvailableSquadrons = Int16EncodingLE.Decode(expanded);
                 if (NumAvailableSquadrons > 0)
                 {
-                    SquadInfo = new SquadInfo[NumAvailableSquadrons];
+                    SquadInfo[] squads = new SquadInfo[NumAvailableSquadrons];
                     for (var i = 0; i < NumAvailableSquadrons; i++)
                     {
                         var thisSquadInfo = new SquadInfo();
-                        thisSquadInfo.x = SingleEncodingLE.Decode(expanded);
-                        thisSquadInfo.y = SingleEncodingLE.Decode(expanded);
-
-                        thisSquadInfo.id = VU_IDEncodingLE.Decode(expanded);
-                        thisSquadInfo.descriptionIndex = Int16EncodingLE.Decode(expanded);
-                        thisSquadInfo.nameId = Int16EncodingLE.Decode(expanded);
-                        thisSquadInfo.airbaseIcon = Int16EncodingLE.Decode(expanded);
-                        thisSquadInfo.squadronPath = Int16EncodingLE.Decode(expanded);
-                        thisSquadInfo.specialty = bytes[curByte];
-                        curByte++;
-
-                        thisSquadInfo.currentStrength = bytes[curByte];
-                        curByte++;
-
-                        thisSquadInfo.country = bytes[curByte];
-                        curByte++;
-
-                        thisSquadInfo.airbaseName = Encoding.ASCII.GetString(bytes, curByte, 40);
-                        nullLoc = thisSquadInfo.airbaseName.IndexOf('\0');
-                        if (nullLoc > -1) thisSquadInfo.airbaseName = thisSquadInfo.airbaseName.Substring(0, nullLoc);
-                        curByte += 40;
-
-                        if (version < 42)
-                        {
-                            curByte += 40;
-                            //skip additional string length for squad name in older versions that had 80 bytes
-                        }
-
-                        curByte++; //align on int32 boundary
-                        rst.SquadInfo[i] = thisSquadInfo;
+                        SquadInfoEncodingLE.Decode(expanded, ref thisSquadInfo);
+                        squads[i] = thisSquadInfo;
                     }
                 }
-                if (version >= 31)
+
+                if (CampaignClass.gCampDataVersion >= 31)
                 {
-                    rst.Tempo = bytes[curByte];
-                    curByte++;
+                    rst.Tempo = (byte)expanded.ReadByte();
                 }
-                if (version >= 43)
+                if (CampaignClass.gCampDataVersion >= 43)
                 {
                     rst.CreatorIP = Int32EncodingLE.Decode(expanded);
                     rst.CreationTime = Int32EncodingLE.Decode(expanded);
                     rst.CreationRand = Int32EncodingLE.Decode(expanded);
                 }
-
             }
-            return rst;
-#endif
-            throw new NotImplementedException();
         }
- 
+
         public static int Size
         {
             get

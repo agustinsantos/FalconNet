@@ -4,16 +4,19 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
 using VU_ID_NUMBER = System.UInt64;
+using VU_TIME = System.UInt64;
 using Team = System.SByte;
 using GridIndex = System.Int16;
 using Control = System.Byte;
 using System.Diagnostics;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
+using log4net;
+//using Unit = FalconNet.Campaign.UnitClass;
 
 namespace FalconNet.Campaign
 {
-    
+
 
 
     public static class CampbaseStatic
@@ -63,37 +66,193 @@ public static  VU_ID_NUMBER lastVolitileId;
         // Global functions
         // ===========================
 
-        public static CampBaseClass GetFirstEntity(F4LIt list)
-        { throw new NotImplementedException(); }
+        public static CampBaseClass GetFirstEntity(VuListIterator list)
+        {
+            VuEntity e;
 
-        public static CampBaseClass GetNextEntity(F4LIt list)
-        { throw new NotImplementedException(); }
+            e = list.GetFirst();
+
+            while (e != null)
+            {
+                //if (e.VuState() != VU_MEM_DELETED)
+                if (GetEntityClass(e) == Classes.CLASS_UNIT || GetEntityClass(e) == Classes.CLASS_OBJECTIVE)
+                {
+                    return (CampBaseClass)e;
+                }
+
+                e = list.GetNext();
+            }
+
+            return null;
+        }
+
+        public static CampBaseClass GetNextEntity(VuListIterator list)
+        {
+            VuEntity e;
+
+            e = list.GetNext();
+
+            while (e != null)
+            {
+                //if (e.VuState() != VU_MEM_DELETED)
+                if (GetEntityClass(e) == Classes.CLASS_UNIT || GetEntityClass(e) == Classes.CLASS_OBJECTIVE)
+                {
+                    return (CampBaseClass)e;
+                }
+
+                e = list.GetNext();
+            }
+
+            return null;
+        }
 
         public static int Parent(CampBaseClass e)
         { throw new NotImplementedException(); }
 
-        public static int Real(int type)
-        { throw new NotImplementedException(); }
+        public static int Real(ClassTypes type)
+        {
+            if (type == ClassTypes.TYPE_BATTALION || type == ClassTypes.TYPE_FLIGHT || type == ClassTypes.TYPE_TASKFORCE)
+                return 1;
 
-        public static short GetEntityClass(VuEntity h)
-        { throw new NotImplementedException(); }
+            return 0;
+        }
 
-        public static short GetEntityDomain(VuEntity h)
-        { throw new NotImplementedException(); }
+        public static Classes GetEntityClass(VuEntity e)
+        {
+            if (e == null)
+                return 0;
 
-        public static Unit GetEntityUnit(VuEntity h)
-        { throw new NotImplementedException(); }
+            return (Classes)(e.EntityType()).classInfo_[(int)Vu_CLASS.VU_CLASS];
+        }
+
+        public static short GetEntityDomain(VuEntity e)
+        {
+            if (e == null)
+                return 0;
+
+            return (e.EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
+        }
+
+        public static CampBaseClass /* TODO was Unit */ GetEntityUnit(VuEntity e)
+        {
+            if (GetEntityClass(e) == Classes.CLASS_UNIT)
+                return (CampBaseClass /* TODO was Unit */ )e;
+
+            return null;
+        }
 
 #if TODO
         public static Objective GetEntityObjective(VuEntity h)
-        { throw new NotImplementedException(); }
+        {
+    if (GetEntityClass(e) == CLASS_OBJECTIVE)
+        return (Objective)e;
+
+    return null;
+}
 #endif
+        // My global for last assigned id
+        static short gLastId = 32767;
+
         public static short FindUniqueID()
-        { throw new NotImplementedException(); }
+        {
+            CampBaseClass e;
+            short id, eid;
+
+            if (gLastId < Camplib.MAX_CAMP_ENTITIES - 1)
+            {
+                // simple algorythm to find a unique id
+                gLastId++;
+                id = gLastId;
+                return id;
+            }
+            else
+            {
+                // more complex algorythm if we're out of space
+                short highest = 0;
+                for (int i = 0; i < Camplib.MAX_CAMP_ENTITIES; i++)
+                    CampSearch[i] = 0;
+
+                VuListIterator myit = new VuListIterator(CampListStatic.AllCampList);
+                e = (CampBaseClass)myit.GetFirst();
+
+                while (e != null)
+                {
+                    eid = e.GetCampID();
+                    Debug.Assert(eid < Camplib.MAX_CAMP_ENTITIES);
+                    CampSearch[eid] = 1;
+
+                    if (e.GetCampID() > highest)
+                    {
+                        gLastId = e.GetCampID();
+                        highest = gLastId;
+                    }
+
+                    e = (CampBaseClass)myit.GetNext();
+                }
+
+
+                for (id = 1; id < Camplib.MAX_CAMP_ENTITIES; id++)
+                {
+                    if (CampSearch[id] == 0)
+                        return id;
+                }
+
+                log.Error("Error! Exceeded max entity count!\n");
+            }
+
+            return 0;
+
+        }
+        static int tod = 0;
 
         public static int GetVisualDetectionRange(int mt)
-        { throw new NotImplementedException(); }
-    }
+        {
+#if TODO
+		            int dr;
 
-  
+            dr = CampaignStatic.VisualDetectionRange[mt];
+
+            //Cobra Expensive TOD check, we will limit how often it gets checked
+            VU_TIME timer = 0;
+
+
+            if ((timer == 0) || (SimLibStatic.SimLibElapsedTime > timer))
+            {
+                tod = TimeOfDayGeneral();
+                timer = SimLibStatic.SimLibElapsedTime + 900000;//15 minutes
+            }
+
+            if (tod == 1)
+            {
+                dr = (dr + 3) / 4;
+            }
+            else if (tod == 2)
+            {
+                dr = (dr + 1) / 2;
+            }
+
+            return dr;
+
+            //end cobra
+            //Cobra below is the old code
+            /*switch (TimeOfDayGeneral()) // Time of day modifiers
+             {
+             case TOD_NIGHT:
+             dr = (dr+3)/4;
+             break;
+             case TOD_DAWNDUSK:
+             dr = (dr+1)/2;
+             break;
+             default:
+             break;
+             }*/
+            //return dr;
+ 
+#endif
+            throw new NotImplementedException();
+        }
+
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    }
 }

@@ -158,6 +158,11 @@ namespace FalconNet.FalcLib
             flyState = FLYSTATE.FLYSTATE_IN_UI;
         }
 
+        public virtual VU_ERRCODE InsertionCallback()
+        {
+            throw new NotImplementedException();
+        }
+        //TODO public virtual ~FalconSessionEntity();
 
 #if TODO
 		public FalconSessionEntity (VU_BYTE[] stream)
@@ -169,12 +174,6 @@ namespace FalconNet.FalcLib
 		{
 			throw new NotImplementedException ();
 		}
-#endif
-        public virtual VU_ERRCODE InsertionCallback()
-        {
-            throw new NotImplementedException();
-        }
-        //TODO public virtual ~FalconSessionEntity();
 
         // encoders
         public virtual int SaveSize()
@@ -191,7 +190,7 @@ namespace FalconNet.FalcLib
         {
             throw new NotImplementedException();
         }
-
+#endif
         public void DoFullUpdate()
         {
             throw new NotImplementedException();
@@ -307,7 +306,7 @@ namespace FalconNet.FalcLib
 
         public FalconGameEntity GetGame()
         {
-            return (FalconGameEntity)game_;
+            return (FalconGameEntity)base.Game();
         }
 
         public byte GetAssignedAircraftNum()
@@ -472,7 +471,7 @@ namespace FalconNet.FalcLib
 
         // event Handlers
         //		virtual VU_ERRCODE Handle(VuEvent *event);
-        public virtual VU_ERRCODE Handle(VuFullUpdateEvent evnt)
+        public override VU_ERRCODE Handle(VuFullUpdateEvent evnt)
         {
             throw new NotImplementedException();
         }
@@ -482,46 +481,31 @@ namespace FalconNet.FalcLib
         // Some conversion equivalencies between vuLocalSession and FalconLocalSession
         public static FalconSessionEntity virtualFalconLocalSession()
         {
-#if TODO
-			return ((FalconSessionEntity)vuLocalSessionEntity);
-#endif
-            throw new NotImplementedException();
+            return ((FalconSessionEntity)VUSTATIC.vuLocalSessionEntity);
         }
 
         public static object FalconLocalSessionId()
         {
-#if TODO
-			return vuLocalSession;
-#endif
-            throw new NotImplementedException();
+            return VUSTATIC.vuLocalSession;
         }
 
-        public static FalconSessionEntity FalconLocalGame
+        public static FalconGameEntity FalconLocalGame
         {
             // #define FalconLocalGame (((FalconSessionEntity*)vuLocalSessionEntity).GetGame())
             get
             {
-#if TODO
-			return (((FalconSessionEntity)vuLocalSessionEntity).GetGame());
-#endif
-                throw new NotImplementedException();
+                return (((FalconSessionEntity)VUSTATIC.vuLocalSessionEntity).GetGame());
             }
         }
 
         public static object VuLocalGame()
         {
-#if TODO
-			return (vuLocalSessionEntity.Game());
-#endif
-            throw new NotImplementedException();
+            return (VUSTATIC.vuLocalSessionEntity.Game());
         }
 
-        public static object FalconLocalGameId()
+        public static VU_ID FalconLocalGameId()
         {
-#if TODO
-			return (vuLocalSessionEntity.GameId());
-#endif
-            throw new NotImplementedException();
+            return VUSTATIC.vuLocalSessionEntity.GameId();
         }
 
         //TODO THis function is not declared in the .h file ??

@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace FalconNet.VU
 {
     public class VuFullGridIterator : VuRBIterator
@@ -18,7 +19,8 @@ namespace FalconNet.VU
         //       is intended, but some compilers will flag this as a warning
         public new VuEntity GetFirst()
         {
-            if (collection_ != null)
+#if TODO
+		            if (collection_ != null)
             {
                 currow_ = 0;
                 curlink_ = VuTailNode.vuTailNode;
@@ -37,12 +39,15 @@ namespace FalconNet.VU
                 return GetNext();
             }
 
-            return null;
+            return null;  
+#endif
+            throw new NotImplementedException();
         }
 
         public new VuEntity GetNext()
         {
-            while ((curnode_ == null) && (++currow_ < ((VuGridTree)collection_).rowcount_))
+#if TODO
+		            while ((curnode_ == null) && (++currow_ < ((VuGridTree)collection_).rowcount_))
             {
                 curRB_++;
                 curnode_ = table_[curRB_].root_;
@@ -79,7 +84,9 @@ namespace FalconNet.VU
                 curlink_ = curnode_.head_;
             }
 
-            return curlink_.entity_;
+            return curlink_.entity_;  
+#endif
+            throw new NotImplementedException();
         }
 
         public new VuEntity GetFirst(VuFilter filter)

@@ -956,8 +956,9 @@ namespace FalconNet.FalcLib
                 throw new ApplicationException("Failed to load Rocket data");	// added by M.N.
             if (!LoadDirtyData(filename))
                 throw new ApplicationException("Failed to load Dirty data priorities"); // added by M.N.
-#if TODO         
+#if TODO       
             LoadMissionData();
+            
             LoadVisIdMap();
             LoadRackTables();
             RDLoadRackData();

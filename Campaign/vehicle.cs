@@ -11,8 +11,10 @@ namespace FalconNet.Campaign
     // ===================
     // Flags
     // ===================
+    [Flags]
     public enum VEH_FLAGS
     {
+        VEH_NOTHING = 0,
         // Aircraft special capibilities and service types
         VEH_AIRFORCE = 0x01,
         VEH_NAVY = 0x02,

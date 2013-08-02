@@ -1,4 +1,5 @@
 ﻿using FalconNet.Common.Encoding;
+using System;
 using System.IO;
 using VU_BOOL = System.Boolean;
 using VU_BYTE = System.Byte;
@@ -159,7 +160,10 @@ namespace FalconNet.VU
                                     //   VuxRetireEntity, leaving ultimate cleanup up to the app
                                     VuEntity.VuReferenceEntity(Entity());
                                     VUSTATIC.vuDatabase.Remove(Entity());
-                                    VUSTATIC.vuAntiDB.Remove(Entity());
+#if TODO
+		                                    VUSTATIC.vuAntiDB.Remove(Entity());  
+#endif
+                                    throw new NotImplementedException();
                                 }
                                 VUSTATIC.VuxRetireEntity(Entity());
                                 SetEntity(null);
@@ -180,7 +184,11 @@ namespace FalconNet.VU
 #if NOTHING
       vuDatabase.Insert(Entity());
 #else
-                    VUSTATIC.vuDatabase.SilentInsert(Entity());	 //me123 to silent otherwise this will
+#if TODO
+		                    VUSTATIC.vuDatabase.SilentInsert(Entity());	 //me123 to silent otherwise this will
+ 
+	#endif
+            throw new NotImplementedException();
 #endif
 
                     return VU_ERRCODE.VU_SUCCESS;

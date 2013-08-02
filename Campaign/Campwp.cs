@@ -22,7 +22,7 @@ namespace FalconNet.Campaign
 
 
 
-        public const int WP_LAST = 50;
+       // public const int WP_LAST = 50;
 
         
 

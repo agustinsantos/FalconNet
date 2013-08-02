@@ -16,12 +16,12 @@ namespace FalconNet.VU
     [Flags]
     public enum VU_MEM_STATE : byte
     {
-        VU_MEM_CREATED = 0x01,
-        VU_MEM_ACTIVE = 0x02,
-        VU_MEM_SUSPENDED = 0x03,       // lives only in AntiDatabase
-        VU_MEM_PENDING_DELETE = 0x04,
-        VU_MEM_INACTIVE = 0x05,
-        VU_MEM_DELETED = 0xdd
+        VU_MEM_CREATED = 0x01, ///< entity has been created (constructor called)
+        VU_MEM_TO_BE_INSERTED = 0x02, ///< entity was added to birth list, will be inserted soon
+        VU_MEM_ACTIVE = 0x03, ///< entity inserted into vuDB
+        VU_MEM_INACTIVE = 0x04, ///< entity marked for collection
+        VU_MEM_REMOVED = 0x05, ///< entity garbage collected or purged from collection
+        VU_MEM_DELETED = 0xDD  ///< happens just before entity deletion by unreferencing
     }
 
     public class VuEntityType
@@ -49,6 +49,7 @@ namespace FalconNet.VU
         public bool persistent_;
     }
 
+
     public struct VuFlagBits
     {
         public bool private_;//: 1;	// 1 -. not public
@@ -57,7 +58,8 @@ namespace FalconNet.VU
         public bool collidable_;//: 1;	// 1 -. put in auto collision table
         public bool global_;//: 1;	// 1 -. visible to all groups
         public bool persistent_;//: 1;	// 1 -. keep ent local across group joins
-        public uint pad_;//: 10;	// unused
+        public VU_SEND_TYPE sendCreate_;//: 2;  // 0 --> dont send, 1 send, 2 send immediately (oob)
+        public uint pad_;//: 8;	// unused
 
 
         public static explicit operator VuFlagBits(ushort bits)
@@ -194,6 +196,14 @@ namespace FalconNet.VU
         {
             get { return SingleEncodingLE.Size * 6; }
         }
+    }
+
+    /** action to take for a created local unit inserted into DB */
+    public enum VU_SEND_TYPE
+    {
+        VU_SC_DONT_SEND = 0, ///< dont send creation, since each session reads its own from files (non volatiles)
+        VU_SC_SEND = 1, ///< send creation, reliable but no hurry
+        VU_SC_SEND_OOB = 2  ///< send creation, hurry (OOB)
     }
 
     public class VuEntity
@@ -418,7 +428,15 @@ namespace FalconNet.VU
         public bool IsLocal() { return (bool)((VUSTATIC.vuLocalSession == OwnerId()) ? true : false); }
         public VU_ID Association() { return share_.assoc_; }
 
-
+        /** if true, entity is sent immediately (OOB) to others upon creation */
+        public VU_SEND_TYPE SendCreate()
+        {
+            return share_.flags_.sendCreate_;
+        }
+        public void SetSendCreate(VU_SEND_TYPE sc)
+        {
+            share_.flags_.sendCreate_ = sc;
+        }
         public BIG_SCALAR XPos() { return pos_.x_; }
         public BIG_SCALAR YPos() { return pos_.y_; }
         public BIG_SCALAR ZPos() { return pos_.z_; }
@@ -671,7 +689,9 @@ namespace FalconNet.VU
                 vuAssignmentId = vuLowWrapNumber; // cover wrap
             share_.id_.num_ = vuAssignmentId++;
 
-            while (VUSTATIC.vuDatabase.Find(Id()) != null || VUSTATIC.vuAntiDB.Find(Id()) != null || Id() == other.Id())
+            while (VUSTATIC.vuDatabase.Find(Id()) != null ||
+                //TODO VUSTATIC.vuAntiDB.Find(Id()) != null || 
+                Id() == other.Id())
                 share_.id_.num_ = vuAssignmentId++;
 
             SetVuState(VU_MEM_STATE.VU_MEM_ACTIVE);
@@ -728,9 +748,9 @@ namespace FalconNet.VU
             return (VU_ID_NUMBER)rand.NextDouble() * UInt64.MaxValue;
         }
 
-        protected internal ShareData share_;
-        internal protected PositionData pos_;
-        internal OrientationData orient_;
+        public ShareData share_;
+        public PositionData pos_;
+        public OrientationData orient_;
 
         // local data
         internal ushort refcount_;	// entity reference count
@@ -849,6 +869,53 @@ namespace FalconNet.VU
             }
             };
 
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return this.share_.id_ == ((VuEntity)obj).share_.id_;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return this.share_.id_.GetHashCode();
+        }
+        public static bool operator ==(VuEntity lhs, VuEntity rhs)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(lhs, rhs))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)lhs == null) || ((object)rhs == null))
+            {
+                return false;
+            }
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(VuEntity lhs, VuEntity rhs)
+        {
+            return !(lhs == rhs); ;
+        }
+        public override string ToString()
+        {
+            return String.Format("VuEntity({0}, Type={1})", this.share_.id_, this.share_.entityType_);
+        }
     }
 
     public static class VuEntityEncodingLE
@@ -868,7 +935,7 @@ namespace FalconNet.VU
         }
 
 
-        public static void Decode(Stream stream, ref VuEntity rst)
+        public static void Decode(Stream stream, VuEntity rst)
         {
             rst.refcount_ = 0;
             //driver_ = 0;
@@ -876,9 +943,9 @@ namespace FalconNet.VU
             rst.share_.flags_ = (VuFlagBits)UInt16EncodingLE.Decode(stream);
             rst.share_.id_.creator_ = new VU_SESSION_ID(UInt16EncodingLE.Decode(stream));
             rst.share_.id_.num_ = UInt64EncodingLE.Decode(stream);
-            rst.share_.ownerId_.creator_ = new VU_SESSION_ID(UInt64EncodingLE.Decode(stream));
+            rst.share_.ownerId_.creator_ = new VU_SESSION_ID(UInt32EncodingLE.Decode(stream));
             rst.share_.ownerId_.num_ = UInt64EncodingLE.Decode(stream);
-            rst.share_.assoc_.creator_ = new VU_SESSION_ID(UInt64EncodingLE.Decode(stream));
+            rst.share_.assoc_.creator_ = new VU_SESSION_ID(UInt32EncodingLE.Decode(stream));
             rst.share_.assoc_.num_ = UInt64EncodingLE.Decode(stream);
             PositionDataEncodingLE.Decode(stream, ref rst.pos_);
             OrientationDataEncodingLE.Decode(stream, ref rst.orient_);

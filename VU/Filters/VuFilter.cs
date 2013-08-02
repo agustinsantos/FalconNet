@@ -5,6 +5,7 @@ using VU_TIME = System.UInt64;
 using SM_SCALAR = System.Single;
 using BIG_SCALAR = System.Single;
 using VU_DAMAGE = System.UInt64;
+using VU_KEY = System.UInt64;
 using System.IO;
 
 namespace FalconNet.VU
@@ -19,7 +20,25 @@ namespace FalconNet.VU
         /// <param name="ent1"></param>
         /// <param name="ent2"></param>
         /// <returns>< 0 --> ent1  < ent2, == 0 --> ent1 == ent2, > 0 --> ent1  > ent2</returns>
-        public abstract int Compare(VuEntity ent1, VuEntity ent2);
+        public virtual int Compare(VuEntity ent1, VuEntity ent2)
+        {
+            if (ent1 == null || ent2 == null)
+                return 0;
+
+            VU_ID key1 = ent1.Id();
+            VU_ID key2 = ent2.Id();
+
+            if (key1 > key2)
+            {
+                return 1;
+            }
+            else if (key1 < key2)
+            {
+                return -1;
+            }
+
+            return 0;
+        }
 
 
         /// <summary>

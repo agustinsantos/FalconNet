@@ -6,7 +6,7 @@ using System.Text;
 namespace FalconNet.FalcLib
 {
     // Target Type
-    public enum MissionTargetTypeEnum
+    public enum MissionTargetTypeEnum:byte
     {
         AMIS_TAR_NONE = 0,
         AMIS_TAR_OBJECTIVE = 1,

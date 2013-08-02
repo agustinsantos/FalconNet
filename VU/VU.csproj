@@ -36,6 +36,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\VuCollection.cs" />
+    <Compile Include="Collections\VuCollectionManager.cs" />
+    <Compile Include="Collections\VuDatabase.cs" />
+    <Compile Include="Collections\VuGridTree.cs" />
+    <Compile Include="Collections\VuHashTablecs.cs" />
+    <Compile Include="Collections\VuLinkedList.cs" />
+    <Compile Include="Collections\VuOrderedList.cs" />
+    <Compile Include="Collections\VuRedBlackTree.cs" />
     <Compile Include="F4CriticalSection.cs" />
     <Compile Include="IdNamespace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

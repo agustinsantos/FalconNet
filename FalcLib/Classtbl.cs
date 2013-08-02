@@ -33,6 +33,7 @@ namespace FalconNet.FalcLib
     /* Class Class table Entries */
     public enum Classes
     {
+        CLASS_NOTHING = 0,
         CLASS_ANIMAL = 1,
         CLASS_FEATURE = 2,
         CLASS_MANAGER = 3,

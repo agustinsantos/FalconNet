@@ -4,6 +4,8 @@ using FalconNet.VU;
 using VU_KEY = System.UInt64;
 using BIG_SCALAR = System.Single;
 using FalconNet.Common;
+using F4PFList=FalconNet.FalcLib.FalconPrivateList ;
+using F4POList=FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {
@@ -261,9 +263,11 @@ namespace FalconNet.Campaign
         public byte real;					// Set if real only
 
 
-        public UnitProxFilter(int r) : base()
+        public UnitProxFilter(int r)
+            : base()
         { throw new NotImplementedException(); }
-        public UnitProxFilter(UnitProxFilter other, int r): base(other)
+        public UnitProxFilter(UnitProxFilter other, int r)
+            : base(other)
         { throw new NotImplementedException(); }
         // TODO public virtual ~UnitProxFilter()					{}
 
@@ -405,13 +409,13 @@ namespace FalconNet.Campaign
         // Registered Lists
         // ==============================
 
-        public static VuFilteredList AllUnitList;		// All units
-        public static VuFilteredList AllAirList;		// All air units
-        public static VuFilteredList AllRealList;		// All ground units
-        public static VuFilteredList AllParentList;	// All parent units
-        public static VuFilteredList AllObjList;		// All objectives
-        public static VuFilteredList AllCampList;		// All campaign entities
-        public static VuFilteredList InactiveList;	// Inactive units (reinforcements)
+        public static VuLinkedList AllUnitList;		// All units
+        public static VuLinkedList AllAirList;		// All air units
+        public static VuLinkedList AllRealList;		// All ground units
+        public static VuLinkedList AllParentList;	// All parent units
+        public static VuLinkedList AllObjList;		// All objectives
+        public static VuLinkedList AllCampList;		// All campaign entities
+        public static VuLinkedList InactiveList;	// Inactive units (reinforcements)
 
         // ==============================
         // Maintained Lists
@@ -484,6 +488,32 @@ namespace FalconNet.Campaign
         public static void StandardRebuild()
         { throw new NotImplementedException(); }
 
+        // All versions of campaign use these lists
+        private static void InitBaseLists()
+        {
+            //#if VU_ALL_FILTERED
+            AllCampList = new VuLinkedList(CampFilter);
+            //#else
+            //    AllCampList = new VuFilteredList(&CampFilter);
+            //#endif
+            AllCampList.Register();
+            //deaggregateList = new FalconPrivateList (&CampFilter);
+            //DeaggregateList->Init();
+            /* sfr: these are initialized with campaign now
+            for (int loop = 0; loop < MAX_DIRTY_BUCKETS; loop ++){
+             // sfr: new dirty buckets
+             //DirtyBucket[loop] = new TailInsertList (&AllOpaqueFilter);
+             //DirtyBucket[loop]->Init();
+             campDirtyBuckets[loop] = new list<FalconEntityBin>;
+             campDirtyMutexes[loop] = F4CreateCriticalSection("camp dirty mutex");
+             simDirtyBuckets[loop] = new list<FalconEntityBin>;
+             simDirtyMutexes[loop] = F4CreateCriticalSection("sim dirty mutex");
+            }
+            */
+            EmitterList = new FalconPrivateList(CampFilter);
+            EmitterList.Register();
 
+            throw new NotImplementedException();
+        }
     }
 }

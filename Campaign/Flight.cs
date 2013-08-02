@@ -10,6 +10,9 @@ using VU_BYTE=System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
+
 //using FalconNet.Sim;
 
 namespace FalconNet.Campaign

@@ -10,10 +10,12 @@ namespace FalconNet.VU
         public VuLineIterator(VuGridTree coll, VuEntity origin, VuEntity destination, BIG_SCALAR radius)
             : base(coll)
         {
+ #if TODO    
             curRB_ = null;
             key1min_ = 0;
             key1max_ = UInt64.MaxValue;
-            key2min_ = 0;
+
+		            key2min_ = 0;
             key2max_ = UInt64.MaxValue;
             key1cur_ = 0;
 
@@ -53,7 +55,9 @@ namespace FalconNet.VU
                 {
                     key1max_ = gt.top_;
                 }
-            }
+            }  
+#endif
+            throw new NotImplementedException();
         }
 
         public VuLineIterator(VuGridTree coll,
@@ -61,7 +65,8 @@ namespace FalconNet.VU
               BIG_SCALAR xPos1, BIG_SCALAR yPos1, BIG_SCALAR radius)
             : base(coll)
         {
-            curRB_ = null;
+#if TODO
+		          curRB_ = null;
             key1min_ = 0;
             key1max_ = UInt64.MaxValue;
             key2min_ = 0;
@@ -103,15 +108,19 @@ namespace FalconNet.VU
                 {
                     key1max_ = gt.top_;
                 }
-            }
+            }  
+#endif
+            throw new NotImplementedException();
         }
+
         //TODO public virtual ~VuLineIterator();
 
         // note: these implementations HIDE the RBIterator methods, which
         //       is intended, but some compilers will flag this as a warning
         public new VuEntity GetFirst()
         {
-            if (collection_ != null)
+#if TODO
+		            if (collection_ != null)
             {
                 curlink_ = VuTailNode.vuTailNode;
                 key1cur_ = key1min_;
@@ -132,12 +141,15 @@ namespace FalconNet.VU
                 return GetNext();
             }
 
-            return null;
+            return null;  
+#endif
+            throw new NotImplementedException();
         }
 
         public new VuEntity GetNext()
         {
-            while (curnode_ == null && key1cur_ < key1max_)
+#if TODO
+		            while (curnode_ == null && key1cur_ < key1max_)
             {
                 // danm_TBD: what about non-wrapping edges?
                 key1cur_ += ((VuGridTree)collection_).rowheight_;
@@ -178,24 +190,30 @@ namespace FalconNet.VU
                 curlink_ = curnode_.head_;
             }
 
-            return curlink_.entity_;
+            return curlink_.entity_;  
+#endif
+            throw new NotImplementedException();
         }
 
         public new VuEntity GetFirst(VuFilter filter)
         {
-            VuEntity retval = GetFirst();
+#if TODO
+		            VuEntity retval = GetFirst();
 
             if (retval == null || filter.Test(retval))
             {
                 return retval;
             }
 
-            return GetNext(filter);
+            return GetNext(filter);  
+#endif
+            throw new NotImplementedException();
         }
 
         public new VuEntity GetNext(VuFilter filter)
         {
-            VuEntity retval = null;
+#if TODO
+		    VuEntity retval = null;
 
             while ((retval = GetNext()) != null)
             {
@@ -205,7 +223,9 @@ namespace FalconNet.VU
                 }
             }
 
-            return retval;
+            return retval;  
+#endif
+            throw new NotImplementedException();
         }
 
         protected VuRedBlackTree curRB_;

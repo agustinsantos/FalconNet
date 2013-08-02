@@ -6,7 +6,7 @@ namespace FalconNet.VU
 
     public class VuTypeFilter : VuFilter
     {
-        public VuTypeFilter(VuEntityType type)
+        public VuTypeFilter(ushort type)
             : base()
         {
             type_ = type;
@@ -15,12 +15,12 @@ namespace FalconNet.VU
 
         public override VU_BOOL Test(VuEntity ent)
         {
-            return ent.EntityType().Equals(type_) ? true : false;
+            return ent.Type().Equals(type_) ? true : false;
         }
 
         public override VU_BOOL RemoveTest(VuEntity ent)
         {
-            return ent.EntityType().Equals(type_) ? true : false;
+            return ent.Type().Equals(type_) ? true : false;
         }
 
         public override int Compare(VuEntity ent1, VuEntity ent2)
@@ -41,6 +41,6 @@ namespace FalconNet.VU
         }
 
         // DATA
-        protected VuEntityType type_;
+        protected ushort type_;
     }
 }

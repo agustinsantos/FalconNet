@@ -1,4 +1,7 @@
+using FalconNet.Common.Encoding;
+using FalconNet.F4Common;
 using System;
+using System.IO;
 
 namespace FalconNet.Campaign
 {
@@ -20,6 +23,12 @@ namespace FalconNet.Campaign
 
         public const int NO_PILOT = 255;						// No pilot is assigned
 
+        public const int NUM_CALLSIGNS = 160;
+        public const int NUM_PILOTS = 686;
+        public const int FIRST_PILOT_ID = 2300;
+        public const int FIRST_CALLSIGN_ID = 2000;
+
+
         // ================
         // Data
         // ================
@@ -34,51 +43,90 @@ namespace FalconNet.Campaign
         // ================
         // functions
         // ================
-        protected static void Decode(byte[] bytes, int version)
+        public static bool LoadPilotInfo(Stream stream, int version)
         {
-            if (version < 60)
+            if (CampaignClass.gCampDataVersion < 60)
             {
-                return;
+                return false;
             }
-            var offset = 0;
-            NumPilots = BitConverter.ToInt16(bytes, offset);
-            offset += 2;
-            PilotInfo = new PilotInfoClass[NumPilots];
-            for (var j = 0; j < PilotInfo.Length; j++)
-            {
-                var thisPilot = new PilotInfoClass();
-                thisPilot.usage = BitConverter.ToInt16(bytes, offset);
-                offset += 2;
-                thisPilot.voice_id = bytes[offset];
-                offset++;
-                thisPilot.photo_id = bytes[offset];
-                offset++;
-            }
-
-            NumCallsigns = BitConverter.ToInt16(bytes, offset);
-            offset += 2;
-            CallsignData = new byte[NumCallsigns];
-            for (var j = 0; j < NumCallsigns; j++)
-            {
-                CallsignData[j] = bytes[offset];
-                offset++;
-            }
-        }
-
-
-        public static bool LoadPilotInfo(byte[] bytes, int version)
-        {
-            Decode(bytes, version);
+            PilotStaticEncodingLE.Decode(stream);
             return true;
         }
 
         public static void NewPilotInfo()
         {
-            throw new NotImplementedException();
+            NumPilots = NUM_PILOTS;
+            PilotInfo = new PilotInfoClass[NumPilots];
+
+            for (int i = 0; i < NumPilots; i++)
+                PilotInfo[i].ResetStats();
+
+            // Some hard coded values (Because I'm vain)
+            // Col. Klemmick
+            PilotInfo[1].voice_id = 1;
+            PilotInfo[1].photo_id = 55;
+            // Col. Bonanni
+            PilotInfo[2].voice_id = 2;
+            PilotInfo[2].photo_id = 102;
+            // Col. Reiner
+            PilotInfo[3].voice_id = 3;
+            PilotInfo[3].photo_id = 77;
+            // Unassigned pilot (don't use)
+            PilotInfo[255].usage = 32000;
+            NumCallsigns = NUM_CALLSIGNS;
+            CallsignData = new byte[NumCallsigns];
         }
 
-        public static int LoadPilotInfo(string filename)
+        public static bool LoadPilotInfo(string filename)
         {
+#if TODO
+		 char /* *data,*/ * data_ptr;
+            short max;
+
+            if (CampaignClass.gCampDataVersion < 60)
+            {
+                NewPilotInfo();
+                return true;
+            }
+
+            CampaignData cd = ReadCampFile(scenario, "plt");
+
+            if (cd.dataSize == -1)
+            {
+                return false;
+            }
+
+            data_ptr = cd.data;
+
+            // Pilot Data
+            max = *((short*)data_ptr);
+            data_ptr += sizeof(short);
+
+            //if (PilotInfo)
+            //delete [] PilotInfo;
+
+            NumPilots = max;
+            PilotInfo = new PilotInfoClass[NumPilots];
+
+            memcpy(PilotInfo, data_ptr, sizeof(PilotInfoClass) * max);
+            data_ptr += sizeof(PilotInfoClass) * max;
+
+            // Callsign Data
+            max = *((short*)data_ptr);
+            data_ptr += sizeof(short);
+
+            //if (CallsignData)
+            //   delete [] CallsignData;
+
+            NumCallsigns = max;
+
+            CallsignData = new byte[NumCallsigns];
+            memcpy(CallsignData, data_ptr, sizeof(uchar) * NumCallsigns);
+            data_ptr += sizeof(uchar) * NumCallsigns;
+
+            //delete cd.data;
+            return true;  
+#endif
             throw new NotImplementedException();
         }
 
@@ -94,11 +142,38 @@ namespace FalconNet.Campaign
 
         public static int GetAvailablePilot(int first, int last, int owner)
         {
-            throw new NotImplementedException();
+            int best_pilot = -1;
+            short best = short.MaxValue;
+
+            if (last > NumPilots)
+                last = NumPilots;
+
+            for (int i = first; i < last; i++)
+            {
+                if (PilotInfo[i].usage < best)
+                {
+                    best = PilotInfo[i].usage;
+                    best_pilot = i;
+                }
+            }
+
+            if (best_pilot > -1)
+                PilotInfo[best_pilot].usage++;
+
+            if (PilotInfo[best_pilot].voice_id == 255)
+            {
+                PilotInfo[best_pilot].AssignVoice(owner);
+            }
+
+            return best_pilot;
         }
 
         public static void GetPilotName(int id, string name, int size)
         {
+#if TODO
+		            ReadIndexedString(FIRST_PILOT_ID + id, name, size);
+ 
+#endif
             throw new NotImplementedException();
         }
 
@@ -130,6 +205,39 @@ namespace FalconNet.Campaign
         public static void GetDogfightCallsign(FlightClass flight)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public static class PilotStaticEncodingLE
+    {
+        public static void Encode(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream)
+        {
+            PilotStatic.NumPilots = Int16EncodingLE.Decode(stream);
+            PilotStatic.PilotInfo = new PilotInfoClass[PilotStatic.NumPilots];
+            for (var j = 0; j < PilotStatic.PilotInfo.Length; j++)
+            {
+                var thisPilot = new PilotInfoClass();
+                thisPilot.usage = Int16EncodingLE.Decode(stream);
+                thisPilot.voice_id = (byte)stream.ReadByte();
+                thisPilot.photo_id = (byte)stream.ReadByte();
+            }
+
+            PilotStatic.NumCallsigns = Int16EncodingLE.Decode(stream);
+            PilotStatic.CallsignData = new byte[PilotStatic.NumCallsigns];
+            for (var j = 0; j < PilotStatic.NumCallsigns; j++)
+            {
+                PilotStatic.CallsignData[j] = (byte)stream.ReadByte();
+            }
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
         }
     }
     // ===========================

@@ -51,6 +51,7 @@ namespace FalconNet.CampaignBase
         WP_RESERVE = 46,
         WP_AIRDEFENSE = 47,
         WP_FIRESUPPORT = 48,
-        WP_SECURE = 49
+        WP_SECURE = 49,
+        WP_LAST = 50
     }
 }

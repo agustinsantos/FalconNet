@@ -23,7 +23,9 @@ namespace FalconNet.VU
         //TODO public virtual ~VuIterator();
 
         public abstract VuEntity CurrEnt();
-        public abstract VU_BOOL IsReferenced(VuEntity ent);
+
+        //public abstract VU_BOOL IsReferenced(VuEntity ent);
+        
         public virtual VU_ERRCODE Cleanup()
         {
             // by default, do nothing
@@ -32,9 +34,6 @@ namespace FalconNet.VU
 
 
         protected VuCollection collection_;
-
-        // for use by VuCollectionManager only!
-        internal VuIterator nextiter_;
     }
 
 

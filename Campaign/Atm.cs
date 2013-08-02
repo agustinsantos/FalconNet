@@ -11,6 +11,9 @@ using Package = FalconNet.Campaign.PackageClass;
 using Team = System.SByte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
+
 namespace FalconNet.Campaign
 {
 
@@ -262,17 +265,17 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
 
         // core functions
-        public int BuildPackage(Package pc, MissionRequest mis)
+        public int BuildPackage(Package pc, MissionRequestClass mis)
         { throw new NotImplementedException(); }
-        public int BuildDivert(MissionRequest mis)
+        public int BuildDivert(MissionRequestClass mis)
         { throw new NotImplementedException(); }
         public int BuildSpecificDivert(Flight flight)
         { throw new NotImplementedException(); }
-        public void ProcessRequest(MissionRequest request)
+        public void ProcessRequest(MissionRequestClass request)
         { throw new NotImplementedException(); }
-        public Squadron FindBestAir(MissionRequest mis, GridIndex bx, GridIndex by)
+        public Squadron FindBestAir(MissionRequestClass mis, GridIndex bx, GridIndex by)
         { throw new NotImplementedException(); }
-        public Flight FindBestAirFlight(MissionRequest mis)
+        public Flight FindBestAirFlight(MissionRequestClass mis)
         { throw new NotImplementedException(); }
         public void SendATMMessage(VU_ID from, Team to, short msg, short d1, short d2, object d3, int flags)
         { throw new NotImplementedException(); }

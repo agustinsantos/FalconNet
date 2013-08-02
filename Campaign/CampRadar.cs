@@ -1,6 +1,8 @@
 using FalconNet.Common;
+using FalconNet.Common.Encoding;
 using FalconNet.Common.Maths;
 using System;
+using System.IO;
 //using FalconNet.Sim;
 
 namespace FalconNet.Campaign
@@ -64,5 +66,22 @@ namespace FalconNet.Campaign
 			detect_ratio [anum] = ratio;
 		}
 	}
+
+    public static class RadarRangeClassEncodingLE
+    {
+        public static void Encode(Stream stream, RadarRangeClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ref RadarRangeClass rst)
+        {
+            //rst.detect_ratio = new float[NUM_RADAR_ARCS];
+            for (var i = 0; i < 8; i++)
+            {
+                rst.detect_ratio[i] = SingleEncodingLE.Decode(stream);
+            }
+        }
+    }
 }
 

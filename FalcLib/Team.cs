@@ -739,7 +739,7 @@ namespace FalconNet.FalcLib
         public static Team GetEnemyTeam(Team who)
         { throw new NotImplementedException(); }
 
-        public static int GetPriority(MissionRequest mis)
+        public static int GetPriority(MissionRequestClass mis)
         { throw new NotImplementedException(); }
 
         public static void AddReinforcements(Team who, int inc)

@@ -8,6 +8,8 @@ using FalconNet.FalcLib;
 using FalconNet.Common;
 using FalconNet.CampaignBase;
 //using FalconNet.Sim;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {

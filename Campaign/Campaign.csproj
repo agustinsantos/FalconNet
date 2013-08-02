@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="camplist.cs" />
     <Compile Include="Campwp.cs" />
     <Compile Include="Division.cs" />
     <Compile Include="Feature.cs" />

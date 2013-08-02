@@ -40,14 +40,8 @@ namespace FalconNet.Common
     public struct SquadUIInfoClass { }
     public struct EventElement { }
     public struct DrawableTrail { }
-    public class TailInsertList { }
     public struct FalconDeathMessage { }
-    public class F4PFList { }
-    public class F4POList { }
-    public class FalconPrivateOrderedList { }
-    public class FalconPrivateList { }
     public struct UnitType { }
-    public class MissionRequest { }
     public class ATCBrain
     {
         public ATCBrain(Object o) { }

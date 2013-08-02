@@ -8,6 +8,7 @@ using VU_ID_NUMBER = System.UInt64;
 using Team = System.SByte;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
+using System.IO;
 
 namespace FalconNet.FalcLib
 {
@@ -699,5 +700,22 @@ namespace FalconNet.FalcLib
         private int feLocalFlags;
     }
 
+    public static class FalconEntityEncodingLE
+    {
+        public static void Encode(Stream stream, FalconEntity val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, FalconEntity rst)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
 }
 

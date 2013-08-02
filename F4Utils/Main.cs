@@ -12,18 +12,18 @@ namespace F4Resources
 {
 	class MainClass
 	{
-		public static string FalconDirectory = @"../../../data";
+        public static string FalconDirectory = @"C:\Falcon BMS 4.32\Data";
 
 		public static void Main (string[] args)
 		{
 			TextWriterTraceListener tr1 = new TextWriterTraceListener (System.Console.Out);
 			Debug.Listeners.Add (tr1);
 			Debug.WriteLine ("FalconNet Converter started...!");
-			ReadTHR (FalconDirectory + "/campaign/save/korea.thr");
+			//ReadTHR (FalconDirectory + "/campaign/save/korea.thr");
 			//ReadTerrain ();
 			//ConvertResources(FalconDirectory+"/art/resource/campbg.idx");
 			//ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
-			//ReadCampaign (FalconDirectory + "/campaign/save/Save-Day 1 13 19 39.cam", 71);
+            ReadCampaign(FalconDirectory + "/campaign/save/save0.cam", 71); //Save-Day 1 13 19 39.cam", 71);
 			Debug.WriteLine ("FalconNet Converter has finished...!");
 		}
 
@@ -171,13 +171,16 @@ namespace F4Resources
 					break;	
 					
 				case ".plt":
-					PltFile plt = new PltFile (fileData, ver);
+#if TODO
+							PltFile plt = new PltFile (fileData, ver);
 					Debug.WriteLine ("PLT data:");
 					Debug.WriteLine ("\tNum Pilots  {0}", plt.NumPilots);
 					if (plt.NumPilots > 0)
 						foreach (F4Utils.Campaign.PilotInfoClass pilot in plt.PilotInfo)
 							if (pilot.photo_id != 0 || pilot.voice_id != 0 || pilot.usage != 0)
-								Debug.WriteLine (string.Format ("\t\tPilot  {0}, {1}, {2}", pilot.usage, pilot.photo_id, pilot.voice_id));
+								Debug.WriteLine (string.Format ("\t\tPilot  {0}, {1}, {2}", pilot.usage, pilot.photo_id, pilot.voice_id));  
+#endif
+                    //Implemented at FalconNet.Campaign.PilotStatic
 					break;
 					
 				case ".pst":

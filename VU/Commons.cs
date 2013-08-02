@@ -9,8 +9,6 @@ namespace FalconNet.VU
         VU_SUCCESS = 1
     }
 
-    public class F4LIt { }
-
     public static class CriticalSection
     {
         public static void VuEnterCriticalSection()

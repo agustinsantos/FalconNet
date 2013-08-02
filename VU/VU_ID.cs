@@ -137,19 +137,19 @@ namespace FalconNet.VU
     {
         public static void Encode(Stream stream, VU_ID val)
         {
-            UInt64EncodingLE.Encode(stream, val.num_);
+            UInt32EncodingLE.Encode(stream, (uint)val.num_);
             VU_SESSION_IDEncodingLE.Encode(stream, val.creator_);
         }
 
         public static void Decode(Stream stream, VU_ID rst)
         {
-            rst.num_ = UInt64EncodingLE.Decode(stream);
+            rst.num_ = UInt32EncodingLE.Decode(stream);
             VU_SESSION_IDEncodingLE.Decode(stream, rst.creator_);
         }
 
         public static int Size
         {
-            get { return UInt64EncodingLE.Size + VU_SESSION_IDEncodingLE.Size; }
+            get { return UInt32EncodingLE.Size + VU_SESSION_IDEncodingLE.Size; }
         }
     }
 }

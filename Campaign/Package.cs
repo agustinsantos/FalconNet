@@ -7,6 +7,8 @@ using Unit=FalconNet.Campaign.UnitClass;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 using FalconNet.CampaignBase;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {
@@ -140,11 +142,11 @@ namespace FalconNet.Campaign
 		{ throw new NotImplementedException ();	}
 
 		// core functions
-		public override int BuildPackage(MissionRequest mis, F4PFList assemblyList)	
+        public override int BuildPackage(MissionRequestClass mis, F4PFList assemblyList)	
 		{ throw new NotImplementedException ();	}
-		public int RecordFlightAddition (Flight flight, MissionRequest mis, int targetd)	
+        public int RecordFlightAddition(Flight flight, MissionRequestClass mis, int targetd)	
 		{ throw new NotImplementedException ();	}
-		public void FindSupportFlights (MissionRequest mis, int targetd)	
+        public void FindSupportFlights(MissionRequestClass mis, int targetd)	
 		{ throw new NotImplementedException ();	}
 		public override void HandleRequestReceipt(int type, int them, VU_ID flight)	
 		{ throw new NotImplementedException ();	}
@@ -199,8 +201,8 @@ namespace FalconNet.Campaign
 		
 		public static PackageClass NewPackage (int type)	
 		{ throw new NotImplementedException ();	}
-		
-		public static Flight AttachFlight (MissionRequest mis, PackageClass pack)	
+
+        public static Flight AttachFlight(MissionRequestClass mis, PackageClass pack)	
 		{ throw new NotImplementedException ();	}
 	}
 }

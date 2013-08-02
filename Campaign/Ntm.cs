@@ -3,6 +3,8 @@ using Team = System.SByte;
 using FalconNet.VU;
 using FalconNet.Common;
 using System.IO;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 
 namespace FalconNet.Campaign

@@ -1,4 +1,5 @@
-﻿using VU_BOOL = System.Boolean;
+﻿using System;
+using VU_BOOL = System.Boolean;
 
 namespace FalconNet.VU
 {
@@ -26,7 +27,8 @@ namespace FalconNet.VU
 
         protected override VU_ERRCODE Process(VU_BOOL autod)
         {
-            VuTargetEntity sender = (VuTargetEntity)VUSTATIC.vuDatabase.Find(Sender());
+#if TODO
+		            VuTargetEntity sender = (VuTargetEntity)VUSTATIC.vuDatabase.Find(Sender());
 
             if (!IsLocal())
             {
@@ -163,6 +165,9 @@ namespace FalconNet.VU
                 }
             }
             return VU_ERRCODE.VU_NO_OP;
+ 
+#endif
+            throw new NotImplementedException();
         }
     }
 

@@ -12,23 +12,26 @@ using VU_ID_NUMBER = System.UInt64;
 using FalconNet.Common.Maths;
 using FalconNet.Campaign;
 using System.Diagnostics;
+using System.IO;
+using FalconNet.Common.Encoding;
+using log4net;
 
 namespace FalconNet.FalcLib
 {
     public class CampBaseClass : FalconEntity
     {
 
-        private CampaignTime spotTime;		// Last time this entity was spotted
-        private short spotted;		// Bitwise array of spotting data, by team
-        private Transmittable base_flags;		// Various user flags
-        private short camp_id;		// Unique campaign id
-        private Control owner;			// Controlling Country
+        public CampaignTime spotTime;		// Last time this entity was spotted
+        public short spotted;		// Bitwise array of spotting data, by team
+        public Transmittable base_flags;		// Various user flags
+        public short camp_id;		// Unique campaign id
+        public Control owner;			// Controlling Country
         // Don't transmit below this line
-        private CBC_ENUM local_flags;	// Non transmitted flags
-        private TailInsertList components;	// List of deaggregated sim entities
-        private VU_ID deag_owner;		// Owner of deaggregated components
-        private VU_ID new_deag_owner;	// Who is most interrested in this guy
-        private Dirty_Campaign_Base dirty_camp_base;
+        public CBC_ENUM local_flags;	// Non transmitted flags
+        public TailInsertList components;	// List of deaggregated sim entities
+        public VU_ID deag_owner;		// Owner of deaggregated components
+        public VU_ID new_deag_owner;	// Who is most interrested in this guy
+        public Dirty_Campaign_Base dirty_camp_base;
 
 
         // Access Functions
@@ -242,7 +245,10 @@ namespace FalconNet.FalcLib
             components = null;
             deag_owner = VU_ID.FalconNullId;
             SetAggregate(true);
-            SetAssociation(FalconSessionEntity.FalconLocalGame.Id());
+            if (FalconSessionEntity.FalconLocalGame != null)
+                SetAssociation(FalconSessionEntity.FalconLocalGame.Id());
+            else
+                log.Warn("FalconSessionEntity.FalconLocalGame is null, TODO");
             dirty_camp_base = 0;
             spotTime = new CampaignTime(0); // JB 010719
         }
@@ -992,11 +998,11 @@ namespace FalconNet.FalcLib
                 {
                     gTacanList.RemoveTacan(Id(), NavigationSystem.AIRBASE);
                 }
-                else if (EntityType().classInfo_[VU_CLASS] == CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_FLIGHT)
+                else if (EntityType().classInfo_[VU_CLASS] == Classes.CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_FLIGHT)
                 {
                     gTacanList.RemoveTacan(Id(), NavigationSystem.TANKER);
                 }
-                else if (EntityType().classInfo_[VU_CLASS] == CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_TASKFORCE && EntityType().classInfo_[VU_STYPE])
+                else if (EntityType().classInfo_[VU_CLASS] == Classes.CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_TASKFORCE && EntityType().classInfo_[VU_STYPE])
                 {
                     gTacanList.RemoveTacan(Id(), NavigationSystem.CARRIER);
                 }
@@ -1066,6 +1072,102 @@ namespace FalconNet.FalcLib
             local_flags |= CBC_ENUM.CBC_RESERVED_ONLY;
             if (r == 0)
                 local_flags ^= CBC_ENUM.CBC_RESERVED_ONLY;
+        }
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    }
+
+    public static class CampBaseClassEncodingLE
+    {
+        public static void Encode(Stream stream, CampBaseClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, CampBaseClass rst)
+        {
+            GridIndex x, y;
+
+            // Read vu stuff here
+            rst.share_.id_ = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.share_.id_);
+
+            //memcpy(&share_.id_, *stream, sizeof(VU_ID)); *stream += sizeof(VU_ID);
+#if DEBUG
+            // VU_ID_NUMBERs moved to 32 bits
+            //share_.id_.num_ &= 0xffff;
+#endif
+            rst.share_.entityType_ = UInt16EncodingLE.Decode(stream);
+            x = Int16EncodingLE.Decode(stream);
+            y = Int16EncodingLE.Decode(stream);
+            rst.SetLocation(x, y);
+
+            if (CampaignClass.gCampDataVersion < 70)
+            {
+               rst.pos_.z_ = 0.0F;
+            }
+            else
+            {
+                rst.pos_.z_ = SingleEncodingLE.Decode(stream);
+            }
+
+            rst.SetEntityType(rst.share_.entityType_);
+            rst.SetTypeFlag(EntityEnum.FalconCampaignEntity);
+
+            rst.spotTime = new CampaignTime(UInt64EncodingLE.Decode(stream));
+            rst.spotted = Int16EncodingLE.Decode(stream);
+            rst.base_flags = (Transmittable)Int16EncodingLE.Decode(stream);
+            rst.owner = (Control)stream.ReadByte();
+            rst.camp_id = Int16EncodingLE.Decode(stream);
+            rst.local_flags = CBC_ENUM.CBC_AGGREGATE;
+            rst.deag_owner = VU_ID.FalconNullId;
+            rst.components = null;
+            rst.dirty_camp_base = 0;
+
+#if CAMPTOOL
+   if (GetEntityByCampID(camp_id))
+      {
+      MonoPrint("Got duplicate camp ID #%d.\n",camp_id);
+      for (int i=0; i<MAX_CAMP_ENTITIES; i++)
+         {
+         if (!CampIDRenameTable[i])
+            {
+            CampIDRenameTable[i] = camp_id;
+            break;
+            }
+         }
+      }
+   if (VuDatabase.vuDatabase.Find(Id()))
+      {
+      MonoPrint("Got duplicate VU_ID #%d.\n",Id().num_);
+      }
+#endif
+
+#if TODO // DEBUG
+            // Clear out entities owned by non-existant teams
+            // KCK NOTE: This doesn't work in multi-player remote, as we often don't have teams at this point
+            if (FalconSessionEntity.FalconLocalGame != null && FalconSessionEntity.FalconLocalGame.IsLocal())
+            {
+                if (TeamStatic.TeamInfo[GetTeam()] == null || TeamStatic.TeamInfo[GetOwner()] == null)
+                {
+                    int i;
+                    for (i = 0; i < (int)TeamDataEnum.NUM_TEAMS && TeamStatic.TeamInfo[i] == null; i++) ;
+                    SetOwner((byte)i);
+                }
+            }
+#endif
+
+            // Set owner to game master and associate the entity
+            Debug.Assert(FalconSessionEntity.FalconLocalGame != null);
+            if (FalconSessionEntity.FalconLocalGame != null)
+            {
+                rst.share_.ownerId_ = FalconSessionEntity.FalconLocalGame.OwnerId();
+                rst.SetAssociation(FalconSessionEntity.FalconLocalGame.Id());
+            }
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

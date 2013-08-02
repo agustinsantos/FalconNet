@@ -1,4 +1,5 @@
-﻿using VU_BOOL = System.Boolean;
+﻿using System;
+using VU_BOOL = System.Boolean;
 using VU_MSG_TYPE = System.Byte;
 
 namespace FalconNet.VU
@@ -35,7 +36,8 @@ namespace FalconNet.VU
 
         protected override VU_ERRCODE Activate(VuEntity ent)
         {
-            if (ent != null)
+#if TODO
+		            if (ent != null)
             {
                 SetEntity(ent);
             }
@@ -57,7 +59,9 @@ namespace FalconNet.VU
                     SetEntity(null);
                 }
             }
-            return VU_ERRCODE.VU_NO_OP;
+            return VU_ERRCODE.VU_NO_OP;  
+#endif
+            throw new NotImplementedException();
         }
 
     }

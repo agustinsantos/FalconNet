@@ -15,6 +15,8 @@ using VehicleID = System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
 using FalconNet.CampaignBase;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {
@@ -1553,7 +1555,7 @@ namespace FalconNet.Campaign
             WayPointClass new_list, lw, nw, w;
 
 
-            if (gCampDataVersion >= 71)
+            if (CampaignClass.gCampDataVersion >= 71)
             {
                 memcpychk(&count, stream, sizeof(ushort), rem);
             }
@@ -1916,7 +1918,7 @@ namespace FalconNet.Campaign
         }
 
         // Package virtuals
-        public virtual int BuildPackage(MissionRequest p, F4PFList d)
+        public virtual int BuildPackage(MissionRequestClass p, F4PFList d)
         {
             return 0;
         }
@@ -2253,10 +2255,10 @@ namespace FalconNet.Campaign
         public static int LoadUnits(string FileName)
         { throw new NotImplementedException(); }
 
-        public static Unit GetFirstUnit(F4LIt l)
+        public static Unit GetFirstUnit(VuListIterator l)
         { throw new NotImplementedException(); }
 
-        public static Unit GetNextUnit(F4LIt l)
+        public static Unit GetNextUnit(VuListIterator l)
         { throw new NotImplementedException(); }
 
         public static Unit LoadAUnit(int Num, int FHandle, Unit parent)

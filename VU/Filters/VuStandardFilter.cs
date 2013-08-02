@@ -30,13 +30,10 @@ namespace FalconNet.VU
 
         public override VU_BOOL Test(VuEntity ent)
         {
-            if
-            (
-                ((ent.FlagValue()) & (ushort)idmask_) != 0 &&
-                (
-                    (localSession_ == VU_TRI_STATE.DONT_CARE) ||
+            if(((ent.FlagValue()) & (ushort)idmask_) != 0 &&
+                ((localSession_ == VU_TRI_STATE.DONT_CARE) ||
                 ((localSession_ == VU_TRI_STATE.TRUE) && (ent.IsLocal())) ||
-                    ((localSession_ == VU_TRI_STATE.FALSE) && (!ent.IsLocal()))
+                ((localSession_ == VU_TRI_STATE.FALSE) && (!ent.IsLocal()))
                 )
             )
             {

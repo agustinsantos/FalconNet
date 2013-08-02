@@ -88,22 +88,19 @@ namespace FalconNet.FalcLib
                 (TeamStatic.TeamInfo[who].flags.HasFlag(TeamFlagEnum.TEAM_ACTIVE)))
             {
                 VuTargetEntity target = (VuTargetEntity)VUSTATIC.vuDatabase.Find(TeamStatic.TeamInfo[who].atm.OwnerId());
-#if TODO
                 FalconMissionRequestMessage message =
                     new FalconMissionRequestMessage(TeamStatic.TeamInfo[who].atm.Id(), VUSTATIC.vuLocalSessionEntity);
-                GetPriority(this);
-                message.dataBlock.request = this;
-                message.dataBlock.team = who;
+                TeamStatic.GetPriority(this);
+                message.request = this;
+                message.team = who;
 
                 if (priority > 0)
                 {
-                    FalconSendMessage(message, false); // KCK NOTE: Go ahead and let a few messages miss their target
+                    FalcMesgStatic.FalconSendMessage(message, false); // KCK NOTE: Go ahead and let a few messages miss their target
                     return 0;
                 }
                 else
                     ;//  delete message; // JPO mem leak
-#endif
-                throw new NotImplementedException();
                 }
 
             return -1;

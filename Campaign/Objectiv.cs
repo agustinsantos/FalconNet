@@ -16,8 +16,11 @@ using System.Diagnostics;
 //using FalconNet.Sim;
 using FalconNet.CampaignBase;
 using FalconNet.Campaign;
-
+using System.IO;
+using FalconNet.Common.Encoding;
 //using VU_ERRCODE=System.Int32;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {
@@ -47,13 +50,13 @@ namespace FalconNet.Campaign
         public byte links;			// Number of links
         public RadarRangeClass radar_data;		// Data on what a radar stationed here can see
         public ObjClassDataType class_data;		// Pointer to class data
-    };
+    }
 
     public class CampObjectiveLinkDataType
     {
         public byte[] costs = new byte[(int)MoveType.MOVEMENT_TYPES];	// Cost to go here, depending on movement type
         public VU_ID id;
-    };
+    }
 
     public class ObjectiveClass : CampBaseClass
     {
@@ -67,7 +70,7 @@ namespace FalconNet.Campaign
 		static MEM_POOL	pool;
 #endif
 
-        private CampObjectiveTransmitDataType obj_data;
+        public CampObjectiveTransmitDataType obj_data;
         private int dirty_objective;
         public CampObjectiveStaticDataType static_data;
         public CampObjectiveLinkDataType[] link_data;		// The actual link data (was [OBJ_MAX_NEIGHBORS])
@@ -1872,7 +1875,7 @@ namespace FalconNet.Campaign
     // Transmitable flags
     // =======================
     [Flags]
-    public enum O_FLAGS : ulong
+    public enum O_FLAGS : uint
     {
         O_FRONTLINE = 0x1,
         O_SECONDLINE = 0x2,
@@ -1989,12 +1992,12 @@ namespace FalconNet.Campaign
             throw new NotImplementedException();
         }
 
-        public static ObjectiveClass GetFirstObjective(F4LIt l)
+        public static ObjectiveClass GetFirstObjective(VuListIterator l)
         {
             throw new NotImplementedException();
         }
 
-        public static ObjectiveClass GetNextObjective(F4LIt l)
+        public static ObjectiveClass GetNextObjective(VuListIterator l)
         {
             throw new NotImplementedException();
         }
@@ -2031,4 +2034,170 @@ namespace FalconNet.Campaign
 
     }
 
+    public static class CampObjectiveTransmitDataTypeEncodingLE
+    {
+        public static void Encode(Stream stream, CampObjectiveTransmitDataType val)
+        {
+            throw new NotImplementedException();
+        }
+        public static void Decode(Stream stream, ref CampObjectiveTransmitDataType rst)
+        {
+            rst.last_repair = UInt32EncodingLE.Decode(stream);
+
+
+            if (CampaignClass.gCampDataVersion > 1)
+            {
+                rst.obj_flags = (O_FLAGS)UInt32EncodingLE.Decode(stream);
+            }
+            else
+            {
+                rst.obj_flags = (O_FLAGS)UInt16EncodingLE.Decode(stream);
+            }
+
+            rst.supply = (byte)stream.ReadByte();
+            rst.fuel = (byte)stream.ReadByte();
+            rst.losses = (byte)stream.ReadByte();
+
+            var numStatuses = (byte)stream.ReadByte();
+
+            rst.fstatus = new byte[numStatuses];
+            for (var i = 0; i < numStatuses; i++)
+            {
+                rst.fstatus[i] = (byte)stream.ReadByte();
+            }
+            rst.priority = (byte)stream.ReadByte();
+        }
+    }
+
+    public static class CampObjectiveStaticDataTypeEncodingLE
+    {
+        public static void Encode(Stream stream, CampObjectiveStaticDataType val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ref CampObjectiveStaticDataType rst)
+        {
+            rst.nameid = Int16EncodingLE.Decode(stream);
+            rst.parent = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.parent);
+            rst.first_owner = (byte)stream.ReadByte();
+            rst.links = (byte)stream.ReadByte();
+        }
+    }
+    public static class CampObjectiveLinkDataTypeEncodingLE
+    {
+        public static void Encode(Stream stream, CampObjectiveLinkDataType val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, CampObjectiveLinkDataType rst)
+        {
+                rst.costs = new byte[(int) MoveType.MOVEMENT_TYPES];
+                for (var j = 0; j < (int) MoveType.MOVEMENT_TYPES; j++)
+                {
+                    rst.costs[j] = (byte)stream.ReadByte();
+                }
+
+                var newId = new VU_ID();
+                VU_IDEncodingLE.Decode(stream, rst.id);
+        }
+    }
+    public static class ObjectiveClassEncodingLE
+    {
+        public static void Encode(Stream stream, ObjectiveClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ObjectiveClass rst)
+        {
+            CampObjectiveTransmitDataTypeEncodingLE.Decode(stream, ref rst.obj_data);
+            CampObjectiveStaticDataTypeEncodingLE.Decode(stream, ref rst.static_data);
+
+
+            if (rst.static_data.links > 0)
+            {
+                rst.link_data = new CampObjectiveLinkDataType[rst.static_data.links];
+            }
+            else
+            {
+                rst.link_data = null;
+            }
+            for (var i = 0; i < rst.static_data.links; i++)
+            {
+                rst.link_data[i] = new CampObjectiveLinkDataType();
+                CampObjectiveLinkDataTypeEncodingLE.Decode(stream, rst.link_data[i]);
+            }
+
+            if (CampaignClass.gCampDataVersion >= 20)
+            {
+                var hasRadarData = (byte)stream.ReadByte();
+
+                if (hasRadarData > 0)
+                {
+                    rst.static_data.radar_data = new RadarRangeClass();
+                    RadarRangeClassEncodingLE.Decode(stream, ref rst.static_data.radar_data);
+                }
+            //    else
+            //    {
+            //        detect_ratio = null;
+            //    }
+            }
+            //else
+            //{
+            //    detect_ratio = null;
+            //}
+        }
+        
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
+    public static class ObjectiveClassListEncodingLE
+    {
+        public static void Encode(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream)
+        {
+            short numObjectives;
+
+            var expanded = Expand(stream, out numObjectives);
+            if (expanded != null)
+            {
+                for (var i = 0; i < numObjectives; i++)
+                {
+                    var thisObjectiveType = UInt16EncodingLE.Decode(expanded);
+                    ObjectiveClass thisObjective = new ObjectiveClass(thisObjectiveType);
+                    ObjectiveClassEncodingLE.Decode(expanded, thisObjective);
+                    //objectives[i] = thisObjective;
+                }
+            }
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        private static MemoryStream Expand(Stream compressed, out short numObjectives)
+        {
+            numObjectives = Int16EncodingLE.Decode(compressed);
+            var uncompressedSize = Int32EncodingLE.Decode(compressed);
+            var newSize = Int32EncodingLE.Decode(compressed);
+            if (uncompressedSize == 0) return null;
+
+            int remaining = (int)Math.Min(newSize, compressed.Length - compressed.Position);
+            var actualCompressed = compressed.ReadBytes(remaining);
+            byte[] uncompressed = LZSS.Decompress(actualCompressed, uncompressedSize);
+            return new MemoryStream(uncompressed);
+        }
+    }
 }

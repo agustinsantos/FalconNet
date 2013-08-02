@@ -8,6 +8,8 @@ using GridIndex = System.Int16;
 using FalconNet.VU;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
+using F4PFList = FalconNet.FalcLib.FalconPrivateList;
+using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
 
 namespace FalconNet.Campaign
 {

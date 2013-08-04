@@ -349,14 +349,17 @@ namespace FalconNet.VU
             share_.ownerId_ = ownerId;
         }
 
-        public void SetEntityType(ushort entityType)
+        public virtual void SetEntityType(ushort entityType)
         {
             share_.entityType_ = entityType;
 
             if (share_.entityType_ < vuTypeTable.Length) // JPO - make sure its in the range (CTD) VU_LAST_ENTITY_TYPE == 100 
                 entityTypePtr_ = vuTypeTable[share_.entityType_];
+            // TODO ASM I have a dependency cicle here
             else if (share_.entityType_ >= VU_LAST_ENTITY_TYPE)
-                entityTypePtr_ = VUSTATIC.VuxType(share_.entityType_);
+                ; //do nothing..
+            //  this information should be in the override methods.  
+            //  entityTypePtr_ = F4VUStatic.VuxType(share_.entityType_);
             else
             {
                 entityTypePtr_ = null;

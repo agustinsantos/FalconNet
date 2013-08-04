@@ -5,6 +5,8 @@ using System.IO;
 using log4net;
 using FalconNet.Campaign;
 using FalconNet.FalcLib;
+using FalconNet.VU;
+using FalconNet.Common.Encoding;
 
 namespace UnitTestVU
 {
@@ -20,43 +22,85 @@ namespace UnitTestVU
             F4File.FalconDirectory = FalconDirectory;
             F4VUStatic.InitVU();
             EntityDB.LoadClassTable("Falcon4");
+            VUSTATIC.vuLocalSessionEntity.game_ = new FalconGameEntity(0, "DummyTest");
         }
 
         [TestMethod]
         public void TestReadCampaignFiles()
         {
-            FileStream file;
-
+            // More information on CampaignClass::LoadCampaign(FalconGameType gametype, char *savefile), CmpClass line 423
             F4File.StartReadCampFile(FalconGameType.game_Campaign, "save0");
 
-            file = F4File.OpenCampFile("save0", "cmp", FileAccess.Read);
-            Assert.AreEqual(4, file.Position);
-            CampaignClass camp = new CampaignClass();
-            CampaignClassEncodingLE.Decode(file, camp);
-            Assert.AreEqual("korea", camp.TheaterName);
+            using (Stream file = F4File.ReadCampFile("save0", "cmp"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(4443, file.Length);
+                CampaignClass camp = new CampaignClass();
+                CampaignClassEncodingLE.Decode(file, camp);
+                Assert.AreEqual("korea", camp.TheaterName);
+            }
 
-            file = F4File.OpenCampFile("save0", "obj", FileAccess.Read);
-            Assert.AreEqual(4447, file.Position);
-            ObjectiveClassListEncodingLE.Decode(file);
+            using (Stream file = F4File.ReadCampFile("save0", "obj"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(115657, file.Length);
+            }
+            ObjectivStatic.LoadBaseObjectives("save0");
 
-            file = F4File.OpenCampFile("save0", "obd", FileAccess.Read);
-            Assert.AreEqual(120104, file.Position);
-            file = F4File.OpenCampFile("save0", "uni", FileAccess.Read);
-            Assert.AreEqual(133297, file.Position);
-            file = F4File.OpenCampFile("save0", "tea", FileAccess.Read);
-            Assert.AreEqual(184625, file.Position);
-            file = F4File.OpenCampFile("save0", "evt", FileAccess.Read);
-            Assert.AreEqual(191731, file.Position);
-            file = F4File.OpenCampFile("save0", "plt", FileAccess.Read);
-            Assert.AreEqual(191821, file.Position);
-            file = F4File.OpenCampFile("save0", "pst", FileAccess.Read);
-            Assert.AreEqual(194729, file.Position);
-            file = F4File.OpenCampFile("save0", "wth", FileAccess.Read);
-            Assert.AreEqual(194733, file.Position);
-            file = F4File.OpenCampFile("save0", "ver", FileAccess.Read);
-            Assert.AreEqual(227538, file.Position);
-            file = F4File.OpenCampFile("save0", "te", FileAccess.Read);
-            Assert.AreEqual(227540, file.Position);
+            using (Stream file = F4File.ReadCampFile("save0", "obd"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(13193, file.Length);
+                int csize = Int32EncodingLE.Decode(file);
+                // There is a dependency between CampBaseClass and ObjetiveClass
+                //TODO ObjectivStatic.DecodeObjectiveDeltas(file, null);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "uni"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(51328, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "tea"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(7106, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "evt"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(90, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "plt"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(2908, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "pst"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(4, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "wth"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(32805, file.Length);
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "ver"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(2, file.Length);
+                using (StreamReader reader = new StreamReader(file))
+                {
+                    String line = reader.ReadToEnd();
+                    int vers = int.Parse(line);
+                    Assert.AreEqual(73, vers);
+                }
+            }
+            using (Stream file = F4File.ReadCampFile("save0", "te"))
+            {
+                Assert.AreEqual(0, file.Position);
+                Assert.AreEqual(86, file.Length);
+            }
             F4File.EndReadCampFile();
         }
     }

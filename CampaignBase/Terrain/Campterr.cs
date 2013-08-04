@@ -70,7 +70,7 @@ namespace FalconNet.Campaign
 
         public static bool LoadTheaterTerrainLight(string fileName)
         {
-            FileStream fp;
+            Stream fp;
 
             FreeTheaterTerrain();
             if ((fp = F4File.OpenCampFile(fileName, "thr", FileAccess.Read)) == null)
@@ -84,7 +84,7 @@ namespace FalconNet.Campaign
 
 		public static bool SaveTheaterTerrain (string fileName)
         {
-            FileStream fp;
+            Stream fp;
 
             if (TheaterCells == null)
                 return false;

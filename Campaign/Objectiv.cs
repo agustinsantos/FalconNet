@@ -21,6 +21,8 @@ using FalconNet.Common.Encoding;
 //using VU_ERRCODE=System.Int32;
 using F4PFList = FalconNet.FalcLib.FalconPrivateList;
 using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
+using FalconNet.F4Common;
+using log4net;
 
 namespace FalconNet.Campaign
 {
@@ -94,7 +96,7 @@ namespace FalconNet.Campaign
 
         // constructors
         public ObjectiveClass(ushort typeindex)
-            : base(typeindex, 0 ) // Review this implementation for FreeFalcon. it has a second parameter
+            : base(typeindex, 0) // Review this implementation for FreeFalcon. it has a second parameter
         {
             int size;
 
@@ -142,7 +144,7 @@ namespace FalconNet.Campaign
 	gObjectiveCount++;
 #endif
         }
- #if TODO 
+#if TODO 
         public ObjectiveClass(byte[] stream, ref int offset)
             : base(stream, ref offset)
         {
@@ -269,7 +271,7 @@ namespace FalconNet.Campaign
             //while a more general function name could have been chosen ;)
             SimulationDriver.SimDriver.SleepCampaignFlight(GetComponents()); //2002-02-11 REMOVED BY S.G. MPS original Cut and paste bug from UnitClass. Objectives have no flights!
 
-            SetAwake(0);
+            SetAwake(false);
             AwakeCampaignEntities--;
 
             //	InsertInSimLists(XPos(),YPos());
@@ -1692,16 +1694,17 @@ namespace FalconNet.Campaign
 
         public void ResetObjectiveStatus()
         {
-#if TODO
 			int f, s;
 
 			s = 100;
 			// Airbases use their own (slightly different) version of determining status:
-			if (GetFalconType () == Classtable_Types.TYPE_AIRBASE) {
+            if (GetFalconType() == ClassTypes.TYPE_AIRBASE)
+            {
 				// AIRBASE version
-				for (f = 0; s && f < static_data.class_data.Features; f++) {
+				for (f = 0; s !=0 && f < static_data.class_data.Features; f++) {
 					// Only adjust status for non-runways
-					if (EntityDB.Falcon4ClassTable [GetFeatureID (f)].vuClassData.classInfo_ [(int)VU_CLASS.VU_TYPE] != Classtable_Types.TYPE_RUNWAY) { // (IS_RUNWAY)
+                    if ((ClassTypes)EntityDB.Falcon4ClassTable[GetFeatureID(f)].vuClassData.classInfo_[(int)Vu_CLASS.VU_TYPE] != ClassTypes.TYPE_RUNWAY)
+                    { // (IS_RUNWAY)
 						if (GetFeatureStatus (f) == VIS_TYPES.VIS_DAMAGED)
 							s -= GetFeatureValue (f) / 2;
 						if (GetFeatureStatus (f) == VIS_TYPES.VIS_DESTROYED)
@@ -1713,17 +1716,18 @@ namespace FalconNet.Campaign
 				else {
 					// Make sure we're below our maximum for # of active runways
 					int index, runways = 0, inactive = 0, max;
-					ObjClassDataType* oc = GetObjectiveClassData ();
+					ObjClassDataType oc = GetObjectiveClassData ();
 					index = oc.PtDataIndex;
-					while (index) {
-						if (PtHeaderDataTable [index].type == RunwayPt) {
+					while (index !=0) {
+                        if (EntityDB.PtHeaderDataTable[index].type == PointTypes.RunwayPt)
+                        {
 							runways++;
-							if (CheckHeaderStatus (this, index) == VIS_TYPES.VIS_DESTROYED)
+                            if (PtData.CheckHeaderStatus(this, index) == VIS_TYPES.VIS_DESTROYED)
 								inactive++;
 						}
-						index = PtHeaderDataTable [index].nextHeader;
+                        index = EntityDB.PtHeaderDataTable[index].nextHeader;
 					}
-					if (!runways)
+					if (runways ==0)
 						max = 0;
 					else
 						max = ((runways - inactive) * 100) / runways;
@@ -1744,8 +1748,6 @@ namespace FalconNet.Campaign
 			if (s != obj_data.status) {
 				SetObjectiveStatus ((byte)s);
 			}
-#endif
-            throw new NotImplementedException();
         }
 
         public void RepairFeature(int f)
@@ -1912,7 +1914,14 @@ namespace FalconNet.Campaign
 
         public static ObjectiveClass FindObjective(VU_ID id)
         {
-            throw new NotImplementedException();
+            VuEntity e = VUSTATIC.vuDatabase.Find(id);
+
+            if (e != null && CampbaseStatic.GetEntityClass(e) == Classes.CLASS_OBJECTIVE)
+            {
+                return (Objective)e;
+            }
+
+            return null;
         }
 
         // ================================
@@ -1926,30 +1935,197 @@ namespace FalconNet.Campaign
         // ---------------------------------------
         // public static al Function Declarations
         // ---------------------------------------
+        private static void DecodeObjective(Stream stream, ObjectiveClass o)
+        {
+            ObjectiveClassEncodingLE.Decode(stream, o);
+            o.obj_data.aiscore = 0;
+            o.ResetObjectiveStatus();
+
+            if ((o.GetFalconType() == ClassTypes.TYPE_AIRBASE) || (o.GetFalconType() == ClassTypes.TYPE_AIRSTRIP))
+            {
+                if (o.GetFalconType() == ClassTypes.TYPE_AIRBASE)
+                {
+                    o.SetTacan(1);
+                }
+
+                o.brain = new ATCBrain(o);
+            }
+            else
+            {
+                o.brain = null;
+            }
+            if (F4Config.RepairObjective)  // Activated by command line parameter '-repair',
+            {
+                for (int i = 0; i < o.GetTotalFeatures(); i++)
+                {
+                    if (o.GetFeatureID(i) != 0)
+                    {
+                        o.SetFeatureStatus(i, VIS_TYPES.VIS_NORMAL);
+                    }
+                    else
+                    {
+                        o.SetFeatureStatus(i, VIS_TYPES.VIS_DESTROYED);
+                    }
+                }
+            }
+            else if (F4Config.DestroyObjective)//activated by commandline parameter '-armageddon'
+            {
+                for (int i = 0; i < o.GetTotalFeatures(); i++)
+                {
+                    o.SetFeatureStatus(i, VIS_TYPES.VIS_DESTROYED);
+                }
+            }
+            // Set the owner to the game master.
+            if (!FalconSessionEntity.FalconLocalGame.IsLocal())
+            {
+                o.share_.ownerId_ = FalconSessionEntity.FalconLocalGame.OwnerId();
+            }
+
+            if (o.static_data.class_data.Features == 0)
+            {
+                // Since there's nothing to do in this case, might as well mark us as awake and save the Sim time...
+                o.SetAggregate(false);
+                o.SetAwake(true);
+            }
+
+        }
+        public static ObjectiveClass NewObjective(ushort tid, Stream stream)
+        {
+            if (tid == 0)
+            {
+                return null;
+            }
+
+            CampaignStatic.CampEnterCriticalSection();
+            Objective o = new ObjectiveClass(tid);
+            DecodeObjective(stream, o);
+
+            CampaignStatic.CampLeaveCriticalSection();
+
+            // these will be read from the other side as well
+            o.SetSendCreate(VU_SEND_TYPE.VU_SC_DONT_SEND);
+            VUSTATIC.vuDatabase./*Silent*/Insert(o);
+            return o;
+        }
 
         public static ObjectiveClass NewObjective()
         {
-            throw new NotImplementedException();
+
+            Objective o;
+            ushort cid;
+
+            cid = (ushort)EntityDB.GetClassID(Domains.DOMAIN_LAND, Classes.CLASS_OBJECTIVE, ClassTypes.TYPE_CITY, 1, 0, 0, 0, 0);
+
+            if (cid == 0)
+            {
+                return null;
+            }
+
+            cid += VuEntity.VU_LAST_ENTITY_TYPE;
+
+            //VuEnterCriticalSection();
+            //lastVolatileId = vuAssignmentId;
+            //vuAssignmentId = lastObjectiveId;
+            //vuLowWrapNumber = FIRST_OBJECTIVE_VU_ID_NUMBER;
+            //vuHighWrapNumber = LAST_OBJECTIVE_VU_ID_NUMBER;
+
+            o = new ObjectiveClass(cid);
+            // these will be read from the other side as well
+            o.SetSendCreate(VU_SEND_TYPE.VU_SC_DONT_SEND);
+            VU_ERRCODE ret = VUSTATIC.vuDatabase./*Silent*/Insert(
+                                 o/*, lastObjectiveId+1, FIRST_OBJECTIVE_VU_ID_NUMBER, LAST_OBJECTIVE_VU_ID_NUMBER*/
+                             );
+
+
+            if (ret != VU_ERRCODE.VU_SUCCESS)
+            {
+                // delete o;
+                o = null;
+            }
+
+
+            //lastObjectiveId = vuAssignmentId;
+            //vuAssignmentId = lastVolatileId;
+            //vuLowWrapNumber = FIRST_VOLATILE_VU_ID_NUMBER;
+            //vuHighWrapNumber = LAST_VOLATILE_VU_ID_NUMBER;
+            //VuExitCriticalSection();
+
+            return o;
         }
 
-        public static ObjectiveClass NewObjective(short tid, VU_BYTE[] stream)
+
+        public static bool LoadBaseObjectives(string scenario)
         {
-            throw new NotImplementedException();
+            int old_version = CampaignClass.gCampDataVersion;
+            CampaignClass.gCampDataVersion = CampaignClass.ReadVersionNumber(scenario);
+
+            using (Stream file = F4File.ReadCampFile(scenario, "obj"))
+            {
+                if (file.Position == file.Length)
+                {
+                    CampaignClass.gCampDataVersion = old_version;
+                    return false;
+                }
+
+                // Read Number of Objectives..
+                short numObjectives;
+
+                var expanded = ObjectiveClassListEncodingLE.Expand(file, out numObjectives);
+                if (expanded != null)
+                {
+                    for (var i = 0; i < numObjectives; i++)
+                    {
+                        var type = UInt16EncodingLE.Decode(expanded);
+                        ObjectiveClass o = NewObjective(type, expanded);
+
+                        if (o == null)
+                        {
+                            log.Error("Error creating object from stream");
+                        }
+                        else
+                        {
+                            o.SetAggregate(true);
+                        }
+                    }
+                }
+            }
+            CampaignClass.gCampDataVersion = old_version;
+
+            return true;
         }
 
-        public static ObjectiveClass NewObjective(short tid, VU_BYTE[] stream, int fromDisk)
+        public static bool LoadObjectiveDeltas(string savefile)
         {
-            throw new NotImplementedException();
-        }
+            int csize;
 
-        public static int LoadBaseObjectives(string scenario)
-        {
-            throw new NotImplementedException();
-        }
+            if (savefile == CampaignClass.TheCampaign.Scenario)
+            {
+                // KCK Temporary: Reset dirty flags and return;
+                if (CampListStatic.AllObjList == null)
+                {
+                    return true; // InstantAction/DogFight
+                }
 
-        public static int LoadObjectiveDeltas(string savefile)
-        {
-            throw new NotImplementedException();
+                Objective o;
+                VuListIterator myit = new VuListIterator(CampListStatic.AllObjList);
+                o = GetFirstObjective(myit);
+
+                while (o != null)
+                {
+                    o.SetDelta(0);
+                    o = GetNextObjective(myit);
+                }
+
+                return true;
+            }
+
+            using (Stream cd = F4File.ReadCampFile(savefile, "obd"))
+            {
+                csize = Int32EncodingLE.Decode(cd);
+                ObjectivStatic.DecodeObjectiveDeltas(cd, null);
+                return true;
+            }
+            return false;
         }
 
         public static void SaveBaseObjectives(string scenario)
@@ -2022,16 +2198,44 @@ namespace FalconNet.Campaign
             throw new NotImplementedException();
         }
 
-        public static int DecodeObjectiveDeltas(VU_BYTE[] stream, FalconSessionEntity owner)
+        public static int DecodeObjectiveDeltas(Stream stream, FalconSessionEntity owner)
         {
-            throw new NotImplementedException();
-        }
+            short count = Int16EncodingLE.Decode(stream);
+            int size = Int32EncodingLE.Decode(stream);
+            int remaining = (int)(stream.Length - stream.Position);
+            var actualCompressed = stream.ReadBytes(remaining);
+            MemoryStream uncompressed = new MemoryStream(LZSS.Decompress(actualCompressed, size));
+            VU_ID vuid;
+            Objective o;
 
+            while (count != 0)
+            {
+                vuid = new VU_ID();
+                VU_IDEncodingLE.Decode(uncompressed, vuid);
+                o = FindObjective(vuid);
+
+                Debug.Assert(o != null);
+
+                if (o != null)
+                {
+                    //o.UpdateFromData(uncompressed);
+                    ObjectiveClassDeltaEncodingLE.Decode(uncompressed, o);
+                    count--;
+                }
+                else
+                {
+                    count = 0;
+                }
+            }
+
+            return 0;
+        }
         public static int EvaluateKill(FalconDeathMessage dtm, SimBaseClass simShooter, CampBaseClass campShooter, SimBaseClass simTarget, CampBaseClass campTarget) //TODO This function is defined as extern in DeathMessage.cpp (??)
         {
             throw new NotImplementedException();
         }
 
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }
 
     public static class CampObjectiveTransmitDataTypeEncodingLE
@@ -2040,7 +2244,7 @@ namespace FalconNet.Campaign
         {
             throw new NotImplementedException();
         }
-        public static void Decode(Stream stream, ref CampObjectiveTransmitDataType rst)
+        public static void Decode(Stream stream, ref CampObjectiveTransmitDataType rst, int nsize)
         {
             rst.last_repair = UInt32EncodingLE.Decode(stream);
 
@@ -2060,7 +2264,7 @@ namespace FalconNet.Campaign
 
             var numStatuses = (byte)stream.ReadByte();
 
-            rst.fstatus = new byte[numStatuses];
+            rst.fstatus = new byte[nsize];
             for (var i = 0; i < numStatuses; i++)
             {
                 rst.fstatus[i] = (byte)stream.ReadByte();
@@ -2094,16 +2298,17 @@ namespace FalconNet.Campaign
 
         public static void Decode(Stream stream, CampObjectiveLinkDataType rst)
         {
-                rst.costs = new byte[(int) MoveType.MOVEMENT_TYPES];
-                for (var j = 0; j < (int) MoveType.MOVEMENT_TYPES; j++)
-                {
-                    rst.costs[j] = (byte)stream.ReadByte();
-                }
+            rst.costs = new byte[(int)MoveType.MOVEMENT_TYPES];
+            for (var j = 0; j < (int)MoveType.MOVEMENT_TYPES; j++)
+            {
+                rst.costs[j] = (byte)stream.ReadByte();
+            }
 
-                var newId = new VU_ID();
-                VU_IDEncodingLE.Decode(stream, rst.id);
+            rst.id = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.id);
         }
     }
+
     public static class ObjectiveClassEncodingLE
     {
         public static void Encode(Stream stream, ObjectiveClass val)
@@ -2113,7 +2318,10 @@ namespace FalconNet.Campaign
 
         public static void Decode(Stream stream, ObjectiveClass rst)
         {
-            CampObjectiveTransmitDataTypeEncodingLE.Decode(stream, ref rst.obj_data);
+            CampBaseClassEncodingLE.Decode(stream, rst);
+            byte nsize = (byte)(((rst.static_data.class_data.Features * 2) + 7) / 8);
+            CampObjectiveTransmitDataTypeEncodingLE.Decode(stream, ref rst.obj_data, nsize);
+            rst.obj_data.status = 100; // JPO init
             CampObjectiveStaticDataTypeEncodingLE.Decode(stream, ref rst.static_data);
 
 
@@ -2140,23 +2348,61 @@ namespace FalconNet.Campaign
                     rst.static_data.radar_data = new RadarRangeClass();
                     RadarRangeClassEncodingLE.Decode(stream, ref rst.static_data.radar_data);
                 }
-            //    else
-            //    {
-            //        detect_ratio = null;
-            //    }
+                else
+                {
+                    rst.static_data.radar_data = null;
+                }
             }
-            //else
-            //{
-            //    detect_ratio = null;
-            //}
+            else
+            {
+                rst.static_data.radar_data = null;
+            }
         }
-        
+
 
         public static int Size
         {
             get { throw new NotImplementedException(); }
         }
     }
+    
+    public static class ObjectiveClassDeltaEncodingLE
+    {
+        public static void Encode(Stream stream, ObjectiveClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, ObjectiveClass rst)
+        {
+            rst.obj_data.last_repair =  UInt32EncodingLE.Decode(stream);
+            byte owner = (byte)stream.ReadByte();
+            rst.SetOwner(owner);
+            rst.obj_data.supply =  (byte)stream.ReadByte();
+            rst.obj_data.fuel =  (byte)stream.ReadByte();
+            rst.obj_data.losses = (byte)stream.ReadByte();
+            int len = (byte)stream.ReadByte();
+            rst.obj_data.fstatus = new byte[len];
+            if (CampaignClass.gCampDataVersion < 64)
+            {
+                rst.obj_data.fstatus[0]= (byte)stream.ReadByte();
+            }
+            else
+            {
+                for (int i = 0; i < len; i++)
+                    rst.obj_data.fstatus[i] = (byte)stream.ReadByte();
+            }
+
+            rst.ResetObjectiveStatus();
+        }
+
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
 
     public static class ObjectiveClassListEncodingLE
     {
@@ -2187,7 +2433,7 @@ namespace FalconNet.Campaign
             get { throw new NotImplementedException(); }
         }
 
-        private static MemoryStream Expand(Stream compressed, out short numObjectives)
+        public static MemoryStream Expand(Stream compressed, out short numObjectives)
         {
             numObjectives = Int16EncodingLE.Decode(compressed);
             var uncompressedSize = Int32EncodingLE.Decode(compressed);
@@ -2199,5 +2445,7 @@ namespace FalconNet.Campaign
             byte[] uncompressed = LZSS.Decompress(actualCompressed, uncompressedSize);
             return new MemoryStream(uncompressed);
         }
+
+
     }
 }

@@ -34,7 +34,7 @@ namespace FalconNet.Campaign
 
         public static void LoadNameStream()
         {
-            FileStream fp;
+            Stream fp;
 
             CampaignStatic.CampEnterCriticalSection();
             fp = F4File.OpenCampFile(NameFile, "wch", FileAccess.Read);
@@ -52,7 +52,7 @@ namespace FalconNet.Campaign
 
         public static int SaveNames(string filename)
         {
-            FileStream fp;
+            Stream fp;
 
             if ((fp = F4File.OpenCampFile(filename, "idx", FileAccess.Write)) == null)
                 return 0;

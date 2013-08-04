@@ -32,6 +32,10 @@ namespace FalconNet.F4Common
 
 	public static class F4Config
 	{
+        //Defined originally at winmain
+        public static bool RepairObjective = false;
+        public static bool DestroyObjective = false;
+
 		#if TODO
 		extern "C" g_nBWMaxDeltaTime;	// needed to link into C files (capi.c)
 		extern "C" g_nBWCheckDeltaTime;

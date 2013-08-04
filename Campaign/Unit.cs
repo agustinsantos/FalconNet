@@ -17,6 +17,10 @@ using FalconNet.Common;
 using FalconNet.CampaignBase;
 using F4PFList = FalconNet.FalcLib.FalconPrivateList;
 using F4POList = FalconNet.FalcLib.FalconPrivateOrderedList;
+using System.IO;
+using FalconNet.Common.Encoding;
+using FalconNet.F4Common;
+using log4net;
 
 namespace FalconNet.Campaign
 {
@@ -282,8 +286,28 @@ namespace FalconNet.Campaign
             MakeUnitDirty(Dirty_Unit.DIRTY_TACTIC, Dirtyness.SEND_EVENTUALLY);
         }
 
-        public void SetCurrentWaypoint(ushort p)
-        { throw new NotImplementedException(); }
+        public void SetCurrentWaypoint(ushort cw)
+        {
+#if DEBUG
+            WayPoint tw = wp_list;
+            int i = cw;
+
+            while (i != 0 && tw != null)
+            {
+                tw = tw.GetNextWP();
+                i--;
+            }
+
+            Debug.Assert(i == 0);
+
+            if (cw == 0)
+                Debug.Assert(!IsFlight());
+
+#endif
+            current_wp = cw;
+            //MakeUnitDirty (DIRTY_WAYPOINT, DDP[79].priority);
+            MakeUnitDirty(Dirty_Unit.DIRTY_WAYPOINT, Dirtyness.SEND_NOW);
+        }
 
         public void SetNameId(short nid)
         {
@@ -322,9 +346,6 @@ namespace FalconNet.Campaign
                     VuSessionEntity target = (VuSessionEntity)VUSTATIC.vuDatabase.Find(OwnerId());
                     FalconFlightPlanMessage msg = new FalconFlightPlanMessage(Id(), target);
                     byte[] tmp = new byte[1024];
-                    int ptr;
-
-                    ptr = 0;
                     msg.dataBlock.size = EncodeWaypoints(tmp);
                     msg.dataBlock.type = FalconFlightPlanMessage.DataType.waypointData;
                     msg.dataBlock.data = new byte[msg.dataBlock.size];
@@ -899,7 +920,7 @@ namespace FalconNet.Campaign
         public void SendUnitMessage(VU_ID id, short msg, short d1, short d2, short d3)
         {
             VuTargetEntity target = (VuTargetEntity)VUSTATIC.vuDatabase.Find(OwnerId());
-            FalconUnitMessage um = new FalconUnitMessage( Id(), target);
+            FalconUnitMessage um = new FalconUnitMessage(Id(), target);
             um.dataBlock.from = id;
             um.dataBlock.message = msg;
             um.dataBlock.data1 = d1;
@@ -1442,7 +1463,7 @@ namespace FalconNet.Campaign
 
             w = new WayPointClass(x, y, alt, speed, arr, station, mission, 0);
 
-            if (wp_list ==null)
+            if (wp_list == null)
             {
                 wp_list = w;
                 current_wp = 1;
@@ -1494,7 +1515,7 @@ namespace FalconNet.Campaign
             CampaignStatic.CampEnterCriticalSection();
             t = wp_list;
 
-            if ( t == null)
+            if (t == null)
                 return;
 
             if (t == w)
@@ -1548,28 +1569,24 @@ namespace FalconNet.Campaign
         }
 
 
-        public void DecodeWaypoints(byte[] stream)
+        public void DecodeWaypoints(Stream stream)
         {
-#if TODO
             ushort count;
-            WayPointClass new_list, lw, nw, w;
-
-
             if (CampaignClass.gCampDataVersion >= 71)
             {
-                memcpychk(&count, stream, sizeof(ushort), rem);
+                count = UInt16EncodingLE.Decode(stream);
             }
             else
             {
                 count = 0;
-                memcpychk(&count, stream, sizeof(uchar), rem);
+                count = (byte)stream.ReadByte();
             }
 
-            if (load_log)
-            {
-                fprintf(load_log, "%d ", count);
-                fflush(load_log);
-            }
+            
+            WayPointClass new_list, lw, nw, w;
+
+
+            log.Debug(count);
 
             // KCK: Rather than replace our waypoint list,
             // I'm going to copy the new list into our old one.
@@ -1582,7 +1599,8 @@ namespace FalconNet.Campaign
 
             while (count != 0)
             {
-                w = new WayPointClass(stream, rem);
+                w = new WayPointClass(); 
+                WayPointClassEncodingLE.Decode(stream, ref w);
 
                 if (lw == null)
                     new_list = lw = w;
@@ -1593,11 +1611,11 @@ namespace FalconNet.Campaign
                 count--;
             }
 
-            CampEnterCriticalSection();
+            CampaignStatic.CampEnterCriticalSection();
             nw = new_list;
             w = wp_list;
             lw = null;
-
+#if TODO
             while (w && nw)
             {
                 w.CloneWP(nw);
@@ -1632,9 +1650,9 @@ namespace FalconNet.Campaign
             }
 
             if (new_list != null)
-                DeleteWPList(new_list);
+                CampwpStatic.DeleteWPList(new_list);
 
-            CampLeaveCriticalSection();
+            CampaignStatic.CampLeaveCriticalSection();
 
             // Fix up Speeds
             w = wp_list;
@@ -2193,6 +2211,9 @@ namespace FalconNet.Campaign
         protected CampBaseClass sojSource;
         protected int sojOctant;
         protected float sojRangeSq;
+
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
     }
 #if TODO //Not used
 	public class UnitDriver : VuMaster
@@ -2299,6 +2320,24 @@ namespace FalconNet.Campaign
 
         public static int DecodeUnitData(VU_BYTE[] stream, FalconSessionEntity owner)
         { throw new NotImplementedException(); }
+    }
+
+    public static class UnitClassEncodingLE
+    {
+        public static void Encode(Stream stream, UnitClass val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, UnitClass rst)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Size
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }
 

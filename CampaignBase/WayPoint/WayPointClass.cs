@@ -625,7 +625,7 @@ namespace FalconNet.CampaignBase
     {
         public const byte WP_HAVE_DEPTIME = 0x01;
         public const byte WP_HAVE_TARGET = 0x02;
-        private const int version = 71; //TODO fix that
+        private const int version = 73; //TODO fix that
         private const int FLAGS_WIDENED_AT_VERSION = 73;
 
         public static void Encode(Stream stream, WayPointClass val)

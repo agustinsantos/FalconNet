@@ -79,6 +79,8 @@
     <Compile Include="Mission\MissionTargetTypeEnum.cs" />
     <Compile Include="Mission\MissionTypeEnum.cs" />
     <Compile Include="Mission\TankerConditionalModeEnum.cs" />
+    <Compile Include="NavigationEnums.cs" />
+    <Compile Include="PtData.cs" />
     <Compile Include="SimLibStatic.cs" />
     <Compile Include="SoundFX.cs" />
     <Compile Include="Camplib.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="dispcfg.cs" />
     <Compile Include="dirtybits.cs" />
     <Compile Include="FalcDmg.cs" />
+    <Compile Include="Tacan.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="Team\AirActionTypeEnum.cs" />
     <Compile Include="Team\AirTacticTypeEnum.cs" />

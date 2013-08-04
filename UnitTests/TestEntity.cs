@@ -129,5 +129,11 @@ namespace UnitTestVU
         {
             EntityDB.LoadDirtyData("Falcon4");
         }
+
+        [TestMethod]
+        public void TestLoadRackTables()
+        {
+            EntityDB.LoadRackTables();
+        }
     }
 }

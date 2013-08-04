@@ -1133,7 +1133,7 @@ protected:
   protected VU_ID cameras_[VU_MAX_SESSION_CAMERAS];
 #endif
         // local data
-        protected VuGameEntity game_;
+        public VuGameEntity game_;
         protected VU_GAME_ACTION action_;
     }
 
@@ -1438,7 +1438,7 @@ protected:
         // DATA
         protected string groupName_;
         protected ushort sessionMax_;
-        internal VuOrderedList sessionCollection_;
+        internal protected VuOrderedList sessionCollection_;
 
         // scratch data
         protected int selfIndex_;

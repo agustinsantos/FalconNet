@@ -84,17 +84,6 @@ namespace FalconNet.VU
             Console.WriteLine("You dropped an entity, better find it!!!\n");
         }
 
-        public static VuEntityType VuxType(ushort id)
-        {
-            VuEntityType retval = null;
-#if TODO
-                Debug.Assert(id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities);
-
-                if (id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities)
-                    retval = (VuEntityType)(Falcon4ClassTable[id - VuEntity.VU_LAST_ENTITY_TYPE]);
-#endif
-            return retval;
-        }
 
         public static VU_ID_NUMBER VuxGetId()
         {

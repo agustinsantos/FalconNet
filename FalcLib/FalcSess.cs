@@ -157,7 +157,12 @@ namespace FalconNet.FalcLib
             SetEntityType((ushort)(EntityDB.F4SessionType + VU_LAST_ENTITY_TYPE));
             flyState = FLYSTATE.FLYSTATE_IN_UI;
         }
-
+        public override void SetEntityType(ushort entityType)
+        {
+            if (entityType >= VU_LAST_ENTITY_TYPE)
+                entityTypePtr_ = F4VUStatic.VuxType(entityType);
+            base.SetEntityType(entityType);
+        }
         public virtual VU_ERRCODE InsertionCallback()
         {
             throw new NotImplementedException();

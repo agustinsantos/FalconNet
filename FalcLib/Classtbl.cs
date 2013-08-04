@@ -19,7 +19,7 @@ namespace FalconNet.FalcLib
     //#define FALCON_RELEASE      23
     //#define FALCON40            0x02
     /* Domain Class table Entries */
-    public enum Domains
+    public enum Domains : byte
     {
         DOMAIN_ABSTRACT = 1,
         DOMAIN_AIR = 2,
@@ -31,7 +31,7 @@ namespace FalconNet.FalcLib
     };
 
     /* Class Class table Entries */
-    public enum Classes
+    public enum Classes : byte
     {
         CLASS_NOTHING = 0,
         CLASS_ANIMAL = 1,
@@ -51,7 +51,7 @@ namespace FalconNet.FalcLib
     };
 
     /* Type Class table Entries */
-    public enum ClassTypes
+    public enum ClassTypes : byte
     {
         TYPE_NOTHING = 1,
         TYPE_GUN = 3,
@@ -4392,7 +4392,7 @@ namespace FalconNet.FalcLib
         public static void InitClassTableAndData(string name, string objset)
         {
 
-            FileStream filePtr;
+            Stream filePtr;
             string fileName;
 
             if (objset != "objects")
@@ -4448,8 +4448,7 @@ namespace FalconNet.FalcLib
                     }
                     thisClass.vehicleDataIndex = Int16EncodingLE.Decode(filePtr);
                     thisClass.dataType = (Data_Types)filePtr.ReadByte();
-                    //skip dataPtr
-                    filePtr.Position += 4;
+                    thisClass.dataPtr = Int32EncodingLE.Decode(filePtr);
                     EntityDB.Falcon4ClassTable[i] = thisClass;
                 }
                 F4File.CloseCampFile(filePtr);

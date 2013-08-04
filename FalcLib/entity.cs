@@ -500,7 +500,7 @@ namespace FalconNet.FalcLib
     public class PtHeaderDataType
     {
         public short objID;						// ID of the objective this belongs to
-        public byte type;						// The type of pt data this contains
+        public PointTypes type;						// The type of pt data this contains
         public byte count;						// Number of points
         public byte[] features = new byte[Camplib.MAX_FEAT_DEPEND];	// Features this list depends on (# in objective's feature list)
         public short data;						// Other data (runway heading, for example)
@@ -522,7 +522,7 @@ namespace FalconNet.FalcLib
         public static void Decode(Stream stream, PtHeaderDataType rst)
         {
             rst.objID = Int16EncodingLE.Decode(stream);
-            rst.type = (byte)stream.ReadByte();
+            rst.type = (PointTypes)stream.ReadByte();
             rst.count = (byte)stream.ReadByte();
             for (int i = 0; i < Camplib.MAX_FEAT_DEPEND; i++)
                 rst.features[i] = (byte)stream.ReadByte();
@@ -544,8 +544,8 @@ namespace FalconNet.FalcLib
     }
     public struct PtDataType
     {
-        public float xOffset, yOffset;			// X and Y offsets of this point (from center of objective tile)
-        public byte type;						// The type of point this is
+        public float xOffset, yOffset; // X and Y offsets of this point (from center of objective tile)
+        public PointTypes type;		   // The type of point this is
         public byte flags;
     }
     public static class PtDataTypeEncodingLE
@@ -559,7 +559,7 @@ namespace FalconNet.FalcLib
         {
             rst.xOffset = SingleEncodingLE.Decode(stream);
             rst.yOffset = SingleEncodingLE.Decode(stream);
-            rst.type = (byte)stream.ReadByte();
+            rst.type = (PointTypes)stream.ReadByte();
             rst.flags = (byte)stream.ReadByte();
             stream.ReadBytes(2);
         }
@@ -882,6 +882,9 @@ namespace FalconNet.FalcLib
         // Id of our generic rocket.
         public static short gRocketId;
 
+
+        public const int CLASS_NUM_BYTES = 8;
+
         // ===============================================
         // Functions
         // ===============================================
@@ -965,50 +968,52 @@ namespace FalconNet.FalcLib
 
             F4Assert(Falcon4ClassTable);
             WriteClassTable();
+#endif
             // Build ptr data
-            for (i = 0; i < NumEntities; i++)
+            for (int i = 0; i < F4VUStatic.NumEntities; i++)
             {
                 if (Falcon4ClassTable[i].dataPtr != null)
                 {
-                    if (Falcon4ClassTable[i].dataType == DTYPE_UNIT)
+                    if (Falcon4ClassTable[i].dataType == Data_Types.DTYPE_UNIT)
                     {
                         //				if (Falcon4ClassTable[i].vuClassData.classInfo_[VU_DOMAIN] == DOMAIN_AIR && Falcon4ClassTable[i].vuClassData.classInfo_[VU_TYPE] == TYPE_SQUADRON)
                         //					NumSquadTypes++;
                         Debug.Assert((int)Falcon4ClassTable[i].dataPtr < NumUnitEntries);
-                        UnitDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = i;
-                        Falcon4ClassTable[i].dataPtr = (void*)&UnitDataTable[(int)Falcon4ClassTable[i].dataPtr];
+                        UnitDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = (short)i;
+                        Falcon4ClassTable[i].dataPtr = UnitDataTable[(int)Falcon4ClassTable[i].dataPtr];
                     }
-                    else if (Falcon4ClassTable[i].dataType == DTYPE_OBJECTIVE)
+                    else if (Falcon4ClassTable[i].dataType == Data_Types.DTYPE_OBJECTIVE)
                     {
-                        if (Falcon4ClassTable[i].vuClassData.classInfo_[VU_TYPE] >= NumObjectiveTypes)
-                            NumObjectiveTypes = Falcon4ClassTable[i].vuClassData.classInfo_[VU_TYPE];
+                        if (Falcon4ClassTable[i].vuClassData.classInfo_[Vu_CLASS.VU_TYPE] >= NumObjectiveTypes)
+                            NumObjectiveTypes = Falcon4ClassTable[i].vuClassData.classInfo_[Vu_CLASS.VU_TYPE];
                         Debug.Assert((int)Falcon4ClassTable[i].dataPtr < NumObjectiveEntries);
-                        ObjDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = i;
-                        Falcon4ClassTable[i].dataPtr = (void*)&ObjDataTable[(int)Falcon4ClassTable[i].dataPtr];
+                        ObjDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = (short)i;
+                        Falcon4ClassTable[i].dataPtr = ObjDataTable[(int)Falcon4ClassTable[i].dataPtr];
                     }
-                    else if (Falcon4ClassTable[i].dataType == DTYPE_WEAPON)
+                    else if (Falcon4ClassTable[i].dataType == Data_Types.DTYPE_WEAPON)
                     {
                         Debug.Assert((int)Falcon4ClassTable[i].dataPtr < NumWeaponTypes);
-                        WeaponDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = i;
-                        Falcon4ClassTable[i].dataPtr = (void*)&WeaponDataTable[(int)Falcon4ClassTable[i].dataPtr];
+                        WeaponDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = (short)i;
+                        Falcon4ClassTable[i].dataPtr = WeaponDataTable[(int)Falcon4ClassTable[i].dataPtr];
                     }
-                    else if (Falcon4ClassTable[i].dataType == DTYPE_FEATURE)
+                    else if (Falcon4ClassTable[i].dataType == Data_Types.DTYPE_FEATURE)
                     {
                         Debug.Assert((int)Falcon4ClassTable[i].dataPtr < NumFeatureEntries);
-                        FeatureDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = i;
-                        Falcon4ClassTable[i].dataPtr = (void*)&FeatureDataTable[(int)Falcon4ClassTable[i].dataPtr];
+                        FeatureDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = (short)i;
+                        Falcon4ClassTable[i].dataPtr = FeatureDataTable[(int)Falcon4ClassTable[i].dataPtr];
                     }
-                    else if (Falcon4ClassTable[i].dataType == DTYPE_VEHICLE)
+                    else if (Falcon4ClassTable[i].dataType == Data_Types.DTYPE_VEHICLE)
                     {
                         Debug.Assert((int)Falcon4ClassTable[i].dataPtr < NumVehicleEntries);
-                        VehicleDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = i;
-                        Falcon4ClassTable[i].dataPtr = (void*)&VehicleDataTable[(int)Falcon4ClassTable[i].dataPtr];
+                        VehicleDataTable[(int)Falcon4ClassTable[i].dataPtr].Index = (short)i;
+                        Falcon4ClassTable[i].dataPtr = VehicleDataTable[(int)Falcon4ClassTable[i].dataPtr];
                     }
                     else
                         Falcon4ClassTable[i].dataPtr = null;
                 }
             }
             ReadClassTable();
+#if TODO
             // Update some precalculated statistics
             // KCK: I do these precalculations in the classtable builder now.. 
             //	UpdateVehicleCombatStatistics();
@@ -1081,14 +1086,12 @@ namespace FalconNet.FalcLib
             Falcon4ClassTable[F4GameType].vuClassData.persistent_ = false;
 
             Falcon4ClassTable[F4FlyingEyeType].vuClassData.fineUpdateMultiplier_ = 0.2F;
-#endif
+#endif //TODO
 #endif
 #endif
 #endif
             ReadClassTable();
             return 1;
-
-            throw new NotImplementedException();
         }
 
 
@@ -1128,7 +1131,7 @@ namespace FalconNet.FalcLib
         {
             short entries;
 
-            using (FileStream fp = F4File.OpenCampFile(filename, "UCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "UCD", FileAccess.Read))
             {
                 entries = Int16EncodingLE.Decode(fp);
                 UnitDataTable = new UnitClassDataType[entries];
@@ -1159,7 +1162,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadObjectiveData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "OCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "OCD", FileAccess.Read))
             {
                 NumObjectiveEntries = Int16EncodingLE.Decode(fp);
                 ObjDataTable = new ObjClassDataType[NumObjectiveEntries];
@@ -1176,7 +1179,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadWeaponData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "WCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "WCD", FileAccess.Read))
             {
                 NumWeaponTypes = Int16EncodingLE.Decode(fp);
                 WeaponDataTable = new WeaponClassDataType[NumWeaponTypes];
@@ -1193,7 +1196,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadRocketData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "RKT", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "RKT", FileAccess.Read))
             {
                 NumRocketTypes = Int16EncodingLE.Decode(fp);
                 RocketDataTable = new RocketClassDataType[NumRocketTypes];
@@ -1211,7 +1214,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadDirtyData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "DDP", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "DDP", FileAccess.Read))
             {
                 NumDirtyDataPriorities = Int16EncodingLE.Decode(fp);
                 DDP = new DirtyDataClassType[NumDirtyDataPriorities];
@@ -1243,7 +1246,7 @@ namespace FalconNet.FalcLib
                     fname = filename;
                 }
             }
-            using (FileStream fp = F4File.OpenCampFile(fname, "FCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(fname, "FCD", FileAccess.Read))
             {
                 entries = Int16EncodingLE.Decode(fp);
                 FeatureDataTable = new FeatureClassDataType[entries];
@@ -1264,7 +1267,7 @@ namespace FalconNet.FalcLib
 
             short entries;
 
-            using (FileStream fp = F4File.OpenCampFile(filename, "VCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "VCD", FileAccess.Read))
             {
                 entries = Int16EncodingLE.Decode(fp);
                 VehicleDataTable = new VehicleClassDataType[entries];
@@ -1284,7 +1287,7 @@ namespace FalconNet.FalcLib
         {
             short entries;
 
-            using (FileStream fp = F4File.OpenCampFile(filename, "WLD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "WLD", FileAccess.Read))
             {
                 entries = Int16EncodingLE.Decode(fp);
                 WeaponListDataTable = new WeaponListDataType[entries];
@@ -1301,7 +1304,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadPtHeaderData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "PHD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "PHD", FileAccess.Read))
             {
                 NumPtHeaders = Int16EncodingLE.Decode(fp);
                 PtHeaderDataTable = new PtHeaderDataType[NumPtHeaders];
@@ -1358,7 +1361,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadPtData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "PD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "PD", FileAccess.Read))
             {
                 NumPts = Int16EncodingLE.Decode(fp);
                 PtDataTable = new PtDataType[NumPts];
@@ -1389,7 +1392,7 @@ namespace FalconNet.FalcLib
                     fname = filename;
                 }
             }
-            using (FileStream fp = F4File.OpenCampFile(fname, "FED", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(fname, "FED", FileAccess.Read))
             {
                 NumObjFeatEntries = Int16EncodingLE.Decode(fp);
                 FeatureEntryDataTable = new FeatureEntry[NumObjFeatEntries];
@@ -1406,7 +1409,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadRadarData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "RCD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "RCD", FileAccess.Read))
             {
                 NumRadarEntries = Int16EncodingLE.Decode(fp);
                 RadarDataTable = new RadarDataType[NumRadarEntries];
@@ -1423,7 +1426,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadIRSTData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "ICD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "ICD", FileAccess.Read))
             {
                 NumIRSTEntries = Int16EncodingLE.Decode(fp);
                 IRSTDataTable = new IRSTDataType[NumIRSTEntries];
@@ -1440,7 +1443,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadRwrData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "rwd", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "rwd", FileAccess.Read))
             {
                 NumRwrEntries = Int16EncodingLE.Decode(fp);
                 RwrDataTable = new RwrDataType[NumRwrEntries];
@@ -1457,7 +1460,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadVisualData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "vsd", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "vsd", FileAccess.Read))
             {
                 NumVisualEntries = Int16EncodingLE.Decode(fp);
                 VisualDataTable = new VisualDataType[NumVisualEntries];
@@ -1474,7 +1477,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadSimWeaponData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "SWD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "SWD", FileAccess.Read))
             {
                 NumSimWeaponEntries = Int16EncodingLE.Decode(fp);
                 SimWeaponDataTable = new SimWeaponDataType[NumSimWeaponEntries];
@@ -1491,7 +1494,7 @@ namespace FalconNet.FalcLib
 
         public static bool LoadACDefData(string filename)
         {
-            using (FileStream fp = F4File.OpenCampFile(filename, "ACD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "ACD", FileAccess.Read))
             {
                 NumACDefEntries = Int16EncodingLE.Decode(fp);
                 SimACDefTable = new SimACDefType[NumACDefEntries];
@@ -1509,7 +1512,7 @@ namespace FalconNet.FalcLib
         public static bool LoadSquadronStoresData(string filename)
         {
 
-            using (FileStream fp = F4File.OpenCampFile(filename, "SSD", FileAccess.Read))
+            using (Stream fp = F4File.OpenCampFile(filename, "SSD", FileAccess.Read))
             {
                 NumSquadTypes = Int16EncodingLE.Decode(fp);
                 SquadronStoresDataTable = new SquadronStoresDataType[NumSquadTypes];
@@ -1529,34 +1532,290 @@ namespace FalconNet.FalcLib
             throw new NotImplementedException();
         }
 
-        public static int GetClassID(byte domain, byte eclass, byte type, byte stype, byte sp, byte owner, byte c6, byte c7)
+        private const int VU_FILTERANY = 255;
+        private const int VU_FILTERSTOP = 0;
+
+        private static bool CheckClassEntry(int id, byte[] filter)
         {
-            throw new NotImplementedException();
+            int
+            i;
+
+            /* compare class bytes */
+            for (i = 0; i < CLASS_NUM_BYTES; i++)
+            {
+                if (filter[i] == VU_FILTERSTOP)
+                {
+                    break;
+                }
+                else
+                {
+                    if (filter[i] != VU_FILTERANY)
+                    {
+                        if (filter[i] != Falcon4ClassTable[id].vuClassData.classInfo_[i])
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
+
+        public static int GetClassID(Domains domain, Classes eclass, ClassTypes type,
+                                    byte stype, byte sp, byte owner, byte c6, byte c7)
+        {
+            int id;
+            byte[] filter = new byte[CLASS_NUM_BYTES];
+
+            filter[0] = (byte)domain;
+            filter[1] = (byte)eclass;
+            filter[2] = (byte)type;
+            filter[3] = stype;
+            filter[4] = sp;
+            filter[5] = owner;
+            filter[6] = c6;
+            filter[7] = c7;
+
+
+            // This should eventually be smart enough to return the 'next best thing'
+            for (id = 0; id < F4VUStatic.NumEntities; id++)
+            {
+                if (CheckClassEntry(id, filter))
+                    return id;
+            }
+
+            return 0;
+        }
+
 
         public static string GetClassName(int ID)
         {
-            throw new NotImplementedException();
+            Data_Types type;
+            Object ptr;
+            //union
+            //{
+            //    void *ptr;
+            //    FeatureClassDataType *fc;
+            //    ObjClassDataType *oc;
+            //    UnitClassDataType *uc;
+            //    VehicleClassDataType *vc;
+            //    WeaponClassDataType *wc;
+            //}
+            //ptr;
+
+            type = Falcon4ClassTable[ID].dataType;
+
+            ptr = Falcon4ClassTable[ID].dataPtr;
+
+            if (type == Data_Types.DTYPE_FEATURE)
+            {
+                return ((FeatureClassDataType)ptr).Name;
+            }
+            else if (type == Data_Types.DTYPE_OBJECTIVE)
+            {
+                return ((ObjClassDataType)ptr).Name;
+            }
+            else if (type == Data_Types.DTYPE_UNIT)
+            {
+                return ((UnitClassDataType)ptr).Name;
+            }
+            else if (type == Data_Types.DTYPE_VEHICLE)
+            {
+                return ((VehicleClassDataType)ptr).Name;
+            }
+            else if (type == Data_Types.DTYPE_WEAPON)
+            {
+                return ((WeaponClassDataType)ptr).Name;
+            }
+
+            return null;
         }
 
-        public static DWORD MapVisId(DWORD ID)
+        private const int MAXMAPID = 1400;
+        private static DWORD[] idmap = new DWORD[MAXMAPID]; // well simple is easiest
+
+        public static void LoadVisIdMap()
         {
-            throw new NotImplementedException();
+
+            for (uint i = 0; i < MAXMAPID; i++)
+                idmap[i] = i; // identity map
+
+            using (StreamReader reader = new StreamReader(F4File.OpenCampFile("visid", "map", FileAccess.Read)))
+            {
+
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (String.IsNullOrWhiteSpace(line) || line.StartsWith("/"))
+                        continue;
+                    string[] parts = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 3)
+                    {
+                        int id1 = int.Parse(parts[0]);
+                        uint id2 = uint.Parse(parts[2]);
+
+                        if (id1 >= 0 && id1 < MAXMAPID)
+                            idmap[id1] = id2;
+                    }
+                }
+
+                reader.Close();
+            }
+        }
+
+        public static DWORD MapVisId(DWORD visId)
+        {
+            if (visId >= 0 && visId < MAXMAPID)
+                return idmap[visId];
+
+            return visId;
         }
 
         public static void LoadRackTables()
         {
-            throw new NotImplementedException();
-        } // JPO
+            int ngrp = 0;
+
+            //if ((fp = OpenCampFile("Rack", "dat", "rt")) == NULL)
+            //{
+            //    sprintf(buffer, "%s\\%s", FalconObjectDataDir, "Rack.dat");
+
+            //    if ((fp = fopen(buffer, "rt")) == NULL) return;
+            //}
+            using (StreamReader reader = new StreamReader(F4File.OpenCampFile("visid", "map", FileAccess.Read)))
+            {
+
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (String.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+                    string[] parts = line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length != 2 && parts[1] != "NumGroups")
+                        continue;
+                    ngrp = int.Parse(parts[1]);
+                    Debug.Assert(ngrp >= 0 && ngrp < 1000); // arbitrary 1000
+                    break;
+                }
+                //if (feof(fp))
+                //{
+                //    fclose(fp);
+                //    return;
+                //}
+
+                // read in the groups
+                MaxRackGroups = ngrp;
+                RackGroupTable = new RackGroup[MaxRackGroups];
+                int rg = 0;
+                while (rg < MaxRackGroups && (line = reader.ReadLine()) != null)
+                {
+                    if (String.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+                    int grp;
+
+                    string[] parts = line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (!parts[0].StartsWith("Group"))
+                        continue;
+                    grp = int.Parse(parts[0].Substring(5));
+
+                    Debug.Assert(grp < MaxRackGroups); // well it should be
+                    ngrp = int.Parse(parts[1]);
+                    Debug.Assert(ngrp >= 0 && ngrp < 1000); // arbitrary 1000
+                    RackGroupTable[grp].nentries = ngrp;
+                    RackGroupTable[grp].entries = new int[ngrp];
+
+                    for (int i = 2; i < parts.Length && i < ngrp; i++)
+                    {
+                        RackGroupTable[grp].entries[i] = int.Parse(parts[i]);
+                    }
+
+                    rg++;
+                }
+
+                // now read in the entries
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (String.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+                    string[] parts = line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length != 2 && parts[1] != "NumRacks")
+                        continue;
+
+                    ngrp = int.Parse(parts[1]);
+
+                    Debug.Assert(ngrp >= 0 && ngrp < 1000); // arbitrary 1000
+                    break;
+                }
+
+                MaxRackObjects = ngrp;
+                RackObjectTable = new RackObject[MaxRackObjects];
+                int rack = 0;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (String.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+
+                    int ctid, occ;
+
+                    string[] parts = line.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length != 3 && !parts[0].StartsWith("Rack"))
+                        continue;
+                    rack = int.Parse(parts[0].Substring(4));
+                    ctid = int.Parse(parts[1]);
+                    occ = int.Parse(parts[2]);
+                    Debug.Assert(rack < MaxRackObjects);
+                    Debug.Assert(ctid >= 0 && ctid < F4VUStatic.NumEntities);
+                    RackObjectTable[rack].ctind = ctid;
+                    RackObjectTable[rack].maxoccupancy = occ;
+                }
+
+                reader.Close();
+            }
+        }
 
         public static int FindBestRackID(int rackgroup, int count)
         {
-            throw new NotImplementedException();
+            if (rackgroup < 0 || rackgroup >= MaxRackGroups)
+                return -1;
+
+            for (int i = 0; i < RackGroupTable[rackgroup].nentries; i++)
+            {
+                int rack = RackGroupTable[rackgroup].entries[i];
+
+                if (rack > 0 && rack < MaxRackObjects &&
+                    RackObjectTable[rack].maxoccupancy >= count)
+                    return rack;
+            }
+
+            return -1; // not possible
         }
+
+        
+
 
         public static int FindBestRackIDByPlaneAndWeapon(int planerg, int weaponrg, int count)
         {
-            throw new NotImplementedException();
+            if (planerg < 0 || planerg >= MaxRackGroups ||
+                weaponrg < 0 || weaponrg >= MaxRackGroups)
+                return -1;
+
+            // first find a rackgroup in common
+            for (int i = 0; i < RackGroupTable[planerg].nentries; i++)
+            {
+                for (int j = 0; j < RackGroupTable[weaponrg].nentries; j++)
+                {
+                    int rack = RackGroupTable[planerg].entries[i];
+
+                    if (rack == RackGroupTable[weaponrg].entries[j] &&
+                        rack > 0 && rack < MaxRackObjects &&
+                        RackObjectTable[rack].maxoccupancy >= count)
+                        return rack;
+                }
+            }
+
+            return -1;
         }
 
 

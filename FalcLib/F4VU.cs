@@ -10,6 +10,7 @@ using VU_KEY = System.UInt64;
 using VU_BOOL = System.Boolean;
 using BIG_SCALAR = System.Single;
 using SM_SCALAR = System.Single;
+using System.Diagnostics;
 
 namespace FalconNet.FalcLib
 {
@@ -167,10 +168,18 @@ namespace FalconNet.FalcLib
         {
             return (VuSessionEntity)new FalconSessionEntity(vuxLocalDomain, "Falcon 4.0");
         }
-        
 
+        public static VuEntityType VuxType(ushort id)
+        {
+            VuEntityType retval = null;
 
+           // Debug.Assert(id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities);
 
+            if (id >= VuEntity.VU_LAST_ENTITY_TYPE && id - VuEntity.VU_LAST_ENTITY_TYPE < NumEntities)
+                retval = EntityDB.Falcon4ClassTable[id - VuEntity.VU_LAST_ENTITY_TYPE].vuClassData;
+
+            return retval;
+        }
 
  
 

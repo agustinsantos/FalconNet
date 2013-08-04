@@ -95,7 +95,7 @@ namespace FalconNet.F4Common
             return 1;
         }
 
-        public static FileStream OpenCampFile(string filename, string ext, FileAccess access)
+        public static Stream OpenCampFile(string filename, string ext, FileAccess access)
         {
             string fullname, path;
             int index;
@@ -140,7 +140,6 @@ namespace FalconNet.F4Common
                     if (string_compare_extensions(fullname, camp_names[index]))
                     {
                         camp_fp.Seek(camp_offset[index], 0);
-
                         return camp_fp;
                     }
                 }
@@ -153,7 +152,7 @@ namespace FalconNet.F4Common
                 fullname = filename + "." + ext;
                 camp_fp.Seek(0, SeekOrigin.End);
                 camp_names[camp_num_files] = fullname;
-                camp_offset[camp_num_files] = camp_fp.Position;
+                camp_offset[camp_num_files] = (int)camp_fp.Position;
                 camp_size[camp_num_files] = 0;
                 return camp_fp;
             }
@@ -180,7 +179,7 @@ namespace FalconNet.F4Common
             return fp;
         }
 
-        public static void CloseCampFile(FileStream fp)
+        public static void CloseCampFile(Stream fp)
         {
             int index;
 
@@ -199,7 +198,7 @@ namespace FalconNet.F4Common
                 if (writing_campressed_file)
                 {
                     camp_fp.Seek(0, SeekOrigin.End);
-                    camp_size[camp_num_files] = camp_fp.Position - camp_offset[camp_num_files];
+                    camp_size[camp_num_files] = (int)(camp_fp.Position - camp_offset[camp_num_files]);
                     camp_num_files++;
                 }
                 else if (reading_campressed_file)
@@ -265,7 +264,7 @@ namespace FalconNet.F4Common
             byte[] data;
             string buffer;
 
-            FileStream fp;
+            Stream fp;
 
             if (reading_campressed_file)
             {
@@ -411,6 +410,7 @@ namespace FalconNet.F4Common
                 case "smd":
                 case "sqd":
                 case "pol":
+                case "map":
                     return FalconCampUserSaveDirectory;
 
                 case "ct":
@@ -496,8 +496,8 @@ namespace FalconNet.F4Common
         private static string[] camp_names = new string[32];
         private static string camp_file_name;
         private static int camp_num_files;
-        private static long[] camp_offset = new long[32];
-        private static long[] camp_size = new long[32];
+        private static int[] camp_offset = new int[32];
+        private static int[] camp_size = new int[32];
 
         private static FalconGameType camp_game_type;
 

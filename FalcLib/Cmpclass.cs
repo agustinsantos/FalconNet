@@ -433,7 +433,7 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
 
         // Here's the UI Interface routines:
-        public int LoadScenarioStats(FalconGameType type, string savefile)
+        public bool LoadScenarioStats(FalconGameType type, string savefile)
         { throw new NotImplementedException(); }
 
         public int RequestScenarioStats(FalconGameEntity game)
@@ -444,8 +444,169 @@ namespace FalconNet.Campaign
 
         public int NewCampaign(FalconGameType gametype, string scenario)
         { throw new NotImplementedException(); }			// Calls InitCampaign Internally
-        public int LoadCampaign(FalconGameType gametype, string savefile)
-        { throw new NotImplementedException(); }			// Calls InitCampaign Internally
+
+
+        public bool LoadCampaign(FalconGameType gametype, string savefile) // Calls InitCampaign Internally
+        {
+            if (IsLoaded())
+            {
+                EndCampaign();
+            }
+            if (!IsPreLoaded() && !LoadScenarioStats(gametype, savefile))
+            {
+                EndCampaign();
+                return false;
+            }
+
+            InMainUI = false; // MN for weather UI
+
+            TheCampaign.Suspend();
+            //ShiAssert (gameCompressionRatio == 0);
+
+            F4File.StartReadCampFile(gametype, savefile);
+
+            gCampDataVersion = ReadVersionNumber(savefile);
+
+#if NO_LOCKS_ON_INIT_EXIT
+    CampEnterCriticalSection();
+#endif
+
+            switch (gametype)
+            {
+                case FalconGameType.game_InstantAction:
+                case FalconGameType.game_Dogfight:
+                    Flags |= CAMP_ENUM.CAMP_LIGHT;
+                    DisposeEventLists();
+                    break;
+                case FalconGameType.game_TacticalEngagement:
+                    Flags |= CAMP_ENUM.CAMP_TACTICAL;
+                    DisposeEventLists();
+                    break;
+            }
+
+            InitCampaign(gametype, null);
+
+            // Load Savefile Data
+            if (!TeamStatic.LoadTeams(savefile))
+            {
+                TeamStatic.AddNewTeams(RelType.Neutral);
+            }
+
+#if TODO
+		    ObjectivStatic.LoadBaseObjectives(Scenario);
+            ObjectivStatic.LoadObjectiveDeltas(savefile);
+
+            if (gClearPilotInfo || !PilotStatic.LoadPilotInfo(savefile))
+            {
+                PilotStatic.NewPilotInfo();
+            }
+            UnitStatic.LoadUnits(savefile);
+
+            if (!LoadCampaignEvents(savefile, Scenario))
+            {
+                NewCampaignEvents(Scenario);
+            }
+
+            PersistStatic.LoadPersistantList(savefile);
+            ChooseBullseye();
+            if (gametype != game_InstantAction)
+    {
+        RebuildObjectiveLists();
+
+        if (gCurrentDataVersion > 67)
+        {
+            LoadPrimaryObjectiveList(savefile);
+        }
+    }
+
+    if (gametype != game_InstantAction)
+    {
+        BuildDivisionData();
+    }
+
+    if (!(Flags & CAMP_LIGHT) && !(Flags & CAMP_TACTICAL))
+    {
+        // KCK: By telling weathermap that we're instant action, it won't
+        // cause a reloading of weather for multiple instant action runs.
+        ((WeatherClass)realWeather).CampLoad(savefile, 0);
+        StandardRebuild();
+        lastAirPlan = 0; // Force an air replan - To get squadron data into the ATM
+        ChooseBullseye();
+    }
+    else
+    {
+        ((WeatherClass)realWeather).CampLoad(savefile, gametype);
+    }
+
+    // ChillTypes();
+    Flags |= CAMP_ENUM.CAMP_LOADED;
+
+    // Insert our game into the database - which will broadcast it if we're online
+    VuGameEntity game = gCommsMgr.GetTargetGame();
+    vuDatabase./*Quick*/Insert(game);
+    EndReadCampFile();
+
+    // Copy force ratio and history files into working file
+    sprintf(from, "%s\\%s.his", FalconCampUserSaveDirectory, savefile);
+    sprintf(to, "%s\\tmp.his", FalconCampUserSaveDirectory);
+    CopyFile(from, to, FALSE);
+    sprintf(from, "%s\\%s.frc", FalconCampUserSaveDirectory, savefile);
+    sprintf(to, "%s\\tmp.frc", FalconCampUserSaveDirectory);
+    CopyFile(from, to, FALSE);
+
+    // KCK: Added code for tactical engagement missions which were saved with no gun..
+    // This should go away once they've been converted..
+    if (tactical_is_training())
+    {
+        VuListIterator myit(AllAirList);
+        Unit u;
+        u = (Unit) myit.GetFirst();
+
+        while (u)
+        {
+            if (u.IsFlight())
+            {
+                LoadoutStruct load = ((Flight)u).GetLoadout();
+
+                if (!load)
+                {
+                    ((Flight)u).LoadWeapons(NULL, DefaultDamageMods, Air, 2, WEAP_GUN, 0);
+                }
+                else
+                {
+                    if (load[0].WeaponID[0] && !load[0].WeaponCount[0])
+                        load[0].WeaponCount[0] = 50;
+                }
+            }
+
+            u = (Unit) myit.GetNext();
+        }
+    }
+
+    if (gTacticalFullEdit)
+    {
+        // Copy in new country names
+        for (int t = 0; t < NUM_TEAMS; t++)
+        {
+            if (TeamInfo[t])
+            {
+                TeamInfo[t].SetName(CountryNameStr[t]);
+            }
+        }
+    }
+
+    gCampDataVersion = gCurrentDataVersion;
+    TheCampaign.Resume();
+#if NO_LOCKS_ON_INIT_EXIT
+    CampLeaveCriticalSection();
+#endif
+    return true;
+ 
+#endif
+            throw new NotImplementedException();
+        }
+
+
         public int JoinCampaign(FalconGameType gametype, FalconGameEntity game)
         { throw new NotImplementedException(); }	// Calls InitCampaign Internally
         public int StartRemoteCampaign(FalconGameEntity game)
@@ -570,19 +731,35 @@ namespace FalconNet.Campaign
         // Squadron UI data stuff
         public void VerifySquadrons(int team)
         { throw new NotImplementedException(); }						// Rebuilds any changable squadron data
+
         public void FreeSquadronData()
         { throw new NotImplementedException(); }
 
         public void ReadValidAircraftTypes(string typefile)
         { throw new NotImplementedException(); }			// Reads text file with valid squadron types
+
         public int IsValidAircraftType(Unit u)
-        { throw new NotImplementedException(); }						// Checks if passed Squadron is valid
+        { throw new NotImplementedException(); }			// Checks if passed Squadron is valid
+
         public int IsValidSquadron(int id)
         { throw new NotImplementedException(); }
 
         public void ChillTypes()
         { throw new NotImplementedException(); }
 
+        public static int ReadVersionNumber(string saveFile)
+        {
+            int vers = 1; // If we can't load a version file, assume the worst ? RH
+
+            Stream cd = F4File.ReadCampFile(saveFile, "ver");
+
+            using (StreamReader reader = new StreamReader(cd))
+            {
+                String line = reader.ReadToEnd();
+                vers = int.Parse(line);
+            }
+            return vers;
+        }
 
         // The one and only Campaign instance:
         public static CampaignClass TheCampaign;

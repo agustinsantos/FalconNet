@@ -679,7 +679,7 @@ namespace FalconNet.FalcLib
         public static void RemoveTeams()
         { throw new NotImplementedException(); }
 
-        public static int LoadTeams(string scenario)
+        public static bool LoadTeams(string scenario)
         { throw new NotImplementedException(); }
 
         public static int SaveTeams(string scenario)

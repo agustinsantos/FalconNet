@@ -68,6 +68,7 @@
     <Compile Include="TestTheaterList.cs" />
     <Compile Include="TestLogbook.cs" />
     <Compile Include="TestReadCampFile.cs" />
+    <Compile Include="TestTacan.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Campaign\Campaign.csproj">

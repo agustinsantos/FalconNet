@@ -15,6 +15,13 @@ using System.Diagnostics;
 using System.IO;
 using FalconNet.Common.Encoding;
 using log4net;
+using VU_BYTE = System.Byte;
+using VU_TIME = System.UInt64;
+using VU_KEY = System.UInt64;
+using VU_BOOL = System.Boolean;
+using BIG_SCALAR = System.Single;
+using SM_SCALAR = System.Single;
+
 
 namespace FalconNet.FalcLib
 {
@@ -137,7 +144,7 @@ namespace FalconNet.FalcLib
             ptr = (byte)dirty_camp_base;
             ptr += sizeof(byte);
 
-            if (dirty_camp_base.IsFlagSet(Dirty_Campaign_Base.DIRTY_POSITION))
+            if (dirty_camp_base.HasFlag(Dirty_Campaign_Base.DIRTY_POSITION))
             {
                 GridIndex x, y;
 
@@ -148,13 +155,13 @@ namespace FalconNet.FalcLib
                 ptr += sizeof(GridIndex);
             }
 
-            if (dirty_camp_base.IsFlagSet(Dirty_Campaign_Base.DIRTY_ALTITUDE))
+            if (dirty_camp_base.HasFlag(Dirty_Campaign_Base.DIRTY_ALTITUDE))
             {
                 Array.Copy(BitConverter.GetBytes(ZPos()), 0, stream, ptr, sizeof(float));
                 ptr += sizeof(float);
             }
 
-            if (dirty_camp_base.IsFlagSet(Dirty_Campaign_Base.DIRTY_SPOTTED))
+            if (dirty_camp_base.HasFlag(Dirty_Campaign_Base.DIRTY_SPOTTED))
             {
                 Array.Copy(BitConverter.GetBytes(spotted), 0, stream, ptr, sizeof(GridIndex));
                 ptr += sizeof(GridIndex);
@@ -162,7 +169,7 @@ namespace FalconNet.FalcLib
                 ptr += sizeof(ulong);
             }
 
-            if (dirty_camp_base.IsFlagSet(Dirty_Campaign_Base.DIRTY_BASE_FLAGS))
+            if (dirty_camp_base.HasFlag(Dirty_Campaign_Base.DIRTY_BASE_FLAGS))
             {
                 Array.Copy(BitConverter.GetBytes((short)base_flags), 0, stream, ptr, sizeof(short));
                 ptr += sizeof(short);
@@ -180,7 +187,7 @@ namespace FalconNet.FalcLib
 
             //MonoPrint ("  CB %08x", bits);
 
-            if (bits.IsFlagSet(Dirty_Campaign_Base.DIRTY_POSITION))
+            if (bits.HasFlag(Dirty_Campaign_Base.DIRTY_POSITION))
             {
                 GridIndex
                     x,
@@ -202,7 +209,7 @@ namespace FalconNet.FalcLib
                 }
             }
 
-            if (bits.IsFlagSet(Dirty_Campaign_Base.DIRTY_ALTITUDE))
+            if (bits.HasFlag(Dirty_Campaign_Base.DIRTY_ALTITUDE))
             {
                 float z;
 
@@ -215,7 +222,7 @@ namespace FalconNet.FalcLib
                 }
             }
 
-            if (bits.IsFlagSet(Dirty_Campaign_Base.DIRTY_SPOTTED))
+            if (bits.HasFlag(Dirty_Campaign_Base.DIRTY_SPOTTED))
             {
                 spotted = BitConverter.ToInt16(stream, pos);
                 ptr += sizeof(short);
@@ -223,7 +230,7 @@ namespace FalconNet.FalcLib
                 ptr += sizeof(ulong); //CampaignTime);
             }
 
-            if (bits.IsFlagSet(Dirty_Campaign_Base.DIRTY_BASE_FLAGS))
+            if (bits.HasFlag(Dirty_Campaign_Base.DIRTY_BASE_FLAGS))
             {
                 base_flags = (Transmittable)BitConverter.ToInt16(stream, pos);
                 ptr += sizeof(short);
@@ -697,57 +704,57 @@ namespace FalconNet.FalcLib
         // Queries
         public override bool IsEmitting()
         {
-            return base_flags.IsFlagSet(Transmittable.CBC_EMITTING);
+            return base_flags.HasFlag(Transmittable.CBC_EMITTING);
         }
 
         public bool IsJammed()
         {
-            return base_flags.IsFlagSet(Transmittable.CBC_JAMMED);
+            return base_flags.HasFlag(Transmittable.CBC_JAMMED);
         }
         // Local flag access
         public bool IsChecked()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_CHECKED);
+            return local_flags.HasFlag(CBC_ENUM.CBC_CHECKED);
         }
 
         public bool IsAwake()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_AWAKE);
+            return local_flags.HasFlag(CBC_ENUM.CBC_AWAKE);
         }
 
         public bool InPackage()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_IN_PACKAGE);
+            return local_flags.HasFlag(CBC_ENUM.CBC_IN_PACKAGE);
         }
 
         public bool InSimLists()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_IN_SIM_LIST);
+            return local_flags.HasFlag(CBC_ENUM.CBC_IN_SIM_LIST);
         }
 
         public bool IsInterested()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_INTEREST);
+            return local_flags.HasFlag(CBC_ENUM.CBC_INTEREST);
         }
 
         public bool IsReserved()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_RESERVED_ONLY);
+            return local_flags.HasFlag(CBC_ENUM.CBC_RESERVED_ONLY);
         }
 
         public bool IsAggregate()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_AGGREGATE);
+            return local_flags.HasFlag(CBC_ENUM.CBC_AGGREGATE);
         }
 
         public bool IsTacan()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_HAS_TACAN);
+            return local_flags.HasFlag(CBC_ENUM.CBC_HAS_TACAN);
         }
 
         public bool HasDelta()
         {
-            return local_flags.IsFlagSet(CBC_ENUM.CBC_HAS_DELTA);
+            return local_flags.HasFlag(CBC_ENUM.CBC_HAS_DELTA);
         }
 
         // Getters
@@ -991,32 +998,33 @@ namespace FalconNet.FalcLib
 
         public void SetTacan(int t)
         {
-#if TODO
-            if (t == 0 && IsTacan() && gTacanList)
+            if (t == 0 && IsTacan() && Tacan.gTacanList != null)
             {
-                if (IsObjective() && GetFalconType() == Classtable_Types.TYPE_AIRBASE)
+                if (IsObjective() && GetFalconType() == ClassTypes.TYPE_AIRBASE)
                 {
-                    gTacanList.RemoveTacan(Id(), NavigationSystem.AIRBASE);
+                    Tacan.gTacanList.RemoveTacan(Id(), NavigationType.AIRBASE);
                 }
-                else if (EntityType().classInfo_[VU_CLASS] == Classes.CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_FLIGHT)
+                else if (EntityType().classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT &&
+                         EntityType().classInfo_[(int)Vu_CLASS.VU_TYPE] == (byte)ClassTypes.TYPE_FLIGHT)
                 {
-                    gTacanList.RemoveTacan(Id(), NavigationSystem.TANKER);
+                    Tacan.gTacanList.RemoveTacan(Id(), NavigationType.TANKER);
                 }
-                else if (EntityType().classInfo_[VU_CLASS] == Classes.CLASS_UNIT && EntityType().classInfo_[VU_TYPE] == Classtable_Types.TYPE_TASKFORCE && EntityType().classInfo_[VU_STYPE])
+                else if (EntityType().classInfo_[(int)Vu_CLASS.VU_CLASS] == (byte)Classes.CLASS_UNIT &&
+                         EntityType().classInfo_[(int)Vu_CLASS.VU_TYPE] == (byte)ClassTypes.TYPE_TASKFORCE &&
+                         EntityType().classInfo_[(int)Vu_CLASS.VU_STYPE] != 0)
                 {
-                    gTacanList.RemoveTacan(Id(), NavigationSystem.CARRIER);
+                    Tacan.gTacanList.RemoveTacan(Id(), NavigationType.CARRIER);
                 }
             }
-            else if (t && (!IsTacan() || (IsObjective() && GetFalconType() == Classtable_Types.TYPE_AIRBASE)) && gTacanList)
+            else if (t != 0 && (!IsTacan() || (IsObjective() && GetFalconType() ==  ClassTypes.TYPE_AIRBASE)) &&
+                   Tacan.gTacanList != null)
             {
-                gTacanList.AddTacan(this);
+                Tacan.gTacanList.AddTacan(this);
             }
 
             local_flags |= CBC_ENUM.CBC_HAS_TACAN;
             if (t == 0)
                 local_flags ^= CBC_ENUM.CBC_HAS_TACAN;
-#endif
-            throw new NotImplementedException();
         }
 
         public void SetChecked()
@@ -1039,10 +1047,10 @@ namespace FalconNet.FalcLib
             local_flags &= ~CBC_ENUM.CBC_INTEREST;
         }
 
-        public void SetAwake(int d)
+        public void SetAwake(bool d)
         {
             local_flags |= CBC_ENUM.CBC_AWAKE;
-            if (d == 0)
+            if (!d)
                 local_flags ^= CBC_ENUM.CBC_AWAKE;
         }
 
@@ -1073,6 +1081,14 @@ namespace FalconNet.FalcLib
             if (r == 0)
                 local_flags ^= CBC_ENUM.CBC_RESERVED_ONLY;
         }
+
+        public override void SetEntityType(ushort entityType)
+        {
+            if (entityType >= VU_LAST_ENTITY_TYPE)
+                entityTypePtr_ = F4VUStatic.VuxType(entityType);
+            base.SetEntityType(entityType);
+        }
+
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     }
 
@@ -1113,7 +1129,7 @@ namespace FalconNet.FalcLib
             rst.SetEntityType(rst.share_.entityType_);
             rst.SetTypeFlag(EntityEnum.FalconCampaignEntity);
 
-            rst.spotTime = new CampaignTime(UInt64EncodingLE.Decode(stream));
+            rst.spotTime = new CampaignTime(UInt32EncodingLE.Decode(stream));
             rst.spotted = Int16EncodingLE.Decode(stream);
             rst.base_flags = (Transmittable)Int16EncodingLE.Decode(stream);
             rst.owner = (Control)stream.ReadByte();

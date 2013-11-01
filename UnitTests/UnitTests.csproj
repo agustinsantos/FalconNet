@@ -43,6 +43,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -69,8 +70,15 @@
     <Compile Include="TestLogbook.cs" />
     <Compile Include="TestReadCampFile.cs" />
     <Compile Include="TestTacan.cs" />
+    <Compile Include="TestCampStr.cs" />
+    <Compile Include="TestGameEngine.cs" />
+    <Compile Include="TestBSPObjects.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
+      <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
+      <Name>CampaignBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Campaign\Campaign.csproj">
       <Project>{b822ed47-038a-4e04-8ba8-5742c69adf6e}</Project>
       <Name>Campaign</Name>
@@ -87,10 +95,19 @@
       <Project>{12899d19-7f1a-49fe-82e2-3535b3ced5c3}</Project>
       <Name>FalcLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{c3e4d4bd-c1f5-447a-a87e-eabf2974d246}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{eda4023d-884d-4f58-9e25-0f77a34cf43c}</Project>
       <Name>VU</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="log4netconfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -4,16 +4,13 @@ using DWORD = System.UInt32;
 using BYTE = System.Byte;
 using System.Diagnostics;
 using FalconNet.Common.Graphics;
+using System.IO;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.Graphics
 {
     public class Palette
     {
-        public static int Sizeof()
-        {
-            throw new NotImplementedException();
-        }
-
 #if USE_SH_POOLS
 		// Overload new/delete to use a SmartHeap fixed size pool
 		public void *operator new(size_t size) { Debug.Assert( size == sizeof(Palette) ); return MemAllocFS(pool);	};
@@ -22,15 +19,12 @@ namespace FalconNet.Graphics
 		public static void ReleaseStorage()	{ MemPoolFree( pool ); };
 		public static MEM_POOL	pool;
 #endif
-        public Palette(byte[] d)
-        { throw new NotImplementedException(); }
-
         public Palette()
         {
             refCount = 0;
             palHandle = null;
-            //TODO memset(paletteData, 0, sizeof(paletteData));
         }
+
         // public ~Palette()	{ Debug.Assert( refCount == 0); };
 
 
@@ -404,5 +398,29 @@ namespace FalconNet.Graphics
         }
     }
 
+
+    #region Encoding
+    public static class PaletteEncodingLE
+    {
+        public static void Encode(Stream stream, Palette val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, Palette rst)
+        {
+            for (int i = 0; i < 256; i++)
+                rst.paletteData[i] = UInt32EncodingLE.Decode(stream);
+            int val = Int32EncodingLE.Decode(stream); // palHandle
+            val = Int32EncodingLE.Decode(stream); //refcount
+            Debug.Assert(val == 1);
+        }
+
+        public static int Size
+        {
+            get { return 256 * UInt32EncodingLE.Size + 2 * Int32EncodingLE.Size; }
+        }
+    }
+    #endregion
 }
 

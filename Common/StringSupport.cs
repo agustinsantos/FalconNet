@@ -23,8 +23,8 @@ namespace FalconNet.Common
 			// \W+    one or more non-word characters together
 		}
 
-		private static Regex regex = new Regex (@"((""((?<token>.*?)(?<!\\)"")|(?<token>[\w]+)|(?<token>\[[\w]+\]))(\s)*)", RegexOptions.None);
-
+		//private static Regex regex = new Regex (@"((""((?<token>.*?)(?<!\\)"")|(?<token>[\w]+)|(?<token>\[[\w]+\]))(\s)*)", RegexOptions.None);
+        private static Regex regex = new Regex(@"((""((?<token>.*?)(?<!\\)"")|(?<token>[\S]+)|(?<token>\[[\S]+\]))(\s)*)", RegexOptions.None);
 		public static List<string> SplitWords (this string input)
 		{
 			var result = (from Match m in regex.Matches (input) 

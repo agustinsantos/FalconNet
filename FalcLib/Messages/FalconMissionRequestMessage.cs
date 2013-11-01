@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using FalconNet.VU;
 using VU_MSG_TYPE = System.Byte;
-using Team = System.SByte;
+using Team = System.Byte;
 
 namespace FalconNet.FalcLib
 {

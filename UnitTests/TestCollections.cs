@@ -17,10 +17,10 @@ namespace UnitTestVU
         {
             VuEntity entity;
             VuLinkedList list = new VuLinkedList(new VuTypeFilter(VuEntity.VU_SESSION_ENTITY_TYPE));
-            entity = new VuEntity((ushort)VuEntity.VU_UNKNOWN_ENTITY_TYPE, (ulong)10);
+            entity = new VuEntity((ushort)VuEntity.VU_UNKNOWN_ENTITY_TYPE, (uint)10);
             list.Insert(entity);
             Assert.AreEqual(0, list.l_.Count);
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)10);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)10);
             list.Insert(entity);
             Assert.AreEqual(1, list.l_.Count);
         }
@@ -32,7 +32,7 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 list.Insert(entity);
             }
             Assert.AreEqual(cnt, list.l_.Count);
@@ -45,10 +45,10 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 list.Insert(entity);
             }
-            Assert.IsTrue(list.Find(new VuEntity((ushort)0, (ulong)cnt / 71)));
+            Assert.IsTrue(list.Find(new VuEntity((ushort)0, (uint)cnt / 71)));
         }
 
         [TestMethod]
@@ -58,12 +58,12 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 list.Insert(entity);
             }
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 list.Remove(entity);
             }
             Assert.AreEqual(0, list.l_.Count);
@@ -84,7 +84,7 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 entity.vuState_ = (i % 2 == 0 ? VU_MEM_STATE.VU_MEM_ACTIVE : VU_MEM_STATE.VU_MEM_INACTIVE);
                 list.Insert(entity);
             }
@@ -98,7 +98,7 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 list.Insert(entity);
             }
             list.Purge();
@@ -115,7 +115,7 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
                 list.Insert(entity);
             }
@@ -144,7 +144,7 @@ namespace UnitTestVU
 
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
                 list.Insert(entity);
             }
@@ -164,9 +164,9 @@ namespace UnitTestVU
             for (int i = 0; i < cnt; i++)
             {
                 if (i % 2 == 0)
-                    entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)i);
+                    entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)i);
                 else
-                    entity = new VuEntity((ushort)VuEntity.VU_UNKNOWN_ENTITY_TYPE, (ulong)i);
+                    entity = new VuEntity((ushort)VuEntity.VU_UNKNOWN_ENTITY_TYPE, (uint)i);
                 entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
                 list.Insert(entity);
             }
@@ -194,13 +194,13 @@ namespace UnitTestVU
         {
             VuEntity entity;
             VuOrderedList list = new VuOrderedList(new VuTypeFilter(VuEntity.VU_SESSION_ENTITY_TYPE));
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)50);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)50);
             list.Insert(entity);
             Assert.AreEqual(1, list.l_.Count);
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)10);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)10);
             list.Insert(entity);
             Assert.AreEqual(2, list.l_.Count);
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)30);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)30);
             list.Insert(entity);
             Assert.AreEqual(3, list.l_.Count);
         }
@@ -210,17 +210,17 @@ namespace UnitTestVU
         {
             VuEntity entity;
             VuOrderedList list = new VuOrderedList(new VuTypeFilter(VuEntity.VU_SESSION_ENTITY_TYPE));
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)50);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)50);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             list.Insert(entity);
             Assert.AreEqual(1, list.l_.Count);
 
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)10);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)10);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             list.Insert(entity);
             Assert.AreEqual(2, list.l_.Count);
 
-            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (ulong)30);
+            entity = new VuEntity((ushort)VuEntity.VU_SESSION_ENTITY_TYPE, (uint)30);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             list.Insert(entity);
             Assert.AreEqual(3, list.l_.Count);
@@ -246,7 +246,7 @@ namespace UnitTestVU
         {
             int num = 5;
             VuHashTable hash = new VuHashTable(null, num);
-            VuEntity entity = new VuEntity((ushort)0, (ulong)20);
+            VuEntity entity = new VuEntity((ushort)0, (uint)20);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             //entities[i]. = new VU_ID(null, i);
             hash.Insert(entity);
@@ -260,13 +260,13 @@ namespace UnitTestVU
         {
             int num = 5;
             VuHashTable hash = new VuHashTable(null, num);
-            VuEntity entity = new VuEntity((ushort)0, (ulong)20);
+            VuEntity entity = new VuEntity((ushort)0, (uint)20);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             //entities[i]. = new VU_ID(null, i);
             hash.Insert(entity);
             Assert.AreEqual(1, hash.table_[0].l_.Count);
 
-            hash.Remove(new VuEntity((ushort)0, (ulong)20));
+            hash.Remove(new VuEntity((ushort)0, (uint)20));
             Assert.AreEqual(0, hash.table_[0].l_.Count);
         }
 
@@ -275,15 +275,15 @@ namespace UnitTestVU
         {
             int num = 5;
             VuHashTable hash = new VuHashTable(null, num);
-            VuEntity entity = new VuEntity((ushort)0, (ulong)20);
+            VuEntity entity = new VuEntity((ushort)0, (uint)20);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             //entities[i]. = new VU_ID(null, i);
             hash.Insert(entity);
             Assert.AreEqual(1, hash.table_[0].l_.Count);
 
-            bool hasEnt = hash.Find(new VuEntity((ushort)0, (ulong)20));
+            bool hasEnt = hash.Find(new VuEntity((ushort)0, (uint)20));
             Assert.AreEqual(true, hasEnt);
-            hasEnt = hash.Find(new VuEntity((ushort)0, (ulong)10));
+            hasEnt = hash.Find(new VuEntity((ushort)0, (uint)10));
             Assert.AreEqual(false, hasEnt);
         }
 
@@ -292,15 +292,15 @@ namespace UnitTestVU
         {
             int num = 5;
             VuHashTable hash = new VuHashTable(null, num);
-            VuEntity entity = new VuEntity((ushort)0, (ulong)20);
+            VuEntity entity = new VuEntity((ushort)0, (uint)20);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
             //entities[i]. = new VU_ID(null, i);
             hash.Insert(entity);
             Assert.AreEqual(1, hash.table_[0].l_.Count);
 
-            VuEntity rstEntity = hash.Find(new VU_ID((ushort)0, (ulong)20));
+            VuEntity rstEntity = hash.Find(new VU_ID((ushort)0, (uint)20));
             Assert.AreEqual(entity, rstEntity);
-            rstEntity = hash.Find(new VU_ID((ushort)0, (ulong)10));
+            rstEntity = hash.Find(new VU_ID((ushort)0, (uint)10));
             Assert.AreEqual(null, rstEntity);
         }
 
@@ -311,13 +311,13 @@ namespace UnitTestVU
             VuHashTable hash = new VuHashTable(null, num);
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i);
                 entity.vuState_ = VU_MEM_STATE.VU_MEM_ACTIVE;
                 hash.Insert(entity);
             }
             for (int i = 0; i < cnt; i++)
             {
-                VuEntity entity = new VuEntity((ushort)0, (ulong)i + cnt);
+                VuEntity entity = new VuEntity((ushort)0, (uint)i + cnt);
                 entity.vuState_ = VU_MEM_STATE.VU_MEM_INACTIVE;
                 hash.Insert(entity);
             }
@@ -339,7 +339,7 @@ namespace UnitTestVU
         {
             int num = 5;
             VuDatabase database = new VuDatabase(num);
-            VuEntity entity = new VuEntity((ushort)0, (ulong)20);
+            VuEntity entity = new VuEntity((ushort)0, (uint)20);
             entity.vuState_ = VU_MEM_STATE.VU_MEM_INACTIVE;
             database.Insert(entity);
         }

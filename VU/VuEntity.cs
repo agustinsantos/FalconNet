@@ -5,7 +5,7 @@ using VU_DAMAGE = System.UInt64;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using VU_BOOL = System.Boolean;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 
 using System.IO;
 using FalconNet.Common.Encoding;//typedef float SM_SCALAR;
@@ -29,7 +29,7 @@ namespace FalconNet.VU
         public ushort id_;
         public ushort collisionType_;
         public SM_SCALAR collisionRadius_;
-        public VU_BYTE[] classInfo_; //[CLASS_NUM_BYTES];
+        public VU_BYTE[] classInfo_; //[CLASS_NUM_BYTES]; domain,cclass,type,subtype,specific,mode
         public VU_TIME updateRate_;
         public VU_TIME updateTolerance_;
         public SM_SCALAR fineUpdateRange_;	// max distance to send position updates
@@ -748,7 +748,7 @@ namespace FalconNet.VU
         }
         public static VU_ID_NUMBER VuRandomID()
         {
-            return (VU_ID_NUMBER)rand.NextDouble() * UInt64.MaxValue;
+            return (VU_ID_NUMBER)rand.NextDouble() * UInt32.MaxValue;
         }
 
         public ShareData share_;
@@ -944,12 +944,12 @@ namespace FalconNet.VU
             //driver_ = 0;
             rst.share_.entityType_ = UInt16EncodingLE.Decode(stream);
             rst.share_.flags_ = (VuFlagBits)UInt16EncodingLE.Decode(stream);
-            rst.share_.id_.creator_ = new VU_SESSION_ID(UInt16EncodingLE.Decode(stream));
-            rst.share_.id_.num_ = UInt64EncodingLE.Decode(stream);
-            rst.share_.ownerId_.creator_ = new VU_SESSION_ID(UInt32EncodingLE.Decode(stream));
-            rst.share_.ownerId_.num_ = UInt64EncodingLE.Decode(stream);
-            rst.share_.assoc_.creator_ = new VU_SESSION_ID(UInt32EncodingLE.Decode(stream));
-            rst.share_.assoc_.num_ = UInt64EncodingLE.Decode(stream);
+            rst.share_.id_  = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.share_.id_);
+            rst.share_.ownerId_ = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.share_.ownerId_);
+            rst.share_.assoc_ = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.share_.assoc_);
             PositionDataEncodingLE.Decode(stream, ref rst.pos_);
             OrientationDataEncodingLE.Decode(stream, ref rst.orient_);
 

@@ -21,9 +21,10 @@ namespace F4Resources
 			Debug.WriteLine ("FalconNet Converter started...!");
 			//ReadTHR (FalconDirectory + "/campaign/save/korea.thr");
 			//ReadTerrain ();
-			//ConvertResources(FalconDirectory+"/art/resource/campbg.idx");
+            //ConvertResources(FalconDirectory + "/art/resource/ylwar_ee.idx", "borra");
+            ConvertResourcesFromDir(FalconDirectory + "/art/resource/");
 			//ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
-            ReadCampaign(FalconDirectory + "/campaign/save/save0.cam", 71); //Save-Day 1 13 19 39.cam", 71);
+            //ReadCampaign(FalconDirectory + "/campaign/save/save0.cam", 71); //Save-Day 1 13 19 39.cam", 71);
 			Debug.WriteLine ("FalconNet Converter has finished...!");
 		}
 
@@ -210,11 +211,24 @@ namespace F4Resources
 				}
 			}
 		}
-		
-		public static void ConvertResources (string filename)
+
+        public static void ConvertResourcesFromDir(string dirPath)
+        {
+            if (Directory.Exists(dirPath)) {
+                foreach (string file in Directory.EnumerateFiles(dirPath, "*.idx"))
+                {
+                    FileInfo fi = new FileInfo(file);
+                    ConvertResources(file, "./"+ Path.GetFileNameWithoutExtension(fi.Name));
+                }
+            }
+        }
+		public static void ConvertResources (string filename, string intoDir = ".")
 		{
+            if (!Directory.Exists(intoDir))
+                Directory.CreateDirectory(intoDir);
 			Debug.WriteLine ("Converting F4 Resources");
 			F4ResourceBundleReader reader = new F4ResourceBundleReader ();
+
 			reader.Load (filename);
 			Debug.WriteLine ("Read " + reader.NumResources + " resources");
 			for (int i = 0; i < reader.NumResources; i++) {
@@ -225,11 +239,12 @@ namespace F4Resources
 					break;
 				case F4ResourceType.ImageResource:
 					Bitmap bitmap = reader.GetImageResource (i);
-					bitmap.Save (name + ".png", ImageFormat.Png);
+                    bitmap.Save(intoDir +"/"+ name + ".png", ImageFormat.Png);
 					break;
 				case F4ResourceType.SoundResource:
 					byte[] thisSound = reader.GetSoundResource (i);
-					using (FileStream fs = new FileStream(name + ".wav", FileMode.Create)) {
+                    using (FileStream fs = new FileStream(intoDir + "/" + name + ".wav", FileMode.Create))
+                    {
 						fs.Write (thisSound, 0, thisSound.Length);
 						fs.Flush ();
 						fs.Close ();

@@ -293,10 +293,13 @@ namespace F4Utils.Resources
                     {
                         var thisPixelPaletteIndex = _resourceIndex.ResourceData.Data[imageHeader.ImageOffset + curByte];
                         var thisPixelPaletteEntry = palette[thisPixelPaletteIndex];
-                        A = 255;
-                        R = ((thisPixelPaletteEntry & 0x7C00) >> 10) << 3;
-                        G = ((thisPixelPaletteEntry & 0x3E0) >> 5) << 3;
-                        B = (thisPixelPaletteEntry & 0x1F) << 3;
+                        if (thisPixelPaletteIndex != 0)
+                        {
+                            A = 255;
+                            R = ((thisPixelPaletteEntry & 0x7C00) >> 10) << 3;
+                            G = ((thisPixelPaletteEntry & 0x3E0) >> 5) << 3;
+                            B = (thisPixelPaletteEntry & 0x1F) << 3;
+                        }
                         curByte++;
                     }
                     else if ((imageHeader.Flags & (uint) F4ResourceFlags.SixteenBit) == (uint) F4ResourceFlags.SixteenBit)

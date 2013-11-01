@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.Common;
 using FalconNet.F4Common;

@@ -8,7 +8,7 @@ using VU_BOOL = System.Boolean;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using VU_KEY = System.UInt64;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 
 namespace FalconNet.VU
 {
@@ -116,8 +116,8 @@ protected:
 #endif //VU_USE_COMMS
             rst.share_.entityType_ = UInt16EncodingLE.Decode(stream);
             rst.share_.flags_ = (VuFlagBits)UInt16EncodingLE.Decode(stream);
-            rst.share_.id_.creator_ = new VU_SESSION_ID(UInt16EncodingLE.Decode(stream));
-            rst.share_.id_.num_ = UInt64EncodingLE.Decode(stream);
+            rst.share_.id_  = new VU_ID();
+            VU_IDEncodingLE.Decode(stream, rst.share_.id_);
             rst.SetEntityType(rst.share_.entityType_);
             rst.dirty = 0;
         }

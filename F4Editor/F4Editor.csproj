@@ -56,6 +56,12 @@
     <Compile Include="Background.Designer.cs">
       <DependentUpon>Background.cs</DependentUpon>
     </Compile>
+    <Compile Include="CampaignGame.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CampaignGame.Designer.cs">
+      <DependentUpon>CampaignGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="CampDataViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -75,6 +81,13 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CampEditor.cs" />
+    <Compile Include="Map\IMapOverlay.cs" />
+    <Compile Include="Map\Layer.cs" />
+    <Compile Include="Map\MapControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Map\MapSymbol.cs" />
+    <Compile Include="Map\MapToolTip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TheatherSelection.cs">
       <SubType>UserControl</SubType>
@@ -87,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Background.resx">
       <DependentUpon>Background.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CampaignGame.resx">
+      <DependentUpon>CampaignGame.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CampDataViewer.resx">
       <DependentUpon>CampDataViewer.cs</DependentUpon>

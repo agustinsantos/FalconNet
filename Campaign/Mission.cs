@@ -3,7 +3,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using Flight = FalconNet.Campaign.FlightClass;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
 using F4PFList = FalconNet.FalcLib.FalconPrivateList;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 using VU_KEY = System.UInt64;
 using VU_BOOL = System.Boolean;
 using BIG_SCALAR = System.Single;

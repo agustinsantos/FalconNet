@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using System.Text;
 
 namespace FalconNet.Campaign
 {
@@ -55,5 +57,13 @@ extern void AddLocationToBuffer (char type, GridIndex x, GridIndex y, _TCHAR *bu
 extern void ConstructOrderedSentence (short maxlen,_TCHAR *buffer, _TCHAR *format, ... );
 
 END TODO */
+
+    public static class Brief
+    {
+        public static string ConstructOrderedSentence(short maxlen, string format, params object[] args)
+        {
+            return CampStr.ConstructOrderedSentence(format, args);
+        }
+    }
 }
 

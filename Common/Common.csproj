@@ -64,6 +64,9 @@
     <Compile Include="Maths\Phyconst.cs" />
     <Compile Include="Maths\Vector.cs" />
     <Compile Include="MultiplataformIni.cs" />
+    <Compile Include="Plugin\IPlugin.cs" />
+    <Compile Include="Plugin\ISystem.cs" />
+    <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="SizeUtils.cs" />
     <Compile Include="SortableBindingList.cs" />

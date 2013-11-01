@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 
 namespace FalconNet.VU
 {
@@ -116,19 +116,19 @@ namespace FalconNet.VU
         public const int MAX_NUMBER_OF_UNITS = 4000;	// Max # of NON volitile units only
         public const int MAX_NUMBER_OF_VOLATILE_UNITS = 16000;
         public const int MAX_CAMP_ENTITIES = (MAX_NUMBER_OF_OBJECTIVES + MAX_NUMBER_OF_UNITS + MAX_NUMBER_OF_VOLATILE_UNITS);
-        private const ulong FIRST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID;
-        private const ulong LAST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID + MAX_NUMBER_OF_OBJECTIVES;
-        private const ulong FIRST_NON_VOLATILE_VU_ID_NUMBER = LAST_OBJECTIVE_VU_ID_NUMBER + 1;
-        private const ulong LAST_NON_VOLATILE_VU_ID_NUMBER = FIRST_NON_VOLATILE_VU_ID_NUMBER + MAX_NUMBER_OF_UNITS;
+        private const uint FIRST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID;
+        private const uint LAST_OBJECTIVE_VU_ID_NUMBER = VU_ID.VU_FIRST_ENTITY_ID + MAX_NUMBER_OF_OBJECTIVES;
+        private const uint FIRST_NON_VOLATILE_VU_ID_NUMBER = LAST_OBJECTIVE_VU_ID_NUMBER + 1;
+        private const uint LAST_NON_VOLATILE_VU_ID_NUMBER = FIRST_NON_VOLATILE_VU_ID_NUMBER + MAX_NUMBER_OF_UNITS;
         // divided low volatilies in 2 halfs
         //#define FIRST_LOW_VOLATILE_VU_ID_NUMBER (LAST_NON_VOLATILE_VU_ID_NUMBER+1)
         //#define LAST_LOW_VOLATILE_VU_ID_NUMBER (FIRST_LOW_VOLATILE_VU_ID_NUMBER+(MAX_NUMBER_OF_VOLITILE_UNITS))
-        private const ulong FIRST_PACKAGE_ID_NUMBER = LAST_NON_VOLATILE_VU_ID_NUMBER + 1;
-        private const ulong LAST_PACKAGE_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + (MAX_NUMBER_OF_VOLATILE_UNITS / 2);
-        private const ulong FIRST_FLIGHT_ID_NUMBER = LAST_PACKAGE_ID_NUMBER + 1;
-        private const ulong LAST_FLIGHT_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + MAX_NUMBER_OF_VOLATILE_UNITS;
-        private const ulong FIRST_VOLATILE_VU_ID_NUMBER = LAST_FLIGHT_ID_NUMBER + 1;
-        private const ulong LAST_VOLATILE_VU_ID_NUMBER = ~((VU_ID_NUMBER)0);
+        private const uint FIRST_PACKAGE_ID_NUMBER = LAST_NON_VOLATILE_VU_ID_NUMBER + 1;
+        private const uint LAST_PACKAGE_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + (MAX_NUMBER_OF_VOLATILE_UNITS / 2);
+        private const uint FIRST_FLIGHT_ID_NUMBER = LAST_PACKAGE_ID_NUMBER + 1;
+        private const uint LAST_FLIGHT_ID_NUMBER = FIRST_PACKAGE_ID_NUMBER + MAX_NUMBER_OF_VOLATILE_UNITS;
+        private const uint FIRST_VOLATILE_VU_ID_NUMBER = LAST_FLIGHT_ID_NUMBER + 1;
+        private const uint LAST_VOLATILE_VU_ID_NUMBER = ~((VU_ID_NUMBER)0);
 
     }
 }

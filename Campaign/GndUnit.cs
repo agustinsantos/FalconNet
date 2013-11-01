@@ -2,7 +2,7 @@ using System;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
 using Objective = FalconNet.Campaign.ObjectiveClass;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;

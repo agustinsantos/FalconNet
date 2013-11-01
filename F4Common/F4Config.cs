@@ -171,8 +171,8 @@ namespace FalconNet.F4Common
 		public static string g_strServerAdminEmail;
 		public static string g_strVoiceHostIP;
 		public static string g_strWorldName;
-
-
+        public static bool g_bGreyMFD = true;
+        public static bool bNVGmode = false;
 		// JB
 #if _DEBUG
 		public static int g_nNearLabelLimit = 150; // nm		M.N.

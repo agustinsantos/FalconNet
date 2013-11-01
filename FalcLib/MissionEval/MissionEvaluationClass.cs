@@ -6,7 +6,7 @@ using System.Text;
 using WayPoint = FalconNet.CampaignBase.WayPointClass;
 using Flight = FalconNet.FalcLib.FlightClass;
 using GridIndex = System.Int16;
-using Team = System.SByte;
+using Team = System.Byte;
 using FalconNet.CampaignBase;
 using FalconNet.F4Common;
 using FalconNet.Common;

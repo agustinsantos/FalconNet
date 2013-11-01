@@ -3,7 +3,7 @@ using FalconNet.VU;
 using System;
 using FalconNet.Common;
 using FalconNet.FalcLib;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 
 namespace FalconNet.FalcLib

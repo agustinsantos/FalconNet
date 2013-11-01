@@ -7,7 +7,7 @@ using System.IO;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
 using Control = System.Byte;
-using Team = System.SByte;
+using Team = System.Byte;
 using FalconNet.Common.Encoding;
 namespace FalconNet.SimBase
 {

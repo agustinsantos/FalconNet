@@ -4,8 +4,8 @@ using System;
 using System.Diagnostics;
 using Control = System.Byte;
 using VU_TIME = System.UInt64;
-using VU_ID_NUMBER = System.UInt64;
-using Team = System.SByte;
+using VU_ID_NUMBER = System.UInt32;
+using Team = System.Byte;
 using FalconNet.CampaignBase;
 using FalconNet.Common.Maths;
 using System.IO;
@@ -203,9 +203,9 @@ namespace FalconNet.FalcLib
 
         public abstract Control GetCountry();
 
-        public virtual byte GetDomain()
+        public virtual Domains GetDomain()
         {
-            return EntityDB.Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[Vu_CLASS.VU_DOMAIN];
+            return (Domains) EntityDB.Falcon4ClassTable[Type() - VU_LAST_ENTITY_TYPE].vuClassData.classInfo_[Vu_CLASS.VU_DOMAIN];
         }
 
         public virtual FEC_RADAR GetRadarMode()

@@ -21,6 +21,7 @@ namespace FalconNet.F4Common
         public static string FalconCampaignSaveDirectory;
         public static string FalconCampUserSaveDirectory;
         public static string FalconUserConfigDirectory;
+        public static string FalconArtDirectory;
 
         public static readonly char Sep = Path.DirectorySeparatorChar;
 
@@ -44,6 +45,7 @@ namespace FalconNet.F4Common
             FalconCampaignSaveDirectory = campaignDir + Sep + "Save";
             FalconCampUserSaveDirectory = campaignDir + Sep + "Save";
             FalconUserConfigDirectory = FalconDirectory + "User" + Sep + "Config";
+            FalconArtDirectory = FalconDataDirectory + Sep + "Art"; ;
         }
 
         // Returns path of file data is in.
@@ -440,6 +442,13 @@ namespace FalconNet.F4Common
                 case "plc":
                 case "pop":
                     return FalconUserConfigDirectory;
+
+                case "lst":
+                    return FalconArtDirectory;
+
+                case "hdr":
+                case "lod":
+                    return FalconObjectDataDir;
 
                 default:
                     return FalconCampUserSaveDirectory;

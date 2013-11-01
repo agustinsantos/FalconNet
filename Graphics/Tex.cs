@@ -6,6 +6,7 @@ using BYTE = System.Byte;
 using System.Diagnostics;
 using System.IO;
 using FalconNet.Common;
+using FalconNet.Common.Encoding;
 
 namespace FalconNet.Graphics
 {
@@ -373,5 +374,30 @@ namespace FalconNet.Graphics
         private static DXContext rc = null;
 
     }
+
+    #region Encoding
+    public static class TextureEncodingLE
+    {
+        public static void Encode(Stream stream, Texture val)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Decode(Stream stream, Texture rst)
+        {
+            rst.dimensions = Int32EncodingLE.Decode(stream);
+            int val = Int32EncodingLE.Decode(stream); //imageData
+            rst.flags = (TexInfo)UInt32EncodingLE.Decode(stream);
+            rst.chromaKey = UInt32EncodingLE.Decode(stream);
+            val = Int32EncodingLE.Decode(stream); //palette
+            val = Int32EncodingLE.Decode(stream); //texHandle
+        }
+
+        public static int Size
+        {
+            get { return 4 * Int32EncodingLE.Size; }
+        }
+    }
+    #endregion
 }
 

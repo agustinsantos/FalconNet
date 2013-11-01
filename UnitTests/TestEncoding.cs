@@ -64,7 +64,7 @@ namespace UnitTestVU
         public void TestVU_ID()
         {
             MemoryStream buffer = new MemoryStream(VU_IDEncodingLE.Size);
-            VU_ID val = new VU_ID(123456789,9876543210);
+            VU_ID val = new VU_ID(123456789,876543210);
             VU_IDEncodingLE.Encode(buffer, val);
             buffer.Seek(0, SeekOrigin.Begin);
             VU_ID val2 = new VU_ID();

@@ -7,7 +7,7 @@ using System.IO;
 using VU_BYTE=System.Byte;
 using VU_TIME = System.UInt64;
 using Control = System.Byte;
-using Team = System.SByte;
+using Team = System.Byte;
 using FalconNet.CampaignBase;
 namespace FalconNet.Campaign
 {
@@ -197,9 +197,9 @@ namespace FalconNet.Campaign
 		public override short GetCampID ()
 		{throw new NotImplementedException();}
 
-		public override byte GetDomain ()
+		public override Domains GetDomain ()
 		{
-            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
+            return (Domains)(EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
 		}
 
 		public byte GetClass ()

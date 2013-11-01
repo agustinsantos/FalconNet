@@ -1,3 +1,4 @@
+using FalconNet.CampaignBase;
 using FalconNet.Common;
 using FalconNet.Common.Encoding;
 using FalconNet.Common.Maths;
@@ -41,7 +42,7 @@ namespace FalconNet.Campaign
 		{
 			int oct;
 
-			oct = FindStatic.OctantTo (0.0F, 0.0F, dx, dy);
+            oct = GridIndexMath.OctantTo(0.0F, 0.0F, dx, dy);
 			if ((dz * dz) > ((dx * dx) + (dy * dy)) * (detect_ratio [oct] * detect_ratio [oct]))
 				return 1;
 			return 0;
@@ -51,7 +52,7 @@ namespace FalconNet.Campaign
 		{
 			int oct;
 
-			oct = FindStatic.OctantTo (0.0F, 0.0F, dx, dy);
+            oct = GridIndexMath.OctantTo(0.0F, 0.0F, dx, dy);
 			return dz / detect_ratio [oct];
 		}
 

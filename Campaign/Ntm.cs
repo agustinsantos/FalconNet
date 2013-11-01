@@ -1,5 +1,5 @@
 ﻿using System;
-using Team = System.SByte;
+using Team = System.Byte;
 using FalconNet.VU;
 using FalconNet.Common;
 using System.IO;

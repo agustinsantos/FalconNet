@@ -1,6 +1,6 @@
 ﻿using System;
 using FalconNet.FalcLib;
-using Team = System.SByte;
+using Team = System.Byte;
 using FalconNet.CampaignBase;
 
 namespace FalconNet.Campaign

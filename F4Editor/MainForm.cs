@@ -18,7 +18,8 @@ namespace F4Editor
             MAIN_CONTROL,
             LOGBOOK_CONTROL,
             THEATER_SELECTION_CONTROL,
-            CAMPAIGN_DATA_CONTROL
+            CAMPAIGN_DATA_CONTROL,
+            CAMPAIGN_GAME
         }
 
         private TheaterDef theTheater;
@@ -48,7 +49,6 @@ namespace F4Editor
         {
             ShowControl(ControlsEnum.THEATER_SELECTION_CONTROL);
         }
-
 
         public void ShowControl(ControlsEnum ctrl)
         {
@@ -83,6 +83,8 @@ namespace F4Editor
                     return new TheatherSelection(this);
                 case ControlsEnum.CAMPAIGN_DATA_CONTROL:
                     return new CampDataViewer();
+                case ControlsEnum.CAMPAIGN_GAME:
+                    return new CampaignGame();
                 default:
                     return null;
             }
@@ -90,7 +92,7 @@ namespace F4Editor
 
         private void viewCampDataToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ShowControl(ControlsEnum.CAMPAIGN_DATA_CONTROL);
+           
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -114,6 +116,16 @@ namespace F4Editor
         private void logbookToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowControl(ControlsEnum.LOGBOOK_CONTROL);
+        }
+
+        private void playToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowControl(ControlsEnum.CAMPAIGN_GAME);
+        }
+
+        private void viewClassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowControl(ControlsEnum.CAMPAIGN_DATA_CONTROL);
         }
 
     }

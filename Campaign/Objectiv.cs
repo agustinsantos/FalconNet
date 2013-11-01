@@ -8,7 +8,7 @@ using PriorityLevel = System.Byte;
 using Unit = FalconNet.Campaign.UnitClass;
 using Flight = FalconNet.Campaign.FlightClass;
 using WayPoint = FalconNet.CampaignBase.WayPointClass;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using VU_BYTE = System.Byte;
 using Control = System.Byte;
@@ -1362,7 +1362,7 @@ namespace FalconNet.Campaign
 
 			type = t;
 			stype = 1;						// Try for a real objective
-			dindex = GetClassID (DOMAIN_LAND, CLASS_OBJECTIVE, type, stype, 0, 0, 0, 0);
+			dindex = GetClassID (Domains.DOMAIN_LAND, CLASS_OBJECTIVE, type, stype, 0, 0, 0, 0);
 			if (!dindex)
 				return;
 			SetObjectiveClass (dindex + VU_LAST_ENTITY_TYPE);
@@ -1379,7 +1379,7 @@ namespace FalconNet.Campaign
 
 			type = GetFalconType ();
 			stype = s;						// Try for a real objective
-			dindex = GetClassID (DOMAIN_LAND, CLASS_OBJECTIVE, type, stype, 0, 0, 0, 0);
+			dindex = GetClassID (Domains.DOMAIN_LAND, CLASS_OBJECTIVE, type, stype, 0, 0, 0, 0);
 			if (!dindex)
 				return;
 			SetObjectiveClass (dindex + VU_LAST_ENTITY_TYPE);
@@ -1646,10 +1646,10 @@ namespace FalconNet.Campaign
 
 			s = GetObjectiveStatus ();
 			hours += ((Camp_GetCurrentTime () - GetObjectiveRepairTime ()) / CampaignHours);
-			bf = BestRepairFeature (this, &hours);
+			bf = ObjectivStatic.BestRepairFeature (this, &hours);
 			while (bf > -1) {
 				s += GetFeatureValue (bf) / 2;
-				bf = BestRepairFeature (this, &hours);
+				bf = ObjectivStatic.BestRepairFeature (this, &hours);
 			}
 			if (s > 100)
 				s = 100;
@@ -1660,20 +1660,18 @@ namespace FalconNet.Campaign
 
         public int GetRepairTime(int status)
         {
-#if TODO		
-			int s, hours = 2400, f;
+            int s, hours = 2400, f;
 
-			ResetObjectiveStatus ();
-			s = GetObjectiveStatus ();
-			while (s < status) {
-				f = BestRepairFeature (this, &hours);
-				if (f < 0)
-					break;
-				s += GetFeatureValue (f) / 2;
-			}
-			return 2400 - hours;
-#endif
-            throw new NotImplementedException();
+            ResetObjectiveStatus();
+            s = GetObjectiveStatus();
+            while (s < status)
+            {
+                f = ObjectivStatic.BestRepairFeature(this, ref hours);
+                if (f < 0)
+                    break;
+                s += GetFeatureValue(f) / 2;
+            }
+            return 2400 - hours;
         }
 
         public byte GetBestTarget()
@@ -1694,60 +1692,67 @@ namespace FalconNet.Campaign
 
         public void ResetObjectiveStatus()
         {
-			int f, s;
+            int f, s;
 
-			s = 100;
-			// Airbases use their own (slightly different) version of determining status:
+            s = 100;
+            // Airbases use their own (slightly different) version of determining status:
             if (GetFalconType() == ClassTypes.TYPE_AIRBASE)
             {
-				// AIRBASE version
-				for (f = 0; s !=0 && f < static_data.class_data.Features; f++) {
-					// Only adjust status for non-runways
+                // AIRBASE version
+                for (f = 0; s != 0 && f < static_data.class_data.Features; f++)
+                {
+                    // Only adjust status for non-runways
                     if ((ClassTypes)EntityDB.Falcon4ClassTable[GetFeatureID(f)].vuClassData.classInfo_[(int)Vu_CLASS.VU_TYPE] != ClassTypes.TYPE_RUNWAY)
                     { // (IS_RUNWAY)
-						if (GetFeatureStatus (f) == VIS_TYPES.VIS_DAMAGED)
-							s -= GetFeatureValue (f) / 2;
-						if (GetFeatureStatus (f) == VIS_TYPES.VIS_DESTROYED)
-							s -= GetFeatureValue (f);
-					}
-				}
-				if (s <= 0)
-					s = 0;
-				else {
-					// Make sure we're below our maximum for # of active runways
-					int index, runways = 0, inactive = 0, max;
-					ObjClassDataType oc = GetObjectiveClassData ();
-					index = oc.PtDataIndex;
-					while (index !=0) {
+                        if (GetFeatureStatus(f) == VIS_TYPES.VIS_DAMAGED)
+                            s -= GetFeatureValue(f) / 2;
+                        if (GetFeatureStatus(f) == VIS_TYPES.VIS_DESTROYED)
+                            s -= GetFeatureValue(f);
+                    }
+                }
+                if (s <= 0)
+                    s = 0;
+                else
+                {
+                    // Make sure we're below our maximum for # of active runways
+                    int index, runways = 0, inactive = 0, max;
+                    ObjClassDataType oc = GetObjectiveClassData();
+                    index = oc.PtDataIndex;
+                    while (index != 0)
+                    {
                         if (EntityDB.PtHeaderDataTable[index].type == PointTypes.RunwayPt)
                         {
-							runways++;
+                            runways++;
                             if (PtData.CheckHeaderStatus(this, index) == VIS_TYPES.VIS_DESTROYED)
-								inactive++;
-						}
+                                inactive++;
+                        }
                         index = EntityDB.PtHeaderDataTable[index].nextHeader;
-					}
-					if (runways ==0)
-						max = 0;
-					else
-						max = ((runways - inactive) * 100) / runways;
-					if (s > max)
-						s = max;
-				}
-			} else {
-				for (f = 0; s > 0 && f < static_data.class_data.Features; f++) {
-					if (GetFeatureStatus (f) == VIS_TYPES.VIS_DAMAGED)
-						s -= GetFeatureValue (f) / 2;
-					if (GetFeatureStatus (f) == VIS_TYPES.VIS_DESTROYED)
-						s -= GetFeatureValue (f);
-				}
-				if (s < 0)
-					s = 0;
-			}
+                    }
+                    if (runways == 0)
+                        max = 0;
+                    else
+                        max = ((runways - inactive) * 100) / runways;
+                    if (s > max)
+                        s = max;
+                }
+            }
+            else
+            {
+                for (f = 0; s > 0 && f < static_data.class_data.Features; f++)
+                {
+                    if (GetFeatureStatus(f) == VIS_TYPES.VIS_DAMAGED)
+                        s -= GetFeatureValue(f) / 2;
+                    if (GetFeatureStatus(f) == VIS_TYPES.VIS_DESTROYED)
+                        s -= GetFeatureValue(f);
+                }
+                if (s < 0)
+                    s = 0;
+            }
 
-			if (s != obj_data.status) {
-				SetObjectiveStatus ((byte)s);
-			}
+            if (s != obj_data.status)
+            {
+                SetObjectiveStatus((byte)s);
+            }
         }
 
         public void RepairFeature(int f)
@@ -2143,9 +2148,92 @@ namespace FalconNet.Campaign
             throw new NotImplementedException();
         }
 
-        public static int BestRepairFeature(ObjectiveClass o, int[] hours)
+        public static int BestRepairFeature(ObjectiveClass o, ref int hours)
         {
-            throw new NotImplementedException();
+            int score, best = 0;
+            VIS_TYPES s;
+            int v, t, bt = 9999, f, bf = -1;
+
+            bool assignedEng = false;
+
+            GridIndex ux = 0, uy = 0;
+            GridIndex ox = 0, oy = 0;
+
+            VuListIterator uit = new VuListIterator(CampListStatic.AllUnitList);
+            Unit u;
+
+            // RV - Biker - Where is the object
+            o.GetLocation(out ox, out oy);
+
+            // RV - Biker - Loop through ground units to find engineer battalion assigned for repair
+            u = UnitStatic.GetFirstUnit(uit);
+
+            while (u != null)
+            {
+                if (u.IsBrigade() || u.GetDomain() != Domains.DOMAIN_LAND || u.GetTeam() != o.GetTeam())
+                {
+                    u = UnitStatic.GetNextUnit(uit);
+                    continue;
+                }
+
+                u.GetLocation(out ox, out oy);
+                float dx = ux - ox;
+                float dy = uy - oy;
+
+                float dist = (float)Math.Sqrt(dx * dx + dy * dy);
+
+                // RV - Biker - Check for engineer type maybe we need some more check
+                if (u.GetSType() == SubTypes.STYPE_UNIT_ENGINEER || u.GetSType() == SubTypes.STYPE_WHEELED_ENGINEER)
+                {
+                    if (dist < 1.0f)
+                        assignedEng = true;
+                    else
+                        assignedEng = false;
+                }
+
+                u = UnitStatic.GetNextUnit(uit);
+            }
+
+            // Find 'quickest fix'. That is, the feature which will give us the most operational
+            // percentage in the shortest time.
+            for (f = 0; f < o.GetTotalFeatures(); f++)
+            {
+                s = o.GetFeatureStatus(f);
+
+                if (s != VIS_TYPES.VIS_NORMAL && s != VIS_TYPES.VIS_REPAIRED)
+                {
+                    v = o.GetFeatureValue(f);
+
+                    // RV - Biker - If we have a engineer battalion assigned repair time is one fourth
+                    if (assignedEng)
+                        t = (int)(o.GetFeatureRepairTime(f) / 4.0f);
+                    else
+                        t = o.GetFeatureRepairTime(f);
+
+                    score = (v * 100) / (t + 1);
+
+                    if (score > best)
+                    {
+                        best = score;
+                        bf = f;
+                        bt = t;
+                    }
+                }
+
+                // if (s != VIS_DESTROYED && !o.GetFeatureID(f))
+                // o.SetFeatureStatus(f,VIS_DESTROYED);
+            }
+
+            // 2001-03-12 MODIFIED BY S.G. SO IT DOESN'T WAIT ONE MORE HOUR BEFORE FINISHING THE REPAIR
+            // 2001-03-13 REINSTATED BECAUSE THE DATA FILE ISN'T ADJUSTED FOR IT YET,
+            if (bt < hours)
+            // if (bt <= *hours)
+            {
+                hours -= bt;
+                return bf;
+            }
+
+            return -1;
         }
 
         public static int BestTargetFeature(ObjectiveClass o, byte[] targeted)
@@ -2289,6 +2377,7 @@ namespace FalconNet.Campaign
             rst.links = (byte)stream.ReadByte();
         }
     }
+
     public static class CampObjectiveLinkDataTypeEncodingLE
     {
         public static void Encode(Stream stream, CampObjectiveLinkDataType val)
@@ -2365,7 +2454,7 @@ namespace FalconNet.Campaign
             get { throw new NotImplementedException(); }
         }
     }
-    
+
     public static class ObjectiveClassDeltaEncodingLE
     {
         public static void Encode(Stream stream, ObjectiveClass val)
@@ -2375,17 +2464,17 @@ namespace FalconNet.Campaign
 
         public static void Decode(Stream stream, ObjectiveClass rst)
         {
-            rst.obj_data.last_repair =  UInt32EncodingLE.Decode(stream);
+            rst.obj_data.last_repair = UInt32EncodingLE.Decode(stream);
             byte owner = (byte)stream.ReadByte();
             rst.SetOwner(owner);
-            rst.obj_data.supply =  (byte)stream.ReadByte();
-            rst.obj_data.fuel =  (byte)stream.ReadByte();
+            rst.obj_data.supply = (byte)stream.ReadByte();
+            rst.obj_data.fuel = (byte)stream.ReadByte();
             rst.obj_data.losses = (byte)stream.ReadByte();
             int len = (byte)stream.ReadByte();
             rst.obj_data.fstatus = new byte[len];
             if (CampaignClass.gCampDataVersion < 64)
             {
-                rst.obj_data.fstatus[0]= (byte)stream.ReadByte();
+                rst.obj_data.fstatus[0] = (byte)stream.ReadByte();
             }
             else
             {
@@ -2402,7 +2491,6 @@ namespace FalconNet.Campaign
             get { throw new NotImplementedException(); }
         }
     }
-
 
     public static class ObjectiveClassListEncodingLE
     {

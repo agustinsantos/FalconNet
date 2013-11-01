@@ -4,7 +4,7 @@ using FalconNet.Common;
 using FalconNet.FalcLib;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
-using Team = System.SByte;
+using Team = System.Byte;
 
 namespace FalconNet.Campaign
 {

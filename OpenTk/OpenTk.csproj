@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -38,8 +38,45 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundingBox.cs" />
+    <Compile Include="BoundingSphere.cs" />
+    <Compile Include="CopyOp.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IVisitorPattern.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeCallback.cs" />
+    <Compile Include="NodeVisitor.cs" />
+    <Compile Include="osgMath\Matrixd.cs" />
+    <Compile Include="osgMath\Matrixf.cs" />
+    <Compile Include="osgMath\Quat.cs" />
+    <Compile Include="osgMath\Vec2b.cs" />
+    <Compile Include="osgMath\Vec2d.cs" />
+    <Compile Include="osgMath\Vec2f.cs" />
+    <Compile Include="osgMath\Vec2i.cs" />
+    <Compile Include="osgMath\Vec2s.cs" />
+    <Compile Include="osgMath\Vec2ub.cs" />
+    <Compile Include="osgMath\Vec2ui.cs" />
+    <Compile Include="osgMath\Vec2us.cs" />
+    <Compile Include="osgMath\Vec3b.cs" />
+    <Compile Include="osgMath\Vec3d.cs" />
+    <Compile Include="osgMath\Vec3f.cs" />
+    <Compile Include="osgMath\Vec3i.cs" />
+    <Compile Include="osgMath\Vec3s.cs" />
+    <Compile Include="osgMath\Vec3ub.cs" />
+    <Compile Include="osgMath\Vec3ui.cs" />
+    <Compile Include="osgMath\Vec3us.cs" />
+    <Compile Include="osgMath\Vec4b.cs" />
+    <Compile Include="osgMath\Vec4d.cs" />
+    <Compile Include="osgMath\Vec4f.cs" />
+    <Compile Include="osgMath\Vec4i.cs" />
+    <Compile Include="osgMath\Vec4s.cs" />
+    <Compile Include="osgMath\Vec4ub.cs" />
+    <Compile Include="osgMath\Vec4ui.cs" />
+    <Compile Include="osgMath\Vec4us.cs" />
+    <Compile Include="Transform.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using Control = System.Byte;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 using FalconNet.Common.Maths;
 using FalconNet.Campaign;
 using System.Diagnostics;
@@ -696,9 +696,9 @@ namespace FalconNet.FalcLib
         public int NumberOfComponents()
         { throw new NotImplementedException(); }
 
-        public override byte Domain()
+        public override VU_BYTE Domain()
         {
-            return GetDomain();
+            return (VU_BYTE)GetDomain(); //TODO Should be Doamins instead of VU_BYTE
         }
 
         // Queries
@@ -758,9 +758,9 @@ namespace FalconNet.FalcLib
         }
 
         // Getters
-        public override byte GetDomain()
+        public override Domains GetDomain()
         {
-            return (EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
+            return (Domains)(EntityType()).classInfo_[(int)Vu_CLASS.VU_DOMAIN];
         }
 
         public byte GetClass()

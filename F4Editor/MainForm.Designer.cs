@@ -34,16 +34,18 @@
             this.logbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theathersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectTheaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewCampDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.campaignToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNewCampaignToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewCampDataToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.StripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.internalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewHDRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +58,7 @@
             this.theathersToolStripMenuItem,
             this.campaignToolStripMenuItem,
             this.setupToolStripMenuItem,
+            this.internalsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -88,8 +91,7 @@
             // theathersToolStripMenuItem
             // 
             this.theathersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selectTheaterToolStripMenuItem,
-            this.viewCampDataToolStripMenuItem});
+            this.selectTheaterToolStripMenuItem});
             this.theathersToolStripMenuItem.Name = "theathersToolStripMenuItem";
             this.theathersToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
             this.theathersToolStripMenuItem.Text = "Theathers";
@@ -101,17 +103,11 @@
             this.selectTheaterToolStripMenuItem.Text = "Select Theater";
             this.selectTheaterToolStripMenuItem.Click += new System.EventHandler(this.selectTheaterToolStripMenuItem_Click);
             // 
-            // viewCampDataToolStripMenuItem
-            // 
-            this.viewCampDataToolStripMenuItem.Name = "viewCampDataToolStripMenuItem";
-            this.viewCampDataToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.viewCampDataToolStripMenuItem.Text = "View Camp Data";
-            // 
             // campaignToolStripMenuItem
             // 
             this.campaignToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startNewCampaignToolStripMenuItem,
-            this.viewCampDataToolStripMenuItem1});
+            this.playToolStripMenuItem});
             this.campaignToolStripMenuItem.Name = "campaignToolStripMenuItem";
             this.campaignToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
             this.campaignToolStripMenuItem.Text = "Campaign";
@@ -122,12 +118,12 @@
             this.startNewCampaignToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.startNewCampaignToolStripMenuItem.Text = "Start new Campaign";
             // 
-            // viewCampDataToolStripMenuItem1
+            // playToolStripMenuItem
             // 
-            this.viewCampDataToolStripMenuItem1.Name = "viewCampDataToolStripMenuItem1";
-            this.viewCampDataToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
-            this.viewCampDataToolStripMenuItem1.Text = "View CampData";
-            this.viewCampDataToolStripMenuItem1.Click += new System.EventHandler(this.viewCampDataToolStripMenuItem1_Click);
+            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.playToolStripMenuItem.Text = "Play";
+            this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
             // setupToolStripMenuItem
             // 
@@ -154,7 +150,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -173,6 +169,28 @@
             this.StripStatusLabel.Name = "StripStatusLabel";
             this.StripStatusLabel.Size = new System.Drawing.Size(113, 17);
             this.StripStatusLabel.Text = "No Theater Selected";
+            // 
+            // internalsToolStripMenuItem
+            // 
+            this.internalsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewClassToolStripMenuItem,
+            this.viewHDRToolStripMenuItem});
+            this.internalsToolStripMenuItem.Name = "internalsToolStripMenuItem";
+            this.internalsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.internalsToolStripMenuItem.Text = "Internals";
+            // 
+            // viewClassToolStripMenuItem
+            // 
+            this.viewClassToolStripMenuItem.Name = "viewClassToolStripMenuItem";
+            this.viewClassToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.viewClassToolStripMenuItem.Text = "View Class Table";
+            this.viewClassToolStripMenuItem.Click += new System.EventHandler(this.viewClassToolStripMenuItem_Click);
+            // 
+            // viewHDRToolStripMenuItem
+            // 
+            this.viewHDRToolStripMenuItem.Name = "viewHDRToolStripMenuItem";
+            this.viewHDRToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.viewHDRToolStripMenuItem.Text = "View HDR/LOD";
             // 
             // MainForm
             // 
@@ -206,12 +224,14 @@
         private System.Windows.Forms.ToolStripMenuItem logbookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem campaignToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectTheaterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewCampDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel StripStatusLabel;
         private System.Windows.Forms.ToolStripMenuItem startNewCampaignToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewCampDataToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewSetupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem internalsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewClassToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewHDRToolStripMenuItem;
     }
 }
 

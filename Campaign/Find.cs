@@ -3,7 +3,7 @@ using FalconNet.FalcLib;
 using FalconNet.Common;
 using Objective = FalconNet.Campaign.ObjectiveClass;
 using Flight = FalconNet.Campaign.FlightClass;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.VU;
 using FalconNet.CampaignBase;
@@ -49,7 +49,8 @@ namespace FalconNet.Campaign
         // =============================
         // Global function headers
         // =============================
-
+        //These methods are defined at GridIndexMath
+#if TODO 
         public static int DistSqu(GridIndex ox, GridIndex oy, GridIndex dx, GridIndex dy)
         { throw new NotImplementedException(); }
 
@@ -110,7 +111,7 @@ namespace FalconNet.Campaign
 
         public static CampaignTime TimeBetweenO(Objective o1, Objective o2, int speed)
         { throw new NotImplementedException(); }
-
+#endif
         public static Objective FindObjective(VU_ID id)
         { throw new NotImplementedException(); }
 

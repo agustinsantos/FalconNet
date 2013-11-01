@@ -1,7 +1,7 @@
 ﻿using FalconNet.Common.Encoding;
 using System;
 using System.IO;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 using VU_KEY = System.UInt64;
 
 namespace FalconNet.VU
@@ -137,7 +137,7 @@ namespace FalconNet.VU
     {
         public static void Encode(Stream stream, VU_ID val)
         {
-            UInt32EncodingLE.Encode(stream, (uint)val.num_);
+            UInt32EncodingLE.Encode(stream, val.num_);
             VU_SESSION_IDEncodingLE.Encode(stream, val.creator_);
         }
 

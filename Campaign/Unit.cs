@@ -6,11 +6,11 @@ using Path = FalconNet.Campaign.BasePathClass;
 using WayPoint = FalconNet.CampaignBase.WayPointClass;
 using FalconNet.VU;
 using VU_BYTE = System.Byte;
-using Team = System.SByte;
+using Team = System.Byte;
 using VU_TIME = System.UInt64;
 using GridIndex = System.Int16;
 using Control = System.Byte;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 using VehicleID = System.Int16;
 using FalconNet.FalcLib;
 using FalconNet.Common;
@@ -1582,7 +1582,7 @@ namespace FalconNet.Campaign
                 count = (byte)stream.ReadByte();
             }
 
-            
+
             WayPointClass new_list, lw, nw, w;
 
 
@@ -1599,7 +1599,7 @@ namespace FalconNet.Campaign
 
             while (count != 0)
             {
-                w = new WayPointClass(); 
+                w = new WayPointClass();
                 WayPointClassEncodingLE.Decode(stream, ref w);
 
                 if (lw == null)
@@ -2270,17 +2270,96 @@ namespace FalconNet.Campaign
     // ============================================================
     public static class UnitStatic
     {
-        public static void SaveUnits(string FileName)
-        { throw new NotImplementedException(); }
+        public static void SaveUnits(string scenario)
+        {
+            using (Stream fp = F4File.OpenCampFile(scenario, "uni", FileAccess.Write))
+            {
+                EncodeUnitData(fp, null);
+                F4File.CloseCampFile(fp);
+            }
+        }
 
-        public static int LoadUnits(string FileName)
-        { throw new NotImplementedException(); }
+        public static bool LoadUnits(string scenario)
+        {
+            using (Stream cd = F4File.ReadCampFile(scenario, "uni"))
+            {
+
+                //take size out
+                //this size is not used anywhere, so ill trust my size
+                int size = Int32EncodingLE.Decode(cd);
+
+                //updated the call to include remaining value
+                DecodeUnitData(cd, null);
+
+                // KCK HACK: Reset any saved off player slots
+                VuListIterator myit = new VuListIterator(CampListStatic.AllAirList);
+                Unit u;
+                u = (Unit)myit.GetFirst();
+
+                while (u != null)
+                {
+                    if (u.IsFlight())
+                    {
+                        //   memset(((FlightClass*)u).player_slots, NO_PILOT, PILOTS_PER_FLIGHT * sizeof(uchar));
+                        throw new NotImplementedException();
+                    }
+                    u = (Unit)myit.GetNext();
+                }
+            }
+            return true;
+        }
 
         public static Unit GetFirstUnit(VuListIterator l)
-        { throw new NotImplementedException(); }
+        {
+            VuEntity e;
+
+            e = l.GetFirst();
+
+            while (e != null)
+            {
+                if (CampbaseStatic.GetEntityClass(e) == Classes.CLASS_UNIT)
+                    return (Unit)e;
+
+                e = l.GetNext();
+            }
+
+            return null;
+        }
 
         public static Unit GetNextUnit(VuListIterator l)
-        { throw new NotImplementedException(); }
+        {
+            VuEntity e;
+
+            e = l.GetNext();
+
+            while (e != null)
+            {
+                //if (e.VuState() != VU_MEM_DELETED)
+                if (CampbaseStatic.GetEntityClass(e) == Classes.CLASS_UNIT)
+                {
+                    return (Unit)e;
+                }
+
+                e = l.GetNext();
+            }
+
+            return null;
+        }
+
+        public static Unit GetUnitByID(VU_ID id)
+        {
+            VuListIterator it = new VuListIterator(CampListStatic.AllUnitList);
+
+            for (VuEntity u = it.GetFirst(); u != null; u = it.GetNext())
+            {
+                if (u.Id() == id)
+                {
+                    return (Unit)u;
+                }
+            }
+
+            return null;
+        }
 
         public static Unit LoadAUnit(int Num, int FHandle, Unit parent)
         { throw new NotImplementedException(); }
@@ -2289,13 +2368,113 @@ namespace FalconNet.Campaign
         { throw new NotImplementedException(); }
 
         public static Unit ConvertUnit(Unit u, int domain, int type, int stype, int sptype)
-        { throw new NotImplementedException(); }
+        {
+            Unit nu, p = null;
+            GridIndex x, y;
+            int z;
+
+            nu = NewUnit(domain, type, stype, sptype, u.GetUnitParent());
+
+            if (nu == null)
+                return u;
+
+            u.DisposeChildren();
+
+            // Copy Data (Common Unit, CampBase, and VuEntity data)
+            nu.SetLastCheck(u.GetLastCheck());
+            nu.SetRoster(u.GetRoster());
+            nu.SetUnitFlags(u.GetUnitFlags());
+            nu.SetDestX(u.GetDestX());
+            nu.SetDestY(u.GetDestY());
+            nu.SetMoved(u.GetMoved());
+            nu.SetLosses(u.GetLosses());
+            nu.SetTactic(u.GetTactic());
+            nu.SetCurrentWaypoint(u.GetCurrentWaypoint());
+            nu.SetNameId(u.GetNameId());
+            nu.wp_list = u.wp_list;
+            nu.SetSpottedTime(u.GetSpotTime());
+            //TODO review this nu.SetSpotted(u.GetOwner(), u.GetSpotted());
+            nu.SetSpotted(u.GetOwner(), u.GetSpottedTime());
+            nu.SetBaseFlags(u.GetBaseFlags());
+            nu.SetOwner(u.GetOwner());
+            nu.SetTargetId(u.GetTargetId());
+            nu.SetCampId(u.GetCampId());
+            u.GetLocation(out x, out y);
+            z = u.GetAltitude();
+            nu.SetLocation(x, y);
+            nu.SetAltitude(z);
+            nu.BuildElements();
+
+            u.Remove();
+            return nu;
+        }
+        public static int GetArrivalSpeed(UnitClass u)
+        {
+            WayPoint w;
+            GridIndex x, y, wx, wy;
+            float d;
+            CampaignTime t, c;
+            int maxs, reqs;
+
+            if (u.Father() != 0)
+                maxs = u.GetFormationCruiseSpeed();
+            else
+                maxs = u.GetMaxSpeed();
+
+            w = u.GetCurrentUnitWP();
+
+            if (w == null)
+                return maxs;
+
+            u.GetLocation(out x, out y);
+            w.GetWPLocation(out wx, out wy);
+            d = GridIndexMath.Distance(x, y, wx, wy);
+            t = w.GetWPArrivalTime();
+            c = Camplib.Camp_GetCurrentTime();
+
+            if (t > c)
+            {
+                reqs = (int)(d * CampaignTime.CampaignHours / (t - c));
+
+                if (u.IsFlight() && reqs < maxs / 2)
+                    reqs = maxs / 2; // Minimal speed
+
+                if (reqs < maxs)
+                    return reqs;
+            }
+
+            return maxs;
+        }
 
         public static int GetUnitRole(Unit u)
         { throw new NotImplementedException(); }
 
-        public static string GetSizeName(int domain, int type, char[] buffer)
-        { throw new NotImplementedException(); }
+        public static string GetSizeName(Domains domain, ClassTypes type)
+        {
+            string rst = null;
+            if (domain == Domains.DOMAIN_AIR)
+            {
+                if (type == ClassTypes.TYPE_SQUADRON)
+                    rst = CampStr.ReadIndexedString(610);
+                else if (type == ClassTypes.TYPE_FLIGHT)
+                    rst = CampStr.ReadIndexedString(611);
+                else if (type == ClassTypes.TYPE_PACKAGE)
+                    rst = CampStr.ReadIndexedString(612);
+            }
+            else if (domain == Domains.DOMAIN_LAND)
+            {
+                if (type == ClassTypes.TYPE_BRIGADE)
+                    rst = CampStr.ReadIndexedString(614);
+                else if (type == ClassTypes.TYPE_BATTALION)
+                     rst = CampStr.ReadIndexedString(615);
+            }
+            else if (domain == Domains.DOMAIN_SEA)
+                rst = CampStr.ReadIndexedString(616);
+            else
+                rst = CampStr.ReadIndexedString(617);
+
+            return rst;
+        }
 
         public static string GetDivisionName(int div, char[] buffer, int size, int obj)
         { throw new NotImplementedException(); }
@@ -2315,10 +2494,10 @@ namespace FalconNet.Campaign
         public static float GetRange(Unit us, CampBaseClass them)
         { throw new NotImplementedException(); }
 
-        public static int EncodeUnitData(VU_BYTE[] stream, FalconSessionEntity owner)
+        public static int EncodeUnitData(Stream stream, FalconSessionEntity owner)
         { throw new NotImplementedException(); }
 
-        public static int DecodeUnitData(VU_BYTE[] stream, FalconSessionEntity owner)
+        public static int DecodeUnitData(Stream stream, FalconSessionEntity owner)
         { throw new NotImplementedException(); }
     }
 

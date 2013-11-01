@@ -81,7 +81,7 @@
             this.tabObjetives.Location = new System.Drawing.Point(4, 22);
             this.tabObjetives.Name = "tabObjetives";
             this.tabObjetives.Padding = new System.Windows.Forms.Padding(3);
-            this.tabObjetives.Size = new System.Drawing.Size(808, 333);
+            this.tabObjetives.Size = new System.Drawing.Size(842, 374);
             this.tabObjetives.TabIndex = 1;
             this.tabObjetives.Text = "Objetives";
             this.tabObjetives.UseVisualStyleBackColor = true;
@@ -90,7 +90,7 @@
             // 
             this.tabUnits.Location = new System.Drawing.Point(4, 22);
             this.tabUnits.Name = "tabUnits";
-            this.tabUnits.Size = new System.Drawing.Size(808, 333);
+            this.tabUnits.Size = new System.Drawing.Size(842, 374);
             this.tabUnits.TabIndex = 2;
             this.tabUnits.Text = "Units";
             this.tabUnits.UseVisualStyleBackColor = true;
@@ -99,7 +99,7 @@
             // 
             this.tabSensors.Location = new System.Drawing.Point(4, 22);
             this.tabSensors.Name = "tabSensors";
-            this.tabSensors.Size = new System.Drawing.Size(808, 333);
+            this.tabSensors.Size = new System.Drawing.Size(842, 374);
             this.tabSensors.TabIndex = 3;
             this.tabSensors.Text = "Sensors";
             this.tabSensors.UseVisualStyleBackColor = true;
@@ -108,7 +108,7 @@
             // 
             this.tabVehicles.Location = new System.Drawing.Point(4, 22);
             this.tabVehicles.Name = "tabVehicles";
-            this.tabVehicles.Size = new System.Drawing.Size(808, 333);
+            this.tabVehicles.Size = new System.Drawing.Size(842, 374);
             this.tabVehicles.TabIndex = 4;
             this.tabVehicles.Text = "Vehicles";
             this.tabVehicles.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             // 
             this.tabWeapons.Location = new System.Drawing.Point(4, 22);
             this.tabWeapons.Name = "tabWeapons";
-            this.tabWeapons.Size = new System.Drawing.Size(808, 333);
+            this.tabWeapons.Size = new System.Drawing.Size(842, 374);
             this.tabWeapons.TabIndex = 5;
             this.tabWeapons.Text = "Weapons";
             this.tabWeapons.UseVisualStyleBackColor = true;

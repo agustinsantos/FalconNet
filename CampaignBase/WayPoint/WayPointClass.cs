@@ -519,9 +519,10 @@ namespace FalconNet.CampaignBase
             Arrive += dt; Depart += dt;
         }
 
-        public void GetWPLocation(ref GridIndex x, ref GridIndex y)
+        public void GetWPLocation(out GridIndex x, out GridIndex y)
         {
-            x = GridX; y = GridY;
+            x = GridX;
+            y = GridY;
         }
 
         // These functions are intended for use by the Sim (They use sim coordinates and times)

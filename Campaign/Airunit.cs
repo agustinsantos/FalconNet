@@ -6,7 +6,7 @@ using Unit = FalconNet.Campaign.UnitClass;
 using FalconNet.Common;
 using FalconNet.CampaignBase;
 //using FalconNet.Sim;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 
 namespace FalconNet.Campaign
 {

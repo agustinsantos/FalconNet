@@ -10,10 +10,16 @@ namespace UnitTestVU
     {
         public static string FalconDirectory = @"C:\Falcon BMS 4.32\";
 
+        [ClassInitialize]
+        public static void Init(TestContext context)
+        {
+            log4net.Config.BasicConfigurator.Configure();
+            F4File.FalconDirectory = FalconDirectory;
+        }
+
         [TestMethod]
         public void TestLoadNames()
         {
-            F4File.FalconDirectory = FalconDirectory;
             Name.LoadNames("Strings");
             for (int i = 0; i < Name.NameEntries - 1; i++)
             {

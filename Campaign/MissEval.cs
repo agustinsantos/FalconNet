@@ -7,8 +7,7 @@ using FalconNet.FalcLib;
 using FalconNet.VU;
 using Flight = FalconNet.Campaign.FlightClass;
 using Objective = FalconNet.Campaign.ObjectiveClass;
-
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
 using FalconNet.F4Common;

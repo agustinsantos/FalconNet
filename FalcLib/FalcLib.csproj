@@ -49,6 +49,7 @@
     <Compile Include="FalcList.cs" />
     <Compile Include="FEC_FLAGS.cs" />
     <Compile Include="FEC_RADAR.cs" />
+    <Compile Include="Messages\CampEventDataMessage.cs" />
     <Compile Include="Messages\CampWeaponsFireMsg.cs" />
     <Compile Include="F4Globals.cs" />
     <Compile Include="Messages\FalcMesg.cs" />

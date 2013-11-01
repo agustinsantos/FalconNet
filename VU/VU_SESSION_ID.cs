@@ -1,7 +1,7 @@
 ﻿using System;
 using VU_MSG_TYPE = System.UInt64;
 using VU_KEY = System.UInt64;
-using VU_ID_NUMBER = System.UInt64;
+using VU_ID_NUMBER = System.UInt32;
 using FalconNet.Common.Encoding;
 using System.IO;
 

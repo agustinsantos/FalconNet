@@ -1,3 +1,4 @@
+using FalconNet.CampaignBase;
 using FalconNet.Common.Encoding;
 using FalconNet.F4Common;
 using System;
@@ -23,30 +24,28 @@ namespace FalconNet.Campaign
 
         public static void LoadNames(string filename)
         {
-            MemoryStream buf = F4File.ReadCampFile(filename, "idx");
-            NameFile = filename;
-            NameEntries = Int16EncodingLE.Decode(buf);
-            NameIndex = new ushort[NameEntries];
-            for (int i = 0; i < NameEntries; i++)
-                NameIndex[i] = UInt16EncodingLE.Decode(buf);
+            using (Stream buf = F4File.ReadCampFile(filename, "idx"))
+            {
+                NameFile = filename;
+                NameEntries = (short)UInt16EncodingLE.Decode(buf);
+                NameIndex = new ushort[NameEntries];
+                for (int i = 0; i < NameEntries; i++)
+                    NameIndex[i] = UInt16EncodingLE.Decode(buf);
+                F4File.CloseCampFile(buf);
+            }
             LoadNameStream();
         }
 
         public static void LoadNameStream()
         {
-            Stream fp;
-
             CampaignStatic.CampEnterCriticalSection();
-            fp = F4File.OpenCampFile(NameFile, "wch", FileAccess.Read);
-
-            if (fp != null)
+            using (Stream fp = F4File.OpenCampFile(NameFile, "wch", FileAccess.Read))
             {
                 byte[] buf = new byte[NameIndex[NameEntries - 1]];
                 fp.Read(buf, 0, NameIndex[NameEntries - 1]);
                 NameStream = Encoding.ASCII.GetString(buf);
                 F4File.CloseCampFile(fp);
             }
-
             CampaignStatic.CampLeaveCriticalSection();
         }
 

@@ -8,7 +8,7 @@ using Flight = FalconNet.Campaign.FlightClass;
 using Squadron = FalconNet.Campaign.SquadronClass;
 using WayPoint = FalconNet.CampaignBase.WayPointClass;
 using Package = FalconNet.Campaign.PackageClass;
-using Team = System.SByte;
+using Team = System.Byte;
 using GridIndex = System.Int16;
 using FalconNet.CampaignBase;
 using F4PFList = FalconNet.FalcLib.FalconPrivateList;

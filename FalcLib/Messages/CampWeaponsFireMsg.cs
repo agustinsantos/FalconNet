@@ -16,7 +16,6 @@ namespace FalconNet.FalcLib
 
     public static class CampWeaponsFireStatic
     {
-
         public const int MAX_TYPES_PER_CAMP_FIRE_MESSAGE = 8;
         public static byte[] gDamageStatusBuffer = new byte[256];
         public static byte[] gDamageStatusPtr;
@@ -34,13 +33,14 @@ namespace FalconNet.FalcLib
      */
     public class FalconCampWeaponsFire : FalconEvent
     {
-
         public FalconCampWeaponsFire(VU_ID entityId, VuTargetEntity target, bool loopback = true)
             : base((VU_MSG_TYPE)FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, entityId, target, loopback)
         { throw new NotImplementedException(); }
+        
         public FalconCampWeaponsFire(VU_MSG_TYPE type, VU_ID senderid, VU_ID target)
             : base((VU_MSG_TYPE)FalconMsgID.CampWeaponFireMsg, HandlingThread.CampaignThread, senderid, target)
         { throw new NotImplementedException(); }
+
         //TODO public  ~FalconCampWeaponsFire();
 
         public override int Size()

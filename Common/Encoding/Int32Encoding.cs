@@ -33,6 +33,12 @@ namespace FalconNet.Common.Encoding
             stream.Write(buf, 0, buf.Length);
         }
 
+        public static void Encode(byte[] buff, Int32 val, int startindex = 0)
+        {
+            byte[] buf = Encode(val);
+            buf.CopyTo(buff, startindex);
+        }
+
         /// <summary> 
         /// Decodes and returns the parameterValue stored in the specified bufferStream.
         /// </summary>

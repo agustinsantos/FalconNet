@@ -295,7 +295,7 @@ namespace FalconNet.Campaign
 		public FalconPrivateList facList;
 		public VuFilteredList atcList;
 		public VuFilteredList tankerList;
-		public int doFile;
+		public bool doFile;
 		public int doEvent;
 		public uint eventReadPointer;
 		public ulong lastRealTime;

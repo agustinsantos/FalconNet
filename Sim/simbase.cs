@@ -12,7 +12,7 @@ using FalconNet.Common.Encoding;
 namespace FalconNet.SimBase
 {
     // Flags used to convey special data
-    //NOTE top 16 bits are used for motion type
+    // NOTE top 16 bits are used for motion type
     [Flags]
     public enum SpecialFlags : int
     {
@@ -101,7 +101,7 @@ namespace FalconNet.SimBase
         public float dx;					// use as a vector
         public float dy;
         public float dz;
-        public DrawableTrail smokeTrail;	// smoke when guns are firing
+        //TODO public DrawableTrail smokeTrail;	// smoke when guns are firing
 
         public SimBaseNonLocalData()
         { throw new NotImplementedException(); }

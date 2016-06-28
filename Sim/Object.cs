@@ -40,7 +40,7 @@ namespace FalconNet.Sim
         public Int32[] rdrSy = new int[NUM_RADAR_HISTORY];	// radar symbol (assigned by exec in RadarDoppler)
         public Float32[] rdrX = new Float32[NUM_RADAR_HISTORY];	// azmuth in radians?
         public Float32[] rdrY = new Float32[NUM_RADAR_HISTORY];	// range in feet (radial)
-        public Float32[] rdrHd = new Float32[NUM_RADAR_HISTORY];	// our heading at target paint time (platform->Yaw())
+        public Float32[] rdrHd = new Float32[NUM_RADAR_HISTORY];	// our heading at target paint time (platform.Yaw())
         public VU_TIME rdrLastHit;					// Last time this target was detected (SimLibElapsedTime)
         public UInt32 rdrDetect;					// Bit field indicating when we did/didn't detect the target
 

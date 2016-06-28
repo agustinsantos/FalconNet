@@ -15,7 +15,7 @@ namespace FalconNet.VU
     entry_ = 0;
 #endif
 
-            // vuCollectionManager->Register(this);
+            // vuCollectionManager.Register(this);
         }
 
 
@@ -47,7 +47,7 @@ namespace FalconNet.VU
 
     if (collection_)
     {
-        entry_ = ((VuHashTable*)collection_)->table_;
+        entry_ = ((VuHashTable*)collection_).table_;
 
         while (*entry_ == vuTailNode)
         {
@@ -64,7 +64,7 @@ namespace FalconNet.VU
         }
 
         // sfr: smartpointer
-        return curr_->entity_.get();
+        return curr_.entity_.get();
     }
 
     return 0;
@@ -94,12 +94,12 @@ namespace FalconNet.VU
             return ret;
 
 #if NOTHING
-    curr_ = curr_->next_;
+    curr_ = curr_.next_;
 
     if (curr_ != vuTailNode)
     {
         // sfr: smartpointer
-        return curr_->entity_.get();
+        return curr_.entity_.get();
     }
 
     entry_++;
@@ -119,7 +119,7 @@ namespace FalconNet.VU
     }
 
     // sfr: smartpointer
-    return curr_->entity_.get();
+    return curr_.entity_.get();
 #endif
         }
 
@@ -152,20 +152,20 @@ namespace FalconNet.VU
 
         if (filter)
         {
-            if (curr_->entity_.get() == 0)
+            if (curr_.entity_.get() == 0)
             {
-                return curr_->entity_.get();
+                return curr_.entity_.get();
             }
 
-            if (filter->Test(curr_->entity_.get()))
+            if (filter.Test(curr_.entity_.get()))
             {
-                return curr_->entity_.get();
+                return curr_.entity_.get();
             }
 
             return GetNext(filter);
         }
 
-        return curr_->entity_.get();
+        return curr_.entity_.get();
 #endif
         }
 
@@ -195,20 +195,20 @@ namespace FalconNet.VU
 
             if (filter)
             {
-                if (curr_->entity_.get() == 0)
+                if (curr_.entity_.get() == 0)
                 {
-                    return curr_->entity_.get();
+                    return curr_.entity_.get();
                 }
 
-                if (filter->Test(curr_->entity_.get()))
+                if (filter.Test(curr_.entity_.get()))
                 {
-                    return curr_->entity_.get();
+                    return curr_.entity_.get();
                 }
 
                 return GetNext(filter);
             }
 
-            return curr_->entity_.get();
+            return curr_.entity_.get();
 #endif
         }
 
@@ -217,7 +217,7 @@ namespace FalconNet.VU
             return curr_.CurrEnt();
 #if NOTHING
             // sfr: smartpointer
-            return curr_->entity_.get();
+            return curr_.entity_.get();
 #endif
         }
 

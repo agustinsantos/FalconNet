@@ -33,7 +33,7 @@ namespace OSGNet.Osg
     /// call the appropriate apply(..) method of the NodeVisitor.  To
     /// use this feature one must use the Node::accept(NodeVisitor) which
     /// is extended in each Node subclass, rather than the NodeVisitor
-    /// apply directly.  So use root->accept(myVisitor); instead of
+    /// apply directly.  So use root.accept(myVisitor); instead of
     /// myVisitor.apply(*root).  The later method will bypass the double
     /// dispatch and the appropriate NodeVisitor::apply(..) method will
     /// not be called.

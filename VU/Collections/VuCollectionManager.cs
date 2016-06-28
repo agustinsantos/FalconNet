@@ -187,7 +187,7 @@ namespace FalconNet.VU
             // make last...
             //birthlist_.clear();
             //gclist_.clear();
-            //vuDatabase->Suspend(all);
+            //vuDatabase.Suspend(all);
             lock (collsMutex_)
             {
                 // copy the list since the purges can change the registered collection structure

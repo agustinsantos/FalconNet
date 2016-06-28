@@ -3912,7 +3912,7 @@ namespace FalconNet.Ui95
 
 			if (Popup_ == null) {
 				Popup_ = new C_PopupMgr ();
-				Popup_->Setup (Handler_);
+				Popup_.Setup (Handler_);
 			}
 
 			if (LoadScript (filename) == false)

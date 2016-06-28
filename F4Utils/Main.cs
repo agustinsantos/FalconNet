@@ -22,7 +22,7 @@ namespace F4Resources
 			//ReadTHR (FalconDirectory + "/campaign/save/korea.thr");
 			//ReadTerrain ();
             //ConvertResources(FalconDirectory + "/art/resource/ylwar_ee.idx", "borra");
-            ConvertResourcesFromDir(FalconDirectory + "/art/resource/");
+            ConvertResourcesFromDir(FalconDirectory + "/art");
 			//ReadClassData (FalconDirectory + "/terrdata/objects/FALCON4.ct");
             //ReadCampaign(FalconDirectory + "/campaign/save/save0.cam", 71); //Save-Day 1 13 19 39.cam", 71);
 			Debug.WriteLine ("FalconNet Converter has finished...!");
@@ -215,7 +215,7 @@ namespace F4Resources
         public static void ConvertResourcesFromDir(string dirPath)
         {
             if (Directory.Exists(dirPath)) {
-                foreach (string file in Directory.EnumerateFiles(dirPath, "*.idx"))
+                foreach (string file in Directory.EnumerateFiles(dirPath, "*.idx", SearchOption.AllDirectories))
                 {
                     FileInfo fi = new FileInfo(file);
                     ConvertResources(file, "./"+ Path.GetFileNameWithoutExtension(fi.Name));

@@ -313,11 +313,11 @@ namespace FalconNet.FalcLib
 #if TODO
 		       TacanCampStr  tinfo; /// XXXXX Bleah
 
-                if (GetCampTacanFromVUID(&tinfo, tacanVUStr->camp_id))
+                if (GetCampTacanFromVUID(&tinfo, tacanVUStr.camp_id))
                 {
-                    rangep = tinfo->range;
-                    ttype = tinfo->tactype;
-                    ilsfreq = tinfo->ilsfreq;
+                    rangep = tinfo.range;
+                    ttype = tinfo.tactype;
+                    ilsfreq = tinfo.ilsfreq;
                 }
                 else
                 {

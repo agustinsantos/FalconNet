@@ -51,7 +51,7 @@ public class TankerBrain : DigitalBrain
 	  private float desSpeed; // MN
 	  private vector TrackPoints[4]; // 2002-03-13 MN
 	  private int currentTP; // 2002-03-13 MN
-	  private bool advancedirection; // if we go from TrackPoint 0->1->2->3 or 0->3->2->1 (latter is the case if tanker is outside min max tanker range envelope - would do a 180° turn in the other case)
+	  private bool advancedirection; // if we go from TrackPoint 0.1.2.3 or 0.3.2.1 (latter is the case if tanker is outside min max tanker range envelope - would do a 180° turn in the other case)
 	  private bool reachedFirstTrackpoint; // when we reached the first trackpoint, we limit rStick and pStich in wingmnvers.cpp
 	  private float trackPointDistance; // contains closest distance at < 5 nm trackpoint distance
 

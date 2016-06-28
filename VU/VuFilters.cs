@@ -188,7 +188,7 @@ namespace FalconNet.VU
 
 #if DEBUG_AUTO_DISPATCH
 				VU_PRINT("VU: Auto message dispatch: sender %d; msg id %u\n",
-					event->MsgId().num_, event->MsgId().id_);
+					event.MsgId().num_, event.MsgId().id_);
 #endif
                     }
                 }

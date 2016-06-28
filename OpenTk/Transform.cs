@@ -30,7 +30,7 @@ namespace OSGNet.Osg
     /// Reference Guide (the blue book). To enable it in the OSG, you simply
     /// need to attach a local osg::StateSet to the osg::Transform, and set
     /// the appropriate mode to ON via
-    ///   stateset->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+    ///   stateset.setMode(GL_NORMALIZE, osg::StateAttribute::ON);
     /// </summary>
     public class Transform : Group
     {

@@ -54,7 +54,7 @@ namespace FalconNet.FalcLib
 
         protected override VU_ERRCODE Process(bool autodisp)
         {
-            // F4Assert(vuCritical->count == 0);
+            // F4Assert(vuCritical.count == 0);
 
             if (autodisp)
                 return VU_ERRCODE.VU_ERROR;

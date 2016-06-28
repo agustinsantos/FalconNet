@@ -1,14 +1,13 @@
 ﻿using FalconNet.Common.Encoding;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using VU_BOOL = System.Boolean;
 using VU_BYTE = System.Byte;
 using VU_TIME = System.UInt64;
-using VU_KEY = System.UInt64;
+using VU_KEY = System.UInt32;
 using VU_ID_NUMBER = System.UInt32;
+using VU_MSG_TYPE = System.Byte;
+using FalconNet.VU.Comms;
 
 namespace FalconNet.VU
 {
@@ -17,6 +16,41 @@ namespace FalconNet.VU
         VU_NO_SYNC,
         VU_SLAVE_SYNC,
         VU_MASTER_SYNC,
+    }
+    public enum VuCommsConnectStatus
+    {
+        VU_CONN_INACTIVE,
+        VU_CONN_PENDING,
+        VU_CONN_ACTIVE,
+        VU_CONN_ERROR,
+    }
+    public struct VuCommsContext
+    {
+        public ComAPIHandle handle_;
+        public VuCommsConnectStatus status_;
+        public VU_BOOL reliable_;
+        public int maxMsgSize_;
+        public int maxPackSize_;
+        // outgoing data
+        public VU_BYTE[] normalSendPacket_;
+        public VU_BYTE[] normalSendPacketPtr_;
+        public VU_ID normalPendingSenderId_;
+        public VU_ID normalPendingSendTargetId_;
+        // outgoing data
+        public VU_BYTE[] lowSendPacket_;
+        public VU_BYTE[] lowSendPacketPtr_;
+        public VU_ID lowPendingSenderId_;
+        public VU_ID lowPendingSendTargetId_;
+        // incoming data
+        public VU_BYTE[] recBuffer_;
+        // incoming message portion
+        public VU_MSG_TYPE type_;
+        public int length_;
+        public ushort msgid_;
+        public VU_ID targetId_;
+        public VU_TIME timestamp_;
+        // ping data
+        public int ping;
     }
 
     public abstract class VuTargetEntity : VuEntity
@@ -30,47 +64,96 @@ namespace FalconNet.VU
             return true;
         }
 
+        /// <summary>
+        ///  TRUE --> id contains (or is) ent
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public abstract VU_BOOL HasTarget(VU_ID id);
 
+        /// <summary>
+        /// TRUE --> ent contained by (or is) id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public abstract VU_BOOL InTarget(VU_ID id);
 
-#if VU_USE_COMMS
-  virtual VuTargetEntity *ForwardingTarget(VuMessage *msg = 0);
+        public virtual VuTargetEntity  ForwardingTarget(VuMessage  msg = null)
+        { throw new NotImplementedException();  }
 
-  int FlushOutboundMessageBuffer();
-  int SendMessage(VuMessage *msg);
-  int GetMessages();
-  int SendQueuedMessage ();
+        public int FlushOutboundMessageBuffer()
+        { throw new NotImplementedException(); }
 
-  void SetDirty (void);
-  void ClearDirty (void);
-  int IsDirty (void);
-  
-  // normal (best effort) comms handle
-  VuCommsConnectStatus GetCommsStatus() { return bestEffortComms_.status_; }
-  ComAPIHandle GetCommsHandle() { return bestEffortComms_.handle_; }
-  void SetCommsStatus(VuCommsConnectStatus cs) { bestEffortComms_.status_ = cs;}
-  void SetCommsHandle(ComAPIHandle ch, int bufSize=0, int packSize=0);
+        public int SendMessage(VuMessage  msg)
+        { throw new NotImplementedException(); }
 
-  // reliable comms handle
-  VuCommsConnectStatus GetReliableCommsStatus() {return reliableComms_.status_;}
-  ComAPIHandle GetReliableCommsHandle() { return reliableComms_.handle_; }
-  void SetReliableCommsStatus(VuCommsConnectStatus cs) { reliableComms_.status_ = cs; }
-  void SetReliableCommsHandle(ComAPIHandle ch, int bufSize=0, int packSize=0);
+        public int GetMessages()
+        { throw new NotImplementedException(); }
 
-  int BytesPending();
-  int MaxPacketSize();
-  int MaxMessageSize();
-  int MaxReliablePacketSize();
-  int MaxReliableMessageSize();
+        public int SendQueuedMessage ()
+        { throw new NotImplementedException(); }
 
-protected:
-  int Flush(VuCommsContext *ctxt);
-  int FlushLow(VuCommsContext *ctxt);
-  int SendOutOfBand(VuCommsContext *ctxt, VuMessage *msg);
-  int SendNormalPriority(VuCommsContext *ctxt, VuMessage *msg);
-  int SendLowPriority(VuCommsContext *ctxt, VuMessage *msg);
-#endif
+        public void SetDirty ()
+        { throw new NotImplementedException(); }
+
+        public void ClearDirty ()
+        { throw new NotImplementedException(); }
+
+        public int IsDirty ()
+        { throw new NotImplementedException(); }
+
+        // normal (best effort) comms handle
+        public VuCommsConnectStatus GetCommsStatus() { return bestEffortComms_.status_; }
+
+        public ComAPIHandle GetCommsHandle() { return bestEffortComms_.handle_; }
+
+        public void SetCommsStatus(VuCommsConnectStatus cs) { bestEffortComms_.status_ = cs;}
+
+        public void SetCommsHandle(ComAPIHandle ch, int bufSize=0, int packSize=0)
+        { throw new NotImplementedException(); }
+
+
+        // reliable comms handle
+        public VuCommsConnectStatus GetReliableCommsStatus() {return reliableComms_.status_;}
+        public ComAPIHandle GetReliableCommsHandle() { return reliableComms_.handle_; }
+        public void SetReliableCommsStatus(VuCommsConnectStatus cs) { reliableComms_.status_ = cs; }
+        public void SetReliableCommsHandle(ComAPIHandle ch, int bufSize=0, int packSize=0)
+        { throw new NotImplementedException(); }
+
+        public int BytesPending()
+        { throw new NotImplementedException(); }
+
+        public int MaxPacketSize()
+        { throw new NotImplementedException(); }
+
+        public int MaxMessageSize()
+        { throw new NotImplementedException(); }
+
+        public int MaxReliablePacketSize()
+        { throw new NotImplementedException(); }
+
+        public int MaxReliableMessageSize()
+        { throw new NotImplementedException(); }
+
+
+        protected void CloseComms()
+        { throw new NotImplementedException(); }
+
+        protected int Flush(VuCommsContext  ctxt)
+        { throw new NotImplementedException(); }
+
+        protected int FlushLow(VuCommsContext ctxt)
+        { throw new NotImplementedException(); }
+
+        protected int SendOutOfBand(VuCommsContext ctxt, VuMessage msg)
+        { throw new NotImplementedException(); }
+
+        protected int SendNormalPriority(VuCommsContext ctxt, VuMessage  msg)
+        { throw new NotImplementedException(); }
+
+        protected int SendLowPriority(VuCommsContext  ctxt, VuMessage msg)
+        { throw new NotImplementedException(); }
+
 
 
         protected VuTargetEntity(ushort type, VU_ID_NUMBER eid)
@@ -89,10 +172,8 @@ protected:
         { }
 
         //data
-#if VU_USE_COMMS
-  VuCommsContext bestEffortComms_;
-  VuCommsContext reliableComms_;
-#endif
+        protected VuCommsContext bestEffortComms_;
+        protected VuCommsContext reliableComms_;
         internal int dirty;
     }
 

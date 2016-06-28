@@ -19,7 +19,7 @@ namespace FalconNet.VU
         /// </summary>
         /// <param name="ent1"></param>
         /// <param name="ent2"></param>
-        /// <returns>< 0 --> ent1  < ent2, == 0 --> ent1 == ent2, > 0 --> ent1  > ent2</returns>
+        /// <returns>< 0 -. ent1  < ent2, == 0 -. ent1 == ent2, > 0 -. ent1  > ent2</returns>
         public virtual int Compare(VuEntity ent1, VuEntity ent2)
         {
             if (ent1 == null || ent2 == null)
@@ -56,7 +56,7 @@ namespace FalconNet.VU
         /// called before removing an entity from collection
         /// </summary>
         /// <param name="ent"></param>
-        /// <returns>true --> ent might be in sub-set and may be removed, false --> ent could never have been in sub-set</returns>
+        /// <returns>true -. ent might be in sub-set and may be removed, false -. ent could never have been in sub-set</returns>
         public virtual VU_BOOL RemoveTest(VuEntity ent)
         {
             return true;
@@ -67,8 +67,8 @@ namespace FalconNet.VU
         /// </summary>
         /// <param name="evnt"></param>
         /// <returns>
-        /// TRUE --> event may cause a change to result of Test(),
-        /// FALSE --> event will never cause a change to result of Test()
+        /// TRUE -. event may cause a change to result of Test(),
+        /// FALSE -. event will never cause a change to result of Test()
         /// </returns>
         public virtual VU_BOOL Notice(VuMessage evnt)
         {

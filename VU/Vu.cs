@@ -658,7 +658,7 @@ namespace FalconNet.VU
 
             return 0;
         }
-        // returns ent2->Id() - ent1->Id()
+        // returns ent2.Id() - ent1.Id()
         public override VuFilter Copy()
         {
             return new VuGameFilter(this);
@@ -699,7 +699,7 @@ namespace FalconNet.VU
             }
             return 0;
         }
-        // returns ent2->Id() - ent1->Id()
+        // returns ent2.Id() - ent1.Id()
         public override VuFilter Copy()
         {
             return new VuTargetFilter(this);

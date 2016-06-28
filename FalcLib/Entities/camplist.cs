@@ -498,12 +498,12 @@ namespace FalconNet.Campaign
             //#endif
             AllCampList.Register();
             //deaggregateList = new FalconPrivateList (&CampFilter);
-            //DeaggregateList->Init();
+            //DeaggregateList.Init();
             /* sfr: these are initialized with campaign now
             for (int loop = 0; loop < MAX_DIRTY_BUCKETS; loop ++){
              // sfr: new dirty buckets
              //DirtyBucket[loop] = new TailInsertList (&AllOpaqueFilter);
-             //DirtyBucket[loop]->Init();
+             //DirtyBucket[loop].Init();
              campDirtyBuckets[loop] = new list<FalconEntityBin>;
              campDirtyMutexes[loop] = F4CreateCriticalSection("camp dirty mutex");
              simDirtyBuckets[loop] = new list<FalconEntityBin>;

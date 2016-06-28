@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,6 +10,8 @@
     <RootNamespace>FalconNet.Common</RootNamespace>
     <AssemblyName>Common</AssemblyName>
     <ReleaseVersion>0.0.1</ReleaseVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -30,8 +33,13 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +53,7 @@
     <Compile Include="Encoding\StringEncoding.cs" />
     <Compile Include="Encoding\DoubleEncoding.cs" />
     <Compile Include="Encoding\SingleEncoding.cs" />
+    <Compile Include="Encoding\StructEncoding.cs" />
     <Compile Include="Encoding\UInt16Encoding.cs" />
     <Compile Include="Encoding\UInt32Encoding.cs" />
     <Compile Include="Encoding\UInt64Encoding.cs" />
@@ -61,6 +70,7 @@
     <Compile Include="FileMemMap.cs" />
     <Compile Include="Maths\Angle.cs" />
     <Compile Include="Maths\EulerVector.cs" />
+    <Compile Include="Maths\MathUtil.cs" />
     <Compile Include="Maths\Phyconst.cs" />
     <Compile Include="Maths\Vector.cs" />
     <Compile Include="MultiplataformIni.cs" />
@@ -73,6 +83,10 @@
     <Compile Include="StringSupport.cs" />
     <Compile Include="StreamReaderExtensions.cs" />
     <Compile Include="Lzss.cs" />
+    <Compile Include="Threading\CriticalSection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

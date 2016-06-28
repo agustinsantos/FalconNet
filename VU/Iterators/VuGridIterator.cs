@@ -20,7 +20,7 @@ namespace FalconNet.VU
 
             // low and up row (inclusive)
 #if VU_ALL_FILTERED
-    VuBiKeyFilter *bkf = coll->GetBiKeyFilter();
+    VuBiKeyFilter *bkf = coll.GetBiKeyFilter();
 #else
             VuBiKeyFilter bkf = coll.filter_ as VuBiKeyFilter;
 #endif
@@ -44,7 +44,7 @@ namespace FalconNet.VU
 
             VuGridTree g = collection_ as VuGridTree;
 #if VU_ALL_FILTERED
-    VuBiKeyFilter *bkf = g->GetBiKeyFilter();
+    VuBiKeyFilter *bkf = g.GetBiKeyFilter();
 #else
             VuBiKeyFilter bkf = g.filter_ as VuBiKeyFilter;
 #endif
@@ -64,7 +64,7 @@ namespace FalconNet.VU
         {
             VuGridTree g = collection_ as VuGridTree;
 #if VU_ALL_FILTERED
-    VuBiKeyFilter *bkf = g->GetBiKeyFilter();
+    VuBiKeyFilter *bkf = g.GetBiKeyFilter();
 #else
             VuBiKeyFilter bkf = g.filter_ as VuBiKeyFilter;
 #endif

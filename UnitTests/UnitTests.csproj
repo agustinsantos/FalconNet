@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTestVU</RootNamespace>
     <AssemblyName>UnitTestVU</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,11 +35,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibs\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -53,7 +56,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -62,6 +67,8 @@
     <Compile Include="TestEncoding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCollections.cs" />
+    <Compile Include="TestReadKeyFile.cs" />
+    <Compile Include="TestReadAcmiFile.cs" />
     <Compile Include="TestVuStatic.cs" />
     <Compile Include="TestNames.cs" />
     <Compile Include="TestEntity.cs" />
@@ -73,8 +80,13 @@
     <Compile Include="TestCampStr.cs" />
     <Compile Include="TestGameEngine.cs" />
     <Compile Include="TestBSPObjects.cs" />
+    <Compile Include="TestComm.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Acmi\Acmi.csproj">
+      <Project>{904e898e-9b89-4063-824b-08c8b5150443}</Project>
+      <Name>Acmi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CampaignBase\CampaignBase.csproj">
       <Project>{5446161e-db85-46e2-92ad-473b72766618}</Project>
       <Name>CampaignBase</Name>
@@ -99,6 +111,10 @@
       <Project>{c3e4d4bd-c1f5-447a-a87e-eabf2974d246}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimBase\SimBase.csproj">
+      <Project>{352558ff-c81f-4659-91eb-dd096c93fa5d}</Project>
+      <Name>SimBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VU\VU.csproj">
       <Project>{eda4023d-884d-4f58-9e25-0f77a34cf43c}</Project>
       <Name>VU</Name>
@@ -108,6 +124,9 @@
     <Content Include="log4netconfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

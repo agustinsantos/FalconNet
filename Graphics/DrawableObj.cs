@@ -1,4 +1,5 @@
 using FalconNet.Common.Graphics;
+using FalconNet.F4Common;
 using System;
 using DWORD = System.UInt32;
 
@@ -12,7 +13,7 @@ namespace FalconNet.Graphics
         Abstract base class used to interact with drawable objects which need
         to be drawn sorted with terrain in an out the window view.
     \***************************************************************************/
-    public abstract class DrawableObject
+    public abstract class DrawableObject : IDrawableObject
     {
         public DrawableObject(float s)
         {

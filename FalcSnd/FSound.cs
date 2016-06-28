@@ -63,7 +63,7 @@ public static int  F4LoadFXSound(char filename[], long Flags, SfxDef sfx);
         {
             throw new NotImplementedException();
         }
-        public static long F4SetVolume(int soundIdx, int Volume) // dBs -10000 -> 0
+        public static long F4SetVolume(int soundIdx, int Volume) // dBs -10000 . 0
         {
             throw new NotImplementedException();
         }
@@ -113,7 +113,7 @@ public static bool F4StartCallbackStream(int StreamID,void *ptr,DWORD (*cb)(void
         */
         //TODO #include "SoundGroups.h"
 
-        public static void F4SetGroupVolume(int group, int vol) // dBs -10000 -> 0   
+        public static void F4SetGroupVolume(int group, int vol) // dBs -10000 . 0   
         {
             throw new NotImplementedException();
         }

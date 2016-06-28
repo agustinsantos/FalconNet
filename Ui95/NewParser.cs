@@ -169,7 +169,7 @@ namespace FalconNet.Ui95
 		{
 			string filebuf = filename;
 			try {
-				if (!filename.StartsWith (@"art/"))
+				if (!filename.StartsWith (@"art"))
 					filename = "art" + Path.DirectorySeparatorChar + filename;
 				
 				if (char.IsLetter (filename [0]) && filename [1] == ':' && filename [2] == Path.DirectorySeparatorChar)

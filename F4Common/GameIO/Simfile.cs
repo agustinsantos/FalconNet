@@ -39,6 +39,9 @@ namespace FalconNet.F4Common
             SimlibFileClass file = new SimlibFileClass();
             file.mode = m;
             file.access = acc;
+            if (!File.Exists(fname))
+                return null;
+               // throw new ArgumentException("Check your installation. File not found:" + fname);
             file.fptr = new FileStream(fname, file.mode, file.access);
             if (file.access == FileAccess.Read)
             {
